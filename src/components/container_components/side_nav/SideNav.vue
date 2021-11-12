@@ -1,5 +1,5 @@
 <script setup>
-import FlowObjectSourceVue from './FlowObjectSource.vue';
+import FlowObjectSource from './FlowObjectSource.vue';
 
 const doActionData = {
     prop1: "hello",
@@ -8,7 +8,7 @@ const doActionData = {
 </script>
 <template>
     <div class="side-nav-wrapper">
-        <FlowObjectSourceVue :dragData="doActionData">Do Action</FlowObjectSourceVue>
+        <FlowObjectSource :dragData="doActionData">Do Action</FlowObjectSource>
     </div>
     
 </template>
