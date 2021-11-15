@@ -8,7 +8,7 @@ const doActionData = {
 </script>
 <template>
     <div class="side-nav-wrapper">
-        <FlowObjectSource :dragData="doActionData">Do Action</FlowObjectSource>
+        <FlowObjectSource :dragData="doActionData">Drag Me Tester</FlowObjectSource>
     </div>
     
 </template>
