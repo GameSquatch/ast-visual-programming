@@ -13,13 +13,7 @@ function dragStartHandler(event) {
 </script>
 
 <template>
-    <div class="flow-object-tile" draggable="true" @dragstart="dragStartHandler">
+    <div class="side-nav-tile" draggable="true" @dragstart="dragStartHandler">
         <p><slot></slot></p>
     </div>
 </template>
-
-<style scoped>
-.flow-object-tile {
-    padding: 15px;
-}
-</style>

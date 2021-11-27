@@ -13,7 +13,7 @@ function dragStartHandler(event) {
 </script>
 
 <template>
-    <div class="utility-object-tile" draggable="true" @dragstart="dragStartHandler">
+    <div class="side-nav-tile" draggable="true" @dragstart="dragStartHandler">
         <p><slot></slot></p>
     </div>
 </template>

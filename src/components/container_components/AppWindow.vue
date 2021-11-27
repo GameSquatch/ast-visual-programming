@@ -1,6 +1,7 @@
 <script setup>
 import ExpressionStatement from '../flow_objects/ExpressionStatement.vue';
 import IfStatement from '../flow_objects/IfStatement.vue';
+import dropDataTemplates from '../../drop_data_templates.js';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 
@@ -18,7 +19,13 @@ function dragOverHandler(event) {
  * @param {DragEvent} event
  */
 function dropHandler(event) {
-    store.commit('addNode', {toLocation: `body.${main.value.body.length}`, node: {type: "ExpressionStatement", location: "body.3", "expression": null}});
+    const dropData = JSON.parse(event.dataTransfer.getData("text/json"));
+    const expressionStatement = dropDataTemplates.expressionStatement();
+    console.log(dropData.type);
+    if (dropData.type !== "expressionStatement") {
+        expressionStatement.expression = dropDataTemplates[dropData.type]();
+    }
+    store.commit('addNode', {toLocation: `body.${main.value.body.length}`, node: expressionStatement});
 }
 </script>
 

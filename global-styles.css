@@ -21,3 +21,7 @@ body {
 .dull-text {
     color: #777;
 }
+
+.side-nav-tile {
+    padding: 12px;
+}

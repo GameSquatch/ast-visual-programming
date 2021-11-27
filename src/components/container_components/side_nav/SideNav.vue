@@ -3,24 +3,11 @@ import FlowObjectSource from './FlowObjectSource.vue';
 import UtilityObject from '../../utilities/UtilityObject.vue';
 
 const doActionData = {
-    prop1: "hello",
-    type: "ExpressionStatement"
+    type: "expressionStatement"
 };
 
 const stringUtilData = {
-    type: "CallExpression",
-    callee: {
-        type: "MemberExpression",
-        object: {
-            type: "Identifier",
-            name: "StringUtil"
-        },
-        property: {
-            type: "Identifier",
-            name: "concat"
-        }
-    },
-    arguments: []
+    type: "stringUtil"
 }
 </script>
 <template>

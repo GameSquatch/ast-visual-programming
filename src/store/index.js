@@ -29,6 +29,7 @@ const store = createStore({
         addNode(state, { toLocation, node }) {
             const parent = fetchParentUsingLocation(state.ast, toLocation);
             const placeInParent = getLastItemInLocation(toLocation);
+            node.location = toLocation;
             parent[placeInParent] = node;
         },
         /**
