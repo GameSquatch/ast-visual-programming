@@ -1,6 +1,7 @@
 <script setup>
 import CallExpression from './CallExpression.vue';
 import commonProps from '../../common_ast_props';
+import dropDataTemplates from '../../drop_data_templates.js';
 import { useStore } from 'vuex';
 import { ref } from 'vue';
 
@@ -24,6 +25,7 @@ function dragOverHandler(event) {
 function dropHandler(event) {
     event.stopPropagation();
     const baseLocation = `${props.location}.expression`;
+
     store.commit('addNode', {toLocation: baseLocation, node: {
         type: "CallExpression",
         location: baseLocation,
@@ -57,16 +59,16 @@ function insertDragLeave(event) {
 function insertDropHandler(event) {
     event.stopPropagation();
     isOverInsertSpot.value = false;
+    const dropData = JSON.parse(event.dataTransfer.getData("text/json"));
+
+    const expressionStatement = dropDataTemplates.expressionStatement();
+    // Wrap in an expression statement if it's not an expression statement
+    if (dropData.type !== "expressionStatement") {
+        expressionStatement.expression = dropDataTemplates[dropData.type]();
+    }
 
     const baseLocation = `${props.location}`;
-    store.commit('insertNode', {
-        insertAfterLocation: baseLocation,
-        newNode: {
-            type: "ExpressionStatement",
-            expression: null
-        }
-    });
-
+    store.commit('insertNode', { insertAfterLocation: baseLocation, newNode: expressionStatement});
 }
 </script>
 

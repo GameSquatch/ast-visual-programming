@@ -21,7 +21,8 @@ function dragOverHandler(event) {
 function dropHandler(event) {
     const dropData = JSON.parse(event.dataTransfer.getData("text/json"));
     const expressionStatement = dropDataTemplates.expressionStatement();
-    console.log(dropData.type);
+    
+    // Wrap in an expression statement if it's not an expression statement
     if (dropData.type !== "expressionStatement") {
         expressionStatement.expression = dropDataTemplates[dropData.type]();
     }
