@@ -29,6 +29,11 @@ const store = createStore({
         addNode(state, { location, node }) {
             const parent = fetchParentUsingLocation(state.ast, location);
             const placeInParent = getLastItemInLocation(location);
+            // Expression statements are always the outer wrappers to other expressions. I.e.
+            // you will never find and expression statement inside another at any level.
+            if (node.type == "ExpressionStatement" && parent.type == "ExpressionStatement") {
+                return;
+            }
             node.location = location;
             parent[placeInParent] = node;
         },
