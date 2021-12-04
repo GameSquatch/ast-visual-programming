@@ -16,7 +16,7 @@ function dragOverHandler(event) {
     // do stuff like change the cursor
 }
 
-const insertDrop = dropNewObjectHandler('insertNode', { insertAfterLocation: `body.${main.value.body.length}`});
+const insertDrop = dropNewObjectHandler('insertNode', { location: `body.${main.value.body.length}`});
 </script>
 
 <template>

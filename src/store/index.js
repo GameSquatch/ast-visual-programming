@@ -23,25 +23,25 @@ const store = createStore({
          * 
          * @param {Object} state 
          * @param {Object} param1
-         * @param {string} param1.toLocation
+         * @param {string} param1.location
          * @param {Object} param1.node
          */
-        addNode(state, { toLocation, node }) {
-            const parent = fetchParentUsingLocation(state.ast, toLocation);
-            const placeInParent = getLastItemInLocation(toLocation);
-            node.location = toLocation;
+        addNode(state, { location, node }) {
+            const parent = fetchParentUsingLocation(state.ast, location);
+            const placeInParent = getLastItemInLocation(location);
+            node.location = location;
             parent[placeInParent] = node;
         },
         /**
          * 
          * @param {Object} state
          * @param {Object} param1 
-         * @param {string} param1.insertAfterLocation
+         * @param {string} param1.location
          * @param {Object} param1.node
          */
-        insertNode(state, { insertAfterLocation, node }) {
-            const parent = fetchParentUsingLocation(state.ast, insertAfterLocation);
-            const insertAfterIndex = parseInt(getLastItemInLocation(insertAfterLocation));
+        insertNode(state, { location, node }) {
+            const parent = fetchParentUsingLocation(state.ast, location);
+            const insertAfterIndex = parseInt(getLastItemInLocation(location));
 
             // Modify location properties before splicing in new element
             for (let i = insertAfterIndex + 1; i < parent.length; i += 1) {
@@ -50,7 +50,7 @@ const store = createStore({
             }
 
             // Add new node into the tree
-            const parentLocation = insertAfterLocation.replace(/^(.*)\..*$/, "$1");
+            const parentLocation = location.replace(/^(.*)\..*$/, "$1");
             node.location = `${parentLocation}.${insertAfterIndex + 1}`;
             parent.splice(insertAfterIndex + 1, 0, node);
         }

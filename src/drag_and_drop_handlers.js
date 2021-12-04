@@ -20,7 +20,7 @@ const dragStartHandler = (dragData) => (event) => {
  * @param {Object} stateCommitObj 
  * @returns {DragCallback}
  */
-const dropNewObjectHandler = (stateCommitName, stateCommitObj) => (event) => {
+const dropNewObjectHandler = (stateCommitObj) => (event) => {
     const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
 
     const expressionStatement = dropDataTemplates.expressionStatement();
@@ -32,7 +32,7 @@ const dropNewObjectHandler = (stateCommitName, stateCommitObj) => (event) => {
     }
 
     stateCommitObj.node = expressionStatement;
-    store.commit(stateCommitName, stateCommitObj);
+    store.commit('insertNode', stateCommitObj);
 };
 
 const dropModifyObjectHandler = (stateCommitObj) => (event) => {

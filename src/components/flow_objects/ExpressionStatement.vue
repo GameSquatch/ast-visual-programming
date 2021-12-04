@@ -33,8 +33,8 @@ function removeInsertHover(event) {
     isOverInsertSpot.value = false;
 }
 
-const modifyDrop = dropModifyObjectHandler({ toLocation: `${props.location}.expression` });
-const insertDrop = dropNewObjectHandler('insertNode', { insertAfterLocation: `${props.location}` });
+const modifyDrop = dropModifyObjectHandler({ location: `${props.location}.expression` });
+const insertDrop = dropNewObjectHandler({ location: `${props.location}` });
 </script>
 
 <template>
