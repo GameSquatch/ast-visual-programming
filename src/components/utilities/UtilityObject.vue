@@ -1,19 +1,15 @@
 <script setup>
+import { dragStartHandler } from '../../drag_and_drop_handlers.js';
+
 const props = defineProps({
     dragData: Object
 });
 
-/**
- * @param {DragEvent} event
- */
-function dragStartHandler(event) {
-    event.dataTransfer.setData("text/json", JSON.stringify(props.dragData));
-    event.dataTransfer.dropEffect = "copy";
-}
+const dragStart = dragStartHandler(props.dragData);
 </script>
 
 <template>
-    <div class="side-nav-tile" draggable="true" @dragstart="dragStartHandler">
+    <div class="side-nav-tile" draggable="true" @dragstart="dragStart">
         <p><slot></slot></p>
     </div>
 </template>
