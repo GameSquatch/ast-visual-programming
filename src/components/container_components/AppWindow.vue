@@ -2,6 +2,7 @@
 import ExpressionStatement from '../flow_objects/ExpressionStatement.vue';
 import IfStatement from '../flow_objects/IfStatement.vue';
 import dropDataTemplates from '../../drop_data_templates.js';
+import { dropNewObjectHandler } from '../../drag_and_drop_handlers.js';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 
@@ -15,23 +16,11 @@ function dragOverHandler(event) {
     // do stuff like change the cursor
 }
 
-/**
- * @param {DragEvent} event
- */
-function dropHandler(event) {
-    const dropData = JSON.parse(event.dataTransfer.getData("text/json"));
-    const expressionStatement = dropDataTemplates.expressionStatement();
-    
-    // Wrap in an expression statement if it's not an expression statement
-    if (dropData.type !== "expressionStatement") {
-        expressionStatement.expression = dropDataTemplates[dropData.type]();
-    }
-    store.commit('addNode', {toLocation: `body.${main.value.body.length}`, node: expressionStatement});
-}
+const insertDrop = dropNewObjectHandler('insertNode', { insertAfterLocation: `body.${main.value.body.length}`});
 </script>
 
 <template>
-    <div @dragover.prevent="dragOverHandler" @drop.prevent="dropHandler" class="app-window-wrapper">
+    <div @dragover.prevent="dragOverHandler" @drop.stop.prevent="insertDrop" class="app-window-wrapper">
         <template v-for="(flowObject, indx) of main.body" :key="indx">
             <component :is="flowObject.type" v-bind="flowObject"></component>
         </template>
