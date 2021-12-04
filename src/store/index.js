@@ -37,9 +37,9 @@ const store = createStore({
          * @param {Object} state
          * @param {Object} param1 
          * @param {string} param1.insertAfterLocation
-         * @param {Object} param1.newNode
+         * @param {Object} param1.node
          */
-        insertNode(state, { insertAfterLocation, newNode }) {
+        insertNode(state, { insertAfterLocation, node }) {
             const parent = fetchParentUsingLocation(state.ast, insertAfterLocation);
             const insertAfterIndex = parseInt(getLastItemInLocation(insertAfterLocation));
 
@@ -51,8 +51,8 @@ const store = createStore({
 
             // Add new node into the tree
             const parentLocation = insertAfterLocation.replace(/^(.*)\..*$/, "$1");
-            newNode.location = `${parentLocation}.${insertAfterIndex + 1}`;
-            parent.splice(insertAfterIndex + 1, 0, newNode);
+            node.location = `${parentLocation}.${insertAfterIndex + 1}`;
+            parent.splice(insertAfterIndex + 1, 0, node);
         }
     }
 });
