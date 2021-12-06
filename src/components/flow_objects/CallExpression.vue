@@ -14,11 +14,11 @@ const props = defineProps({
 <template>
     <p style="padding-left: 10px">
         <span>
-            <component :is="callee.type" v-bind="callee"></component>
+            <component :accessor="'callee'" :parent-ref="parentRef[accessor]" :is="callee.type" v-bind="callee"></component>
             (
                 <div class="arg-box" v-for="(argument, i) of arguments">
                     <!-- <input v-if="argument.type == 'StringLiteral'" :value="argument.value" /> -->
-                    <component :is="argument.type" v-bind="argument" :is-argument="true"></component>
+                    <component :accessor="i.toString()" :parent-ref="arguments" :is="argument.type" v-bind="argument" :is-argument="true"></component>
                 </div>
             )
         </span>

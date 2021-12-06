@@ -3,8 +3,8 @@ import CallExpression from './CallExpression.vue';
 import commonProps from '../../common_ast_props.js';
 //import dropDataTemplates from '../../drop_data_templates.js';
 import { dropNewObjectHandler, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
-import { useStore } from 'vuex';
 import { ref } from 'vue';
+import { useStore } from 'vuex';
 
 const props = defineProps({
     ...commonProps,
@@ -12,7 +12,6 @@ const props = defineProps({
 });
 
 let isOverInsertSpot = ref(false);
-
 const store = useStore();
 
 function dragOverHandler(event) {
@@ -35,18 +34,19 @@ function removeInsertHover(event) {
 
 const modifyDrop = dropModifyObjectHandler({ location: `${props.location}.expression` });
 const insertDrop = dropNewObjectHandler({ location: `${props.location}` });
+const test = (event) => store.commit('test', { refObj: props.parentRef, index: props.accessor });
 </script>
 
 <template>
     <div @dragover.prevent="dragOverHandler" @drop.stop.prevent="modifyDrop" class="expression-container">
-        <component v-if="expression != null" :is="expression.type" v-bind="expression"></component>
+        <component v-if="expression != null" :is="expression.type" v-bind="expression" :accessor="'expression'" :parent-ref="parentRef[accessor]"></component>
         <p class="dull-text" v-if="expression == null">Drag an action here</p>
     </div>
     <div
         @dragover.prevent="insertDragOverHandler"
         @dragenter.prevent="insertDragEnter"
         @dragleave.prevent="insertDragLeave"
-        @drop.stop.prevent="insertDrop($event), removeInsertHover($event)"
+        @drop.stop.prevent="test($event), removeInsertHover($event)"
         class="line-down-box"
         :class="{ 'insert-drag-over': isOverInsertSpot }">
     </div>

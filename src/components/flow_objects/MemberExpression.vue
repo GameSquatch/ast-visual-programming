@@ -10,7 +10,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <span><component :is="object.type" v-bind="object" :is-object="true"></component>.<component :is="property.type" v-bind="property" :is-property="true"></component></span>
+    <span><component :accessor="'object'" :parent-ref="object" :is="object.type" v-bind="object" :is-object="true"></component>.<component :accessor="'property'" :parent-ref="property" :is="property.type" v-bind="property" :is-property="true"></component></span>
 </template>
 
 <script>

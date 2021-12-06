@@ -23,10 +23,3 @@ const props = defineProps({
         <option v-for="method of Object.getOwnPropertyNames(String.prototype)" :value="method" :selected="method == name">{{ method }}</option>
     </select>
 </template>
-
-<script>import { getCurrentInstance } from '@vue/runtime-core';
-
-export default {
-    emits: [ 'id-created' ]
-};
-</script>

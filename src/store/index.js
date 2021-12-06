@@ -58,6 +58,13 @@ const store = createStore({
             const parentLocation = location.replace(/^(.*)\..*$/, "$1");
             node.location = `${parentLocation}.${insertAfterIndex + 1}`;
             parent.splice(insertAfterIndex + 1, 0, node);
+        },
+
+        test(state, { refObj, index }) {
+            refObj = [...refObj.splice(parseInt(index) + 1, 0, {
+                type: "ExpressionStatement",
+                expression: null
+            })];
         }
     }
 });
