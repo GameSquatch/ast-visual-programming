@@ -1,6 +1,5 @@
 const commonProps = {
     type: String,
-    location: String,
     parentRef: Object,
     accessor: String
 };
