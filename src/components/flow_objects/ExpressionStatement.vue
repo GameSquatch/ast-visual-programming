@@ -2,9 +2,8 @@
 import CallExpression from './CallExpression.vue';
 import commonProps from '../../common_ast_props.js';
 //import dropDataTemplates from '../../drop_data_templates.js';
-import { dropNewObjectHandler, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
+import { dropModifyObjectHandler, dropInsertHandler } from '../../drag_and_drop_handlers.js';
 import { ref } from 'vue';
-import { useStore } from 'vuex';
 
 const props = defineProps({
     ...commonProps,
@@ -12,7 +11,6 @@ const props = defineProps({
 });
 
 let isOverInsertSpot = ref(false);
-const store = useStore();
 
 function dragOverHandler(event) {
     // do something like change cursor
@@ -33,8 +31,7 @@ function removeInsertHover(event) {
 }
 
 const modifyDrop = dropModifyObjectHandler({ location: `${props.location}.expression` });
-const insertDrop = dropNewObjectHandler({ location: `${props.location}` });
-const test = (event) => store.commit('test', { refObj: props.parentRef, index: props.accessor });
+const insertDrop = dropInsertHandler({ refObj: props.parentRef, accessor: props.accessor });
 </script>
 
 <template>
@@ -46,7 +43,7 @@ const test = (event) => store.commit('test', { refObj: props.parentRef, index: p
         @dragover.prevent="insertDragOverHandler"
         @dragenter.prevent="insertDragEnter"
         @dragleave.prevent="insertDragLeave"
-        @drop.stop.prevent="test($event), removeInsertHover($event)"
+        @drop.stop.prevent="insertDrop($event), removeInsertHover($event)"
         class="line-down-box"
         :class="{ 'insert-drag-over': isOverInsertSpot }">
     </div>

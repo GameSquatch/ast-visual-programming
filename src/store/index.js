@@ -41,30 +41,16 @@ const store = createStore({
          * 
          * @param {Object} state
          * @param {Object} param1 
-         * @param {string} param1.location
-         * @param {Object} param1.node
+         * @param {string} param1.refObj
+         * @param {String|Number} param1.accessor
+         * @param {Object} node
          */
-        insertNode(state, { location, node }) {
-            const parent = fetchParentUsingLocation(state.ast, location);
-            const insertAfterIndex = parseInt(getLastItemInLocation(location));
-
-            // Modify location properties before splicing in new element
-            for (let i = insertAfterIndex + 1; i < parent.length; i += 1) {
-                const node = parent[i];
-                node.location = node.location.replace(/\..*$/, `.${i + 1}`);
-            }
-
-            // Add new node into the tree
-            const parentLocation = location.replace(/^(.*)\..*$/, "$1");
-            node.location = `${parentLocation}.${insertAfterIndex + 1}`;
-            parent.splice(insertAfterIndex + 1, 0, node);
+        insertNode(state, { refObj, accessor, node }) {
+            refObj = [...refObj.splice(parseInt(accessor) + 1, 0, node)];
         },
 
-        test(state, { refObj, index }) {
-            refObj = [...refObj.splice(parseInt(index) + 1, 0, {
-                type: "ExpressionStatement",
-                expression: null
-            })];
+        appendNode(state, { refObj, node }) {
+            refObj[refObj.length] = node;
         }
     }
 });

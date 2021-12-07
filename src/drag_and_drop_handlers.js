@@ -1,6 +1,7 @@
 import store from './store/index.js';
 import dropDataTemplates from './drop_data_templates.js';
 
+const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
 /**
  * @callback DragCallback
  * @param {DragEvent} event
@@ -14,15 +15,17 @@ const dragStartHandler = (dragData) => (event) => {
     event.dataTransfer.setData('text/json', JSON.stringify(dragData));
     event.dataTransfer.dropEffect = 'copy';
 };
-/**
- * 
- * @param {String} stateCommitName 
- * @param {Object} stateCommitObj 
- * @returns {DragCallback}
- */
-const dropNewObjectHandler = (stateCommitObj) => (event) => {
-    const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
 
+const dropModifyObjectHandler = (stateCommitObj) => (event) => {
+    const dragData = getDragData(event);
+    const dropTemplateObj = dropDataTemplates[dragData.type]();
+
+    stateCommitObj.node = dropTemplateObj;
+    store.commit('addNode', stateCommitObj);
+};
+
+const dropInsertHandler = (commitConfig) => (event) => {
+    const dragData = getDragData(event);
     const expressionStatement = dropDataTemplates.expressionStatement();
 
     // Since we are creating a new object in a flow, we need to make sure that
@@ -31,16 +34,8 @@ const dropNewObjectHandler = (stateCommitObj) => (event) => {
         expressionStatement.expression = dropDataTemplates[dragData.type]();
     }
 
-    stateCommitObj.node = expressionStatement;
-    store.commit('insertNode', stateCommitObj);
+    commitConfig.node = expressionStatement;
+    store.commit('insertNode', commitConfig);
 };
 
-const dropModifyObjectHandler = (stateCommitObj) => (event) => {
-    const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
-    const dropTemplateObj = dropDataTemplates[dragData.type]();
-
-    stateCommitObj.node = dropTemplateObj;
-    store.commit('addNode', stateCommitObj);
-};
-
-export { dragStartHandler, dropNewObjectHandler, dropModifyObjectHandler };
+export { dragStartHandler, dropModifyObjectHandler, dropInsertHandler };

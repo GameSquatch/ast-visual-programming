@@ -1,7 +1,7 @@
 <script setup>
 import ExpressionStatement from '../flow_objects/ExpressionStatement.vue';
 import IfStatement from '../flow_objects/IfStatement.vue';
-import { dropNewObjectHandler } from '../../drag_and_drop_handlers.js';
+import { dropInsertHandler } from '../../drag_and_drop_handlers.js';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 
@@ -15,11 +15,13 @@ function dragOverHandler(event) {
     // do stuff like change the cursor
 }
 
-const insertDrop = dropNewObjectHandler({ location: `body.${main.value.body.length}`});
+const appendDrop = (event) => {
+    dropInsertHandler({ refObj: main.value.body, accessor: `${main.value.body.length}`})(event);
+}
 </script>
 
 <template>
-    <div @dragover.prevent="dragOverHandler" @drop.stop.prevent="insertDrop" class="app-window-wrapper">
+    <div @dragover.prevent="dragOverHandler" @drop.stop.prevent="appendDrop" class="app-window-wrapper">
         <template v-for="(flowObject, indx) of main.body" :key="indx">
             <component :is="flowObject.type" v-bind="flowObject" :accessor="indx.toString()" :parent-ref="main.body"></component>
         </template>

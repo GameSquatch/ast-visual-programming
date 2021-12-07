@@ -16,3 +16,7 @@ const curry = (fn) => {
 };
 
 const map = curry((fn, xs) => xs.map(fn));
+
+const prop = curry((name, obj) => obj[name]);
+
+export { compose, curry, map, prop };
