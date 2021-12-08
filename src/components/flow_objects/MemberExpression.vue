@@ -12,10 +12,21 @@ const props = defineProps({
         default: false
     }
 });
+
+const emit = defineEmits([
+    'changeMethod'
+]);
+
+const onMethodChange = (payloadObj) => {
+    if (props.object.name) {
+        payloadObj.objectName = props.object.name;
+    }
+    emit('changeMethod', payloadObj);
+};
 </script>
 
 <template>
-    <span><component :accessor="'object'" :parent-ref="parentRef[accessor]" :is="object.type" v-bind="object" :is-object="true"></component>.<component :accessor="'property'" :parent-ref="parentRef[accessor]" :is="property.type" v-bind="property" :is-callee-property="isCallee"></component></span>
+    <span><component :accessor="'object'" :parent-ref="parentRef[accessor]" :is="object.type" v-bind="object" :is-object="true"></component>.<component @change-method="onMethodChange" :accessor="'property'" :parent-ref="parentRef[accessor]" :is="property.type" v-bind="property" :is-callee-property="isCallee"></component></span>
 </template>
 
 <script>

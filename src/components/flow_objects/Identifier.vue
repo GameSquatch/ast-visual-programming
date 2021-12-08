@@ -17,10 +17,12 @@ const props = defineProps({
     }
 });
 
-const store = useStore();
+const emit = defineEmits([
+    'changeMethod'
+]);
 
 const onPropertyChange = (event) => {
-    store.commit('changeMethod', { refObj: props.parentRef.property, methodName: event.target.value });
+    emit('changeMethod', { methodName: event.target.value });
 };
 </script>
 

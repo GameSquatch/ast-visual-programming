@@ -17,13 +17,16 @@ if (props.callee.type == "MemberExpression") {
         isEmptyCall = true;
     }
 }
-const iter = 2;
+
+const onMethodChange = (payloadObj) => {
+    // TODO: commit change to the store using the parentRef from here
+};
 </script>
 
 <template>
     <p style="padding-left: 10px">
         <span>
-            <component :is-callee="true" :accessor="'callee'" :parent-ref="parentRef[accessor]" :is="callee.type" v-bind="callee"></component>
+            <component @change-method="onMethodChange" :is-callee="true" :accessor="'callee'" :parent-ref="parentRef[accessor]" :is="callee.type" v-bind="callee"></component>
             (
                 <div class="arg-box" v-if="arguments.length > 0" v-for="(argument, i) of arguments">
                     <component :accessor="i.toString()" :parent-ref="arguments" :is="argument.type" v-bind="argument" :is-argument="true"></component>
