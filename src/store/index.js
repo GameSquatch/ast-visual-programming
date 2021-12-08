@@ -51,6 +51,10 @@ const store = createStore({
 
         appendNode(state, { refObj, node }) {
             refObj[refObj.length] = node;
+        },
+
+        changeMethod(state, { refObj, methodName }) {
+            refObj = { ...refObj, name: methodName };
         }
     }
 });

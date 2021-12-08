@@ -1,5 +1,6 @@
 <script setup>
-import commonProps from '../../common_ast_props';
+import { useStore } from 'vuex';
+import commonProps from '../../common_ast_props.js';
 
 const props = defineProps({
     ...commonProps,
@@ -9,17 +10,23 @@ const props = defineProps({
         required: false,
         default: false
     },
-    isProperty: {
+    isCalleeProperty: {
         type: Boolean,
         required: false,
         default: false
     }
 });
+
+const store = useStore();
+
+const onPropertyChange = (event) => {
+    store.commit('changeMethod', { refObj: props.parentRef.property, methodName: event.target.value });
+};
 </script>
 
 <template>
-    <span v-if="!isProperty">{{ name }}</span>
-    <select v-if="isProperty">
+    <span v-if="!isCalleeProperty">{{ name }}</span>
+    <select v-else @change="onPropertyChange">
         <option v-for="method of Object.getOwnPropertyNames(String.prototype)" :value="method" :selected="method == name">{{ method }}</option>
     </select>
 </template>
