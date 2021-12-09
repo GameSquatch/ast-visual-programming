@@ -1,5 +1,4 @@
 <script setup>
-import { useStore } from 'vuex';
 import commonProps from '../../common_ast_props.js';
 import { onUpdated } from 'vue';
 
@@ -26,7 +25,7 @@ const onPropertyChange = (event) => {
     emit('changeMethod', { methodName: event.target.value });
 };
 
-onUpdated(() => console.log(`Updated Identifier: ${props.name}`));
+//onUpdated(() => console.log(`Updated Identifier: ${props.name}`));
 </script>
 
 <template>

@@ -33,7 +33,7 @@ const onMethodChange = (payloadObj) => {
     store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
 };
 
-onUpdated(() => console.log(`updated ${defArgNumber()} ${currentRef.value.callee.property.name}`));
+//onUpdated(() => console.log(`updated ${defArgNumber()} ${currentRef.value.callee.property.name}`));
 </script>
 
 <template>

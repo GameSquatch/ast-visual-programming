@@ -51,24 +51,7 @@ const store = createStore({
         },
 
         changeMethod(state, { refObj, accessor, methodName, objectName }) {
-            console.log(refObj);
             refObj[accessor] = dropDataTemplates.stringUtil(methodName);
-            // state.ast.main.body[2].expression = {
-            //     type: "CallExpression",
-            //     callee: {
-            //         type: "MemberExpression",
-            //         object: {
-            //             type: "Identifier",
-            //             name: "StringUtil"
-            //         },
-            //         property: {
-            //             type: "Identifier",
-            //             name: methodName
-            //         }
-            //     },
-            //     arguments: []
-            // };
-            //console.log(state);
         }
     }
 });
