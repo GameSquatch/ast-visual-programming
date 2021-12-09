@@ -1,6 +1,6 @@
 
 export default {
-    "stringUtil": () => ({
+    "stringUtil": (method = "concat") => ({
         type: "CallExpression",
         callee: {
             type: "MemberExpression",
@@ -10,7 +10,7 @@ export default {
             },
             property: {
                 type: "Identifier",
-                name: "concat"
+                name: method
             }
         },
         arguments: []

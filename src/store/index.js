@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import mockData from '../data-json.js';
+import dropDataTemplates from '../drop_data_templates.js'
 
 const store = createStore({
     state: {
@@ -49,12 +50,25 @@ const store = createStore({
             refObj = [...refObj.splice(parseInt(accessor) + 1, 0, node)];
         },
 
-        appendNode(state, { refObj, node }) {
-            refObj[refObj.length] = node;
-        },
-
-        changeMethod(state, { refObj, methodName }) {
-            refObj = { ...refObj, name: methodName };
+        changeMethod(state, { refObj, accessor, methodName, objectName }) {
+            console.log(refObj);
+            refObj[accessor] = dropDataTemplates.stringUtil(methodName);
+            // state.ast.main.body[2].expression = {
+            //     type: "CallExpression",
+            //     callee: {
+            //         type: "MemberExpression",
+            //         object: {
+            //             type: "Identifier",
+            //             name: "StringUtil"
+            //         },
+            //         property: {
+            //             type: "Identifier",
+            //             name: methodName
+            //         }
+            //     },
+            //     arguments: []
+            // };
+            //console.log(state);
         }
     }
 });

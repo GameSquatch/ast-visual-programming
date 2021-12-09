@@ -6,7 +6,7 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
-const main = computed(() => store.state.ast.main);
+const ast = computed(() => store.state.ast);
 
 /**
  * @param {DragEvent} event
@@ -16,14 +16,14 @@ function dragOverHandler(event) {
 }
 
 const appendDrop = (event) => {
-    dropInsertHandler({ refObj: main.value.body, accessor: `${main.value.body.length}`})(event);
+    dropInsertHandler({ refObj: ast.value.main.body, accessor: `${ast.value.main.body.length}`})(event);
 }
 </script>
 
 <template>
     <div @dragover.prevent="dragOverHandler" @drop.stop.prevent="appendDrop" class="app-window-wrapper">
-        <template v-for="(flowObject, indx) of main.body" :key="indx">
-            <component :is="flowObject.type" v-bind="flowObject" :accessor="indx.toString()" :parent-ref="main.body"></component>
+        <template v-for="(flowObject, indx) of ast.main.body" :key="indx">
+            <component :is="flowObject.type" v-bind="flowObject" :accessor="indx.toString()" :parent-ref="ast.main.body"></component>
         </template>
     </div>
 </template>

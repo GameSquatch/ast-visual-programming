@@ -2,13 +2,15 @@
 import CallExpression from './CallExpression.vue';
 import commonProps from '../../common_ast_props.js';
 //import dropDataTemplates from '../../drop_data_templates.js';
-import { dropModifyObjectHandler, dropInsertHandler } from '../../drag_and_drop_handlers.js';
-import { ref } from 'vue';
+import { dropInsertHandler } from '../../drag_and_drop_handlers.js';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     ...commonProps,
     expression: Object
 });
+
+const parent = computed(() => props.parentRef);
 
 let isOverInsertSpot = ref(false);
 
@@ -30,13 +32,12 @@ function removeInsertHover(event) {
     isOverInsertSpot.value = false;
 }
 
-const modifyDrop = dropModifyObjectHandler({ location: `${props.location}.expression` });
-const insertDrop = dropInsertHandler({ refObj: props.parentRef, accessor: props.accessor });
+const insertDrop = dropInsertHandler({ refObj: parent.value, accessor: props.accessor });
 </script>
 
 <template>
     <div @dragover.prevent="dragOverHandler" @drop.stop.prevent="modifyDrop" class="expression-container">
-        <component v-if="expression != null" :is="expression.type" v-bind="expression" :accessor="'expression'" :parent-ref="parentRef[accessor]"></component>
+        <component v-if="expression != null" :is="expression.type" v-bind="expression" :accessor="'expression'" :parent-ref="parent[accessor]"></component>
         <p class="dull-text" v-if="expression == null">Drag an action here</p>
     </div>
     <div
