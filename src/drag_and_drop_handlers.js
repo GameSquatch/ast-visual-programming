@@ -1,4 +1,3 @@
-import store from './store/index.js';
 import dropDataTemplates from './drop_data_templates.js';
 
 const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
@@ -21,10 +20,10 @@ const dropModifyObjectHandler = (stateCommitObj) => (event) => {
     const dropTemplateObj = dropDataTemplates[dragData.type]();
 
     stateCommitObj.node = dropTemplateObj;
-    store.commit('addNode', stateCommitObj);
+    //store.commit('addNode', stateCommitObj);
 };
 
-const dropInsertHandler = (commitConfig) => (event) => {
+const dropInsertHandler = ({ refObj, accessor }) => (event) => {
     const dragData = getDragData(event);
     const expressionStatement = dropDataTemplates.expressionStatement();
 
@@ -34,8 +33,8 @@ const dropInsertHandler = (commitConfig) => (event) => {
         expressionStatement.expression = dropDataTemplates[dragData.type]();
     }
 
-    commitConfig.node = expressionStatement;
-    store.commit('insertNode', commitConfig);
+    refObj[accessor + 1] = expressionStatement;
+    //store.commit('insertNode', commitConfig);
 };
 
 export { dragStartHandler, dropModifyObjectHandler, dropInsertHandler };

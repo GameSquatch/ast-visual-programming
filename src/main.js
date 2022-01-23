@@ -1,7 +1,7 @@
-import { createApp } from 'vue'
-import store from './store/index.js';
-import App from './App.vue'
+import App from './App.svelte';
 
-const app = createApp(App);
-app.use(store)
-app.mount('#app')
+var app = new App({
+	target: document.querySelector("#app")
+});
+
+export default app;
