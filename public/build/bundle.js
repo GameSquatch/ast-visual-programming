@@ -2044,11 +2044,11 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (44:12) {:else}
+    // (45:12) {:else}
     function create_else_block_1(ctx) {
     	let each_1_anchor;
     	let current;
-    	let each_value_1 = /*defArgNumber*/ ctx[2]();
+    	let each_value_1 = Array(/*utilityDef*/ ctx[1]);
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -2077,8 +2077,8 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*defArgNumber, self*/ 5) {
-    				each_value_1 = /*defArgNumber*/ ctx[2]();
+    			if (dirty & /*Array, utilityDef, self*/ 3) {
+    				each_value_1 = Array(/*utilityDef*/ ctx[1]);
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -2133,14 +2133,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(44:12) {:else}",
+    		source: "(45:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:16) {#each defArgNumber() as i}
+    // (46:16) {#each Array(utilityDef) as i}
     function create_each_block_1(ctx) {
     	let div;
     	let stringliteral;
@@ -2148,7 +2148,7 @@ var app = (function () {
     	let current;
 
     	function stringliteral_parentRef_binding(value) {
-    		/*stringliteral_parentRef_binding*/ ctx[8](value);
+    		/*stringliteral_parentRef_binding*/ ctx[9](value);
     	}
 
     	let stringliteral_props = {
@@ -2173,7 +2173,7 @@ var app = (function () {
     			div = element("div");
     			create_component(stringliteral.$$.fragment);
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$5, 45, 20, 1738);
+    			add_location(div, file$5, 46, 20, 1958);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2182,6 +2182,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const stringliteral_changes = {};
+    			if (dirty & /*utilityDef*/ 2) stringliteral_changes.accessor = /*i*/ ctx[12];
 
     			if (!updating_parentRef && dirty & /*self*/ 1) {
     				updating_parentRef = true;
@@ -2210,14 +2211,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(45:16) {#each defArgNumber() as i}",
+    		source: "(46:16) {#each Array(utilityDef) as i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (40:20) {:else}
+    // (41:20) {:else}
     function create_else_block$1(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -2225,10 +2226,10 @@ var app = (function () {
     	let current;
 
     	function switch_instance_parentRef_binding_1(value) {
-    		/*switch_instance_parentRef_binding_1*/ ctx[7](value);
+    		/*switch_instance_parentRef_binding_1*/ ctx[8](value);
     	}
 
-    	var switch_value = /*constructors*/ ctx[1][/*argument*/ ctx[10].type];
+    	var switch_value = /*constructors*/ ctx[2][/*argument*/ ctx[10].type];
 
     	function switch_props(ctx) {
     		let switch_instance_props = {
@@ -2274,7 +2275,7 @@ var app = (function () {
     				add_flush_callback(() => updating_parentRef = false);
     			}
 
-    			if (switch_value !== (switch_value = /*constructors*/ ctx[1][/*argument*/ ctx[10].type])) {
+    			if (switch_value !== (switch_value = /*constructors*/ ctx[2][/*argument*/ ctx[10].type])) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -2318,21 +2319,21 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(40:20) {:else}",
+    		source: "(41:20) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (38:20) {#if argument.type === "CallExpression"}
+    // (39:20) {#if argument.type === "CallExpression"}
     function create_if_block$2(ctx) {
     	let callexpression;
     	let updating_parentRef;
     	let current;
 
     	function callexpression_parentRef_binding(value) {
-    		/*callexpression_parentRef_binding*/ ctx[6](value);
+    		/*callexpression_parentRef_binding*/ ctx[7](value);
     	}
 
     	let callexpression_props = { accessor: /*i*/ ctx[12] };
@@ -2386,14 +2387,14 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(38:20) {#if argument.type === \\\"CallExpression\\\"}",
+    		source: "(39:20) {#if argument.type === \\\"CallExpression\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (36:12) {#each self.arguments as argument, i (i)}
+    // (37:12) {#each self.arguments as argument, i (i)}
     function create_each_block$1(key_1, ctx) {
     	let div;
     	let current_block_type_index;
@@ -2417,7 +2418,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$5, 36, 16, 1266);
+    			add_location(div, file$5, 37, 16, 1483);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -2472,7 +2473,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(36:12) {#each self.arguments as argument, i (i)}",
+    		source: "(37:12) {#each self.arguments as argument, i (i)}",
     		ctx
     	});
 
@@ -2491,10 +2492,10 @@ var app = (function () {
     	let current;
 
     	function switch_instance_parentRef_binding(value) {
-    		/*switch_instance_parentRef_binding*/ ctx[5](value);
+    		/*switch_instance_parentRef_binding*/ ctx[6](value);
     	}
 
-    	var switch_value = /*constructors*/ ctx[1][/*self*/ ctx[0].callee.type];
+    	var switch_value = /*constructors*/ ctx[2][/*self*/ ctx[0].callee.type];
 
     	function switch_props(ctx) {
     		let switch_instance_props = { isCallee: true, accessor: "callee" };
@@ -2512,6 +2513,7 @@ var app = (function () {
     	if (switch_value) {
     		switch_instance = new switch_value(switch_props(ctx));
     		binding_callbacks.push(() => bind(switch_instance, 'parentRef', switch_instance_parentRef_binding));
+    		switch_instance.$on("changeMethod", /*onMethodChange*/ ctx[3]);
     	}
 
     	let each_value = /*self*/ ctx[0].arguments;
@@ -2547,9 +2549,9 @@ var app = (function () {
     			}
 
     			t1 = text("\n        )");
-    			add_location(span, file$5, 32, 4, 1054);
+    			add_location(span, file$5, 33, 4, 1238);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$5, 31, 0, 1019);
+    			add_location(p, file$5, 32, 0, 1203);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2584,7 +2586,7 @@ var app = (function () {
     				add_flush_callback(() => updating_parentRef = false);
     			}
 
-    			if (switch_value !== (switch_value = /*constructors*/ ctx[1][/*self*/ ctx[0].callee.type])) {
+    			if (switch_value !== (switch_value = /*constructors*/ ctx[2][/*self*/ ctx[0].callee.type])) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -2599,6 +2601,7 @@ var app = (function () {
     				if (switch_value) {
     					switch_instance = new switch_value(switch_props(ctx));
     					binding_callbacks.push(() => bind(switch_instance, 'parentRef', switch_instance_parentRef_binding));
+    					switch_instance.$on("changeMethod", /*onMethodChange*/ ctx[3]);
     					create_component(switch_instance.$$.fragment);
     					transition_in(switch_instance.$$.fragment, 1);
     					mount_component(switch_instance, span, t0);
@@ -2609,7 +2612,7 @@ var app = (function () {
     				switch_instance.$set(switch_instance_changes);
     			}
 
-    			if (dirty & /*self, constructors, defArgNumber*/ 7) {
+    			if (dirty & /*self, constructors, Array, utilityDef*/ 7) {
     				each_value = /*self*/ ctx[0].arguments;
     				validate_each_argument(each_value);
     				group_outros();
@@ -2678,6 +2681,8 @@ var app = (function () {
     }
 
     function instance$6($$self, $$props, $$invalidate) {
+    	let self;
+    	let utilityDef;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('CallExpression', slots, []);
     	let { parentRef } = $$props;
@@ -2690,14 +2695,12 @@ var app = (function () {
     		StringLiteral
     	};
 
-    	let self = parentRef[accessor];
-    	let defArgNumber = () => UtilityDefinitions[self.callee.object.name][self.callee.property.name].args;
-
     	//const store = useStore();
     	const onMethodChange = payloadObj => {
-    		
-    	}; // TODO: commit change to the store using the parentRef from here
-    	//store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
+    		// TODO: commit change to the store using the parentRef from here
+    		//store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
+    		$$invalidate(4, parentRef[accessor] = dropDataTemplates.stringUtil(payloadObj.detail.methodName), parentRef);
+    	};
 
     	const writable_props = ['parentRef', 'accessor'];
 
@@ -2707,33 +2710,33 @@ var app = (function () {
 
     	function switch_instance_parentRef_binding(value) {
     		self = value;
-    		$$invalidate(0, self);
+    		(($$invalidate(0, self), $$invalidate(4, parentRef)), $$invalidate(5, accessor));
     	}
 
     	function callexpression_parentRef_binding(value) {
     		if ($$self.$$.not_equal(self.arguments, value)) {
     			self.arguments = value;
-    			$$invalidate(0, self);
+    			(($$invalidate(0, self), $$invalidate(4, parentRef)), $$invalidate(5, accessor));
     		}
     	}
 
     	function switch_instance_parentRef_binding_1(value) {
     		if ($$self.$$.not_equal(self.arguments, value)) {
     			self.arguments = value;
-    			$$invalidate(0, self);
+    			(($$invalidate(0, self), $$invalidate(4, parentRef)), $$invalidate(5, accessor));
     		}
     	}
 
     	function stringliteral_parentRef_binding(value) {
     		if ($$self.$$.not_equal(self.arguments, value)) {
     			self.arguments = value;
-    			$$invalidate(0, self);
+    			(($$invalidate(0, self), $$invalidate(4, parentRef)), $$invalidate(5, accessor));
     		}
     	}
 
     	$$self.$$set = $$props => {
-    		if ('parentRef' in $$props) $$invalidate(3, parentRef = $$props.parentRef);
-    		if ('accessor' in $$props) $$invalidate(4, accessor = $$props.accessor);
+    		if ('parentRef' in $$props) $$invalidate(4, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(5, accessor = $$props.accessor);
     	};
 
     	$$self.$capture_state = () => ({
@@ -2741,29 +2744,43 @@ var app = (function () {
     		Identifier,
     		StringLiteral,
     		UtilityDefinitions,
+    		dropDataTemplates,
     		parentRef,
     		accessor,
     		constructors,
+    		onMethodChange,
     		self,
-    		defArgNumber,
-    		onMethodChange
+    		utilityDef
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('parentRef' in $$props) $$invalidate(3, parentRef = $$props.parentRef);
-    		if ('accessor' in $$props) $$invalidate(4, accessor = $$props.accessor);
+    		if ('parentRef' in $$props) $$invalidate(4, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(5, accessor = $$props.accessor);
     		if ('self' in $$props) $$invalidate(0, self = $$props.self);
-    		if ('defArgNumber' in $$props) $$invalidate(2, defArgNumber = $$props.defArgNumber);
+    		if ('utilityDef' in $$props) $$invalidate(1, utilityDef = $$props.utilityDef);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*parentRef, accessor*/ 48) {
+    			$$invalidate(0, self = parentRef[accessor]);
+    		}
+
+    		if ($$self.$$.dirty & /*self*/ 1) {
+    			$$invalidate(1, utilityDef = self.callee.type === "MemberExpression"
+    			? UtilityDefinitions[self.callee.object.name][self.callee.property.name].args
+    			: 0);
+    		}
+    	};
+
     	return [
     		self,
+    		utilityDef,
     		constructors,
-    		defArgNumber,
+    		onMethodChange,
     		parentRef,
     		accessor,
     		switch_instance_parentRef_binding,
@@ -2776,7 +2793,7 @@ var app = (function () {
     class CallExpression extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { parentRef: 3, accessor: 4 });
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { parentRef: 4, accessor: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -2788,11 +2805,11 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*parentRef*/ ctx[3] === undefined && !('parentRef' in props)) {
+    		if (/*parentRef*/ ctx[4] === undefined && !('parentRef' in props)) {
     			console.warn("<CallExpression> was created without expected prop 'parentRef'");
     		}
 
-    		if (/*accessor*/ ctx[4] === undefined && !('accessor' in props)) {
+    		if (/*accessor*/ ctx[5] === undefined && !('accessor' in props)) {
     			console.warn("<CallExpression> was created without expected prop 'accessor'");
     		}
     	}
@@ -2816,9 +2833,10 @@ var app = (function () {
 
     /* src/components/flow_objects/ExpressionStatement.svelte generated by Svelte v3.46.2 */
 
+    const { console: console_1 } = globals;
     const file$4 = "src/components/flow_objects/ExpressionStatement.svelte";
 
-    // (40:4) {:else}
+    // (47:4) {:else}
     function create_else_block(ctx) {
     	let p;
 
@@ -2827,7 +2845,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Drag an action here";
     			attr_dev(p, "class", "dull-text");
-    			add_location(p, file$4, 40, 8, 1228);
+    			add_location(p, file$4, 47, 8, 1372);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -2844,14 +2862,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(40:4) {:else}",
+    		source: "(47:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (38:4) {#if self.expression != null}
+    // (45:4) {#if self.expression !== null}
     function create_if_block$1(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -2862,13 +2880,13 @@ var app = (function () {
     		/*switch_instance_parentRef_binding*/ ctx[9](value);
     	}
 
-    	var switch_value = /*constructors*/ ctx[2][/*self*/ ctx[0].expression.type];
+    	var switch_value = /*constructors*/ ctx[4][/*self*/ ctx[3].expression.type];
 
     	function switch_props(ctx) {
     		let switch_instance_props = { accessor: "expression" };
 
-    		if (/*self*/ ctx[0] !== void 0) {
-    			switch_instance_props.parentRef = /*self*/ ctx[0];
+    		if (/*parentRef*/ ctx[0][/*accessor*/ ctx[1]] !== void 0) {
+    			switch_instance_props.parentRef = /*parentRef*/ ctx[0][/*accessor*/ ctx[1]];
     		}
 
     		return {
@@ -2898,13 +2916,13 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const switch_instance_changes = {};
 
-    			if (!updating_parentRef && dirty & /*self*/ 1) {
+    			if (!updating_parentRef && dirty & /*parentRef, accessor*/ 3) {
     				updating_parentRef = true;
-    				switch_instance_changes.parentRef = /*self*/ ctx[0];
+    				switch_instance_changes.parentRef = /*parentRef*/ ctx[0][/*accessor*/ ctx[1]];
     				add_flush_callback(() => updating_parentRef = false);
     			}
 
-    			if (switch_value !== (switch_value = /*constructors*/ ctx[2][/*self*/ ctx[0].expression.type])) {
+    			if (switch_value !== (switch_value = /*constructors*/ ctx[4][/*self*/ ctx[3].expression.type])) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -2948,7 +2966,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(38:4) {#if self.expression != null}",
+    		source: "(45:4) {#if self.expression !== null}",
     		ctx
     	});
 
@@ -2968,7 +2986,7 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*self*/ ctx[0].expression != null) return 0;
+    		if (/*self*/ ctx[3].expression !== null) return 0;
     		return 1;
     	}
 
@@ -2982,10 +3000,10 @@ var app = (function () {
     			t = space();
     			div1 = element("div");
     			attr_dev(div0, "class", "expression-container svelte-1u12z2p");
-    			add_location(div0, file$4, 36, 0, 912);
+    			add_location(div0, file$4, 43, 0, 1040);
     			attr_dev(div1, "class", "line-down-box svelte-1u12z2p");
-    			toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[1]);
-    			add_location(div1, file$4, 43, 0, 1290);
+    			toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
+    			add_location(div1, file$4, 50, 0, 1434);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3002,10 +3020,10 @@ var app = (function () {
     					listen_dev(div0, "dragover", prevent_default(dragOverHandler$1), false, true, false),
     					listen_dev(div0, "drop", stop_propagation(prevent_default(dropModifyObjectHandler)), false, true, true),
     					listen_dev(div1, "dragover", prevent_default(insertDragOverHandler), false, true, false),
-    					listen_dev(div1, "dragenter", prevent_default(/*insertDragEnter*/ ctx[3]), false, true, false),
-    					listen_dev(div1, "dragleave", prevent_default(/*insertDragLeave*/ ctx[4]), false, true, false),
-    					listen_dev(div1, "drop", stop_propagation(prevent_default(/*insertDrop*/ ctx[6])), false, true, true),
-    					listen_dev(div1, "drop", stop_propagation(prevent_default(/*removeInsertHover*/ ctx[5])), false, true, true)
+    					listen_dev(div1, "dragenter", prevent_default(/*insertDragEnter*/ ctx[5]), false, true, false),
+    					listen_dev(div1, "dragleave", prevent_default(/*insertDragLeave*/ ctx[6]), false, true, false),
+    					listen_dev(div1, "drop", stop_propagation(prevent_default(/*insertDrop*/ ctx[8])), false, true, true),
+    					listen_dev(div1, "drop", stop_propagation(prevent_default(/*removeInsertHover*/ ctx[7])), false, true, true)
     				];
 
     				mounted = true;
@@ -3038,8 +3056,8 @@ var app = (function () {
     				if_block.m(div0, null);
     			}
 
-    			if (dirty & /*isOverInsertSpot*/ 2) {
-    				toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[1]);
+    			if (dirty & /*isOverInsertSpot*/ 4) {
+    				toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
     			}
     		},
     		i: function intro(local) {
@@ -3082,81 +3100,97 @@ var app = (function () {
     } // something
 
     function instance$5($$self, $$props, $$invalidate) {
+    	let self;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('ExpressionStatement', slots, []);
     	let { accessor } = $$props;
     	let { parentRef } = $$props;
     	const constructors = { CallExpression };
-    	let self = parentRef[accessor];
     	let isOverInsertSpot = false;
 
     	function insertDragEnter(event) {
-    		$$invalidate(1, isOverInsertSpot = true);
+    		$$invalidate(2, isOverInsertSpot = true);
     	}
 
     	function insertDragLeave(event) {
-    		$$invalidate(1, isOverInsertSpot = false);
+    		$$invalidate(2, isOverInsertSpot = false);
     	}
 
     	function removeInsertHover(event) {
-    		$$invalidate(1, isOverInsertSpot = false);
+    		$$invalidate(2, isOverInsertSpot = false);
     	}
 
-    	const insertDrop = dropInsertHandler({ refObj: parentRef, accessor });
+    	function insertDrop(event) {
+    		parentRef.splice(accessor + 1, 0, {
+    			type: "ExpressionStatement",
+    			expression: null
+    		});
+
+    		console.log(parentRef);
+    		$$invalidate(0, parentRef = [...parentRef]);
+    	}
+
     	const writable_props = ['accessor', 'parentRef'];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<ExpressionStatement> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<ExpressionStatement> was created with unknown prop '${key}'`);
     	});
 
     	function switch_instance_parentRef_binding(value) {
-    		self = value;
-    		$$invalidate(0, self);
+    		if ($$self.$$.not_equal(parentRef[accessor], value)) {
+    			parentRef[accessor] = value;
+    			$$invalidate(0, parentRef);
+    		}
     	}
 
     	$$self.$$set = $$props => {
-    		if ('accessor' in $$props) $$invalidate(7, accessor = $$props.accessor);
-    		if ('parentRef' in $$props) $$invalidate(8, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
+    		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
     	};
 
     	$$self.$capture_state = () => ({
     		CallExpression,
-    		dropInsertHandler,
     		dropModifyObjectHandler,
     		accessor,
     		parentRef,
     		constructors,
-    		self,
     		isOverInsertSpot,
     		dragOverHandler: dragOverHandler$1,
     		insertDragOverHandler,
     		insertDragEnter,
     		insertDragLeave,
     		removeInsertHover,
-    		insertDrop
+    		insertDrop,
+    		self
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('accessor' in $$props) $$invalidate(7, accessor = $$props.accessor);
-    		if ('parentRef' in $$props) $$invalidate(8, parentRef = $$props.parentRef);
-    		if ('self' in $$props) $$invalidate(0, self = $$props.self);
-    		if ('isOverInsertSpot' in $$props) $$invalidate(1, isOverInsertSpot = $$props.isOverInsertSpot);
+    		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
+    		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
+    		if ('isOverInsertSpot' in $$props) $$invalidate(2, isOverInsertSpot = $$props.isOverInsertSpot);
+    		if ('self' in $$props) $$invalidate(3, self = $$props.self);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*parentRef, accessor*/ 3) {
+    			$$invalidate(3, self = parentRef[accessor]);
+    		}
+    	};
+
     	return [
-    		self,
+    		parentRef,
+    		accessor,
     		isOverInsertSpot,
+    		self,
     		constructors,
     		insertDragEnter,
     		insertDragLeave,
     		removeInsertHover,
     		insertDrop,
-    		accessor,
-    		parentRef,
     		switch_instance_parentRef_binding
     	];
     }
@@ -3164,7 +3198,7 @@ var app = (function () {
     class ExpressionStatement extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { accessor: 7, parentRef: 8 });
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { accessor: 1, parentRef: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -3176,12 +3210,12 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*accessor*/ ctx[7] === undefined && !('accessor' in props)) {
-    			console.warn("<ExpressionStatement> was created without expected prop 'accessor'");
+    		if (/*accessor*/ ctx[1] === undefined && !('accessor' in props)) {
+    			console_1.warn("<ExpressionStatement> was created without expected prop 'accessor'");
     		}
 
-    		if (/*parentRef*/ ctx[8] === undefined && !('parentRef' in props)) {
-    			console.warn("<ExpressionStatement> was created without expected prop 'parentRef'");
+    		if (/*parentRef*/ ctx[0] === undefined && !('parentRef' in props)) {
+    			console_1.warn("<ExpressionStatement> was created without expected prop 'parentRef'");
     		}
     	}
 

@@ -1,6 +1,6 @@
 <script>
     import CallExpression from './CallExpression.svelte';
-    import { dropInsertHandler, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
+    import { dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
     
     export let accessor;
     export let parentRef;
@@ -9,7 +9,7 @@
         "CallExpression": CallExpression
     };
 
-    let self = parentRef[accessor];
+    $: self = parentRef[accessor];
     let isOverInsertSpot = false;
     
     function dragOverHandler(event) {
@@ -30,13 +30,20 @@
         isOverInsertSpot = false;
     }
     
-    const insertDrop = dropInsertHandler({ refObj: parentRef, accessor: accessor });
+    function insertDrop(event) {
+        parentRef.splice(accessor + 1, 0, {
+            type: "ExpressionStatement",
+            expression: null
+        });
+        console.log(parentRef);
+        parentRef = [...parentRef];
+    }
 </script>
 
     
 <div on:dragover|preventDefault={dragOverHandler} on:drop|stopPropagation|preventDefault={dropModifyObjectHandler} class="expression-container">
-    {#if self.expression != null}
-        <svelte:component this={constructors[self.expression.type]} accessor={"expression"} bind:parentRef={self} />
+    {#if self.expression !== null}
+        <svelte:component this={constructors[self.expression.type]} accessor={"expression"} bind:parentRef={parentRef[accessor]} />
     {:else}
         <p class="dull-text">Drag an action here</p>
     {/if}

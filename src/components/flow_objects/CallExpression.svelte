@@ -3,6 +3,7 @@
     import Identifier from './Identifier.svelte';
     import StringLiteral from './StringLiteral.svelte';
     import UtilityDefinitions from '../../utility_definitions.js';
+    import dropDataTemplates from '../../drop_data_templates';
 
     export let parentRef;
     export let accessor;
@@ -15,14 +16,14 @@
         "StringLiteral": StringLiteral
     };
 
-    let self = parentRef[accessor];
-    
-    let defArgNumber = () => UtilityDefinitions[self.callee.object.name][self.callee.property.name].args;
+    $: self = parentRef[accessor];
+    $: utilityDef = self.callee.type === "MemberExpression" ? UtilityDefinitions[self.callee.object.name][self.callee.property.name].args : 0;
     
     //const store = useStore();
     const onMethodChange = (payloadObj) => {
         // TODO: commit change to the store using the parentRef from here
         //store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
+        parentRef[accessor] = dropDataTemplates.stringUtil(payloadObj.detail.methodName);
     };
     
     //onUpdated(() => console.log(`updated ${defArgNumber()} ${currentRef.value.callee.property.name}`));
@@ -31,7 +32,7 @@
 
 <p style="padding-left: 10px">
     <span>
-        <svelte:component isCallee={true} accessor={"callee"} bind:parentRef={self} this={constructors[self.callee.type]} />
+        <svelte:component on:changeMethod={onMethodChange} isCallee={true} accessor={"callee"} bind:parentRef={self} this={constructors[self.callee.type]} />
         (
             {#each self.arguments as argument, i (i)}
                 <div class="arg-box">
@@ -42,7 +43,7 @@
                     {/if}
                 </div>
             {:else}
-                {#each defArgNumber() as i}
+                {#each Array(utilityDef) as i}
                     <div class="arg-box">
                         <StringLiteral accessor={i} bind:parentRef={self.arguments} value={""} isArgument={true} />
                     </div>
