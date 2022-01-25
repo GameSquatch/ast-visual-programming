@@ -675,19 +675,6 @@ var app = (function () {
         //store.commit('addNode', stateCommitObj);
     };
 
-    const dropInsertHandler = ({ refObj, accessor }) => (event) => {
-        const dragData = getDragData(event);
-        const expressionStatement = dropDataTemplates.expressionStatement();
-
-        // Since we are creating a new object in a flow, we need to make sure that
-        // we wrap the node we are creating in an Expression Statement
-        if (dragData.type !== 'expressionStatement') {
-            expressionStatement.expression = dropDataTemplates[dragData.type]();
-        }
-
-        refObj[accessor + 1] = expressionStatement;
-        //store.commit('insertNode', commitConfig);
-    };
 
     const dropInsertAstCreation = (event) => {
         const dragData = getDragData(event);
@@ -3685,7 +3672,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Drag an action here";
     			attr_dev(p, "class", "dull-text");
-    			add_location(p, file$4, 55, 8, 1689);
+    			add_location(p, file$4, 55, 8, 1670);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -3840,10 +3827,10 @@ var app = (function () {
     			t = space();
     			div1 = element("div");
     			attr_dev(div0, "class", "expression-container svelte-1u12z2p");
-    			add_location(div0, file$4, 51, 0, 1357);
+    			add_location(div0, file$4, 51, 0, 1338);
     			attr_dev(div1, "class", "line-down-box svelte-1u12z2p");
     			toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
-    			add_location(div1, file$4, 58, 0, 1751);
+    			add_location(div1, file$4, 58, 0, 1732);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3992,7 +3979,6 @@ var app = (function () {
     		CallExpression,
     		UtilityCallExpression,
     		dropInsertAstCreation,
-    		dropInsertHandler,
     		dropModifyObjectHandler,
     		dropDataTemplates,
     		accessor,
@@ -4551,7 +4537,7 @@ var app = (function () {
     			}
 
     			attr_dev(div, "class", "app-window-wrapper svelte-zswezt");
-    			add_location(div, file$2, 27, 0, 774);
+    			add_location(div, file$2, 27, 0, 755);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4658,7 +4644,6 @@ var app = (function () {
     		ExpressionStatement,
     		IfStatement,
     		dropInsertAstCreation,
-    		dropInsertHandler,
     		ast,
     		constructors,
     		dragOverHandler,

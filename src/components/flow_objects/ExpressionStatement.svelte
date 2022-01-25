@@ -1,7 +1,7 @@
 <script>
     import CallExpression from './CallExpression.svelte';
     import UtilityCallExpression from './UtilityCallExpression.svelte';
-    import { dropInsertAstCreation, dropInsertHandler, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
+    import { dropInsertAstCreation, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
     import dropDataTemplates from '../../drop_data_templates';
     
     export let accessor;

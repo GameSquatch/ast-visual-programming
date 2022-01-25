@@ -1,7 +1,7 @@
 <script>
     import ExpressionStatement from '../flow_objects/ExpressionStatement.svelte';
     import IfStatement from '../flow_objects/IfStatement.svelte';
-    import { dropInsertAstCreation, dropInsertHandler } from '../../drag_and_drop_handlers.js';
+    import { dropInsertAstCreation } from '../../drag_and_drop_handlers.js';
     import ast from '../../store/stores.js';
     
     const constructors = {
