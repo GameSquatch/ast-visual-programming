@@ -39,15 +39,12 @@
     function insertDrop(event) {
         const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
 
-        let expression;
+        let expression = dropDataTemplates.expressionStatement();
         if (dragData.type !== "expressionStatement") {
-            expression = dropDataTemplates.stringUtil();
+            expression.expression = dropDataTemplates.stringUtil();
         }
 
-        parentRef.splice(accessor + 1, 0, {
-            type: "ExpressionStatement",
-            expression: expression ?? null
-        });
+        parentRef.splice(accessor + 1, 0, expression);
         
         parentRef = [...parentRef];
     }
