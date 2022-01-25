@@ -38,7 +38,7 @@
                 {/if}
             </div>
         {:else}
-            {#each new Array(UtilityDefinitions[self.utilityName][self.utilityMethod].args) as i}
+            {#each UtilityDefinitions[self.utilityName][self.utilityMethod].args as type, i}
                 <div class="arg-box">
                     <StringLiteral accessor={i} bind:parentRef={self.arguments} value={""} isArgument={true} />
                 </div>

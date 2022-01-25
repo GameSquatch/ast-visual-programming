@@ -2,10 +2,14 @@
 export default {
     "StringUtil": {
         "concat": {
-            "args": 2
+            "args": [
+                "String",
+                "String"
+            ],
+            "returns": "String"
         },
         "trim": {
-            "args": 0
+            "args": []
         }
     }
 };

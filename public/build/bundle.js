@@ -637,18 +637,9 @@ var app = (function () {
 
     var dropDataTemplates = {
         "stringUtil": (method = "concat") => ({
-            type: "CallExpression",
-            callee: {
-                type: "MemberExpression",
-                object: {
-                    type: "Identifier",
-                    name: "StringUtil"
-                },
-                property: {
-                    type: "Identifier",
-                    name: method
-                }
-            },
+            type: "UtilityCallExpression",
+            utilityName: "StringUtil",
+            utilityMethod: method,
             arguments: []
         }),
         "expressionStatement": () => ({
@@ -2024,10 +2015,14 @@ var app = (function () {
     var UtilityDefinitions = {
         "StringUtil": {
             "concat": {
-                "args": 2
+                "args": [
+                    "String",
+                    "String"
+                ],
+                "returns": "String"
             },
             "trim": {
-                "args": 0
+                "args": []
             }
         }
     };
@@ -2849,7 +2844,8 @@ var app = (function () {
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[10] = list[i];
+    	child_ctx[11] = list[i];
+    	child_ctx[10] = i;
     	return child_ctx;
     }
 
@@ -2904,7 +2900,7 @@ var app = (function () {
     function create_else_block_1(ctx) {
     	let each_1_anchor;
     	let current;
-    	let each_value_1 = new Array(UtilityDefinitions[/*self*/ ctx[0].utilityName][/*self*/ ctx[0].utilityMethod].args);
+    	let each_value_1 = UtilityDefinitions[/*self*/ ctx[0].utilityName][/*self*/ ctx[0].utilityMethod].args;
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -2933,8 +2929,8 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*Array, UtilityDefinitions, self*/ 1) {
-    				each_value_1 = new Array(UtilityDefinitions[/*self*/ ctx[0].utilityName][/*self*/ ctx[0].utilityMethod].args);
+    			if (dirty & /*self*/ 1) {
+    				each_value_1 = UtilityDefinitions[/*self*/ ctx[0].utilityName][/*self*/ ctx[0].utilityMethod].args;
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -2996,7 +2992,7 @@ var app = (function () {
     	return block;
     }
 
-    // (41:12) {#each new Array(UtilityDefinitions[self.utilityName][self.utilityMethod].args) as i}
+    // (41:12) {#each UtilityDefinitions[self.utilityName][self.utilityMethod].args as type, i}
     function create_each_block_1(ctx) {
     	let div;
     	let stringliteral;
@@ -3029,7 +3025,7 @@ var app = (function () {
     			div = element("div");
     			create_component(stringliteral.$$.fragment);
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$5, 41, 16, 1463);
+    			add_location(div, file$5, 41, 16, 1458);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3038,7 +3034,6 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const stringliteral_changes = {};
-    			if (dirty & /*self*/ 1) stringliteral_changes.accessor = /*i*/ ctx[10];
 
     			if (!updating_parentRef && dirty & /*self*/ 1) {
     				updating_parentRef = true;
@@ -3067,7 +3062,7 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(41:12) {#each new Array(UtilityDefinitions[self.utilityName][self.utilityMethod].args) as i}",
+    		source: "(41:12) {#each UtilityDefinitions[self.utilityName][self.utilityMethod].args as type, i}",
     		ctx
     	});
 
@@ -3462,7 +3457,7 @@ var app = (function () {
     				each_blocks_1.length = each_value_2.length;
     			}
 
-    			if (dirty & /*self, constructors, Array, UtilityDefinitions*/ 3) {
+    			if (dirty & /*self, constructors, UtilityDefinitions*/ 3) {
     				each_value = /*self*/ ctx[0].arguments;
     				validate_each_argument(each_value);
     				group_outros();

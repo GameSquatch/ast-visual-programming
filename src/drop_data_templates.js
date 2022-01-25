@@ -1,18 +1,9 @@
 
 export default {
     "stringUtil": (method = "concat") => ({
-        type: "CallExpression",
-        callee: {
-            type: "MemberExpression",
-            object: {
-                type: "Identifier",
-                name: "StringUtil"
-            },
-            property: {
-                type: "Identifier",
-                name: method
-            }
-        },
+        type: "UtilityCallExpression",
+        utilityName: "StringUtil",
+        utilityMethod: method,
         arguments: []
     }),
     "expressionStatement": () => ({
