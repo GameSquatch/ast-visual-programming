@@ -4,18 +4,9 @@ const mockData = {
             {
                 "type": "ExpressionStatement",
                 "expression": {
-                    "type": "CallExpression",
-                    "callee": {
-                        "type": "MemberExpression",
-                        "object": {
-                            "type": "Identifier",
-                            "name": "StringUtil"
-                        },
-                        "property": {
-                            "type": "Identifier",
-                            "name": "concat"
-                        }
-                    },
+                    "type": "UtilityCallExpression",
+                    "utilityName": "StringUtil",
+                    "utilityMethod": "concat",
                     "arguments": [
                         {
                             "type": "CallExpression",
@@ -40,18 +31,9 @@ const mockData = {
             {
                 "type": "ExpressionStatement",
                 "expression": {
-                    "type": "CallExpression",
-                    "callee": {
-                        "type": "MemberExpression",
-                        "object": {
-                            "type": "Identifier",
-                            "name": "StringUtil"
-                        },
-                        "property": {
-                            "type": "Identifier",
-                            "name": "concat"
-                        }
-                    },
+                    "type": "UtilityCallExpression",
+                    "utilityName": "StringUtil",
+                    "utilityMethod": "concat",
                     "arguments": [
                         {
                             "type": "StringLiteral",
@@ -67,18 +49,9 @@ const mockData = {
             {
                 "type": "ExpressionStatement",
                 "expression": {
-                    "type": "CallExpression",
-                    "callee": {
-                        "type": "MemberExpression",
-                        "object": {
-                            "type": "Identifier",
-                            "name": "StringUtil"
-                        },
-                        "property": {
-                            "type": "Identifier",
-                            "name": "concat"
-                        }
-                    },
+                    "type": "UtilityCallExpression",
+                    "utilityName": "StringUtil",
+                    "utilityMethod": "concat",
                     "arguments": [
                         {
                             "type": "StringLiteral",

@@ -7,7 +7,7 @@
 </script>
 
 {#if isArgument}
-    <input value={self.value} />
+    <input value={self?.value ?? ""} />
 {:else}
-    <span>"{self.value}"</span>
+    <span>"{self?.value ?? ""}"</span>
 {/if}

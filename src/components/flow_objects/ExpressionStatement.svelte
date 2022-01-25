@@ -1,12 +1,15 @@
 <script>
     import CallExpression from './CallExpression.svelte';
+    import UtilityCallExpression from './UtilityCallExpression.svelte';
     import { dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
+    import dropDataTemplates from '../../drop_data_templates';
     
     export let accessor;
     export let parentRef;
 
     const constructors = {
-        "CallExpression": CallExpression
+        "CallExpression": CallExpression,
+        "UtilityCallExpression": UtilityCallExpression
     };
 
     $: self = parentRef[accessor];
@@ -30,12 +33,22 @@
         isOverInsertSpot = false;
     }
     
+    /**
+     * @param {DragEvent} event
+     */
     function insertDrop(event) {
+        const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
+
+        let expression;
+        if (dragData.type !== "expressionStatement") {
+            expression = dropDataTemplates.stringUtil();
+        }
+
         parentRef.splice(accessor + 1, 0, {
             type: "ExpressionStatement",
-            expression: null
+            expression: expression ?? null
         });
-        console.log(parentRef);
+        
         parentRef = [...parentRef];
     }
 </script>
