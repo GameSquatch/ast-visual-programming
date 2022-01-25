@@ -1,7 +1,7 @@
 <script>
     import ExpressionStatement from '../flow_objects/ExpressionStatement.svelte';
     import IfStatement from '../flow_objects/IfStatement.svelte';
-    import { dropInsertHandler } from '../../drag_and_drop_handlers.js';
+    import { dropInsertAstCreation, dropInsertHandler } from '../../drag_and_drop_handlers.js';
     import ast from '../../store/stores.js';
     
     const constructors = {
@@ -19,7 +19,9 @@
     $: bodyLength = $ast.main.body.length;
     
     const appendDrop = (event) => {
-        dropInsertHandler({ refObj: $ast.main.body, accessor: `${bodyLength}`})(event);
+        const data = dropInsertAstCreation(event);
+
+        $ast.main.body = [...$ast.main.body, data];
     }
 </script>
     

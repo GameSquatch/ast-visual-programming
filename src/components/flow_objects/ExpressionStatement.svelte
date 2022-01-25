@@ -1,7 +1,7 @@
 <script>
     import CallExpression from './CallExpression.svelte';
     import UtilityCallExpression from './UtilityCallExpression.svelte';
-    import { dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
+    import { dropInsertAstCreation, dropInsertHandler, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
     import dropDataTemplates from '../../drop_data_templates';
     
     export let accessor;
@@ -32,19 +32,17 @@
     function removeInsertHover(event) {
         isOverInsertSpot = false;
     }
+
+
+    //$: insertDrop = dropInsertHandler({ refObj: parentRef, accessor });
     
     /**
      * @param {DragEvent} event
      */
     function insertDrop(event) {
-        const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
+        const astNodes = dropInsertAstCreation(event);
 
-        let expression = dropDataTemplates.expressionStatement();
-        if (dragData.type !== "expressionStatement") {
-            expression.expression = dropDataTemplates.stringUtil();
-        }
-
-        parentRef.splice(accessor + 1, 0, expression);
+        parentRef.splice(accessor + 1, 0, astNodes);
         
         parentRef = [...parentRef];
     }

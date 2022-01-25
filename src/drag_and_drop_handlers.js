@@ -23,7 +23,8 @@ const dropModifyObjectHandler = (stateCommitObj) => (event) => {
     //store.commit('addNode', stateCommitObj);
 };
 
-const dropInsertHandler = ({ refObj, accessor }) => (event) => {
+
+const dropInsertAstCreation = (event) => {
     const dragData = getDragData(event);
     const expressionStatement = dropDataTemplates.expressionStatement();
 
@@ -33,8 +34,7 @@ const dropInsertHandler = ({ refObj, accessor }) => (event) => {
         expressionStatement.expression = dropDataTemplates[dragData.type]();
     }
 
-    refObj[accessor + 1] = expressionStatement;
-    //store.commit('insertNode', commitConfig);
-};
+    return expressionStatement;
+}
 
-export { dragStartHandler, dropModifyObjectHandler, dropInsertHandler };
+export { dragStartHandler, dropModifyObjectHandler, dropInsertAstCreation };
