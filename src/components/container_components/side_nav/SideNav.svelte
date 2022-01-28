@@ -1,6 +1,5 @@
 <script>
     import FlowObjectSource from './FlowObjectSource.svelte';
-    import UtilityObject from '../../utilities/UtilityObject.svelte';
     
     const doActionData = {
         type: "expressionStatement"
@@ -17,7 +16,7 @@
     </div>
 
     <div class="utility-pane">
-        <UtilityObject dragData={stringUtilData}>String Util</UtilityObject>
+        <FlowObjectSource dragData={stringUtilData}>String Util</FlowObjectSource>
     </div>
 </div>
     

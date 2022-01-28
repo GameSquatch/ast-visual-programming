@@ -36,3 +36,18 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+.flex {
+    display: flex;
+}
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.w100, .wh100 {
+    width: 100%;
+}
+.h100, .wh100 {
+    height: 100%;
+}

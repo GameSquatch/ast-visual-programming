@@ -2,7 +2,6 @@
     import CallExpression from './CallExpression.svelte';
     import UtilityCallExpression from './UtilityCallExpression.svelte';
     import { dropInsertAstCreation, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
-    import dropDataTemplates from '../../drop_data_templates';
     
     export let accessor;
     export let parentRef;
@@ -34,7 +33,16 @@
     }
 
 
-    //$: insertDrop = dropInsertHandler({ refObj: parentRef, accessor });
+    function dropModify(event) {
+        const node = dropModifyObjectHandler(event);
+
+        if (node.type === 'ExpressionStatement') {
+            parentRef[accessor].expression = null;
+            return;
+        }
+
+        parentRef[accessor].expression = node;
+    }
     
     /**
      * @param {DragEvent} event
@@ -47,9 +55,11 @@
         parentRef = [...parentRef];
     }
 </script>
-
     
-<div on:dragover|preventDefault={dragOverHandler} on:drop|stopPropagation|preventDefault={dropModifyObjectHandler} class="expression-container">
+<div
+    on:dragover|preventDefault={dragOverHandler}
+    on:drop|stopPropagation|preventDefault={dropModify}
+    class="expression-container">
     {#if self.expression !== null}
         <svelte:component this={constructors[self.expression.type]} accessor={"expression"} bind:parentRef={parentRef[accessor]} />
     {:else}

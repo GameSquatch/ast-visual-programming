@@ -24,7 +24,7 @@
 
 <p style="padding-left: 10px">
     <span>{self.utilityName}.<select on:change={onPropertyChange}>
-        {#each Object.getOwnPropertyNames(String.prototype) as method}
+        {#each Object.keys(UtilityDefinitions.StringUtil) as method}
             <option value={method} selected={method === self.utilityMethod}>{method}</option>
         {/each}
     </select></span>

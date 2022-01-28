@@ -15,12 +15,11 @@ const dragStartHandler = (dragData) => (event) => {
     event.dataTransfer.dropEffect = 'copy';
 };
 
-const dropModifyObjectHandler = (stateCommitObj) => (event) => {
+const dropModifyObjectHandler = (event) => {
     const dragData = getDragData(event);
-    const dropTemplateObj = dropDataTemplates[dragData.type]();
+    const replacingNode = dropDataTemplates[dragData.type]();
 
-    stateCommitObj.node = dropTemplateObj;
-    //store.commit('addNode', stateCommitObj);
+    return replacingNode;
 };
 
 
