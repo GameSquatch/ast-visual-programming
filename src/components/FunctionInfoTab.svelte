@@ -1,0 +1,123 @@
+<script>
+    import { slide } from 'svelte/transition';
+    import { quintOut } from 'svelte/easing';
+
+    export let functionInfo;
+
+    let isDisplaying = false;
+
+    function tabToggle(event) {
+        isDisplaying = !isDisplaying;
+    }
+
+    /**
+     * @param {DragEvent} event
+     */
+    function dragStart(event) {
+        event.dataTransfer.setData('text/json', '{"type": "expressionStatement"}');
+        isDisplaying = false;
+        document.addEventListener('drop', functionInfoDrop, true);
+    }
+
+    function functionInfoDrop(event) {
+        isDisplaying = true;
+        document.removeEventListener('drop', functionInfoDrop);
+    }
+
+    function addVariable(event) {
+        functionInfo.variables = [...functionInfo.variables, {
+            "name": "newVar",
+            "type": "String",
+            "value": ""
+        }];
+    }
+
+    function addParameter(event) {
+        functionInfo.parameters = [...functionInfo.parameters, {
+            "name": "newParam",
+            "type": "String"
+        }];
+    }
+</script>
+
+
+<div class="tab-placeholder">
+    <div on:dragstart={dragStart} class="absolute w100 tab-floater">
+        {#if isDisplaying}
+        <div transition:slide="{{ duration: 300, easing: quintOut }}" class="flex tab-content">
+            <div class="flex-1 var-section">
+                <h4>Variables</h4>
+                {#each functionInfo.variables as variable, i}
+                    <div draggable="true" class="flex w-100 space-between var-container">
+                        <div class="flex-1">{variable.name}: </div>
+                        <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
+                        <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>
+                    </div>
+                {/each}
+                <div class="add-var-btn">
+                    <button on:click={addVariable}>Add Variable</button>
+                </div>
+            </div>
+            <div class="flex-1 param-section">
+                <h4>Parameters</h4>
+                {#each functionInfo.parameters as parameter, i}
+                <div draggable="true" on:dragstart={dragStart} class="flex w-100 space-between var-container">
+                    <span>{parameter.name}: </span>
+                    <select value="{parameter.type}"><option value="String">String</option><option value="Integer">Integer</option></select>
+                </div>
+                {/each}
+                <div class="add-var-btn">
+                    <button on:click={addParameter}>Add Variable</button>
+                </div>
+            </div>
+        </div>
+        {/if}
+
+
+        <div class="flex justify-center">
+            <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>Function Info</div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .tab-placeholder {
+        position: relative;
+        padding: 26px 0;
+        z-index: 0;
+    }
+
+    .tab-floater {
+        left: 0;
+        top: 0;
+    }
+
+    .tab-toggle {
+        display: inline-block;
+        padding: 4px 10px;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+        border-left: 2px solid black;
+        border-radius: 0 0 10px 10px;
+        cursor: pointer;
+        z-index: 2;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.4);
+    }
+    .tab-toggle.isDisplaying {
+        background: #555;
+        color: white;
+    }
+
+    .tab-content {
+        height: 200px;
+        overflow: auto;
+        background: #444;
+        color: white;
+        box-shadow: 0 2px 8px 4px rgba(0, 0, 0, 0.45);
+        z-index: 1;
+    }
+    .tab-content > div {
+        padding: 12px;
+    }
+</style>

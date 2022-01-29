@@ -1,6 +1,7 @@
 <script>
     import ExpressionStatement from '../flow_objects/ExpressionStatement.svelte';
     import IfStatement from '../flow_objects/IfStatement.svelte';
+    import FunctionInfoTab from '../FunctionInfoTab.svelte';
     import { dropInsertAstCreation } from '../../drag_and_drop_handlers.js';
     import ast from '../../store/stores.js';
     
@@ -15,17 +16,38 @@
     function dragOverHandler(event) {
         // do stuff like change the cursor
     }
-
-    $: bodyLength = $ast.main.body.length;
     
     const appendDrop = (event) => {
         const data = dropInsertAstCreation(event);
 
         $ast.main.body = [...$ast.main.body, data];
     }
+
+    // Will be fetched with API call
+    const functionInfo = {
+        "variables": [
+            {
+                "name": "aStr",
+                "value": "",
+                "type": "String"
+            },
+            {
+                "name": "aNum",
+                "value": 0,
+                "type": "Integer"
+            }
+        ],
+        "parameters": []
+    };
 </script>
     
-<div on:dragover|preventDefault={dragOverHandler} on:drop|stopPropagation|preventDefault={appendDrop} class="app-window-wrapper">
+<div
+on:dragover|preventDefault={dragOverHandler}
+on:drop|stopPropagation|preventDefault={appendDrop}
+class="app-window-wrapper">
+
+    <FunctionInfoTab {functionInfo} />
+
     {#each $ast.main.body as flowObject, i (i)}
         <svelte:component this={constructors[flowObject.type]} bind:parentRef={$ast.main.body} accessor={i} />
     {/each}

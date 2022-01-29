@@ -45,9 +45,26 @@ body {
     flex-direction: column;
 }
 
+.flex-1 {
+    flex: 1;
+}
+.space-between {
+    justify-content: space-between;
+}
+.align-center {
+    align-items: center;
+}
+.justify-center {
+    justify-content: center;
+}
+
 .w100, .wh100 {
     width: 100%;
 }
 .h100, .wh100 {
     height: 100%;
+}
+
+.absolute {
+    position: absolute;
 }
