@@ -1,14 +1,8 @@
 <script>
-    import ExpressionStatement from '../flow_objects/ExpressionStatement.svelte';
-    import IfStatement from '../flow_objects/IfStatement.svelte';
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
     import { dropInsertAstCreation } from '../../drag_and_drop_handlers.js';
     import ast from '../../store/stores.js';
-    
-    const constructors = {
-        "ExpressionStatement": ExpressionStatement,
-        "IfStatement": IfStatement
-    };
+    import constructors from '../../constructors.js';
     
     /**
      * @param {DragEvent} event

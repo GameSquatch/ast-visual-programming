@@ -1,15 +1,9 @@
 <script>
-    import CallExpression from './CallExpression.svelte';
-    import UtilityCallExpression from './UtilityCallExpression.svelte';
     import { dropInsertAstCreation, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
+    import constructors from '../../constructors.js';
     
     export let accessor;
     export let parentRef;
-
-    const constructors = {
-        "CallExpression": CallExpression,
-        "UtilityCallExpression": UtilityCallExpression
-    };
 
     $: self = parentRef[accessor];
     let isOverInsertSpot = false;

@@ -1,5 +1,5 @@
 
-export default {
+const dropDataTemplates = {
     "stringUtil": (method = "concat") => ({
         type: "UtilityCallExpression",
         utilityName: "StringUtil",
@@ -9,5 +9,15 @@ export default {
     "expressionStatement": () => ({
         type: "ExpressionStatement",
         expression: null
+    }),
+    "AssignmentExpression": (leftIdentifierName = "") => ({
+        type: "AssignmentExpression",
+        left: {
+            type: "Identifier",
+            name: leftIdentifierName
+        },
+        right: null
     })
 };
+
+export default dropDataTemplates;

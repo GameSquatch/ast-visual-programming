@@ -1,13 +1,9 @@
 <script>
     import FlowObjectSource from './FlowObjectSource.svelte';
+    import dropDataTemplates from '../../../drop_data_templates';
     
-    const doActionData = {
-        type: "expressionStatement"
-    };
-    
-    const stringUtilData = {
-        type: "stringUtil"
-    }
+    const doActionData = dropDataTemplates.expressionStatement();
+    const stringUtilData = dropDataTemplates.stringUtil();
 </script>
 
 <div class="side-nav-wrapper">

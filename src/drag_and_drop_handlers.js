@@ -17,7 +17,7 @@ const dragStartHandler = (dragData) => (event) => {
 
 const dropModifyObjectHandler = (event) => {
     const dragData = getDragData(event);
-    const replacingNode = dropDataTemplates[dragData.type]();
+    const replacingNode = dragData;
 
     return replacingNode;
 };
@@ -29,8 +29,8 @@ const dropInsertAstCreation = (event) => {
 
     // Since we are creating a new object in a flow, we need to make sure that
     // we wrap the node we are creating in an Expression Statement
-    if (dragData.type !== 'expressionStatement') {
-        expressionStatement.expression = dropDataTemplates[dragData.type]();
+    if (dragData.type !== 'ExpressionStatement') {
+        expressionStatement.expression = dragData;
     }
 
     return expressionStatement;

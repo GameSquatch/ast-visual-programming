@@ -1,10 +1,12 @@
 <script>
     import { slide } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
+    import dropDataTemplates from '../drop_data_templates.js';
 
     export let functionInfo;
 
     let isDisplaying = false;
+    let reShowTimer = null;
 
     function tabToggle(event) {
         isDisplaying = !isDisplaying;
@@ -13,8 +15,8 @@
     /**
      * @param {DragEvent} event
      */
-    function dragStart(event) {
-        event.dataTransfer.setData('text/json', '{"type": "expressionStatement"}');
+    const dragStart = (variableDragged) => (event) => {
+        event.dataTransfer.setData('text/json', JSON.stringify(dropDataTemplates.AssignmentExpression(variableDragged.name)));
         isDisplaying = false;
         document.addEventListener('drop', functionInfoDrop, true);
     }
@@ -22,6 +24,7 @@
     function functionInfoDrop(event) {
         isDisplaying = true;
         document.removeEventListener('drop', functionInfoDrop);
+        reShowTimer = setTimeout(tabToggle, 1200);
     }
 
     function addVariable(event) {
@@ -38,17 +41,24 @@
             "type": "String"
         }];
     }
+
+    function stopTimer(event) {
+        if (reShowTimer) {
+            clearTimeout(reShowTimer);
+            reShowTimer = null;
+        }
+    }
 </script>
 
 
 <div class="tab-placeholder">
-    <div on:dragstart={dragStart} class="absolute w100 tab-floater">
+    <div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
         {#if isDisplaying}
         <div transition:slide="{{ duration: 300, easing: quintOut }}" class="flex tab-content">
             <div class="flex-1 var-section">
                 <h4>Variables</h4>
                 {#each functionInfo.variables as variable, i}
-                    <div draggable="true" class="flex w-100 space-between var-container">
+                    <div on:dragstart={dragStart(variable)} draggable="true" class="flex w-100 space-between var-container">
                         <div class="flex-1">{variable.name}: </div>
                         <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
                         <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>

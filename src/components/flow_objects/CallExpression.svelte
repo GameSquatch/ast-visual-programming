@@ -1,20 +1,11 @@
 <script>
-    import MemberExpression from './MemberExpression.svelte';
-    import Identifier from './Identifier.svelte';
     import StringLiteral from './StringLiteral.svelte';
     import UtilityDefinitions from '../../utility_definitions.js';
     import dropDataTemplates from '../../drop_data_templates';
+    import constructors from '../../constructors.js';
 
     export let parentRef;
     export let accessor;
-
-    //console.log(callee);
-
-    const constructors = {
-        "MemberExpression": MemberExpression,
-        "Identifier": Identifier,
-        "StringLiteral": StringLiteral
-    };
 
     $: self = parentRef[accessor];
     $: utilityDef = self.callee.type === "MemberExpression" ? UtilityDefinitions[self.callee.object.name][self.callee.property.name].args : 0;

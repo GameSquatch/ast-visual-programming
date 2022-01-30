@@ -1,17 +1,12 @@
 <script>
-    import CallExpression from "./CallExpression.svelte";
     import StringLiteral from './StringLiteral.svelte';
     import UtilityDefinitions from '../../utility_definitions.js';
+    import constructors from '../../constructors.js';
 
     export let parentRef;
     export let accessor;
 
     $: self = parentRef[accessor];
-
-    const constructors = {
-        "CallExpression": CallExpression,
-        "StringLiteral": StringLiteral
-    };
 
     const onPropertyChange = (event) => {
         parentRef[accessor] = {
