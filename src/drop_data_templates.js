@@ -1,20 +1,22 @@
 
 const dropDataTemplates = {
-    "stringUtil": (method = "concat") => ({
+    "stringUtil": (method = "concat", returnType = "String") => ({
         type: "UtilityCallExpression",
         utilityName: "StringUtil",
         utilityMethod: method,
-        arguments: []
+        arguments: [],
+        returns: returnType
     }),
     "expressionStatement": () => ({
         type: "ExpressionStatement",
         expression: null
     }),
-    "AssignmentExpression": (leftIdentifierName = "") => ({
+    "AssignmentExpression": ({ name = "", type = ""}) => ({
         type: "AssignmentExpression",
         left: {
             type: "Identifier",
-            name: leftIdentifierName
+            name,
+            returns: type
         },
         right: null
     })

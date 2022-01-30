@@ -5,11 +5,27 @@
     export let accessor;
 
     $: self = parentRef[accessor];
+
+    const handleDrop = (event) => {
+        const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
+
+        self.right = dragData;
+    ;}
 </script>
 
-<span>Assign <strong>{self.left.name}</strong> to</span>
+<p>Assign <strong>{self.left.name}: {self.left.returns}</strong> to</p>
+<div class="assign-right-block" on:dragover={()=>{}} on:drop|stopPropagation={handleDrop}>
 {#if self.right === null}
-    <p>Drag expression here</p>
+    Drag an expression here
 {:else}
     <svelte:component this={constructors[self.right.type]} bind:parentRef={self} accessor={"right"} />
 {/if}
+</div>
+
+
+<style>
+    .assign-right-block {
+        padding: 10px;
+        border: 1px solid black;
+    }
+</style>

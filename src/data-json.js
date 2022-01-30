@@ -1,5 +1,20 @@
 const mockData = {
     "main": {
+        "info": {
+            "variables": [
+                {
+                    "name": "aStr",
+                    "value": "",
+                    "type": "String"
+                },
+                {
+                    "name": "aNum",
+                    "value": 0,
+                    "type": "Integer"
+                }
+            ],
+            "parameters": [],
+        },
         "body": [
             {
                 "type": "ExpressionStatement",
@@ -9,23 +24,17 @@ const mockData = {
                     "utilityMethod": "concat",
                     "arguments": [
                         {
-                            "type": "CallExpression",
-                            "callee": {
-                                "type": "Identifier",
-                                "name": "thing"
-                            },
-                            "arguments": [
-                                {
-                                    "type": "StringLiteral",
-                                    "value": "A long string teehee"
-                                }
-                            ]
+                            "type": "StringLiteral",
+                            "value": "A long string teehee",
+                            "returns": "String"
                         },
                         {
                             "type": "StringLiteral",
-                            "value": " world!"
+                            "value": " world!",
+                            "returns": "String"
                         }
-                    ]
+                    ],
+                    "returns": "String"
                 }
             },
             {
@@ -43,7 +52,8 @@ const mockData = {
                             "type": "StringLiteral",
                             "value": " world!"
                         }
-                    ]
+                    ],
+                    "returns": "String"
                 }
             },
             {
@@ -61,7 +71,8 @@ const mockData = {
                             "type": "StringLiteral",
                             "value": " concatenation!"
                         }
-                    ]
+                    ],
+                    "returns": "String"
                 }
             }
         ]
