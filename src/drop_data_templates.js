@@ -7,7 +7,7 @@ const dropDataTemplates = {
         arguments: [],
         returns: returnType
     }),
-    "expressionStatement": () => ({
+    "expression": () => ({
         type: "ExpressionStatement",
         expression: null
     }),
@@ -19,6 +19,20 @@ const dropDataTemplates = {
             returns: type
         },
         right: null
+    }),
+    "variableExpression": ({ name = "", type = ""}) => ({
+        type: "AssignmentExpression",
+        left: {
+            type: "Identifier",
+            name,
+            returns: type
+        },
+        right: null
+    }),
+    "variableValue": ({ name = "", type = "" }) => ({
+        type: "Identifier",
+        name,
+        returns: type
     })
 };
 

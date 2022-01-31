@@ -1,9 +1,8 @@
 <script>
     import FlowObjectSource from './FlowObjectSource.svelte';
-    import dropDataTemplates from '../../../drop_data_templates';
     
-    const doActionData = dropDataTemplates.expressionStatement();
-    const stringUtilData = dropDataTemplates.stringUtil();
+    const doActionData = { "dragType": "expression" }
+    const stringUtilData = { "dragType": "stringUtil" }
 </script>
 
 <div class="side-nav-wrapper">

@@ -1,7 +1,6 @@
 <script>
     import { slide } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import dropDataTemplates from '../drop_data_templates.js';
 
     export let info;
 
@@ -16,10 +15,15 @@
      * @param {DragEvent} event
      */
     const dragStart = (variableDragged) => (event) => {
-        event.dataTransfer.setData('text/json', JSON.stringify(dropDataTemplates.AssignmentExpression(variableDragged)));
+        event.dataTransfer.setData('text/json', JSON.stringify({
+            dragType: "variable",
+            data: {
+                ...variableDragged
+            }
+        }));
         isDisplaying = false;
         document.addEventListener('drop', functionInfoDrop, true);
-    }
+    };
 
     function functionInfoDrop(event) {
         isDisplaying = true;
@@ -57,8 +61,14 @@
         <div transition:slide="{{ duration: 300, easing: quintOut }}" class="flex tab-content">
             <div class="flex-1 var-section">
                 <h4>Variables</h4>
+                <div class="flex w100 space-between var-container">
+                    <div class="flex-1">Name</div>
+                    <div class="flex-1">Type</div>
+                    <div class="flex-1">Default Value</div>
+                </div>
+
                 {#each info.variables as variable, i}
-                    <div on:dragstart={dragStart(variable)} draggable="true" class="flex w-100 space-between var-container">
+                    <div on:dragstart={dragStart(variable)} draggable="true" class="flex w100 space-between var-container">
                         <div class="flex-1">{variable.name}: </div>
                         <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
                         <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>
@@ -71,7 +81,7 @@
             <div class="flex-1 param-section">
                 <h4>Parameters</h4>
                 {#each info.parameters as parameter, i}
-                <div draggable="true" on:dragstart={dragStart} class="flex w-100 space-between var-container">
+                <div draggable="true" on:dragstart={dragStart} class="flex w100 space-between var-container">
                     <span>{parameter.name}: </span>
                     <select value="{parameter.type}"><option value="String">String</option><option value="Integer">Integer</option></select>
                 </div>

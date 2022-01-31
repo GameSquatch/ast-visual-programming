@@ -1,5 +1,5 @@
 <script>
-    import { dropInsertAstCreation, dropModifyObjectHandler } from '../../drag_and_drop_handlers.js';
+    import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js';
     import constructors from '../../constructors.js';
     
     export let accessor;
@@ -28,12 +28,7 @@
 
 
     function dropModify(event) {
-        const node = dropModifyObjectHandler(event);
-
-        if (node.type === 'ExpressionStatement') {
-            parentRef[accessor].expression = null;
-            return;
-        }
+        const node = createDropNodeFromContext('expression', event);
 
         parentRef[accessor].expression = node;
     }
@@ -42,7 +37,11 @@
      * @param {DragEvent} event
      */
     function insertDrop(event) {
-        const astNodes = dropInsertAstCreation(event);
+        const astNodes = createDropNodeFromContext('flow', event);
+
+        if (astNodes === null) {
+            return;
+        }
 
         parentRef.splice(accessor + 1, 0, astNodes);
         

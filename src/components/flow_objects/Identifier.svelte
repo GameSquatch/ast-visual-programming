@@ -7,7 +7,7 @@
     export let isCallee = false;
     export let isCalleeProperty = false;
 
-    let self = parentRef[accessor];
+    $: self = parentRef[accessor];
 
     let dispatch = createEventDispatcher();
     

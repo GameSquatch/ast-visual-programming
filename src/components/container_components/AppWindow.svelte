@@ -1,6 +1,6 @@
 <script>
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
-    import { dropInsertAstCreation } from '../../drag_and_drop_handlers.js';
+    import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js';
     import ast from '../../store/stores.js';
     import constructors from '../../constructors.js';
     
@@ -12,7 +12,7 @@
     }
     
     const appendDrop = (event) => {
-        const data = dropInsertAstCreation(event);
+        const data = createDropNodeFromContext('flow', event);
 
         $ast.main.body = [...$ast.main.body, data];
     }

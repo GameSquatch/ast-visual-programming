@@ -1,5 +1,6 @@
 import dropDataTemplates from './drop_data_templates.js';
 
+
 const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
 /**
  * @callback DragCallback
@@ -15,25 +16,51 @@ const dragStartHandler = (dragData) => (event) => {
     event.dataTransfer.dropEffect = 'copy';
 };
 
-const dropModifyObjectHandler = (event) => {
-    const dragData = getDragData(event);
-    const replacingNode = dragData;
 
-    return replacingNode;
-};
-
-
-const dropInsertAstCreation = (event) => {
-    const dragData = getDragData(event);
-    const expressionStatement = dropDataTemplates.expressionStatement();
-
-    // Since we are creating a new object in a flow, we need to make sure that
-    // we wrap the node we are creating in an Expression Statement
-    if (dragData.type !== 'ExpressionStatement') {
-        expressionStatement.expression = dragData;
-    }
-
-    return expressionStatement;
+const wrapWithExpression = (node) => {
+    const expr = dropDataTemplates.expression();
+    expr.expression = node;
+    return expr;
 }
 
-export { dragStartHandler, dropModifyObjectHandler, dropInsertAstCreation };
+
+const dropContextMap = {
+    // dragType
+    variable: {
+        // context
+        flow: (dragData) => wrapWithExpression(dropDataTemplates.variableExpression(dragData.data)),
+        expression: (dragData) => dropDataTemplates.variableExpression(dragData.data),
+        assignment: (dragData) => dropDataTemplates.variableValue(dragData.data),
+        argument: (dragData) => dropDataTemplates.variableValue(dragData.data)
+    },
+    stringUtil: {
+        flow: (dragData) => wrapWithExpression(dropDataTemplates.stringUtil()),
+        expression: (dragData) => dropDataTemplates.stringUtil(),
+        assignment: (dragData) => dropDataTemplates.stringUtil(),
+        argument: (dragData) => dropDataTemplates.stringUtil()
+    },
+    expression: {
+        flow: (dragData) => dropDataTemplates.expression(),
+        expression: (dragData) => null,
+        assignment: (dragData) => null,
+        argument: (dragData) => null
+    }
+}
+
+
+const createDropNodeFromContext = (context, dragEvent, type) => {
+    const dragData = getDragData(dragEvent);
+
+    // Type checking
+    if ((dragData.data?.type ?? false) && type !== undefined) {
+        if (dragData.data.type !== type) {
+            return null;
+        }
+    }
+
+    let node = dropContextMap[dragData.dragType][context](dragData);
+
+    return node;
+};
+
+export { dragStartHandler, createDropNodeFromContext };

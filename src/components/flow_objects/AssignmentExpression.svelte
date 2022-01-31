@@ -1,5 +1,7 @@
 <script>
     import constructors from '../../constructors.js';
+    import dropDataTemplates from '../../drop_data_templates.js';
+    import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js';
 
     export let parentRef;
     export let accessor;
@@ -7,9 +9,9 @@
     $: self = parentRef[accessor];
 
     const handleDrop = (event) => {
-        const dragData = JSON.parse(event.dataTransfer.getData('text/json'));
+        const nNode = createDropNodeFromContext('assignment', event, self.left.returns);
 
-        self.right = dragData;
+        parentRef[accessor].right = nNode;
     ;}
 </script>
 
