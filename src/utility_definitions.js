@@ -1,5 +1,5 @@
 
-export default {
+const typeDefs =  {
     "StringUtil": {
         "concat": {
             "args": [
@@ -15,6 +15,13 @@ export default {
             ],
             "inifiniteArgs": false,
             "returns": "String"
+        },
+        "length": {
+            "args": [
+                "String"
+            ],
+            "infiniteArgs": false,
+            "returns": "Integer"
         }
     },
     "String": {
@@ -78,3 +85,5 @@ export default {
         }
     }
 };
+
+export default typeDefs;

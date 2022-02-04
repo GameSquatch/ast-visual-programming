@@ -1,6 +1,5 @@
 <script>
     import constructors from '../../constructors.js';
-    import dropDataTemplates from '../../drop_data_templates.js';
     import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js';
 
     export let parentRef;
@@ -11,6 +10,8 @@
     const handleDrop = (event) => {
         const nNode = createDropNodeFromContext('assignment', event, self.left.returns);
 
+        if (nNode === null) return;
+
         parentRef[accessor].right = nNode;
     ;}
 </script>
@@ -20,7 +21,7 @@
 {#if self.right === null}
     Drag an expression here
 {:else}
-    <svelte:component this={constructors[self.right.type]} bind:parentRef={self} accessor={"right"} />
+    <svelte:component this={constructors[self.right.type]} bind:parentRef={self} accessor={"right"} filterType={self.left.returns} />
 {/if}
 </div>
 

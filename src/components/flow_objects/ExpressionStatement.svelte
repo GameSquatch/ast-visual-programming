@@ -48,7 +48,8 @@
         parentRef = [...parentRef];
     }
 </script>
-    
+
+
 <div
     on:dragover|preventDefault={dragOverHandler}
     on:drop|stopPropagation|preventDefault={dropModify}

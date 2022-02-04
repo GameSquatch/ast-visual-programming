@@ -3,7 +3,7 @@
     export let accessor;
     export let isArgument = false;
 
-    let self = parentRef[accessor];
+    $: self = parentRef[accessor];
 </script>
 
 {#if isArgument}
