@@ -22,7 +22,8 @@
             }
         }));
         isDisplaying = false;
-        document.addEventListener('drop', functionInfoDrop, true);
+        // Will auto-drop the menu after you've dropped a variable or parameter
+        // document.addEventListener('drop', functionInfoDrop, true);
     };
 
     function functionInfoDrop(event) {
@@ -105,7 +106,7 @@
     .tab-placeholder {
         position: relative;
         padding: 26px 0;
-        z-index: 0;
+        z-index: 2;
     }
 
     .tab-floater {
@@ -121,7 +122,7 @@
         border-left: 2px solid black;
         border-radius: 0 0 10px 10px;
         cursor: pointer;
-        z-index: 2;
+        z-index: 4;
         box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.4);
     }
     .tab-toggle.isDisplaying {
@@ -135,7 +136,7 @@
         background: #444;
         color: white;
         box-shadow: 0 2px 8px 4px rgba(0, 0, 0, 0.45);
-        z-index: 1;
+        z-index: 3;
     }
     .tab-content > div {
         padding: 12px;

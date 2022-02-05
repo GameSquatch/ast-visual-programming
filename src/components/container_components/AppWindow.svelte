@@ -3,6 +3,8 @@
     import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js';
     import ast from '../../store/stores.js';
     import constructors from '../../constructors.js';
+    import { squish } from '../../custom_animations.js';
+    import { flip } from 'svelte/animate';
     
     /**
      * @param {DragEvent} event
@@ -25,8 +27,10 @@ class="app-window-wrapper">
 
     <FunctionInfoTab bind:info={$ast.main.info} />
 
-    {#each $ast.main.body as flowObject, i (i)}
-        <svelte:component this={constructors[flowObject.type]} bind:parentRef={$ast.main.body} accessor={i} />
+    {#each $ast.main.body as flowObject, i (flowObject.id)}
+        <div animate:flip="{{duration: 400}}" transition:squish="{{duration: 300, opacity: 0.4, start: 0.2}}">
+            <svelte:component this={constructors[flowObject.type]} bind:parentRef={$ast.main.body} accessor={i} />
+        </div>
     {/each}
 </div>
     
@@ -35,5 +39,6 @@ class="app-window-wrapper">
         flex: 1;
         overflow: auto;
         background: #efefef;
+        z-index: 0;
     }
 </style>

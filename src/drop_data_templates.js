@@ -9,6 +9,7 @@ const dropDataTemplates = {
     }),
     "expression": () => ({
         type: "ExpressionStatement",
+        id: Symbol(),
         expression: null
     }),
     "AssignmentExpression": ({ name = "", type = ""}) => ({

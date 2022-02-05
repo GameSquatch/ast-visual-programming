@@ -301,6 +301,75 @@ var app = (function () {
         });
     }
 
+    function create_animation(node, from, fn, params) {
+        if (!from)
+            return noop;
+        const to = node.getBoundingClientRect();
+        if (from.left === to.left && from.right === to.right && from.top === to.top && from.bottom === to.bottom)
+            return noop;
+        const { delay = 0, duration = 300, easing = identity, 
+        // @ts-ignore todo: should this be separated from destructuring? Or start/end added to public api and documentation?
+        start: start_time = now() + delay, 
+        // @ts-ignore todo:
+        end = start_time + duration, tick = noop, css } = fn(node, { from, to }, params);
+        let running = true;
+        let started = false;
+        let name;
+        function start() {
+            if (css) {
+                name = create_rule(node, 0, 1, duration, delay, easing, css);
+            }
+            if (!delay) {
+                started = true;
+            }
+        }
+        function stop() {
+            if (css)
+                delete_rule(node, name);
+            running = false;
+        }
+        loop(now => {
+            if (!started && now >= start_time) {
+                started = true;
+            }
+            if (started && now >= end) {
+                tick(1, 0);
+                stop();
+            }
+            if (!running) {
+                return false;
+            }
+            if (started) {
+                const p = now - start_time;
+                const t = 0 + 1 * easing(p / duration);
+                tick(t, 1 - t);
+            }
+            return true;
+        });
+        start();
+        tick(0, 1);
+        return stop;
+    }
+    function fix_position(node) {
+        const style = getComputedStyle(node);
+        if (style.position !== 'absolute' && style.position !== 'fixed') {
+            const { width, height } = style;
+            const a = node.getBoundingClientRect();
+            node.style.position = 'absolute';
+            node.style.width = width;
+            node.style.height = height;
+            add_transform(node, a);
+        }
+    }
+    function add_transform(node, a) {
+        const b = node.getBoundingClientRect();
+        if (a.left !== b.left || a.top !== b.top) {
+            const style = getComputedStyle(node);
+            const transform = style.transform === 'none' ? '' : style.transform;
+            node.style.transform = `${transform} translate(${a.left - b.left}px, ${a.top - b.top}px)`;
+        }
+    }
+
     let current_component;
     function set_current_component(component) {
         current_component = component;
@@ -586,6 +655,10 @@ var app = (function () {
         transition_out(block, 1, 1, () => {
             lookup.delete(block.key);
         });
+    }
+    function fix_and_outro_and_destroy_block(block, lookup) {
+        block.f();
+        outro_and_destroy_block(block, lookup);
     }
     function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
         let o = old_blocks.length;
@@ -901,6 +974,7 @@ var app = (function () {
         }),
         "expression": () => ({
             type: "ExpressionStatement",
+            id: Symbol(),
             expression: null
         }),
         "AssignmentExpression": ({ name = "", type = ""}) => ({
@@ -1481,7 +1555,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (60:8) {#if isDisplaying}
+    // (61:8) {#if isDisplaying}
     function create_if_block$6(ctx) {
     	let div8;
     	let div5;
@@ -1564,28 +1638,28 @@ var app = (function () {
     			div6 = element("div");
     			button1 = element("button");
     			button1.textContent = "Add Variable";
-    			add_location(h40, file$a, 62, 16, 1637);
+    			add_location(h40, file$a, 63, 16, 1720);
     			attr_dev(div0, "class", "flex-1");
-    			add_location(div0, file$a, 64, 20, 1744);
+    			add_location(div0, file$a, 65, 20, 1827);
     			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$a, 65, 20, 1795);
+    			add_location(div1, file$a, 66, 20, 1878);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$a, 66, 20, 1846);
+    			add_location(div2, file$a, 67, 20, 1929);
     			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$a, 63, 16, 1672);
-    			add_location(button0, file$a, 77, 20, 2539);
+    			add_location(div3, file$a, 64, 16, 1755);
+    			add_location(button0, file$a, 78, 20, 2622);
     			attr_dev(div4, "class", "add-var-btn");
-    			add_location(div4, file$a, 76, 16, 2493);
-    			attr_dev(div5, "class", "flex-1 var-section svelte-1ug8hm1");
-    			add_location(div5, file$a, 61, 12, 1588);
-    			add_location(h41, file$a, 81, 16, 2697);
-    			add_location(button1, file$a, 89, 20, 3185);
+    			add_location(div4, file$a, 77, 16, 2576);
+    			attr_dev(div5, "class", "flex-1 var-section svelte-15a0y1j");
+    			add_location(div5, file$a, 62, 12, 1671);
+    			add_location(h41, file$a, 82, 16, 2780);
+    			add_location(button1, file$a, 90, 20, 3268);
     			attr_dev(div6, "class", "add-var-btn");
-    			add_location(div6, file$a, 88, 16, 3139);
-    			attr_dev(div7, "class", "flex-1 param-section svelte-1ug8hm1");
-    			add_location(div7, file$a, 80, 12, 2646);
-    			attr_dev(div8, "class", "flex tab-content svelte-1ug8hm1");
-    			add_location(div8, file$a, 60, 8, 1488);
+    			add_location(div6, file$a, 89, 16, 3222);
+    			attr_dev(div7, "class", "flex-1 param-section svelte-15a0y1j");
+    			add_location(div7, file$a, 81, 12, 2729);
+    			attr_dev(div8, "class", "flex tab-content svelte-15a0y1j");
+    			add_location(div8, file$a, 61, 8, 1571);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div8, anchor);
@@ -1710,14 +1784,14 @@ var app = (function () {
     		block,
     		id: create_if_block$6.name,
     		type: "if",
-    		source: "(60:8) {#if isDisplaying}",
+    		source: "(61:8) {#if isDisplaying}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (70:16) {#each info.variables as variable, i}
+    // (71:16) {#each info.variables as variable, i}
     function create_each_block_1$2(ctx) {
     	let div3;
     	let div0;
@@ -1757,23 +1831,23 @@ var app = (function () {
     			div2 = element("div");
     			input = element("input");
     			attr_dev(div0, "class", "flex-1");
-    			add_location(div0, file$a, 71, 24, 2112);
+    			add_location(div0, file$a, 72, 24, 2195);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$a, 72, 76, 2232);
+    			add_location(option0, file$a, 73, 76, 2315);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$a, 72, 114, 2270);
-    			add_location(select, file$a, 72, 44, 2200);
+    			add_location(option1, file$a, 73, 114, 2353);
+    			add_location(select, file$a, 73, 44, 2283);
     			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$a, 72, 24, 2180);
+    			add_location(div1, file$a, 73, 24, 2263);
     			attr_dev(input, "type", "text");
-    			add_location(input, file$a, 73, 44, 2370);
+    			add_location(input, file$a, 74, 44, 2453);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$a, 73, 24, 2350);
+    			add_location(div2, file$a, 74, 24, 2433);
     			attr_dev(div3, "draggable", "true");
     			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$a, 70, 20, 1984);
+    			add_location(div3, file$a, 71, 20, 2067);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div3, anchor);
@@ -1832,14 +1906,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1$2.name,
     		type: "each",
-    		source: "(70:16) {#each info.variables as variable, i}",
+    		source: "(71:16) {#each info.variables as variable, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (83:16) {#each info.parameters as parameter, i}
+    // (84:16) {#each info.parameters as parameter, i}
     function create_each_block$4(ctx) {
     	let div;
     	let span;
@@ -1866,17 +1940,17 @@ var app = (function () {
     			option0.textContent = "String";
     			option1 = element("option");
     			option1.textContent = "Integer";
-    			add_location(span, file$a, 84, 20, 2903);
+    			add_location(span, file$a, 85, 20, 2986);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$a, 85, 53, 2988);
+    			add_location(option0, file$a, 86, 53, 3071);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$a, 85, 91, 3026);
-    			add_location(select, file$a, 85, 20, 2955);
+    			add_location(option1, file$a, 86, 91, 3109);
+    			add_location(select, file$a, 86, 20, 3038);
     			attr_dev(div, "draggable", "true");
     			attr_dev(div, "class", "flex w100 space-between var-container");
-    			add_location(div, file$a, 83, 16, 2789);
+    			add_location(div, file$a, 84, 16, 2872);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1912,7 +1986,7 @@ var app = (function () {
     		block,
     		id: create_each_block$4.name,
     		type: "each",
-    		source: "(83:16) {#each info.parameters as parameter, i}",
+    		source: "(84:16) {#each info.parameters as parameter, i}",
     		ctx
     	});
 
@@ -1939,15 +2013,15 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			div0.textContent = "Function Info";
-    			attr_dev(div0, "class", "tab-toggle svelte-1ug8hm1");
+    			attr_dev(div0, "class", "tab-toggle svelte-15a0y1j");
     			toggle_class(div0, "isDisplaying", /*isDisplaying*/ ctx[1]);
-    			add_location(div0, file$a, 97, 12, 3366);
+    			add_location(div0, file$a, 98, 12, 3449);
     			attr_dev(div1, "class", "flex justify-center");
-    			add_location(div1, file$a, 96, 8, 3320);
-    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-1ug8hm1");
-    			add_location(div2, file$a, 58, 4, 1387);
-    			attr_dev(div3, "class", "tab-placeholder svelte-1ug8hm1");
-    			add_location(div3, file$a, 57, 0, 1353);
+    			add_location(div1, file$a, 97, 8, 3403);
+    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-15a0y1j");
+    			add_location(div2, file$a, 59, 4, 1470);
+    			attr_dev(div3, "class", "tab-placeholder svelte-15a0y1j");
+    			add_location(div3, file$a, 58, 0, 1436);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2047,8 +2121,8 @@ var app = (function () {
     		}));
 
     		$$invalidate(1, isDisplaying = false);
-    		document.addEventListener('drop', functionInfoDrop, true);
-    	};
+    	}; // Will auto-drop the menu after you've dropped a variable or parameter
+    	// document.addEventListener('drop', functionInfoDrop, true);
 
     	function functionInfoDrop(event) {
     		$$invalidate(1, isDisplaying = true);
@@ -2230,6 +2304,7 @@ var app = (function () {
             "body": [
                 {
                     "type": "ExpressionStatement",
+                    "id": Symbol(),
                     "expression": {
                         "type": "UtilityCallExpression",
                         "utilityName": "StringUtil",
@@ -2251,6 +2326,7 @@ var app = (function () {
                 },
                 {
                     "type": "ExpressionStatement",
+                    "id": Symbol(),
                     "expression": {
                         "type": "UtilityCallExpression",
                         "utilityName": "StringUtil",
@@ -2270,6 +2346,7 @@ var app = (function () {
                 },
                 {
                     "type": "ExpressionStatement",
+                    "id": Symbol(),
                     "expression": {
                         "type": "UtilityCallExpression",
                         "utilityName": "StringUtil",
@@ -2298,7 +2375,7 @@ var app = (function () {
     /* src/components/flow_objects/ExpressionStatement.svelte generated by Svelte v3.46.2 */
     const file$9 = "src/components/flow_objects/ExpressionStatement.svelte";
 
-    // (59:4) {:else}
+    // (70:4) {:else}
     function create_else_block$5(ctx) {
     	let p;
 
@@ -2307,7 +2384,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Drag an action here";
     			attr_dev(p, "class", "dull-text");
-    			add_location(p, file$9, 59, 8, 1531);
+    			add_location(p, file$9, 70, 8, 1763);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -2324,14 +2401,14 @@ var app = (function () {
     		block,
     		id: create_else_block$5.name,
     		type: "else",
-    		source: "(59:4) {:else}",
+    		source: "(70:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (57:4) {#if self.expression !== null}
+    // (64:4) {#if self && self.expression !== null}
     function create_if_block$5(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -2339,7 +2416,7 @@ var app = (function () {
     	let current;
 
     	function switch_instance_parentRef_binding(value) {
-    		/*switch_instance_parentRef_binding*/ ctx[9](value);
+    		/*switch_instance_parentRef_binding*/ ctx[10](value);
     	}
 
     	var switch_value = constructors[/*self*/ ctx[3].expression.type];
@@ -2428,7 +2505,7 @@ var app = (function () {
     		block,
     		id: create_if_block$5.name,
     		type: "if",
-    		source: "(57:4) {#if self.expression !== null}",
+    		source: "(64:4) {#if self && self.expression !== null}",
     		ctx
     	});
 
@@ -2437,9 +2514,11 @@ var app = (function () {
 
     function create_fragment$a(ctx) {
     	let div0;
+    	let button;
+    	let t1;
     	let current_block_type_index;
     	let if_block;
-    	let t;
+    	let t2;
     	let div1;
     	let current;
     	let mounted;
@@ -2448,7 +2527,7 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*self*/ ctx[3].expression !== null) return 0;
+    		if (/*self*/ ctx[3] && /*self*/ ctx[3].expression !== null) return 0;
     		return 1;
     	}
 
@@ -2458,27 +2537,35 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div0 = element("div");
+    			button = element("button");
+    			button.textContent = "Delete";
+    			t1 = space();
     			if_block.c();
-    			t = space();
+    			t2 = space();
     			div1 = element("div");
-    			attr_dev(div0, "class", "expression-container svelte-1u12z2p");
-    			add_location(div0, file$9, 52, 0, 1200);
-    			attr_dev(div1, "class", "line-down-box svelte-1u12z2p");
+    			attr_dev(button, "class", "expression-delete-btn svelte-yzq53r");
+    			add_location(button, file$9, 61, 4, 1443);
+    			attr_dev(div0, "class", "expression-container svelte-yzq53r");
+    			add_location(div0, file$9, 56, 0, 1294);
+    			attr_dev(div1, "class", "line-down-box svelte-yzq53r");
     			toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
-    			add_location(div1, file$9, 62, 0, 1593);
+    			add_location(div1, file$9, 73, 0, 1825);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
+    			append_dev(div0, button);
+    			append_dev(div0, t1);
     			if_blocks[current_block_type_index].m(div0, null);
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t2, anchor);
     			insert_dev(target, div1, anchor);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
+    					listen_dev(button, "click", /*deleteFlowStep*/ ctx[9], false, false, false),
     					listen_dev(div0, "dragover", prevent_default(dragOverHandler$1), false, true, false),
     					listen_dev(div0, "drop", stop_propagation(prevent_default(/*dropModify*/ ctx[7])), false, true, true),
     					listen_dev(div1, "dragover", prevent_default(insertDragOverHandler), false, true, false),
@@ -2534,7 +2621,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div0);
     			if_blocks[current_block_type_index].d();
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(div1);
     			mounted = false;
     			run_all(dispose);
@@ -2582,7 +2669,7 @@ var app = (function () {
     	}
 
     	function dropModify(event) {
-    		const node = createDropNodeFromContext('expression', event);
+    		const node = createDropNodeFromContext("expression", event);
     		$$invalidate(0, parentRef[accessor].expression = node, parentRef);
     	}
 
@@ -2590,13 +2677,18 @@ var app = (function () {
      * @param {DragEvent} event
      */
     	function insertDrop(event) {
-    		const astNodes = createDropNodeFromContext('flow', event);
+    		const astNodes = createDropNodeFromContext("flow", event);
 
     		if (astNodes === null) {
     			return;
     		}
 
     		parentRef.splice(accessor + 1, 0, astNodes);
+    		$$invalidate(0, parentRef = [...parentRef]);
+    	}
+
+    	function deleteFlowStep(event) {
+    		parentRef.splice(accessor, 1);
     		$$invalidate(0, parentRef = [...parentRef]);
     	}
 
@@ -2631,6 +2723,7 @@ var app = (function () {
     		removeInsertHover,
     		dropModify,
     		insertDrop,
+    		deleteFlowStep,
     		self
     	});
 
@@ -2661,6 +2754,7 @@ var app = (function () {
     		removeInsertHover,
     		dropModify,
     		insertDrop,
+    		deleteFlowStep,
     		switch_instance_parentRef_binding
     	];
     }
@@ -5633,6 +5727,45 @@ var app = (function () {
         "AssignmentExpression": AssignmentExpression
     };
 
+    function squish(node, params) {
+        const { opacity = 0, start = 0 } = params;
+
+        return {
+            delay: params.delay || 0,
+            duration: params.duration || 400,
+            easing: params.easing || cubicOut,
+            css(t, _) {
+                const o = t * (1 - opacity) + opacity;
+                const s = t * (1 - start) + start;
+                return `
+                transform: scaleY(${s});
+                opacity: ${o};
+            `;
+            }
+        };
+    }
+
+    function flip(node, { from, to }, params = {}) {
+        const style = getComputedStyle(node);
+        const transform = style.transform === 'none' ? '' : style.transform;
+        const [ox, oy] = style.transformOrigin.split(' ').map(parseFloat);
+        const dx = (from.left + from.width * ox / to.width) - (to.left + ox);
+        const dy = (from.top + from.height * oy / to.height) - (to.top + oy);
+        const { delay = 0, duration = (d) => Math.sqrt(d) * 120, easing = cubicOut } = params;
+        return {
+            delay,
+            duration: is_function(duration) ? duration(Math.sqrt(dx * dx + dy * dy)) : duration,
+            easing,
+            css: (t, u) => {
+                const x = u * dx;
+                const y = u * dy;
+                const sx = t + u * from.width / to.width;
+                const sy = t + u * from.height / to.height;
+                return `transform: ${transform} translate(${x}px, ${y}px) scale(${sx}, ${sy});`;
+            }
+        };
+    }
+
     /* src/components/container_components/AppWindow.svelte generated by Svelte v3.46.2 */
     const file$2 = "src/components/container_components/AppWindow.svelte";
 
@@ -5643,12 +5776,15 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (28:4) {#each $ast.main.body as flowObject, i (i)}
+    // (30:4) {#each $ast.main.body as flowObject, i (flowObject.id)}
     function create_each_block(key_1, ctx) {
-    	let first;
+    	let div;
     	let switch_instance;
     	let updating_parentRef;
-    	let switch_instance_anchor;
+    	let t;
+    	let div_transition;
+    	let rect;
+    	let stop_animation = noop;
     	let current;
 
     	function switch_instance_parentRef_binding(value) {
@@ -5679,19 +5815,20 @@ var app = (function () {
     		key: key_1,
     		first: null,
     		c: function create() {
-    			first = empty();
+    			div = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
-    			switch_instance_anchor = empty();
-    			this.first = first;
+    			t = space();
+    			add_location(div, file$2, 30, 8, 919);
+    			this.first = div;
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, first, anchor);
+    			insert_dev(target, div, anchor);
 
     			if (switch_instance) {
-    				mount_component(switch_instance, target, anchor);
+    				mount_component(switch_instance, div, null);
     			}
 
-    			insert_dev(target, switch_instance_anchor, anchor);
+    			append_dev(div, t);
     			current = true;
     		},
     		p: function update(new_ctx, dirty) {
@@ -5722,7 +5859,7 @@ var app = (function () {
     					binding_callbacks.push(() => bind(switch_instance, 'parentRef', switch_instance_parentRef_binding));
     					create_component(switch_instance.$$.fragment);
     					transition_in(switch_instance.$$.fragment, 1);
-    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+    					mount_component(switch_instance, div, t);
     				} else {
     					switch_instance = null;
     				}
@@ -5730,19 +5867,39 @@ var app = (function () {
     				switch_instance.$set(switch_instance_changes);
     			}
     		},
+    		r: function measure() {
+    			rect = div.getBoundingClientRect();
+    		},
+    		f: function fix() {
+    			fix_position(div);
+    			stop_animation();
+    			add_transform(div, rect);
+    		},
+    		a: function animate() {
+    			stop_animation();
+    			stop_animation = create_animation(div, rect, flip, { duration: 400 });
+    		},
     		i: function intro(local) {
     			if (current) return;
     			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+
+    			add_render_callback(() => {
+    				if (!div_transition) div_transition = create_bidirectional_transition(div, squish, { duration: 300, opacity: 0.4, start: 0.2 }, true);
+    				div_transition.run(1);
+    			});
+
     			current = true;
     		},
     		o: function outro(local) {
     			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			if (!div_transition) div_transition = create_bidirectional_transition(div, squish, { duration: 300, opacity: 0.4, start: 0.2 }, false);
+    			div_transition.run(0);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(first);
-    			if (detaching) detach_dev(switch_instance_anchor);
-    			if (switch_instance) destroy_component(switch_instance, detaching);
+    			if (detaching) detach_dev(div);
+    			if (switch_instance) destroy_component(switch_instance);
+    			if (detaching && div_transition) div_transition.end();
     		}
     	};
 
@@ -5750,7 +5907,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(28:4) {#each $ast.main.body as flowObject, i (i)}",
+    		source: "(30:4) {#each $ast.main.body as flowObject, i (flowObject.id)}",
     		ctx
     	});
 
@@ -5786,7 +5943,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(functioninfotab, 'info', functioninfotab_info_binding));
     	let each_value = /*$ast*/ ctx[0].main.body;
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*i*/ ctx[6];
+    	const get_key = ctx => /*flowObject*/ ctx[4].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -5805,8 +5962,8 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div, "class", "app-window-wrapper svelte-zswezt");
-    			add_location(div, file$2, 20, 0, 568);
+    			attr_dev(div, "class", "app-window-wrapper svelte-109h7vz");
+    			add_location(div, file$2, 22, 0, 668);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5846,8 +6003,10 @@ var app = (function () {
     				each_value = /*$ast*/ ctx[0].main.body;
     				validate_each_argument(each_value);
     				group_outros();
+    				for (let i = 0; i < each_blocks.length; i += 1) each_blocks[i].r();
     				validate_each_keys(ctx, each_value, get_each_context, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div, outro_and_destroy_block, create_each_block, null, get_each_context);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div, fix_and_outro_and_destroy_block, create_each_block, null, get_each_context);
+    				for (let i = 0; i < each_blocks.length; i += 1) each_blocks[i].a();
     				check_outros();
     			}
     		},
@@ -5935,6 +6094,8 @@ var app = (function () {
     		createDropNodeFromContext,
     		ast,
     		constructors,
+    		squish,
+    		flip,
     		dragOverHandler,
     		appendDrop,
     		$ast

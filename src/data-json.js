@@ -18,6 +18,7 @@ const mockData = {
         "body": [
             {
                 "type": "ExpressionStatement",
+                "id": Symbol(),
                 "expression": {
                     "type": "UtilityCallExpression",
                     "utilityName": "StringUtil",
@@ -39,6 +40,7 @@ const mockData = {
             },
             {
                 "type": "ExpressionStatement",
+                "id": Symbol(),
                 "expression": {
                     "type": "UtilityCallExpression",
                     "utilityName": "StringUtil",
@@ -58,6 +60,7 @@ const mockData = {
             },
             {
                 "type": "ExpressionStatement",
+                "id": Symbol(),
                 "expression": {
                     "type": "UtilityCallExpression",
                     "utilityName": "StringUtil",
