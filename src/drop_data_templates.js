@@ -5,7 +5,18 @@ const dropDataTemplates = {
         type: "UtilityCallExpression",
         utilityName: "StringUtil",
         utilityMethod: method,
-        arguments: [],
+        arguments: [
+            // {
+            //     type: "StringLiteral",
+            //     value: "",
+            //     returns: "String"
+            // },
+            // {
+            //     type: "StringLiteral",
+            //     value: "",
+            //     returns: "String"
+            // }
+        ],
         returns: "String"
     }),
     "expression": () => ({
@@ -35,6 +46,18 @@ const dropDataTemplates = {
         type: "Identifier",
         name,
         returns: type
+    }),
+    // Capitalizing because it matches the 'type' field in the AST
+    "StringLiteral": ({ value = "" }) => ({
+        type: "StringLiteral",
+        value: value,
+        returns: "String"
+    }),
+    // Capitalizing because it matches the 'type' field in the AST
+    "IntegerLiteral": ({ value = 0 }) => ({
+        type: "IntegerLiteral",
+        value,
+        returns: "Integer"
     })
 };
 

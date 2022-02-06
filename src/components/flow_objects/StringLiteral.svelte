@@ -1,13 +1,16 @@
 <script>
     export let parentRef;
     export let accessor;
-    export let isArgument = false;
 
     $: self = parentRef[accessor];
+
+    function updateValue(event) {
+        parentRef[accessor] = {
+            ...parentRef[accessor],
+            value: event.target.value
+        };
+    }
 </script>
 
-{#if isArgument}
-    <input value={self?.value ?? ""} />
-{:else}
-    <span>"{self?.value ?? ""}"</span>
-{/if}
+
+<input type="text" value={self.value} on:change={updateValue} />

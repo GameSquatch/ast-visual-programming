@@ -50,11 +50,13 @@ const mockData = {
                     "arguments": [
                         {
                             "type": "StringLiteral",
-                            "value": "hello"
+                            "value": "hello",
+                            "returns": "String"
                         },
                         {
                             "type": "StringLiteral",
-                            "value": " world!"
+                            "value": " world!",
+                            "returns": "String"
                         }
                     ],
                     "returns": "String"
@@ -70,11 +72,13 @@ const mockData = {
                     "arguments": [
                         {
                             "type": "StringLiteral",
-                            "value": "more"
+                            "value": "more",
+                            "returns": "String"
                         },
                         {
                             "type": "StringLiteral",
-                            "value": " concatenation!"
+                            "value": " concatenation!",
+                            "returns": "String"
                         }
                     ],
                     "returns": "String"

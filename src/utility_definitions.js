@@ -22,6 +22,13 @@ const typeDefs =  {
             ],
             "infiniteArgs": false,
             "returns": "Integer"
+        },
+        "fromInt": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returns": "String"
         }
     },
     "String": {
@@ -43,13 +50,6 @@ const typeDefs =  {
             ],
             "infiniteArgs": false,
             "returns": "String"
-        },
-        "split": {
-            "args": [
-                "String"
-            ],
-            "infiniteArgs": false,
-            "returns": "List<String>"
         }
     },
     "Integer": {

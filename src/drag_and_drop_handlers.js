@@ -75,12 +75,22 @@ const dropContextMap = {
 }
 
 
+/**
+ * 
+ * @param {String} context The name of the component in which the drop event occurs. If I
+ * drop in something into an assigment, the context would be 'assignment'. See the structure above
+ * in 'drag_and_drop_handlers.js'
+ * @param {DragEvent} dragEvent The DragEvent passed from the original event handler
+ * @param {String} type The data type of the context component
+ * @returns {Object}
+ */
 const createDropNodeFromContext = (context, dragEvent, type) => {
     const dragData = getDragData(dragEvent);
 
     // Drag type checking
     if ((dragData.data?.type ?? false) && type !== undefined) {
         if (dragData.data.type !== type) {
+            alert("Data types don't match!");
             return null;
         }
     }

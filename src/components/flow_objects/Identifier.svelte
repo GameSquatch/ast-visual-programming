@@ -3,8 +3,6 @@
 
     export let parentRef;
     export let accessor;
-    export let isObject = false;
-    export let isCallee = false;
     export let isCalleeProperty = false;
 
     $: self = parentRef[accessor];
