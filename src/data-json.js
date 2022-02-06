@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 const mockData = {
     "main": {
         "info": {
@@ -18,7 +20,7 @@ const mockData = {
         "body": [
             {
                 "type": "ExpressionStatement",
-                "id": Symbol(),
+                "id": uuidv4(),
                 "expression": {
                     "type": "UtilityCallExpression",
                     "utilityName": "StringUtil",
@@ -40,7 +42,7 @@ const mockData = {
             },
             {
                 "type": "ExpressionStatement",
-                "id": Symbol(),
+                "id": uuidv4(),
                 "expression": {
                     "type": "UtilityCallExpression",
                     "utilityName": "StringUtil",
@@ -60,7 +62,7 @@ const mockData = {
             },
             {
                 "type": "ExpressionStatement",
-                "id": Symbol(),
+                "id": uuidv4(),
                 "expression": {
                     "type": "UtilityCallExpression",
                     "utilityName": "StringUtil",

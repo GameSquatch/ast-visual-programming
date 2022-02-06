@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 
 const dropDataTemplates = {
     "stringUtil": (method = "concat") => ({
@@ -9,7 +10,7 @@ const dropDataTemplates = {
     }),
     "expression": () => ({
         type: "ExpressionStatement",
-        id: Symbol(),
+        id: uuidv4(),
         expression: null
     }),
     "AssignmentExpression": ({ name = "", type = ""}) => ({

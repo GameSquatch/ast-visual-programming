@@ -964,6 +964,80 @@ var app = (function () {
         $inject_state() { }
     }
 
+    // Unique ID creation requires a high quality random # generator. In the browser we therefore
+    // require the crypto API and do not support built-in fallback to lower quality random number
+    // generators (like Math.random()).
+    var getRandomValues;
+    var rnds8 = new Uint8Array(16);
+    function rng() {
+      // lazy load so that environments that need to polyfill have a chance to do so
+      if (!getRandomValues) {
+        // getRandomValues needs to be invoked in a context where "this" is a Crypto implementation. Also,
+        // find the complete implementation of crypto (msCrypto) on IE11.
+        getRandomValues = typeof crypto !== 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto !== 'undefined' && typeof msCrypto.getRandomValues === 'function' && msCrypto.getRandomValues.bind(msCrypto);
+
+        if (!getRandomValues) {
+          throw new Error('crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported');
+        }
+      }
+
+      return getRandomValues(rnds8);
+    }
+
+    var REGEX = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+
+    function validate(uuid) {
+      return typeof uuid === 'string' && REGEX.test(uuid);
+    }
+
+    /**
+     * Convert array of 16 byte values to UUID string format of the form:
+     * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+     */
+
+    var byteToHex = [];
+
+    for (var i = 0; i < 256; ++i) {
+      byteToHex.push((i + 0x100).toString(16).substr(1));
+    }
+
+    function stringify(arr) {
+      var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      // Note: Be careful editing this code!  It's been tuned for performance
+      // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
+      var uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase(); // Consistency check for valid UUID.  If this throws, it's likely due to one
+      // of the following:
+      // - One or more input array values don't map to a hex octet (leading to
+      // "undefined" in the uuid)
+      // - Invalid input values for the RFC `version` or `variant` fields
+
+      if (!validate(uuid)) {
+        throw TypeError('Stringified UUID is invalid');
+      }
+
+      return uuid;
+    }
+
+    function v4(options, buf, offset) {
+      options = options || {};
+      var rnds = options.random || (options.rng || rng)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+
+      rnds[6] = rnds[6] & 0x0f | 0x40;
+      rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
+
+      if (buf) {
+        offset = offset || 0;
+
+        for (var i = 0; i < 16; ++i) {
+          buf[offset + i] = rnds[i];
+        }
+
+        return buf;
+      }
+
+      return stringify(rnds);
+    }
+
     const dropDataTemplates = {
         "stringUtil": (method = "concat") => ({
             type: "UtilityCallExpression",
@@ -974,7 +1048,7 @@ var app = (function () {
         }),
         "expression": () => ({
             type: "ExpressionStatement",
-            id: Symbol(),
+            id: v4(),
             expression: null
         }),
         "AssignmentExpression": ({ name = "", type = ""}) => ({
@@ -1152,6 +1226,12 @@ var app = (function () {
             expression: (dragData) => null,
             assignment: (dragData) => null,
             argument: (dragData) => null
+        },
+        moveExpression: {
+            flow: (dragData, _) => dragData.node,
+            expression: (dragData, _) => dragData.node,
+            assignment: (dragData, _) => null,
+            argument: (dragData, _) => null
         }
     };
 
@@ -2304,7 +2384,7 @@ var app = (function () {
             "body": [
                 {
                     "type": "ExpressionStatement",
-                    "id": Symbol(),
+                    "id": v4(),
                     "expression": {
                         "type": "UtilityCallExpression",
                         "utilityName": "StringUtil",
@@ -2326,7 +2406,7 @@ var app = (function () {
                 },
                 {
                     "type": "ExpressionStatement",
-                    "id": Symbol(),
+                    "id": v4(),
                     "expression": {
                         "type": "UtilityCallExpression",
                         "utilityName": "StringUtil",
@@ -2346,7 +2426,7 @@ var app = (function () {
                 },
                 {
                     "type": "ExpressionStatement",
-                    "id": Symbol(),
+                    "id": v4(),
                     "expression": {
                         "type": "UtilityCallExpression",
                         "utilityName": "StringUtil",
@@ -2375,7 +2455,7 @@ var app = (function () {
     /* src/components/flow_objects/ExpressionStatement.svelte generated by Svelte v3.46.2 */
     const file$9 = "src/components/flow_objects/ExpressionStatement.svelte";
 
-    // (70:4) {:else}
+    // (85:4) {:else}
     function create_else_block$5(ctx) {
     	let p;
 
@@ -2384,7 +2464,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Drag an action here";
     			attr_dev(p, "class", "dull-text");
-    			add_location(p, file$9, 70, 8, 1763);
+    			add_location(p, file$9, 85, 8, 2150);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -2401,14 +2481,14 @@ var app = (function () {
     		block,
     		id: create_else_block$5.name,
     		type: "else",
-    		source: "(70:4) {:else}",
+    		source: "(85:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (64:4) {#if self && self.expression !== null}
+    // (79:4) {#if self && self.expression !== null}
     function create_if_block$5(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -2416,7 +2496,7 @@ var app = (function () {
     	let current;
 
     	function switch_instance_parentRef_binding(value) {
-    		/*switch_instance_parentRef_binding*/ ctx[10](value);
+    		/*switch_instance_parentRef_binding*/ ctx[11](value);
     	}
 
     	var switch_value = constructors[/*self*/ ctx[3].expression.type];
@@ -2505,7 +2585,7 @@ var app = (function () {
     		block,
     		id: create_if_block$5.name,
     		type: "if",
-    		source: "(64:4) {#if self && self.expression !== null}",
+    		source: "(79:4) {#if self && self.expression !== null}",
     		ctx
     	});
 
@@ -2544,12 +2624,13 @@ var app = (function () {
     			t2 = space();
     			div1 = element("div");
     			attr_dev(button, "class", "expression-delete-btn svelte-yzq53r");
-    			add_location(button, file$9, 61, 4, 1443);
+    			add_location(button, file$9, 76, 4, 1830);
     			attr_dev(div0, "class", "expression-container svelte-yzq53r");
-    			add_location(div0, file$9, 56, 0, 1294);
+    			attr_dev(div0, "draggable", "true");
+    			add_location(div0, file$9, 69, 0, 1610);
     			attr_dev(div1, "class", "line-down-box svelte-yzq53r");
     			toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
-    			add_location(div1, file$9, 73, 0, 1825);
+    			add_location(div1, file$9, 88, 0, 2212);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2568,6 +2649,7 @@ var app = (function () {
     					listen_dev(button, "click", /*deleteFlowStep*/ ctx[9], false, false, false),
     					listen_dev(div0, "dragover", prevent_default(dragOverHandler$1), false, true, false),
     					listen_dev(div0, "drop", stop_propagation(prevent_default(/*dropModify*/ ctx[7])), false, true, true),
+    					listen_dev(div0, "dragstart", stop_propagation(/*moveExpression*/ ctx[10]), false, false, true),
     					listen_dev(div1, "dragover", prevent_default(insertDragOverHandler), false, true, false),
     					listen_dev(div1, "dragenter", prevent_default(/*insertDragEnter*/ ctx[4]), false, true, false),
     					listen_dev(div1, "dragleave", prevent_default(/*insertDragLeave*/ ctx[5]), false, true, false),
@@ -2687,9 +2769,22 @@ var app = (function () {
     		$$invalidate(0, parentRef = [...parentRef]);
     	}
 
-    	function deleteFlowStep(event) {
+    	function deleteFlowStep(_) {
     		parentRef.splice(accessor, 1);
     		$$invalidate(0, parentRef = [...parentRef]);
+    	}
+
+    	/**
+     * @param {DragEvent} event
+     */
+    	function moveExpression(event) {
+    		const dragData = {
+    			"dragType": "moveExpression",
+    			"node": parentRef[accessor]
+    		};
+
+    		event.dataTransfer.setData('text/json', JSON.stringify(dragData));
+    		deleteFlowStep();
     	}
 
     	const writable_props = ['accessor', 'parentRef'];
@@ -2724,6 +2819,7 @@ var app = (function () {
     		dropModify,
     		insertDrop,
     		deleteFlowStep,
+    		moveExpression,
     		self
     	});
 
@@ -2755,6 +2851,7 @@ var app = (function () {
     		dropModify,
     		insertDrop,
     		deleteFlowStep,
+    		moveExpression,
     		switch_instance_parentRef_binding
     	];
     }

@@ -65,6 +65,12 @@ const dropContextMap = {
         expression: (dragData) => null,
         assignment: (dragData) => null,
         argument: (dragData) => null
+    },
+    moveExpression: {
+        flow: (dragData, _) => dragData.node,
+        expression: (dragData, _) => dragData.node,
+        assignment: (dragData, _) => null,
+        argument: (dragData, _) => null
     }
 }
 

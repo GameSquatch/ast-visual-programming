@@ -47,17 +47,32 @@
         parentRef = [...parentRef];
     }
 
-    function deleteFlowStep(event) {
+    function deleteFlowStep(_) {
         parentRef.splice(accessor, 1);
 
         parentRef = [...parentRef];
+    }
+
+    /**
+     * @param {DragEvent} event
+     */
+     function moveExpression(event) {
+        const dragData = {
+            "dragType": "moveExpression",
+            "node": parentRef[accessor]
+        };
+        event.dataTransfer.setData('text/json', JSON.stringify(dragData));
+
+        deleteFlowStep(event);
     }
 </script>
 
 <div
     on:dragover|preventDefault={dragOverHandler}
     on:drop|stopPropagation|preventDefault={dropModify}
+    on:dragstart|stopPropagation={moveExpression}
     class="expression-container"
+    draggable="true"
 >
     <button class="expression-delete-btn" on:click={deleteFlowStep}>Delete</button>
 
