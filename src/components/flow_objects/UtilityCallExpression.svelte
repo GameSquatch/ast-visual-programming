@@ -61,7 +61,7 @@
         {#each self.arguments as argument, i (i)}
             <div on:drop|stopPropagation={addArgument(argument.returns, i)} on:dragover={() => {}} class="arg-box">
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self accessor={i} bind:parentRef={self.arguments} filterType={self.returns} />
+                    <svelte:self accessor={i} bind:parentRef={self.arguments} filterType={argument.returns} />
                 {:else}
                     <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} />
                 {/if}

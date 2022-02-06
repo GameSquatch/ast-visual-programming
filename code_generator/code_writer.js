@@ -3,8 +3,8 @@ exports.codeWriter = {
     "ExpressionStatement": function(node) {
         return this[node.expression.type](node.expression) + ";\n";
     },
-    "CallExpression": function(node) {
-        let callee = this[node.callee.type](node.callee);
+    "UtilityCallExpression": function(node) {
+        let utility = `${node.utilityName}.${node.utilityMethod}`;
         let arguments = "";
 
         node.arguments.forEach((arg, i) => {
@@ -14,18 +14,21 @@ exports.codeWriter = {
             arguments += this[arg.type](arg);
         });
 
-        return `${callee}(${arguments})`;
+        return `${utility}(${arguments})`;
     },
-    "MemberExpression": function(node) {
-        const obj = this[node.object.type](node.object);
-        const property = this[node.property.type](node.property);
+    "AssignmentExpression": function(node) {
+        const left = this[node.left.type](node.left);
+        const right = this[node.right.type](node.right);
 
-        return `${obj}.${property}`;
+        return `${left} = ${right}`;
     },
     "Identifier": function(node) {
         return node.name;
     },
     "StringLiteral": function(node) {
         return `"${node.value}"`;
+    },
+    "IntegerLiteral": function(node) {
+        return node.value.toString();
     }
 };

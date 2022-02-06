@@ -3118,7 +3118,7 @@ var app = (function () {
 
     	let utilitycallexpression_props = {
     		accessor: /*i*/ ctx[12],
-    		filterType: /*self*/ ctx[0].returns
+    		filterType: /*argument*/ ctx[10].returns
     	};
 
     	if (/*self*/ ctx[0].arguments !== void 0) {
@@ -3143,7 +3143,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const utilitycallexpression_changes = {};
     			if (dirty & /*self*/ 1) utilitycallexpression_changes.accessor = /*i*/ ctx[12];
-    			if (dirty & /*self*/ 1) utilitycallexpression_changes.filterType = /*self*/ ctx[0].returns;
+    			if (dirty & /*self*/ 1) utilitycallexpression_changes.filterType = /*argument*/ ctx[10].returns;
 
     			if (!updating_parentRef && dirty & /*self*/ 1) {
     				updating_parentRef = true;
@@ -5882,17 +5882,23 @@ var app = (function () {
     			if (current) return;
     			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
 
-    			add_render_callback(() => {
-    				if (!div_transition) div_transition = create_bidirectional_transition(div, squish, { duration: 300, opacity: 0.4, start: 0.2 }, true);
-    				div_transition.run(1);
-    			});
+    			if (local) {
+    				add_render_callback(() => {
+    					if (!div_transition) div_transition = create_bidirectional_transition(div, squish, { duration: 300, opacity: 0.4, start: 0.2 }, true);
+    					div_transition.run(1);
+    				});
+    			}
 
     			current = true;
     		},
     		o: function outro(local) {
     			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
-    			if (!div_transition) div_transition = create_bidirectional_transition(div, squish, { duration: 300, opacity: 0.4, start: 0.2 }, false);
-    			div_transition.run(0);
+
+    			if (local) {
+    				if (!div_transition) div_transition = create_bidirectional_transition(div, squish, { duration: 300, opacity: 0.4, start: 0.2 }, false);
+    				div_transition.run(0);
+    			}
+
     			current = false;
     		},
     		d: function destroy(detaching) {
