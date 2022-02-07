@@ -76,17 +76,13 @@ const mockData = {
                 "id": uuidv4(),
                 "expression": {
                     "type": "UtilityCallExpression",
-                    "utilityName": "StringUtil",
+                    "utilityName": "String",
+                    "variableName": "aStr",
                     "utilityMethod": "concat",
                     "arguments": [
                         {
                             "type": "StringLiteral",
-                            "value": "hello",
-                            "returns": "String"
-                        },
-                        {
-                            "type": "StringLiteral",
-                            "value": " world!",
+                            "value": "add to variable aStr",
                             "returns": "String"
                         }
                     ],
@@ -120,7 +116,7 @@ const mockData = {
 };
 
 for (let variable of mockData.main.info.variables) {
-    console.log(`let ${variable.name};\n`);
+    console.log(`let ${variable.name} = ${variable.type === "String" ? '"' + variable.value + '"' : variable.value};\n`);
 }
 
 for (let statement of mockData.main.body) {

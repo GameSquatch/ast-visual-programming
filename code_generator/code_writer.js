@@ -4,7 +4,7 @@ exports.codeWriter = {
         return this[node.expression.type](node.expression) + ";\n";
     },
     "UtilityCallExpression": function(node) {
-        let utility = `${node.utilityName}.${node.utilityMethod}`;
+        let utility = `${node.variableName ? node.variableName : node.utilityName}.${node.utilityMethod}`;
         let arguments = "";
 
         node.arguments.forEach((arg, i) => {
