@@ -1,6 +1,7 @@
 <script>
     import { createDropNodeFromContext } from "../../drag_and_drop_handlers.js";
     import constructors from "../../constructors.js";
+    import ClearNodeProp from '../ClearNodeProp.svelte';
 
     export let accessor;
     export let parentRef;
@@ -75,6 +76,7 @@
     draggable="true"
 >
     <button class="expression-delete-btn" on:click={deleteFlowStep}>Delete</button>
+    <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
 
     {#if self && self.expression !== null}
         <svelte:component

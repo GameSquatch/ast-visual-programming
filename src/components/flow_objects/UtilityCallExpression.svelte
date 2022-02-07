@@ -1,6 +1,7 @@
 <script>
     import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js'
     import UtilityDefinitions from '../../utility_definitions.js';
+    import ClearNodeProp from '../ClearNodeProp.svelte';
     import constructors from '../../constructors.js';
     import dropDataTemplates from '../../drop_data_templates.js';
 
@@ -60,6 +61,7 @@
     (
         {#each self.arguments as argument, i (i)}
             <div on:drop|stopPropagation={addArgument(argument.returns, i)} on:dragover={() => {}} class="arg-box">
+                <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
                     <svelte:self accessor={i} bind:parentRef={self.arguments} filterType={argument.returns} />
                 {:else}
@@ -75,5 +77,6 @@
         margin-left: 10px;
         padding: 2px;
         border: 1px solid black;
+        position: relative;
     }
 </style>
