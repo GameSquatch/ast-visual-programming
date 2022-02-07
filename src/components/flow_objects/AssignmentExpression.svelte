@@ -21,7 +21,7 @@
 {#if self.right === null}
     Drag an expression here
 {:else}
-    <svelte:component this={constructors[self.right.type]} bind:parentRef={self} accessor={"right"} filterType={self.left.returns} />
+    <svelte:component this={constructors[self.right.type]} bind:parentRef={self} accessor={"right"} isArgument={true} filterType={self.left.returns} />
 {/if}
 </div>
 

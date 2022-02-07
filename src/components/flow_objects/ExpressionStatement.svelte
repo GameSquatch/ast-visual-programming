@@ -101,6 +101,7 @@
         padding: 32px;
         border: 1px dashed black;
         position: relative;
+        max-width: 350px;
         z-index: 1;
     }
 

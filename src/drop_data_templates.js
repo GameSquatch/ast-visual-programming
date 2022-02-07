@@ -19,6 +19,14 @@ const dropDataTemplates = {
         ],
         returns: "String"
     }),
+    "typeUtil": ({ name, method, returns, variableName }) => ({
+        type: "UtilityCallExpression",
+        variableName,
+        utilityName: name,
+        utilityMethod: method,
+        arguments: [],
+        returns
+    }),
     "expression": () => ({
         type: "ExpressionStatement",
         id: uuidv4(),

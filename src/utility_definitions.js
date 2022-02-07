@@ -50,6 +50,13 @@ const typeDefs =  {
             ],
             "infiniteArgs": false,
             "returns": "String"
+        },
+        "length": {
+            "args": [
+                "String"
+            ],
+            "infiniteArgs": false,
+            "returns": "Integer"
         }
     },
     "Integer": {

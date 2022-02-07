@@ -95,6 +95,9 @@ var app = (function () {
         }
         return -1;
     }
+    function null_to_empty(value) {
+        return value == null ? '' : value;
+    }
     function set_store_value(store, ret, value) {
         store.set(value);
         return ret;
@@ -373,25 +376,6 @@ var app = (function () {
     let current_component;
     function set_current_component(component) {
         current_component = component;
-    }
-    function get_current_component() {
-        if (!current_component)
-            throw new Error('Function called outside component initialization');
-        return current_component;
-    }
-    function createEventDispatcher() {
-        const component = get_current_component();
-        return (type, detail) => {
-            const callbacks = component.$$.callbacks[type];
-            if (callbacks) {
-                // TODO are there situations where events could be dispatched
-                // in a server (non-DOM) environment?
-                const event = custom_event(type, detail);
-                callbacks.slice().forEach(fn => {
-                    fn.call(component, event);
-                });
-            }
-        };
     }
     // TODO figure out if we still want to support
     // shorthand events, or if we want to implement
@@ -1057,6 +1041,14 @@ var app = (function () {
             ],
             returns: "String"
         }),
+        "typeUtil": ({ name, method, returns, variableName }) => ({
+            type: "UtilityCallExpression",
+            variableName,
+            utilityName: name,
+            utilityMethod: method,
+            arguments: [],
+            returns
+        }),
         "expression": () => ({
             type: "ExpressionStatement",
             id: v4(),
@@ -1150,6 +1142,13 @@ var app = (function () {
                 ],
                 "infiniteArgs": false,
                 "returns": "String"
+            },
+            "length": {
+                "args": [
+                    "String"
+                ],
+                "infiniteArgs": false,
+                "returns": "Integer"
             }
         },
         "Integer": {
@@ -2429,8 +2428,8 @@ var app = (function () {
                                 "returns": "String"
                             },
                             {
-                                "type": "StringLiteral",
-                                "value": " world!",
+                                "type": "Identifier",
+                                "name": "aStr",
                                 "returns": "String"
                             }
                         ],
@@ -2493,7 +2492,7 @@ var app = (function () {
     const file$a = "src/components/flow_objects/ExpressionStatement.svelte";
 
     // (85:4) {:else}
-    function create_else_block$4(ctx) {
+    function create_else_block$3(ctx) {
     	let p;
 
     	const block = {
@@ -2516,7 +2515,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$4.name,
+    		id: create_else_block$3.name,
     		type: "else",
     		source: "(85:4) {:else}",
     		ctx
@@ -2640,7 +2639,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	const if_block_creators = [create_if_block$4, create_else_block$4];
+    	const if_block_creators = [create_if_block$4, create_else_block$3];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -2660,12 +2659,12 @@ var app = (function () {
     			if_block.c();
     			t2 = space();
     			div1 = element("div");
-    			attr_dev(button, "class", "expression-delete-btn svelte-yzq53r");
+    			attr_dev(button, "class", "expression-delete-btn svelte-1rmlb9p");
     			add_location(button, file$a, 76, 4, 1830);
-    			attr_dev(div0, "class", "expression-container svelte-yzq53r");
+    			attr_dev(div0, "class", "expression-container svelte-1rmlb9p");
     			attr_dev(div0, "draggable", "true");
     			add_location(div0, file$a, 69, 0, 1610);
-    			attr_dev(div1, "class", "line-down-box svelte-yzq53r");
+    			attr_dev(div1, "class", "line-down-box svelte-1rmlb9p");
     			toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
     			add_location(div1, file$a, 88, 0, 2212);
     		},
@@ -2967,7 +2966,7 @@ var app = (function () {
     			option.__value = option_value_value = /*method*/ ctx[13];
     			option.value = option.__value;
     			option.selected = option_selected_value = /*method*/ ctx[13] === /*self*/ ctx[0].utilityMethod;
-    			add_location(option, file$9, 56, 12, 1952);
+    			add_location(option, file$9, 56, 12, 1992);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -3002,7 +3001,7 @@ var app = (function () {
     }
 
     // (65:16) {:else}
-    function create_else_block$3(ctx) {
+    function create_else_block$2(ctx) {
     	let switch_instance;
     	let updating_parentRef;
     	let switch_instance_anchor;
@@ -3015,7 +3014,10 @@ var app = (function () {
     	var switch_value = constructors[/*argument*/ ctx[10].type];
 
     	function switch_props(ctx) {
-    		let switch_instance_props = { accessor: /*i*/ ctx[12] };
+    		let switch_instance_props = {
+    			accessor: /*i*/ ctx[12],
+    			isArgument: true
+    		};
 
     		if (/*self*/ ctx[0].arguments !== void 0) {
     			switch_instance_props.parentRef = /*self*/ ctx[0].arguments;
@@ -3097,7 +3099,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$3.name,
+    		id: create_else_block$2.name,
     		type: "else",
     		source: "(65:16) {:else}",
     		ctx
@@ -3186,7 +3188,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	const if_block_creators = [create_if_block$3, create_else_block$3];
+    	const if_block_creators = [create_if_block$3, create_else_block$2];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -3204,7 +3206,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$9, 61, 12, 2139);
+    			add_location(div, file$9, 61, 12, 2179);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -3289,7 +3291,11 @@ var app = (function () {
     function create_fragment$a(ctx) {
     	let p;
     	let span;
-    	let t0_value = /*self*/ ctx[0].utilityName + "";
+
+    	let t0_value = (/*self*/ ctx[0].variableName
+    	? /*self*/ ctx[0].variableName
+    	: /*self*/ ctx[0].utilityName) + "";
+
     	let t0;
     	let t1;
     	let select;
@@ -3338,7 +3344,7 @@ var app = (function () {
     			}
 
     			t3 = text("\n    )");
-    			add_location(select, file$9, 54, 29, 1823);
+    			add_location(select, file$9, 54, 69, 1863);
     			add_location(span, file$9, 54, 4, 1798);
     			set_style(p, "padding-left", "10px");
     			add_location(p, file$9, 53, 0, 1763);
@@ -3372,7 +3378,9 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*self*/ 1) && t0_value !== (t0_value = /*self*/ ctx[0].utilityName + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty & /*self*/ 1) && t0_value !== (t0_value = (/*self*/ ctx[0].variableName
+    			? /*self*/ ctx[0].variableName
+    			: /*self*/ ctx[0].utilityName) + "")) set_data_dev(t0, t0_value);
 
     			if (dirty & /*Object, utilities, matchParentTypeFilter, self*/ 11) {
     				each_value_1 = Object.keys(/*utilities*/ ctx[1]).filter(/*matchParentTypeFilter*/ ctx[3]);
@@ -3962,7 +3970,7 @@ var app = (function () {
     }
 
     // (32:20) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$1(ctx) {
     	let switch_instance;
     	let updating_parentRef;
     	let switch_instance_anchor;
@@ -4060,7 +4068,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$1.name,
     		type: "else",
     		source: "(32:20) {:else}",
     		ctx
@@ -4143,7 +4151,7 @@ var app = (function () {
     	let current_block_type_index;
     	let if_block;
     	let current;
-    	const if_block_creators = [create_if_block$2, create_else_block$2];
+    	const if_block_creators = [create_if_block$2, create_else_block$1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -4571,16 +4579,18 @@ var app = (function () {
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[6] = list[i];
+    	child_ctx[8] = list[i];
     	return child_ctx;
     }
 
-    // (21:0) {:else}
-    function create_else_block$1(ctx) {
+    // (36:0) {#if isArgument || usesTypeMethod}
+    function create_if_block$1(ctx) {
     	let select;
+    	let option;
+    	let select_class_value;
     	let mounted;
     	let dispose;
-    	let each_value = Object.getOwnPropertyNames(String.prototype);
+    	let each_value = Object.keys(typeDefs[/*self*/ ctx[1].returns]).filter(/*typeMatches*/ ctx[3]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -4591,28 +4601,35 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			select = element("select");
+    			option = element("option");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			add_location(select, file$6, 21, 4, 458);
+    			option.selected = true;
+    			option.__value = "";
+    			option.value = option.__value;
+    			add_location(option, file$6, 37, 8, 1097);
+    			attr_dev(select, "class", select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[2] ? '' : 'type-method-select') + " svelte-o897rk"));
+    			add_location(select, file$6, 36, 4, 1000);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, select, anchor);
+    			append_dev(select, option);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(select, null);
     			}
 
     			if (!mounted) {
-    				dispose = listen_dev(select, "change", /*onPropertyChange*/ ctx[2], false, false, false);
+    				dispose = listen_dev(select, "change", /*methodSelected*/ ctx[4], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*Object, String, self*/ 2) {
-    				each_value = Object.getOwnPropertyNames(String.prototype);
+    			if (dirty & /*Object, utilityDefinitions, self, typeMatches*/ 10) {
+    				each_value = Object.keys(typeDefs[/*self*/ ctx[1].returns]).filter(/*typeMatches*/ ctx[3]);
     				validate_each_argument(each_value);
     				let i;
 
@@ -4634,6 +4651,10 @@ var app = (function () {
 
     				each_blocks.length = each_value.length;
     			}
+
+    			if (dirty & /*usesTypeMethod*/ 4 && select_class_value !== (select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[2] ? '' : 'type-method-select') + " svelte-o897rk"))) {
+    				attr_dev(select, "class", select_class_value);
+    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(select);
@@ -4645,73 +4666,40 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
-    		type: "else",
-    		source: "(21:0) {:else}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (19:0) {#if !isCalleeProperty}
-    function create_if_block$1(ctx) {
-    	let span;
-    	let t_value = /*self*/ ctx[1].name + "";
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			span = element("span");
-    			t = text(t_value);
-    			add_location(span, file$6, 19, 4, 421);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, span, anchor);
-    			append_dev(span, t);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*self*/ 2 && t_value !== (t_value = /*self*/ ctx[1].name + "")) set_data_dev(t, t_value);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(span);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(19:0) {#if !isCalleeProperty}",
+    		source: "(36:0) {#if isArgument || usesTypeMethod}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (23:8) {#each Object.getOwnPropertyNames(String.prototype) as method}
+    // (39:8) {#each Object.keys(utilityDefinitions[self.returns]).filter(typeMatches) as typeMethod}
     function create_each_block$1(ctx) {
     	let option;
-    	let t_value = /*method*/ ctx[6] + "";
+    	let t_value = /*typeMethod*/ ctx[8] + "";
     	let t;
-    	let option_selected_value;
+    	let option_value_value;
 
     	const block = {
     		c: function create() {
     			option = element("option");
     			t = text(t_value);
-    			option.__value = /*method*/ ctx[6];
+    			option.__value = option_value_value = /*typeMethod*/ ctx[8];
     			option.value = option.__value;
-    			option.selected = option_selected_value = /*method*/ ctx[6] === /*self*/ ctx[1].name;
-    			add_location(option, file$6, 23, 12, 579);
+    			add_location(option, file$6, 39, 12, 1232);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*self*/ 2 && option_selected_value !== (option_selected_value = /*method*/ ctx[6] === /*self*/ ctx[1].name)) {
-    				prop_dev(option, "selected", option_selected_value);
+    			if (dirty & /*self*/ 2 && t_value !== (t_value = /*typeMethod*/ ctx[8] + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*self*/ 2 && option_value_value !== (option_value_value = /*typeMethod*/ ctx[8])) {
+    				prop_dev(option, "__value", option_value_value);
+    				option.value = option.__value;
     			}
     		},
     		d: function destroy(detaching) {
@@ -4723,7 +4711,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(23:8) {#each Object.getOwnPropertyNames(String.prototype) as method}",
+    		source: "(39:8) {#each Object.keys(utilityDefinitions[self.returns]).filter(typeMatches) as typeMethod}",
     		ctx
     	});
 
@@ -4731,45 +4719,55 @@ var app = (function () {
     }
 
     function create_fragment$7(ctx) {
+    	let span;
+    	let t0_value = /*self*/ ctx[1].name + "";
+    	let t0;
+    	let t1;
     	let if_block_anchor;
-
-    	function select_block_type(ctx, dirty) {
-    		if (!/*isCalleeProperty*/ ctx[0]) return create_if_block$1;
-    		return create_else_block$1;
-    	}
-
-    	let current_block_type = select_block_type(ctx);
-    	let if_block = current_block_type(ctx);
+    	let if_block = (/*isArgument*/ ctx[0] || /*usesTypeMethod*/ ctx[2]) && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
-    			if_block.c();
+    			span = element("span");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			if (if_block) if_block.c();
     			if_block_anchor = empty();
+    			attr_dev(span, "class", "self svelte-o897rk");
+    			add_location(span, file$6, 34, 0, 923);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			if_block.m(target, anchor);
+    			insert_dev(target, span, anchor);
+    			append_dev(span, t0);
+    			insert_dev(target, t1, anchor);
+    			if (if_block) if_block.m(target, anchor);
     			insert_dev(target, if_block_anchor, anchor);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
-    				if_block.p(ctx, dirty);
-    			} else {
-    				if_block.d(1);
-    				if_block = current_block_type(ctx);
+    			if (dirty & /*self*/ 2 && t0_value !== (t0_value = /*self*/ ctx[1].name + "")) set_data_dev(t0, t0_value);
 
+    			if (/*isArgument*/ ctx[0] || /*usesTypeMethod*/ ctx[2]) {
     				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$1(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
     			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if_block.d(detaching);
+    			if (detaching) detach_dev(span);
+    			if (detaching) detach_dev(t1);
+    			if (if_block) if_block.d(detaching);
     			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
@@ -4787,45 +4785,68 @@ var app = (function () {
 
     function instance$7($$self, $$props, $$invalidate) {
     	let self;
+    	let utilities;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Identifier', slots, []);
     	let { parentRef } = $$props;
     	let { accessor } = $$props;
-    	let { isCalleeProperty = false } = $$props;
-    	let dispatch = createEventDispatcher();
+    	let { isArgument = false } = $$props;
+    	let usesTypeMethod = false;
+    	const typeMatches = utilityKey => utilities[utilityKey].returns === self.returns;
 
-    	const onPropertyChange = event => {
-    		dispatch('changeMethod', { methodName: event.target.value });
-    	};
+    	function methodSelected(event) {
+    		if (!event.target.value) {
+    			$$invalidate(2, usesTypeMethod = false);
+    			return;
+    		}
 
-    	const writable_props = ['parentRef', 'accessor', 'isCalleeProperty'];
+    		$$invalidate(2, usesTypeMethod = true);
+    		const util = typeDefs[self.returns][event.target.value];
+
+    		$$invalidate(
+    			5,
+    			parentRef[accessor] = dropDataTemplates.typeUtil({
+    				name: self.returns,
+    				method: event.target.value,
+    				returns: util.returns,
+    				variableName: self.name
+    			}),
+    			parentRef
+    		);
+    	}
+
+    	const writable_props = ['parentRef', 'accessor', 'isArgument'];
 
     	Object_1.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Identifier> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
-    		if ('parentRef' in $$props) $$invalidate(3, parentRef = $$props.parentRef);
-    		if ('accessor' in $$props) $$invalidate(4, accessor = $$props.accessor);
-    		if ('isCalleeProperty' in $$props) $$invalidate(0, isCalleeProperty = $$props.isCalleeProperty);
+    		if ('parentRef' in $$props) $$invalidate(5, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(6, accessor = $$props.accessor);
+    		if ('isArgument' in $$props) $$invalidate(0, isArgument = $$props.isArgument);
     	};
 
     	$$self.$capture_state = () => ({
-    		createEventDispatcher,
+    		utilityDefinitions: typeDefs,
+    		dropDataTemplates,
     		parentRef,
     		accessor,
-    		isCalleeProperty,
-    		dispatch,
-    		onPropertyChange,
-    		self
+    		isArgument,
+    		usesTypeMethod,
+    		typeMatches,
+    		methodSelected,
+    		self,
+    		utilities
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('parentRef' in $$props) $$invalidate(3, parentRef = $$props.parentRef);
-    		if ('accessor' in $$props) $$invalidate(4, accessor = $$props.accessor);
-    		if ('isCalleeProperty' in $$props) $$invalidate(0, isCalleeProperty = $$props.isCalleeProperty);
-    		if ('dispatch' in $$props) dispatch = $$props.dispatch;
+    		if ('parentRef' in $$props) $$invalidate(5, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(6, accessor = $$props.accessor);
+    		if ('isArgument' in $$props) $$invalidate(0, isArgument = $$props.isArgument);
+    		if ('usesTypeMethod' in $$props) $$invalidate(2, usesTypeMethod = $$props.usesTypeMethod);
     		if ('self' in $$props) $$invalidate(1, self = $$props.self);
+    		if ('utilities' in $$props) utilities = $$props.utilities;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -4833,23 +4854,30 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*parentRef, accessor*/ 24) {
+    		if ($$self.$$.dirty & /*parentRef, accessor*/ 96) {
     			$$invalidate(1, self = parentRef[accessor]);
+    		}
+
+    		if ($$self.$$.dirty & /*self*/ 2) {
+    			utilities = typeDefs[self.returns];
     		}
     	};
 
-    	return [isCalleeProperty, self, onPropertyChange, parentRef, accessor];
+    	return [
+    		isArgument,
+    		self,
+    		usesTypeMethod,
+    		typeMatches,
+    		methodSelected,
+    		parentRef,
+    		accessor
+    	];
     }
 
     class Identifier extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, {
-    			parentRef: 3,
-    			accessor: 4,
-    			isCalleeProperty: 0
-    		});
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { parentRef: 5, accessor: 6, isArgument: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -4861,11 +4889,11 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*parentRef*/ ctx[3] === undefined && !('parentRef' in props)) {
+    		if (/*parentRef*/ ctx[5] === undefined && !('parentRef' in props)) {
     			console.warn("<Identifier> was created without expected prop 'parentRef'");
     		}
 
-    		if (/*accessor*/ ctx[4] === undefined && !('accessor' in props)) {
+    		if (/*accessor*/ ctx[6] === undefined && !('accessor' in props)) {
     			console.warn("<Identifier> was created without expected prop 'accessor'");
     		}
     	}
@@ -4886,11 +4914,11 @@ var app = (function () {
     		throw new Error("<Identifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get isCalleeProperty() {
+    	get isArgument() {
     		throw new Error("<Identifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set isCalleeProperty(value) {
+    	set isArgument(value) {
     		throw new Error("<Identifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -5361,6 +5389,7 @@ var app = (function () {
     	function switch_props(ctx) {
     		let switch_instance_props = {
     			accessor: "right",
+    			isArgument: true,
     			filterType: /*self*/ ctx[0].left.returns
     		};
 

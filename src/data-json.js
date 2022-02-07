@@ -32,8 +32,8 @@ const mockData = {
                             "returns": "String"
                         },
                         {
-                            "type": "StringLiteral",
-                            "value": " world!",
+                            "type": "Identifier",
+                            "name": "aStr",
                             "returns": "String"
                         }
                     ],
