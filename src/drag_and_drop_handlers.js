@@ -52,7 +52,7 @@ const wrapWithExpression = (node) => {
 /**
  * @param {Object} dragData - The DragEvent data parsed into an object
  * @param {string} type - Data type
- * @returns {?Object} Returns either null or the ast node to be created from dropping this stringUtil
+ * @returns {?Object.<string, *>} Returns either null or the ast node to be created from dropping this stringUtil
  */
 const stringUtilFromTypedContext = (dragData, contextType) => {
     const methodName = findStringUtilTypeMatch(contextType);
@@ -108,27 +108,31 @@ const dropContextMap = {
     }
 }
 
-
 /**
- * @param {string} contextName The name of the component in which the drop event occurs. If I
+ * @callback stateChangeCallback
+ * @param {Object.<string, *>} node - The ast node being created from the drop that occurred or null
+ * if nothing should happen
+ */
+/**
+ * @callback dragEventHandler
+ * @param {DragEvent} dragEvent The DragEvent passed from the original event handler
+ */
+/**
+ * @param {Object} dropConfig
+ * @param {string} dropConfig.contextName The name of the component in which the drop event occurs. If I
  * drop in something into an assigment, the context would be 'assignment'. See the structure above
  * in 'drag_and_drop_handlers.js'
- * @param {DragEvent} dragEvent The DragEvent passed from the original event handler
- * @param {string} contextType The data type of the context component
- * @returns {Object}
+ * @param {string} [dropConfig.contextType] The data type of the context component
+ * @param {stateChangeCallback} dropConfig.stateChangeCallback What gets called to modify state once the drop
+ * has occurred and an ast node has been created and passed to this callback
+ * @returns {dragEventHandler}
  */
-const createDropNodeFromContext = (contextName, dragEvent, contextType) => {
+const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (dragEvent) => {
     const dragData = getDragData(dragEvent);
 
-    let node = dropContextMap[dragData.dragType][contextName](dragData, contextType);
-
-    return node;
-};
-
-
-const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (dragEvent) => {
-    const node = createDropNodeFromContext(contextName, dragEvent, contextType);
+    const node = dropContextMap[dragData.dragType][contextName](dragData, contextType);
+    
     stateChangeCallback(node);
 };
 
-export { dragStartHandler, createDropNodeFromContext, flowDropHandler };
+export { dragStartHandler, flowDropHandler };
