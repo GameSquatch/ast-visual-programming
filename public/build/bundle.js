@@ -1049,11 +1049,14 @@ var app = (function () {
             arguments: [],
             returns
         }),
-        "expression": () => ({
-            type: "ExpressionStatement",
-            id: v4(),
-            expression: null
-        }),
+        "expression": () => {
+            const newUuid = v4();
+            return {
+                type: "ExpressionStatement",
+                id: newUuid,
+                expression: null
+            };
+        },
         "AssignmentExpression": ({ name = "", type = ""}) => ({
             type: "AssignmentExpression",
             left: {
@@ -1201,10 +1204,22 @@ var app = (function () {
     };
 
 
-    const findReturnTypeMatch = (utilType) => (type) => {
+    const dragDataTypeMatchesContext = (dragData, contextType) => {
+        if ((dragData.data?.type ?? false) && contextType !== undefined) {
+            if (dragData.data.type !== contextType) {
+                return false;
+            }
+            return true;
+        }
+    };
+
+
+    // This finds a method for the string util that matches the context's type, if any,
+    // so the drop data template can be created with that method as the starting, selected method
+    const findReturnTypeMatch = (utilType) => (contextType) => {
         for (let methodName of Object.keys(typeDefs[utilType])) {
             const method = typeDefs[utilType][methodName];
-            if (method.returns === type) {
+            if (method.returns === contextType) {
                 return methodName;
             }
         }
@@ -1220,67 +1235,86 @@ var app = (function () {
     };
 
 
+    /**
+     * @param {Object} dragData - The DragEvent data parsed into an object
+     * @param {string} type - Data type
+     * @returns {?Object} Returns either null or the ast node to be created from dropping this stringUtil
+     */
+    const stringUtilFromTypedContext = (dragData, contextType) => {
+        const methodName = findStringUtilTypeMatch(contextType);
+        if (methodName === null) return null;
+        return dropDataTemplates.stringUtil(methodName, contextType);
+    };
+
+
+    const variableFromTypedContext = (dragData, contextType) => {
+        const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
+        
+        if (variableTypeMatchesContext) {
+            return dropDataTemplates.variableValue(dragData.data);
+        }
+
+        const method = findReturnTypeMatch(dragData.data.type)(contextType);
+        if (method == null) alert("Types don't match and no methods exist to match the type");
+        
+        return method !== null
+            ? dropDataTemplates.typeUtil({name: dragData.data.type, method, returns: typeDefs[dragData.data.type][method].returns, variableName: dragData.data.name})
+            : null;
+    };
+
+    const noNode = (dragData, contextType) => null;
+
+
     const dropContextMap = {
         // dragType
         variable: {
-            // context
-            flow: (dragData, _) => wrapWithExpression(dropDataTemplates.variableExpression(dragData.data)),
-            expression: (dragData, _) => dropDataTemplates.variableExpression(dragData.data),
-            assignment: (dragData, _) => dropDataTemplates.variableValue(dragData.data),
-            argument: (dragData, _) => dropDataTemplates.variableValue(dragData.data)
+            // context name
+            flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.variableExpression(dragData.data)),
+            expression: (dragData, contextType) => dropDataTemplates.variableExpression(dragData.data),
+            assignment: variableFromTypedContext,
+            argument: variableFromTypedContext
         },
         stringUtil: {
-            flow: (_, type) => wrapWithExpression(dropDataTemplates.stringUtil()),
-            expression: (_, type) => dropDataTemplates.stringUtil(),
-            assignment: (_, type) => {
-                const methodName = findStringUtilTypeMatch(type);
-                if (methodName === null) return null;
-                return dropDataTemplates.stringUtil(methodName, type);
-            },
-            argument: (_, type) => {
-                const methodName = findStringUtilTypeMatch(type);
-                if (methodName === null) return null;
-                return dropDataTemplates.stringUtil(methodName, type);
-            }
+            flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.stringUtil()),
+            expression: (dragData, contextType) => dropDataTemplates.stringUtil(),
+            assignment: stringUtilFromTypedContext,
+            argument: stringUtilFromTypedContext
         },
         expression: {
-            flow: (dragData) => dropDataTemplates.expression(),
-            expression: (dragData) => null,
-            assignment: (dragData) => null,
-            argument: (dragData) => null
+            flow: (dragData, contextType) => dropDataTemplates.expression(),
+            expression: noNode,
+            assignment: noNode,
+            argument: noNode
         },
         moveExpression: {
-            flow: (dragData, _) => dragData.node,
-            expression: (dragData, _) => dragData.node,
-            assignment: (dragData, _) => null,
-            argument: (dragData, _) => null
+            flow: (dragData, contextType) => dragData.node,
+            expression: (dragData, contextType) => dragData.node,
+            assignment: noNode,
+            argument: noNode
         }
     };
 
 
     /**
-     * 
-     * @param {String} context The name of the component in which the drop event occurs. If I
+     * @param {string} contextName The name of the component in which the drop event occurs. If I
      * drop in something into an assigment, the context would be 'assignment'. See the structure above
      * in 'drag_and_drop_handlers.js'
      * @param {DragEvent} dragEvent The DragEvent passed from the original event handler
-     * @param {String} type The data type of the context component
+     * @param {string} contextType The data type of the context component
      * @returns {Object}
      */
-    const createDropNodeFromContext = (context, dragEvent, type) => {
+    const createDropNodeFromContext = (contextName, dragEvent, contextType) => {
         const dragData = getDragData(dragEvent);
 
-        // Drag type checking
-        if ((dragData.data?.type ?? false) && type !== undefined) {
-            if (dragData.data.type !== type) {
-                alert("Data types don't match!");
-                return null;
-            }
-        }
-
-        let node = dropContextMap[dragData.dragType][context](dragData, type);
+        let node = dropContextMap[dragData.dragType][contextName](dragData, contextType);
 
         return node;
+    };
+
+
+    const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (dragEvent) => {
+        const node = createDropNodeFromContext(contextName, dragEvent, contextType);
+        stateChangeCallback(node);
     };
 
     /* src/components/container_components/side_nav/FlowObjectSource.svelte generated by Svelte v3.46.2 */
@@ -2418,66 +2452,81 @@ var app = (function () {
                     "type": "ExpressionStatement",
                     "id": v4(),
                     "expression": {
-                        "type": "UtilityCallExpression",
-                        "utilityName": "StringUtil",
-                        "utilityMethod": "concat",
-                        "arguments": [
-                            {
-                                "type": "StringLiteral",
-                                "value": "A long string teehee",
-                                "returns": "String"
-                            },
-                            {
-                                "type": "Identifier",
-                                "name": "aStr",
-                                "returns": "String"
-                            }
-                        ],
-                        "returns": "String"
+                        "type": "AssignmentExpression",
+                        "left": {
+                            "type": "Identifier",
+                            "name": "aStr",
+                            "returns": "String"
+                        },
+                        "right": {
+                            "type": "UtilityCallExpression",
+                            "utilityName": "StringUtil",
+                            "utilityMethod": "concat",
+                            "arguments": [
+                                {
+                                    "type": "StringLiteral",
+                                    "value": "A long string teehee",
+                                    "returns": "String"
+                                },
+                                {
+                                    "type": "Identifier",
+                                    "name": "aStr",
+                                    "returns": "String"
+                                }
+                            ],
+                            "returns": "String"
+                        }
                     }
                 },
                 {
                     "type": "ExpressionStatement",
                     "id": v4(),
                     "expression": {
-                        "type": "UtilityCallExpression",
-                        "utilityName": "StringUtil",
-                        "utilityMethod": "concat",
-                        "arguments": [
-                            {
-                                "type": "StringLiteral",
-                                "value": "hello",
-                                "returns": "String"
-                            },
-                            {
-                                "type": "StringLiteral",
-                                "value": " world!",
-                                "returns": "String"
-                            }
-                        ],
-                        "returns": "String"
+                        "type": "AssignmentExpression",
+                        "left": {
+                            "type": "Identifier",
+                            "name": "aStr",
+                            "returns": "String"
+                        },
+                        "right": {
+                            "type": "UtilityCallExpression",
+                            "variableName": "aStr",
+                            "utilityName": "StringUtil",
+                            "utilityMethod": "concat",
+                            "arguments": [
+                                {
+                                    "type": "StringLiteral",
+                                    "value": "A long string teehee",
+                                    "returns": "String"
+                                }
+                            ],
+                            "returns": "String"
+                        }
                     }
                 },
                 {
                     "type": "ExpressionStatement",
                     "id": v4(),
                     "expression": {
-                        "type": "UtilityCallExpression",
-                        "utilityName": "StringUtil",
-                        "utilityMethod": "concat",
-                        "arguments": [
-                            {
-                                "type": "StringLiteral",
-                                "value": "more",
-                                "returns": "String"
-                            },
-                            {
-                                "type": "StringLiteral",
-                                "value": " concatenation!",
-                                "returns": "String"
-                            }
-                        ],
-                        "returns": "String"
+                        "type": "AssignmentExpression",
+                        "left": {
+                            "type": "Identifier",
+                            "name": "aNum",
+                            "returns": "Integer"
+                        },
+                        "right": {
+                            "type": "UtilityCallExpression",
+                            "utilityName": "StringUtil",
+                            "utilityMethod": "length",
+                            "arguments": [
+                                {
+                                    "type": "StringLiteral",
+                                    "value": "Counting the length of the string",
+                                    "returns": "String"
+                                }
+                            ],
+                            "returns": "Integer"
+                        }
                     }
                 }
             ]
@@ -2607,7 +2656,7 @@ var app = (function () {
     /* src/components/flow_objects/ExpressionStatement.svelte generated by Svelte v3.46.2 */
     const file$a = "src/components/flow_objects/ExpressionStatement.svelte";
 
-    // (87:4) {:else}
+    // (83:4) {:else}
     function create_else_block$3(ctx) {
     	let p;
 
@@ -2616,7 +2665,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Drag an action here";
     			attr_dev(p, "class", "dull-text");
-    			add_location(p, file$a, 87, 8, 2284);
+    			add_location(p, file$a, 83, 8, 2195);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -2633,14 +2682,14 @@ var app = (function () {
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(87:4) {:else}",
+    		source: "(83:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (81:4) {#if self && self.expression !== null}
+    // (77:4) {#if self && self.expression !== null}
     function create_if_block$4(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -2737,7 +2786,7 @@ var app = (function () {
     		block,
     		id: create_if_block$4.name,
     		type: "if",
-    		source: "(81:4) {#if self && self.expression !== null}",
+    		source: "(77:4) {#if self && self.expression !== null}",
     		ctx
     	});
 
@@ -2786,13 +2835,13 @@ var app = (function () {
     			t3 = space();
     			div1 = element("div");
     			attr_dev(button, "class", "expression-delete-btn svelte-1rmlb9p");
-    			add_location(button, file$a, 77, 4, 1887);
+    			add_location(button, file$a, 73, 4, 1798);
     			attr_dev(div0, "class", "expression-container svelte-1rmlb9p");
     			attr_dev(div0, "draggable", "true");
-    			add_location(div0, file$a, 70, 0, 1667);
+    			add_location(div0, file$a, 66, 0, 1509);
     			attr_dev(div1, "class", "line-down-box svelte-1rmlb9p");
     			toggle_class(div1, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
-    			add_location(div1, file$a, 90, 0, 2346);
+    			add_location(div1, file$a, 86, 0, 2257);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2812,12 +2861,32 @@ var app = (function () {
     				dispose = [
     					listen_dev(button, "click", /*deleteFlowStep*/ ctx[9], false, false, false),
     					listen_dev(div0, "dragover", prevent_default(dragOverHandler$1), false, true, false),
-    					listen_dev(div0, "drop", stop_propagation(prevent_default(/*dropModify*/ ctx[7])), false, true, true),
+    					listen_dev(
+    						div0,
+    						"drop",
+    						stop_propagation(prevent_default(flowDropHandler({
+    							contextName: 'expression',
+    							stateChangeCallback: /*dropModify*/ ctx[7]
+    						}))),
+    						false,
+    						true,
+    						true
+    					),
     					listen_dev(div0, "dragstart", stop_propagation(/*moveExpression*/ ctx[10]), false, false, true),
     					listen_dev(div1, "dragover", prevent_default(insertDragOverHandler), false, true, false),
     					listen_dev(div1, "dragenter", prevent_default(/*insertDragEnter*/ ctx[4]), false, true, false),
     					listen_dev(div1, "dragleave", prevent_default(/*insertDragLeave*/ ctx[5]), false, true, false),
-    					listen_dev(div1, "drop", stop_propagation(prevent_default(/*insertDrop*/ ctx[8])), false, true, true),
+    					listen_dev(
+    						div1,
+    						"drop",
+    						stop_propagation(prevent_default(flowDropHandler({
+    							contextName: 'flow',
+    							stateChangeCallback: /*insertDrop*/ ctx[8]
+    						}))),
+    						false,
+    						true,
+    						true
+    					),
     					listen_dev(div1, "drop", stop_propagation(prevent_default(/*removeInsertHover*/ ctx[6])), false, true, true)
     				];
 
@@ -2920,22 +2989,19 @@ var app = (function () {
     		$$invalidate(2, isOverInsertSpot = false);
     	}
 
-    	function dropModify(event) {
-    		const node = createDropNodeFromContext("expression", event);
+    	function dropModify(node) {
     		$$invalidate(0, parentRef[accessor].expression = node, parentRef);
     	}
 
     	/**
      * @param {DragEvent} event
      */
-    	function insertDrop(event) {
-    		const astNodes = createDropNodeFromContext("flow", event);
-
-    		if (astNodes === null) {
+    	function insertDrop(node) {
+    		if (node === null) {
     			return;
     		}
 
-    		parentRef.splice(accessor + 1, 0, astNodes);
+    		parentRef.splice(accessor + 1, 0, node);
     		$$invalidate(0, parentRef = [...parentRef]);
     	}
 
@@ -2978,7 +3044,7 @@ var app = (function () {
     	};
 
     	$$self.$capture_state = () => ({
-    		createDropNodeFromContext,
+    		flowDropHandler,
     		constructors,
     		ClearNodeProp,
     		accessor,
@@ -3078,21 +3144,21 @@ var app = (function () {
 
     function get_each_context$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
-    	child_ctx[13] = i;
+    	child_ctx[12] = list[i];
+    	child_ctx[14] = i;
     	return child_ctx;
     }
 
     function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[14] = list[i];
+    	child_ctx[15] = list[i];
     	return child_ctx;
     }
 
-    // (57:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
+    // (56:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
     function create_each_block_1$1(ctx) {
     	let option;
-    	let t_value = /*method*/ ctx[14] + "";
+    	let t_value = /*method*/ ctx[15] + "";
     	let t;
     	let option_value_value;
     	let option_selected_value;
@@ -3101,24 +3167,24 @@ var app = (function () {
     		c: function create() {
     			option = element("option");
     			t = text(t_value);
-    			option.__value = option_value_value = /*method*/ ctx[14];
+    			option.__value = option_value_value = /*method*/ ctx[15];
     			option.value = option.__value;
-    			option.selected = option_selected_value = /*method*/ ctx[14] === /*self*/ ctx[2].utilityMethod;
-    			add_location(option, file$9, 57, 12, 2049);
+    			option.selected = option_selected_value = /*method*/ ctx[15] === /*self*/ ctx[2].utilityMethod;
+    			add_location(option, file$9, 56, 12, 1952);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*utilities*/ 8 && t_value !== (t_value = /*method*/ ctx[14] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*utilities*/ 8 && t_value !== (t_value = /*method*/ ctx[15] + "")) set_data_dev(t, t_value);
 
-    			if (dirty & /*utilities*/ 8 && option_value_value !== (option_value_value = /*method*/ ctx[14])) {
+    			if (dirty & /*utilities*/ 8 && option_value_value !== (option_value_value = /*method*/ ctx[15])) {
     				prop_dev(option, "__value", option_value_value);
     				option.value = option.__value;
     			}
 
-    			if (dirty & /*utilities, self*/ 12 && option_selected_value !== (option_selected_value = /*method*/ ctx[14] === /*self*/ ctx[2].utilityMethod)) {
+    			if (dirty & /*utilities, self*/ 12 && option_selected_value !== (option_selected_value = /*method*/ ctx[15] === /*self*/ ctx[2].utilityMethod)) {
     				prop_dev(option, "selected", option_selected_value);
     			}
     		},
@@ -3131,14 +3197,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(57:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
+    		source: "(56:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:16) {:else}
+    // (66:16) {:else}
     function create_else_block$2(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -3146,14 +3212,14 @@ var app = (function () {
     	let current;
 
     	function switch_instance_parentRef_binding(value) {
-    		/*switch_instance_parentRef_binding*/ ctx[10](value);
+    		/*switch_instance_parentRef_binding*/ ctx[11](value);
     	}
 
-    	var switch_value = constructors[/*argument*/ ctx[11].type];
+    	var switch_value = constructors[/*argument*/ ctx[12].type];
 
     	function switch_props(ctx) {
     		let switch_instance_props = {
-    			accessor: /*i*/ ctx[13],
+    			accessor: /*i*/ ctx[14],
     			isArgument: true
     		};
 
@@ -3187,7 +3253,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const switch_instance_changes = {};
-    			if (dirty & /*self*/ 4) switch_instance_changes.accessor = /*i*/ ctx[13];
+    			if (dirty & /*self*/ 4) switch_instance_changes.accessor = /*i*/ ctx[14];
 
     			if (!updating_parentRef && dirty & /*self*/ 4) {
     				updating_parentRef = true;
@@ -3195,7 +3261,7 @@ var app = (function () {
     				add_flush_callback(() => updating_parentRef = false);
     			}
 
-    			if (switch_value !== (switch_value = constructors[/*argument*/ ctx[11].type])) {
+    			if (switch_value !== (switch_value = constructors[/*argument*/ ctx[12].type])) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -3239,26 +3305,26 @@ var app = (function () {
     		block,
     		id: create_else_block$2.name,
     		type: "else",
-    		source: "(67:16) {:else}",
+    		source: "(66:16) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (65:16) {#if argument.type === "UtilityCallExpression"}
+    // (64:16) {#if argument.type === "UtilityCallExpression"}
     function create_if_block$3(ctx) {
     	let utilitycallexpression;
     	let updating_parentRef;
     	let current;
 
     	function utilitycallexpression_parentRef_binding(value) {
-    		/*utilitycallexpression_parentRef_binding*/ ctx[9](value);
+    		/*utilitycallexpression_parentRef_binding*/ ctx[10](value);
     	}
 
     	let utilitycallexpression_props = {
-    		accessor: /*i*/ ctx[13],
-    		filterType: /*argument*/ ctx[11].returns
+    		accessor: /*i*/ ctx[14],
+    		filterType: /*argument*/ ctx[12].returns
     	};
 
     	if (/*self*/ ctx[2].arguments !== void 0) {
@@ -3282,8 +3348,8 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const utilitycallexpression_changes = {};
-    			if (dirty & /*self*/ 4) utilitycallexpression_changes.accessor = /*i*/ ctx[13];
-    			if (dirty & /*self*/ 4) utilitycallexpression_changes.filterType = /*argument*/ ctx[11].returns;
+    			if (dirty & /*self*/ 4) utilitycallexpression_changes.accessor = /*i*/ ctx[14];
+    			if (dirty & /*self*/ 4) utilitycallexpression_changes.filterType = /*argument*/ ctx[12].returns;
 
     			if (!updating_parentRef && dirty & /*self*/ 4) {
     				updating_parentRef = true;
@@ -3311,14 +3377,14 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(65:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
+    		source: "(64:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (62:8) {#each self.arguments as argument, i (i)}
+    // (61:8) {#each self.arguments as argument, i (i)}
     function create_each_block$3(key_1, ctx) {
     	let div;
     	let clearnodeprop;
@@ -3330,7 +3396,7 @@ var app = (function () {
     	let dispose;
 
     	function func(...args) {
-    		return /*func*/ ctx[8](/*i*/ ctx[13], /*argument*/ ctx[11], ...args);
+    		return /*func*/ ctx[9](/*i*/ ctx[14], /*argument*/ ctx[12], ...args);
     	}
 
     	clearnodeprop = new ClearNodeProp({ props: { onClick: func }, $$inline: true });
@@ -3338,7 +3404,7 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*argument*/ ctx[11].type === "UtilityCallExpression") return 0;
+    		if (/*argument*/ ctx[12].type === "UtilityCallExpression") return 0;
     		return 1;
     	}
 
@@ -3354,7 +3420,7 @@ var app = (function () {
     			t = space();
     			if_block.c();
     			attr_dev(div, "class", "arg-box svelte-48s71p");
-    			add_location(div, file$9, 62, 12, 2236);
+    			add_location(div, file$9, 61, 12, 2139);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -3370,7 +3436,15 @@ var app = (function () {
     						div,
     						"drop",
     						stop_propagation(function () {
-    							if (is_function(/*addArgument*/ ctx[6](/*argument*/ ctx[11].returns, /*i*/ ctx[13]))) /*addArgument*/ ctx[6](/*argument*/ ctx[11].returns, /*i*/ ctx[13]).apply(this, arguments);
+    							if (is_function(flowDropHandler({
+    								contextName: 'argument',
+    								contextType: /*argument*/ ctx[12].returns,
+    								stateChangeCallback: /*addArgument*/ ctx[6](/*i*/ ctx[14])
+    							}))) flowDropHandler({
+    								contextName: 'argument',
+    								contextType: /*argument*/ ctx[12].returns,
+    								stateChangeCallback: /*addArgument*/ ctx[6](/*i*/ ctx[14])
+    							}).apply(this, arguments);
     						}),
     						false,
     						false,
@@ -3437,7 +3511,7 @@ var app = (function () {
     		block,
     		id: create_each_block$3.name,
     		type: "each",
-    		source: "(62:8) {#each self.arguments as argument, i (i)}",
+    		source: "(61:8) {#each self.arguments as argument, i (i)}",
     		ctx
     	});
 
@@ -3472,7 +3546,7 @@ var app = (function () {
 
     	let each_value = /*self*/ ctx[2].arguments;
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*i*/ ctx[13];
+    	const get_key = ctx => /*i*/ ctx[14];
     	validate_each_keys(ctx, each_value, get_each_context$3, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -3500,10 +3574,10 @@ var app = (function () {
     			}
 
     			t3 = text("\n    )");
-    			add_location(select, file$9, 55, 69, 1920);
-    			add_location(span, file$9, 55, 4, 1855);
+    			add_location(select, file$9, 54, 69, 1823);
+    			add_location(span, file$9, 54, 4, 1758);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$9, 54, 0, 1820);
+    			add_location(p, file$9, 53, 0, 1723);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3562,7 +3636,7 @@ var app = (function () {
     				each_blocks_1.length = each_value_1.length;
     			}
 
-    			if (dirty & /*addArgument, self, constructors, parentRef, accessor, dropDataTemplates*/ 71) {
+    			if (dirty & /*flowDropHandler, self, addArgument, constructors, parentRef, accessor, dropDataTemplates*/ 71) {
     				each_value = /*self*/ ctx[2].arguments;
     				validate_each_argument(each_value);
     				group_outros();
@@ -3623,6 +3697,7 @@ var app = (function () {
     	let { parentRef } = $$props;
     	let { accessor } = $$props;
     	let { filterType } = $$props;
+    	let { isArgument } = $$props;
 
     	// I think I want to not do this and create the arguments via the drop data templates
     	if (parentRef[accessor].arguments.length === 0) {
@@ -3654,14 +3729,13 @@ var app = (function () {
     	// !filterType is when things don't have a type in their parent context
     	const matchParentTypeFilter = methodName => !filterType || utilities[methodName].returns === filterType;
 
-    	const addArgument = (type, argIndex) => event => {
-    		const node = createDropNodeFromContext('argument', event, type);
+    	const addArgument = argIndex => node => {
     		if (node === null) return;
     		self.arguments.splice(argIndex, 1, node);
     		$$invalidate(0, parentRef[accessor].aruments = [...self.arguments], parentRef);
     	};
 
-    	const writable_props = ['parentRef', 'accessor', 'filterType'];
+    	const writable_props = ['parentRef', 'accessor', 'filterType', 'isArgument'];
 
     	Object_1$1.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<UtilityCallExpression> was created with unknown prop '${key}'`);
@@ -3687,17 +3761,19 @@ var app = (function () {
     		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
     		if ('filterType' in $$props) $$invalidate(7, filterType = $$props.filterType);
+    		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
     	};
 
     	$$self.$capture_state = () => ({
-    		createDropNodeFromContext,
-    		UtilityDefinitions: typeDefs,
+    		flowDropHandler,
+    		typeDefs,
     		ClearNodeProp,
     		constructors,
     		dropDataTemplates,
     		parentRef,
     		accessor,
     		filterType,
+    		isArgument,
     		onPropertyChange,
     		matchParentTypeFilter,
     		addArgument,
@@ -3709,6 +3785,7 @@ var app = (function () {
     		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
     		if ('filterType' in $$props) $$invalidate(7, filterType = $$props.filterType);
+    		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
     		if ('self' in $$props) $$invalidate(2, self = $$props.self);
     		if ('utilities' in $$props) $$invalidate(3, utilities = $$props.utilities);
     	};
@@ -3736,6 +3813,7 @@ var app = (function () {
     		matchParentTypeFilter,
     		addArgument,
     		filterType,
+    		isArgument,
     		func,
     		utilitycallexpression_parentRef_binding,
     		switch_instance_parentRef_binding
@@ -3745,7 +3823,13 @@ var app = (function () {
     class UtilityCallExpression extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { parentRef: 0, accessor: 1, filterType: 7 });
+
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
+    			parentRef: 0,
+    			accessor: 1,
+    			filterType: 7,
+    			isArgument: 8
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -3767,6 +3851,10 @@ var app = (function () {
 
     		if (/*filterType*/ ctx[7] === undefined && !('filterType' in props)) {
     			console.warn("<UtilityCallExpression> was created without expected prop 'filterType'");
+    		}
+
+    		if (/*isArgument*/ ctx[8] === undefined && !('isArgument' in props)) {
+    			console.warn("<UtilityCallExpression> was created without expected prop 'isArgument'");
     		}
     	}
 
@@ -3793,6 +3881,14 @@ var app = (function () {
     	set filterType(value) {
     		throw new Error("<UtilityCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get isArgument() {
+    		throw new Error("<UtilityCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isArgument(value) {
+    		throw new Error("<UtilityCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/components/flow_objects/StringLiteral.svelte generated by Svelte v3.46.2 */
@@ -3810,7 +3906,7 @@ var app = (function () {
     			input = element("input");
     			attr_dev(input, "type", "text");
     			input.value = input_value_value = /*self*/ ctx[0].value;
-    			add_location(input, file$8, 15, 0, 266);
+    			add_location(input, file$8, 16, 0, 293);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3854,6 +3950,7 @@ var app = (function () {
     	validate_slots('StringLiteral', slots, []);
     	let { parentRef } = $$props;
     	let { accessor } = $$props;
+    	let { isArgument } = $$props;
 
     	function updateValue(event) {
     		$$invalidate(
@@ -3866,7 +3963,7 @@ var app = (function () {
     		);
     	}
 
-    	const writable_props = ['parentRef', 'accessor'];
+    	const writable_props = ['parentRef', 'accessor', 'isArgument'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<StringLiteral> was created with unknown prop '${key}'`);
@@ -3875,13 +3972,21 @@ var app = (function () {
     	$$self.$$set = $$props => {
     		if ('parentRef' in $$props) $$invalidate(2, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(3, accessor = $$props.accessor);
+    		if ('isArgument' in $$props) $$invalidate(4, isArgument = $$props.isArgument);
     	};
 
-    	$$self.$capture_state = () => ({ parentRef, accessor, updateValue, self });
+    	$$self.$capture_state = () => ({
+    		parentRef,
+    		accessor,
+    		isArgument,
+    		updateValue,
+    		self
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ('parentRef' in $$props) $$invalidate(2, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(3, accessor = $$props.accessor);
+    		if ('isArgument' in $$props) $$invalidate(4, isArgument = $$props.isArgument);
     		if ('self' in $$props) $$invalidate(0, self = $$props.self);
     	};
 
@@ -3895,13 +4000,13 @@ var app = (function () {
     		}
     	};
 
-    	return [self, updateValue, parentRef, accessor];
+    	return [self, updateValue, parentRef, accessor, isArgument];
     }
 
     class StringLiteral extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { parentRef: 2, accessor: 3 });
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { parentRef: 2, accessor: 3, isArgument: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -3920,6 +4025,10 @@ var app = (function () {
     		if (/*accessor*/ ctx[3] === undefined && !('accessor' in props)) {
     			console.warn("<StringLiteral> was created without expected prop 'accessor'");
     		}
+
+    		if (/*isArgument*/ ctx[4] === undefined && !('isArgument' in props)) {
+    			console.warn("<StringLiteral> was created without expected prop 'isArgument'");
+    		}
     	}
 
     	get parentRef() {
@@ -3935,6 +4044,14 @@ var app = (function () {
     	}
 
     	set accessor(value) {
+    		throw new Error("<StringLiteral>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get isArgument() {
+    		throw new Error("<StringLiteral>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isArgument(value) {
     		throw new Error("<StringLiteral>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -4084,7 +4201,7 @@ var app = (function () {
     			div = element("div");
     			create_component(stringliteral.$$.fragment);
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$7, 37, 20, 1718);
+    			add_location(div, file$7, 37, 20, 1695);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4329,7 +4446,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$7, 28, 16, 1243);
+    			add_location(div, file$7, 28, 16, 1220);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -4460,9 +4577,9 @@ var app = (function () {
     			}
 
     			t1 = text("\n        )");
-    			add_location(span, file$7, 24, 4, 998);
+    			add_location(span, file$7, 24, 4, 975);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$7, 23, 0, 963);
+    			add_location(p, file$7, 23, 0, 940);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4645,7 +4762,7 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		StringLiteral,
-    		UtilityDefinitions: typeDefs,
+    		typeDefs,
     		dropDataTemplates,
     		constructors,
     		parentRef,
@@ -4770,9 +4887,9 @@ var app = (function () {
     			option.selected = true;
     			option.__value = "";
     			option.value = option.__value;
-    			add_location(option, file$6, 37, 8, 1097);
+    			add_location(option, file$6, 37, 8, 1094);
     			attr_dev(select, "class", select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[2] ? '' : 'type-method-select') + " svelte-o897rk"));
-    			add_location(select, file$6, 36, 4, 1000);
+    			add_location(select, file$6, 36, 4, 997);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, select, anchor);
@@ -4848,7 +4965,7 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = option_value_value = /*typeMethod*/ ctx[8];
     			option.value = option.__value;
-    			add_location(option, file$6, 39, 12, 1232);
+    			add_location(option, file$6, 39, 12, 1229);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -4894,7 +5011,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr_dev(span, "class", "self svelte-o897rk");
-    			add_location(span, file$6, 34, 0, 923);
+    			add_location(span, file$6, 34, 0, 920);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5533,7 +5650,7 @@ var app = (function () {
     /* src/components/flow_objects/AssignmentExpression.svelte generated by Svelte v3.46.2 */
     const file$3 = "src/components/flow_objects/AssignmentExpression.svelte";
 
-    // (24:4) {:else}
+    // (22:4) {:else}
     function create_else_block(ctx) {
     	let clearnodeprop;
     	let t;
@@ -5654,14 +5771,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(24:4) {:else}",
+    		source: "(22:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (22:4) {#if self.right === null}
+    // (20:4) {#if self.right === null}
     function create_if_block(ctx) {
     	let t;
 
@@ -5684,7 +5801,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(22:4) {#if self.right === null}",
+    		source: "(20:4) {#if self.right === null}",
     		ctx
     	});
 
@@ -5731,10 +5848,10 @@ var app = (function () {
     			t5 = space();
     			div = element("div");
     			if_block.c();
-    			add_location(strong, file$3, 19, 10, 524);
-    			add_location(p, file$3, 19, 0, 514);
+    			add_location(strong, file$3, 17, 10, 427);
+    			add_location(p, file$3, 17, 0, 417);
     			attr_dev(div, "class", "assign-right-block svelte-v13rfq");
-    			add_location(div, file$3, 20, 0, 586);
+    			add_location(div, file$3, 18, 0, 489);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5755,13 +5872,31 @@ var app = (function () {
     			if (!mounted) {
     				dispose = [
     					listen_dev(div, "dragover", dragover_handler, false, false, false),
-    					listen_dev(div, "drop", stop_propagation(/*handleDrop*/ ctx[3]), false, false, true)
+    					listen_dev(
+    						div,
+    						"drop",
+    						stop_propagation(function () {
+    							if (is_function(flowDropHandler({
+    								contextName: 'assignment',
+    								contextType: /*self*/ ctx[2].left.returns,
+    								stateChangeCallback: /*stateChangeOnDrop*/ ctx[3]
+    							}))) flowDropHandler({
+    								contextName: 'assignment',
+    								contextType: /*self*/ ctx[2].left.returns,
+    								stateChangeCallback: /*stateChangeOnDrop*/ ctx[3]
+    							}).apply(this, arguments);
+    						}),
+    						false,
+    						false,
+    						true
+    					)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(new_ctx, [dirty]) {
+    			ctx = new_ctx;
     			if ((!current || dirty & /*self*/ 4) && t1_value !== (t1_value = /*self*/ ctx[2].left.name + "")) set_data_dev(t1, t1_value);
     			if ((!current || dirty & /*self*/ 4) && t3_value !== (t3_value = /*self*/ ctx[2].left.returns + "")) set_data_dev(t3, t3_value);
     			let previous_block_index = current_block_type_index;
@@ -5831,10 +5966,9 @@ var app = (function () {
     	let { parentRef } = $$props;
     	let { accessor } = $$props;
 
-    	const handleDrop = event => {
-    		const nNode = createDropNodeFromContext('assignment', event, self.left.returns);
-    		if (nNode === null) return;
-    		$$invalidate(0, parentRef[accessor].right = nNode, parentRef);
+    	const stateChangeOnDrop = node => {
+    		if (node === null) return;
+    		$$invalidate(0, parentRef[accessor].right = node, parentRef);
     	};
 
     	const writable_props = ['parentRef', 'accessor'];
@@ -5857,11 +5991,11 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		constructors,
-    		createDropNodeFromContext,
+    		flowDropHandler,
     		ClearNodeProp,
     		parentRef,
     		accessor,
-    		handleDrop,
+    		stateChangeOnDrop,
     		self
     	});
 
@@ -5881,7 +6015,14 @@ var app = (function () {
     		}
     	};
 
-    	return [parentRef, accessor, self, handleDrop, func, switch_instance_parentRef_binding];
+    	return [
+    		parentRef,
+    		accessor,
+    		self,
+    		stateChangeOnDrop,
+    		func,
+    		switch_instance_parentRef_binding
+    	];
     }
 
     class AssignmentExpression extends SvelteComponentDev {
@@ -5986,7 +6127,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (30:4) {#each $ast.main.body as flowObject, i (flowObject.id)}
+    // (28:4) {#each $ast.main.body as flowObject, i (flowObject.id)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let switch_instance;
@@ -6028,7 +6169,7 @@ var app = (function () {
     			div = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
     			t = space();
-    			add_location(div, file$2, 30, 8, 919);
+    			add_location(div, file$2, 28, 8, 906);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -6123,7 +6264,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(30:4) {#each $ast.main.body as flowObject, i (flowObject.id)}",
+    		source: "(28:4) {#each $ast.main.body as flowObject, i (flowObject.id)}",
     		ctx
     	});
 
@@ -6179,7 +6320,7 @@ var app = (function () {
     			}
 
     			attr_dev(div, "class", "app-window-wrapper svelte-109h7vz");
-    			add_location(div, file$2, 22, 0, 668);
+    			add_location(div, file$2, 20, 0, 593);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6198,7 +6339,17 @@ var app = (function () {
     			if (!mounted) {
     				dispose = [
     					listen_dev(div, "dragover", prevent_default(dragOverHandler), false, true, false),
-    					listen_dev(div, "drop", stop_propagation(prevent_default(/*appendDrop*/ ctx[1])), false, true, true)
+    					listen_dev(
+    						div,
+    						"drop",
+    						stop_propagation(prevent_default(flowDropHandler({
+    							contextName: 'flow',
+    							stateChangeCallback: /*appendDrop*/ ctx[1]
+    						}))),
+    						false,
+    						true,
+    						true
+    					)
     				];
 
     				mounted = true;
@@ -6280,9 +6431,8 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('AppWindow', slots, []);
 
-    	const appendDrop = event => {
-    		const data = createDropNodeFromContext('flow', event);
-    		set_store_value(ast, $ast.main.body = [...$ast.main.body, data], $ast);
+    	const appendDrop = node => {
+    		set_store_value(ast, $ast.main.body = [...$ast.main.body, node], $ast);
     	};
 
     	const writable_props = [];
@@ -6307,7 +6457,7 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		FunctionInfoTab,
-    		createDropNodeFromContext,
+    		flowDropHandler,
     		ast,
     		constructors,
     		squish,

@@ -22,66 +22,81 @@ const mockData = {
                 "type": "ExpressionStatement",
                 "id": uuidv4(),
                 "expression": {
-                    "type": "UtilityCallExpression",
-                    "utilityName": "StringUtil",
-                    "utilityMethod": "concat",
-                    "arguments": [
-                        {
-                            "type": "StringLiteral",
-                            "value": "A long string teehee",
-                            "returns": "String"
-                        },
-                        {
-                            "type": "Identifier",
-                            "name": "aStr",
-                            "returns": "String"
-                        }
-                    ],
-                    "returns": "String"
+                    "type": "AssignmentExpression",
+                    "left": {
+                        "type": "Identifier",
+                        "name": "aStr",
+                        "returns": "String"
+                    },
+                    "right": {
+                        "type": "UtilityCallExpression",
+                        "utilityName": "StringUtil",
+                        "utilityMethod": "concat",
+                        "arguments": [
+                            {
+                                "type": "StringLiteral",
+                                "value": "A long string teehee",
+                                "returns": "String"
+                            },
+                            {
+                                "type": "Identifier",
+                                "name": "aStr",
+                                "returns": "String"
+                            }
+                        ],
+                        "returns": "String"
+                    }
                 }
             },
             {
                 "type": "ExpressionStatement",
                 "id": uuidv4(),
                 "expression": {
-                    "type": "UtilityCallExpression",
-                    "utilityName": "StringUtil",
-                    "utilityMethod": "concat",
-                    "arguments": [
-                        {
-                            "type": "StringLiteral",
-                            "value": "hello",
-                            "returns": "String"
-                        },
-                        {
-                            "type": "StringLiteral",
-                            "value": " world!",
-                            "returns": "String"
-                        }
-                    ],
-                    "returns": "String"
+                    "type": "AssignmentExpression",
+                    "left": {
+                        "type": "Identifier",
+                        "name": "aStr",
+                        "returns": "String"
+                    },
+                    "right": {
+                        "type": "UtilityCallExpression",
+                        "variableName": "aStr",
+                        "utilityName": "StringUtil",
+                        "utilityMethod": "concat",
+                        "arguments": [
+                            {
+                                "type": "StringLiteral",
+                                "value": "A long string teehee",
+                                "returns": "String"
+                            }
+                        ],
+                        "returns": "String"
+                    }
                 }
             },
             {
                 "type": "ExpressionStatement",
                 "id": uuidv4(),
                 "expression": {
-                    "type": "UtilityCallExpression",
-                    "utilityName": "StringUtil",
-                    "utilityMethod": "concat",
-                    "arguments": [
-                        {
-                            "type": "StringLiteral",
-                            "value": "more",
-                            "returns": "String"
-                        },
-                        {
-                            "type": "StringLiteral",
-                            "value": " concatenation!",
-                            "returns": "String"
-                        }
-                    ],
-                    "returns": "String"
+                    "type": "AssignmentExpression",
+                    "left": {
+                        "type": "Identifier",
+                        "name": "aNum",
+                        "returns": "Integer"
+                    },
+                    "right": {
+                        "type": "UtilityCallExpression",
+                        "utilityName": "StringUtil",
+                        "utilityMethod": "length",
+                        "arguments": [
+                            {
+                                "type": "StringLiteral",
+                                "value": "Counting the length of the string",
+                                "returns": "String"
+                            }
+                        ],
+                        "returns": "Integer"
+                    }
                 }
             }
         ]

@@ -1,5 +1,5 @@
 <script>
-    import utilityDefinitions from '../../utility_definitions.js';
+    import utilityDefinitions from '../../type_definitions.js';
     import dropDataTemplates from '../../drop_data_templates.js';
 
     export let parentRef;

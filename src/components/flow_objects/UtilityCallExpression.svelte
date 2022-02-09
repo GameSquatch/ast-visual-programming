@@ -1,6 +1,6 @@
 <script>
-    import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js'
-    import UtilityDefinitions from '../../utility_definitions.js';
+    import { flowDropHandler } from '../../drag_and_drop_handlers.js'
+    import typeDefs from '../../type_definitions.js';
     import ClearNodeProp from '../ClearNodeProp.svelte';
     import constructors from '../../constructors.js';
     import dropDataTemplates from '../../drop_data_templates.js';
@@ -8,14 +8,15 @@
     export let parentRef;
     export let accessor;
     export let filterType;
+    export let isArgument;
 
     $: self = parentRef[accessor];
-    $: utilities = UtilityDefinitions[self.utilityName];
+    $: utilities = typeDefs[self.utilityName];
 
     // I think I want to not do this and create the arguments via the drop data templates
     if (parentRef[accessor].arguments.length === 0) {
         const s = parentRef[accessor];
-        const u = UtilityDefinitions[s.utilityName][s.utilityMethod];
+        const u = typeDefs[s.utilityName][s.utilityMethod];
         for (let arg of u.args) {
             s.arguments.push(dropDataTemplates[arg + "Literal"]({}));
         }
@@ -40,9 +41,7 @@
     const matchParentTypeFilter = (methodName) => !filterType || utilities[methodName].returns === filterType;
 
 
-    const addArgument = (type, argIndex) => (event) => {
-        const node = createDropNodeFromContext('argument', event, type);
-
+    const addArgument = (argIndex) => (node) => {
         if (node === null) return;
 
         self.arguments.splice(argIndex, 1, node);
@@ -60,7 +59,7 @@
     </select></span>
     (
         {#each self.arguments as argument, i (i)}
-            <div on:drop|stopPropagation={addArgument(argument.returns, i)} on:dragover={() => {}} class="arg-box">
+            <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })} on:dragover={() => {}} class="arg-box">
                 <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
                     <svelte:self accessor={i} bind:parentRef={self.arguments} filterType={argument.returns} />

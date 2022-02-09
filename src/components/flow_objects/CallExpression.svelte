@@ -1,6 +1,6 @@
 <script>
     import StringLiteral from './StringLiteral.svelte';
-    import UtilityDefinitions from '../../utility_definitions.js';
+    import typeDefs from '../../type_definitions.js';
     import dropDataTemplates from '../../drop_data_templates';
     import constructors from '../../constructors.js';
 
@@ -8,7 +8,7 @@
     export let accessor;
 
     $: self = parentRef[accessor];
-    $: utilityDef = self.callee.type === "MemberExpression" ? UtilityDefinitions[self.callee.object.name][self.callee.property.name].args : 0;
+    $: utilityDef = self.callee.type === "MemberExpression" ? typeDefs[self.callee.object.name][self.callee.property.name].args : 0;
     
     //const store = useStore();
     const onMethodChange = (payloadObj) => {

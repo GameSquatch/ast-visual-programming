@@ -1,6 +1,6 @@
 <script>
     import constructors from '../../constructors.js';
-    import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js';
+    import { flowDropHandler } from '../../drag_and_drop_handlers.js';
     import ClearNodeProp from '../ClearNodeProp.svelte';
 
     export let parentRef;
@@ -8,17 +8,15 @@
 
     $: self = parentRef[accessor];
 
-    const handleDrop = (event) => {
-        const nNode = createDropNodeFromContext('assignment', event, self.left.returns);
+    const stateChangeOnDrop = (node) => {
+        if (node === null) return;
 
-        if (nNode === null) return;
-
-        parentRef[accessor].right = nNode;
-    ;}
+        parentRef[accessor].right = node;
+    }
 </script>
 
 <p>Assign <strong>{self.left.name}: {self.left.returns}</strong> to</p>
-<div class="assign-right-block" on:dragover={()=>{}} on:drop|stopPropagation={handleDrop}>
+<div class="assign-right-block" on:dragover={()=>{}} on:drop|stopPropagation={flowDropHandler({ contextName: 'assignment', contextType: self.left.returns, stateChangeCallback: stateChangeOnDrop })}>
     {#if self.right === null}
         Drag an expression here
     {:else}

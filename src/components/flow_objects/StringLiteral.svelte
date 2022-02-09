@@ -1,6 +1,7 @@
 <script>
     export let parentRef;
     export let accessor;
+    export let isArgument;
 
     $: self = parentRef[accessor];
 

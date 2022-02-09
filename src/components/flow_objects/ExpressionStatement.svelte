@@ -1,5 +1,5 @@
 <script>
-    import { createDropNodeFromContext } from "../../drag_and_drop_handlers.js";
+    import { flowDropHandler } from "../../drag_and_drop_handlers.js";
     import constructors from "../../constructors.js";
     import ClearNodeProp from '../ClearNodeProp.svelte';
 
@@ -27,23 +27,19 @@
         isOverInsertSpot = false;
     }
 
-    function dropModify(event) {
-        const node = createDropNodeFromContext("expression", event);
-
+    function dropModify(node) {
         parentRef[accessor].expression = node;
     }
 
     /**
      * @param {DragEvent} event
      */
-    function insertDrop(event) {
-        const astNodes = createDropNodeFromContext("flow", event);
-
-        if (astNodes === null) {
+    function insertDrop(node) {
+        if (node === null) {
             return;
         }
 
-        parentRef.splice(accessor + 1, 0, astNodes);
+        parentRef.splice(accessor + 1, 0, node);
 
         parentRef = [...parentRef];
     }
@@ -70,7 +66,7 @@
 
 <div
     on:dragover|preventDefault={dragOverHandler}
-    on:drop|stopPropagation|preventDefault={dropModify}
+    on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
     on:dragstart|stopPropagation={moveExpression}
     class="expression-container"
     draggable="true"
@@ -92,7 +88,7 @@
     on:dragover|preventDefault={insertDragOverHandler}
     on:dragenter|preventDefault={insertDragEnter}
     on:dragleave|preventDefault={insertDragLeave}
-    on:drop|stopPropagation|preventDefault={insertDrop}
+    on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
     on:drop|stopPropagation|preventDefault={removeInsertHover}
     class="line-down-box"
     class:insert-drag-over={isOverInsertSpot}

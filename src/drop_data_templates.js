@@ -27,11 +27,14 @@ const dropDataTemplates = {
         arguments: [],
         returns
     }),
-    "expression": () => ({
-        type: "ExpressionStatement",
-        id: uuidv4(),
-        expression: null
-    }),
+    "expression": () => {
+        const newUuid = uuidv4();
+        return {
+            type: "ExpressionStatement",
+            id: newUuid,
+            expression: null
+        };
+    },
     "AssignmentExpression": ({ name = "", type = ""}) => ({
         type: "AssignmentExpression",
         left: {

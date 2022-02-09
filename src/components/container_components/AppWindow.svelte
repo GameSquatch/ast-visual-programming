@@ -1,6 +1,6 @@
 <script>
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
-    import { createDropNodeFromContext } from '../../drag_and_drop_handlers.js';
+    import { flowDropHandler } from '../../drag_and_drop_handlers.js';
     import ast from '../../store/stores.js';
     import constructors from '../../constructors.js';
     import { squish } from '../../custom_animations.js';
@@ -13,16 +13,14 @@
         // do stuff like change the cursor
     }
     
-    const appendDrop = (event) => {
-        const data = createDropNodeFromContext('flow', event);
-
-        $ast.main.body = [...$ast.main.body, data];
+    const appendDrop = (node) => {
+        $ast.main.body = [...$ast.main.body, node];
     }
 </script>
     
 <div
 on:dragover|preventDefault={dragOverHandler}
-on:drop|stopPropagation|preventDefault={appendDrop}
+on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'flow', stateChangeCallback: appendDrop})}
 class="app-window-wrapper">
 
     <FunctionInfoTab bind:info={$ast.main.info} />
