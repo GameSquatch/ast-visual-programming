@@ -2,6 +2,7 @@
     import { flowDropHandler } from "../../drag_and_drop_handlers.js";
     import constructors from "../../constructors.js";
     import ClearNodeProp from '../ClearNodeProp.svelte';
+    import { moveExpressionDrag } from '../../drag_types.js';
 
     export let accessor;
     export let parentRef;
@@ -11,7 +12,6 @@
 
     function dragOverHandler(event) {
         // do something like change cursor
-        //event.stopPropagation();
     }
 
     function insertDragOverHandler(event) {
@@ -53,11 +53,10 @@
     /**
      * @param {DragEvent} event
      */
-     function moveExpression(event) {
-        const dragData = {
-            "dragType": "moveExpression",
-            "node": parentRef[accessor]
-        };
+     function handleMoveExpression(event) {
+        const dragData = moveExpressionDrag();
+        dragData.node = parentRef[accessor];
+
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
 
         deleteFlowStep(event);
@@ -67,7 +66,7 @@
 <div
     on:dragover|preventDefault={dragOverHandler}
     on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
-    on:dragstart|stopPropagation={moveExpression}
+    on:dragstart|stopPropagation={handleMoveExpression}
     class="expression-container"
     draggable="true"
 >

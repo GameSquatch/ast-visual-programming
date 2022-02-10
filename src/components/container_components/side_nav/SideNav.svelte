@@ -1,17 +1,15 @@
 <script>
     import FlowObjectSource from './FlowObjectSource.svelte';
-    
-    const doActionData = { "dragType": "expression" }
-    const stringUtilData = { "dragType": "StringUtil" }
+    import { doActionDataDrag, stringUtilDataDrag } from '../../../drag_types.js';
 </script>
 
 <div class="side-nav-wrapper">
     <div class="project-structure-pane">
-        <FlowObjectSource dragData={doActionData}>Drag Me Tester</FlowObjectSource>
+        <FlowObjectSource dragData={doActionDataDrag()}>Drag Me Tester</FlowObjectSource>
     </div>
 
     <div class="utility-pane">
-        <FlowObjectSource dragData={stringUtilData}>String Util</FlowObjectSource>
+        <FlowObjectSource dragData={stringUtilDataDrag()}>String Util</FlowObjectSource>
     </div>
 </div>
     
