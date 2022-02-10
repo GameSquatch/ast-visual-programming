@@ -1807,28 +1807,28 @@ var app = (function () {
     			div6 = element("div");
     			button1 = element("button");
     			button1.textContent = "Add Variable";
-    			add_location(h40, file$c, 60, 16, 1723);
+    			add_location(h40, file$c, 60, 16, 1732);
     			attr_dev(div0, "class", "flex-1");
-    			add_location(div0, file$c, 62, 20, 1830);
+    			add_location(div0, file$c, 62, 20, 1839);
     			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$c, 63, 20, 1881);
+    			add_location(div1, file$c, 63, 20, 1890);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$c, 64, 20, 1932);
+    			add_location(div2, file$c, 64, 20, 1941);
     			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$c, 61, 16, 1758);
-    			add_location(button0, file$c, 75, 20, 2625);
+    			add_location(div3, file$c, 61, 16, 1767);
+    			add_location(button0, file$c, 75, 20, 2634);
     			attr_dev(div4, "class", "add-var-btn");
-    			add_location(div4, file$c, 74, 16, 2579);
-    			attr_dev(div5, "class", "flex-1 var-section svelte-15a0y1j");
-    			add_location(div5, file$c, 59, 12, 1674);
-    			add_location(h41, file$c, 79, 16, 2783);
-    			add_location(button1, file$c, 87, 20, 3271);
+    			add_location(div4, file$c, 74, 16, 2588);
+    			attr_dev(div5, "class", "flex-1 var-section svelte-isr333");
+    			add_location(div5, file$c, 59, 12, 1683);
+    			add_location(h41, file$c, 79, 16, 2792);
+    			add_location(button1, file$c, 87, 20, 3280);
     			attr_dev(div6, "class", "add-var-btn");
-    			add_location(div6, file$c, 86, 16, 3225);
-    			attr_dev(div7, "class", "flex-1 param-section svelte-15a0y1j");
-    			add_location(div7, file$c, 78, 12, 2732);
-    			attr_dev(div8, "class", "flex tab-content svelte-15a0y1j");
-    			add_location(div8, file$c, 58, 8, 1574);
+    			add_location(div6, file$c, 86, 16, 3234);
+    			attr_dev(div7, "class", "flex-1 param-section svelte-isr333");
+    			add_location(div7, file$c, 78, 12, 2741);
+    			attr_dev(div8, "class", "flex tab-content svelte-isr333");
+    			add_location(div8, file$c, 58, 8, 1583);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div8, anchor);
@@ -2000,23 +2000,23 @@ var app = (function () {
     			div2 = element("div");
     			input = element("input");
     			attr_dev(div0, "class", "flex-1");
-    			add_location(div0, file$c, 69, 24, 2198);
+    			add_location(div0, file$c, 69, 24, 2207);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$c, 70, 76, 2318);
+    			add_location(option0, file$c, 70, 76, 2327);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$c, 70, 114, 2356);
-    			add_location(select, file$c, 70, 44, 2286);
+    			add_location(option1, file$c, 70, 114, 2365);
+    			add_location(select, file$c, 70, 44, 2295);
     			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$c, 70, 24, 2266);
+    			add_location(div1, file$c, 70, 24, 2275);
     			attr_dev(input, "type", "text");
-    			add_location(input, file$c, 71, 44, 2456);
+    			add_location(input, file$c, 71, 44, 2465);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$c, 71, 24, 2436);
+    			add_location(div2, file$c, 71, 24, 2445);
     			attr_dev(div3, "draggable", "true");
     			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$c, 68, 20, 2070);
+    			add_location(div3, file$c, 68, 20, 2079);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div3, anchor);
@@ -2109,17 +2109,17 @@ var app = (function () {
     			option0.textContent = "String";
     			option1 = element("option");
     			option1.textContent = "Integer";
-    			add_location(span, file$c, 82, 20, 2989);
+    			add_location(span, file$c, 82, 20, 2998);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$c, 83, 53, 3074);
+    			add_location(option0, file$c, 83, 53, 3083);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$c, 83, 91, 3112);
-    			add_location(select, file$c, 83, 20, 3041);
+    			add_location(option1, file$c, 83, 91, 3121);
+    			add_location(select, file$c, 83, 20, 3050);
     			attr_dev(div, "draggable", "true");
     			attr_dev(div, "class", "flex w100 space-between var-container");
-    			add_location(div, file$c, 81, 16, 2875);
+    			add_location(div, file$c, 81, 16, 2884);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2163,7 +2163,6 @@ var app = (function () {
     }
 
     function create_fragment$d(ctx) {
-    	let div3;
     	let div2;
     	let t0;
     	let div1;
@@ -2175,29 +2174,25 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
     			div2 = element("div");
     			if (if_block) if_block.c();
     			t0 = space();
     			div1 = element("div");
     			div0 = element("div");
     			div0.textContent = "Function Info";
-    			attr_dev(div0, "class", "tab-toggle svelte-15a0y1j");
+    			attr_dev(div0, "class", "tab-toggle svelte-isr333");
     			toggle_class(div0, "isDisplaying", /*isDisplaying*/ ctx[1]);
-    			add_location(div0, file$c, 95, 12, 3452);
+    			add_location(div0, file$c, 95, 12, 3461);
     			attr_dev(div1, "class", "flex justify-center");
-    			add_location(div1, file$c, 94, 8, 3406);
-    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-15a0y1j");
-    			add_location(div2, file$c, 56, 4, 1473);
-    			attr_dev(div3, "class", "tab-placeholder svelte-15a0y1j");
-    			add_location(div3, file$c, 55, 0, 1439);
+    			add_location(div1, file$c, 94, 8, 3415);
+    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-isr333");
+    			add_location(div2, file$c, 56, 4, 1482);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div2);
+    			insert_dev(target, div2, anchor);
     			if (if_block) if_block.m(div2, null);
     			append_dev(div2, t0);
     			append_dev(div2, div1);
@@ -2251,7 +2246,7 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div2);
     			if (if_block) if_block.d();
     			mounted = false;
     			run_all(dispose);
@@ -6221,7 +6216,7 @@ var app = (function () {
     			div = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
     			t = space();
-    			add_location(div, file$2, 29, 12, 959);
+    			add_location(div, file$2, 29, 12, 945);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -6373,9 +6368,9 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div0, "class", "flex-1 ovflw-auto");
-    			add_location(div0, file$2, 27, 4, 851);
-    			attr_dev(div1, "class", "app-window-wrapper flex-col svelte-1y31b6n");
+    			attr_dev(div0, "class", "flow-wrapper svelte-vf2mc1");
+    			add_location(div0, file$2, 27, 4, 842);
+    			attr_dev(div1, "class", "app-window-wrapper svelte-vf2mc1");
     			add_location(div1, file$2, 20, 0, 593);
     		},
     		l: function claim(nodes) {

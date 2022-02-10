@@ -53,7 +53,7 @@
 </script>
 
 
-<div class="tab-placeholder">
+<!-- <div class="tab-placeholder"> -->
     <div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
         {#if isDisplaying}
         <div transition:slide="{{ duration: 300, easing: quintOut }}" class="flex tab-content">
@@ -96,7 +96,7 @@
             <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>Function Info</div>
         </div>
     </div>
-</div>
+<!-- </div> -->
 
 
 <style>
@@ -107,11 +107,14 @@
     }
 
     .tab-floater {
+        z-index: 2;
         left: 0;
         top: 0;
     }
 
     .tab-toggle {
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
         display: inline-block;
         padding: 4px 10px;
         border-right: 2px solid black;
