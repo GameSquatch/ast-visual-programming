@@ -12,15 +12,7 @@
 
     $: self = parentRef[accessor];
     $: utilities = typeDefs[self.utilityName];
-
-    // I think I want to not do this and create the arguments via the drop data templates
-    if (parentRef[accessor].arguments.length === 0) {
-        const s = parentRef[accessor];
-        const u = typeDefs[s.utilityName][s.utilityMethod];
-        for (let arg of u.args) {
-            s.arguments.push(dropDataTemplates[arg + "Literal"]({}));
-        }
-    }
+    
 
     const onPropertyChange = (event) => {
         const utilityMethod = event.target.value;
@@ -28,15 +20,6 @@
         const items = util.args.map((argType) => dropDataTemplates[argType + "Literal"]({}));
 
         parentRef[accessor] = dropDataTemplates[self.utilityName](utilityMethod);
-
-        // parentRef[accessor] = {
-        //     ...self,
-        //     utilityMethod,
-        //     "arguments": [
-        //         ...items
-        //     ],
-        //     returns: util.returns
-        // };
     };
 
     // !filterType is when things don't have a type in their parent context
