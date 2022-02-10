@@ -53,9 +53,8 @@
     /**
      * @param {DragEvent} event
      */
-     function handleMoveExpression(event) {
-        const dragData = moveExpressionDrag();
-        dragData.node = parentRef[accessor];
+     function handleDragStart(event) {
+        const dragData = moveExpressionDrag(parentRef[accessor]);
 
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
 
@@ -66,7 +65,7 @@
 <div
     on:dragover|preventDefault={dragOverHandler}
     on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
-    on:dragstart|stopPropagation={handleMoveExpression}
+    on:dragstart|stopPropagation={handleDragStart}
     class="expression-container"
     draggable="true"
 >

@@ -16,7 +16,10 @@
 </script>
 
 <p>Assign <strong>{self.left.name}: {self.left.returns}</strong> to</p>
-<div class="assign-right-block" on:dragover={()=>{}} on:drop|stopPropagation={flowDropHandler({ contextName: 'assignment', contextType: self.left.returns, stateChangeCallback: stateChangeOnDrop })}>
+<div class="assign-right-block" 
+    on:dragover={()=>{}}
+    on:drop|stopPropagation={flowDropHandler({ contextName: 'assignment', contextType: self.left.returns, stateChangeCallback: stateChangeOnDrop })}>
+    
     {#if self.right === null}
         Drag an expression here
     {:else}
