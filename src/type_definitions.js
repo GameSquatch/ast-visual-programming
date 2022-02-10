@@ -80,6 +80,11 @@ const typeDefs =  {
             ],
             "infiniteArgs": true,
             "returns": "Integer"
+        },
+        "toString": {
+            "args": [],
+            "infiniteArgs": false,
+            "returns": "String"
         }
     },
     "List": {

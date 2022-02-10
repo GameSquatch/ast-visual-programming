@@ -98,6 +98,61 @@ const mockData = {
                         "returns": "Integer"
                     }
                 }
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
+            },
+            {
+                "type": "ExpressionStatement",
+                "id": uuidv4(),
+                "expression": null
             }
         ]
     }

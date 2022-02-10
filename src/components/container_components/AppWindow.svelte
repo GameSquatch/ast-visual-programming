@@ -21,21 +21,23 @@
 <div
 on:dragover|preventDefault={dragOverHandler}
 on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'flow', stateChangeCallback: appendDrop})}
-class="app-window-wrapper">
+class="app-window-wrapper flex-col">
 
     <FunctionInfoTab bind:info={$ast.main.info} />
 
-    {#each $ast.main.body as flowObject, i (flowObject.id)}
-        <div animate:flip="{{duration: 400}}" transition:squish|local="{{duration: 300, opacity: 0.4, start: 0.2}}">
-            <svelte:component this={constructors[flowObject.type]} bind:parentRef={$ast.main.body} accessor={i} />
-        </div>
-    {/each}
+    <div class="flex-1 ovflw-auto">
+        {#each $ast.main.body as flowObject, i (flowObject.id)}
+            <div animate:flip="{{duration: 400}}" transition:squish|local="{{duration: 300, opacity: 0.4, start: 0.2}}">
+                <svelte:component this={constructors[flowObject.type]} bind:parentRef={$ast.main.body} accessor={i} />
+            </div>
+        {/each}
+    </div>
 </div>
     
 <style>
     .app-window-wrapper {
         flex: 1;
-        overflow: auto;
+        height: 100%;
         background: #efefef;
         z-index: 0;
     }

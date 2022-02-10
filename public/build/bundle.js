@@ -1103,6 +1103,11 @@ var app = (function () {
                 ],
                 "infiniteArgs": true,
                 "returns": "Integer"
+            },
+            "toString": {
+                "args": [],
+                "infiniteArgs": false,
+                "returns": "String"
             }
         },
         "List": {
@@ -2544,6 +2549,61 @@ var app = (function () {
                             "returns": "Integer"
                         }
                     }
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
+                },
+                {
+                    "type": "ExpressionStatement",
+                    "id": v4(),
+                    "expression": null
                 }
             ]
         }
@@ -6119,7 +6179,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (28:4) {#each $ast.main.body as flowObject, i (flowObject.id)}
+    // (29:8) {#each $ast.main.body as flowObject, i (flowObject.id)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let switch_instance;
@@ -6161,7 +6221,7 @@ var app = (function () {
     			div = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
     			t = space();
-    			add_location(div, file$2, 28, 8, 906);
+    			add_location(div, file$2, 29, 12, 959);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -6256,7 +6316,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(28:4) {#each $ast.main.body as flowObject, i (flowObject.id)}",
+    		source: "(29:8) {#each $ast.main.body as flowObject, i (flowObject.id)}",
     		ctx
     	});
 
@@ -6264,10 +6324,11 @@ var app = (function () {
     }
 
     function create_fragment$3(ctx) {
-    	let div;
+    	let div1;
     	let functioninfotab;
     	let updating_info;
     	let t;
+    	let div0;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let current;
@@ -6303,36 +6364,40 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div1 = element("div");
     			create_component(functioninfotab.$$.fragment);
     			t = space();
+    			div0 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div, "class", "app-window-wrapper svelte-109h7vz");
-    			add_location(div, file$2, 20, 0, 593);
+    			attr_dev(div0, "class", "flex-1 ovflw-auto");
+    			add_location(div0, file$2, 27, 4, 851);
+    			attr_dev(div1, "class", "app-window-wrapper flex-col svelte-1y31b6n");
+    			add_location(div1, file$2, 20, 0, 593);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			mount_component(functioninfotab, div, null);
-    			append_dev(div, t);
+    			insert_dev(target, div1, anchor);
+    			mount_component(functioninfotab, div1, null);
+    			append_dev(div1, t);
+    			append_dev(div1, div0);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div, null);
+    				each_blocks[i].m(div0, null);
     			}
 
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div, "dragover", prevent_default(dragOverHandler), false, true, false),
+    					listen_dev(div1, "dragover", prevent_default(dragOverHandler), false, true, false),
     					listen_dev(
-    						div,
+    						div1,
     						"drop",
     						stop_propagation(prevent_default(flowDropHandler({
     							contextName: 'flow',
@@ -6364,7 +6429,7 @@ var app = (function () {
     				group_outros();
     				for (let i = 0; i < each_blocks.length; i += 1) each_blocks[i].r();
     				validate_each_keys(ctx, each_value, get_each_context, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div, fix_and_outro_and_destroy_block, create_each_block, null, get_each_context);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div0, fix_and_outro_and_destroy_block, create_each_block, null, get_each_context);
     				for (let i = 0; i < each_blocks.length; i += 1) each_blocks[i].a();
     				check_outros();
     			}
@@ -6389,7 +6454,7 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div1);
     			destroy_component(functioninfotab);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
