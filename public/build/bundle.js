@@ -1022,78 +1022,6 @@ var app = (function () {
       return stringify(rnds);
     }
 
-    const dropDataTemplates = {
-        "stringUtil": (method = "concat") => ({
-            type: "UtilityCallExpression",
-            utilityName: "StringUtil",
-            utilityMethod: method,
-            arguments: [
-                // {
-                //     type: "StringLiteral",
-                //     value: "",
-                //     returns: "String"
-                // },
-                // {
-                //     type: "StringLiteral",
-                //     value: "",
-                //     returns: "String"
-                // }
-            ],
-            returns: "String"
-        }),
-        "typeUtil": ({ name, method, returns, variableName }) => ({
-            type: "UtilityCallExpression",
-            variableName,
-            utilityName: name,
-            utilityMethod: method,
-            arguments: [],
-            returns
-        }),
-        "expression": () => {
-            const newUuid = v4();
-            return {
-                type: "ExpressionStatement",
-                id: newUuid,
-                expression: null
-            };
-        },
-        "AssignmentExpression": ({ name = "", type = ""}) => ({
-            type: "AssignmentExpression",
-            left: {
-                type: "Identifier",
-                name,
-                returns: type
-            },
-            right: null
-        }),
-        "variableExpression": ({ name = "", type = ""}) => ({
-            type: "AssignmentExpression",
-            left: {
-                type: "Identifier",
-                name,
-                returns: type
-            },
-            right: null
-        }),
-        "variableValue": ({ name = "", type = "" }) => ({
-            type: "Identifier",
-            name,
-            returns: type
-        }),
-        // Capitalizing because it matches the 'type' field in the AST
-        "StringLiteral": ({ value = "" }) => ({
-            type: "StringLiteral",
-            value: value,
-            returns: "String"
-        }),
-        // Capitalizing because it matches the 'type' field in the AST
-        "IntegerLiteral": ({ value = 0 }) => ({
-            type: "IntegerLiteral",
-            value,
-            returns: "Integer"
-        })
-    };
-
     const typeDefs =  {
         "StringUtil": {
             "concat": {
@@ -1188,6 +1116,72 @@ var app = (function () {
         }
     };
 
+    const dropDataTemplates = {
+        "StringUtil": function(method = "concat") {
+            const methodDefinition = typeDefs['StringUtil'][method];
+            const definitionArgs = methodDefinition.args;
+
+            return {
+                type: "UtilityCallExpression",
+                utilityName: "StringUtil",
+                utilityMethod: method,
+                arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
+                returns: methodDefinition.returns
+            };
+        },
+        "typeUtil": ({ name, method, returns, variableName }) => ({
+            type: "UtilityCallExpression",
+            variableName,
+            utilityName: name,
+            utilityMethod: method,
+            arguments: [],
+            returns
+        }),
+        "expression": () => {
+            const newUuid = v4();
+            return {
+                type: "ExpressionStatement",
+                id: newUuid,
+                expression: null
+            };
+        },
+        "AssignmentExpression": ({ name = "", type = ""}) => ({
+            type: "AssignmentExpression",
+            left: {
+                type: "Identifier",
+                name,
+                returns: type
+            },
+            right: null
+        }),
+        "variableExpression": ({ name = "", type = ""}) => ({
+            type: "AssignmentExpression",
+            left: {
+                type: "Identifier",
+                name,
+                returns: type
+            },
+            right: null
+        }),
+        "variableValue": ({ name = "", type = "" }) => ({
+            type: "Identifier",
+            name,
+            returns: type
+        }),
+        // Capitalizing because it matches the 'type' field in the AST
+        "StringLiteral": ({ value = "" }) => ({
+            type: "StringLiteral",
+            value: value,
+            returns: "String"
+        }),
+        // Capitalizing because it matches the 'type' field in the AST
+        "IntegerLiteral": ({ value = 0 }) => ({
+            type: "IntegerLiteral",
+            value,
+            returns: "Integer"
+        })
+    };
+
     const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
     /**
      * @callback DragCallback
@@ -1238,12 +1232,12 @@ var app = (function () {
     /**
      * @param {Object} dragData - The DragEvent data parsed into an object
      * @param {string} type - Data type
-     * @returns {?Object} Returns either null or the ast node to be created from dropping this stringUtil
+     * @returns {?Object.<string, *>} Returns either null or the ast node to be created from dropping this stringUtil
      */
     const stringUtilFromTypedContext = (dragData, contextType) => {
         const methodName = findStringUtilTypeMatch(contextType);
         if (methodName === null) return null;
-        return dropDataTemplates.stringUtil(methodName, contextType);
+        return dropDataTemplates.StringUtil(methodName, contextType);
     };
 
 
@@ -1274,9 +1268,9 @@ var app = (function () {
             assignment: variableFromTypedContext,
             argument: variableFromTypedContext
         },
-        stringUtil: {
-            flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.stringUtil()),
-            expression: (dragData, contextType) => dropDataTemplates.stringUtil(),
+        StringUtil: {
+            flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.StringUtil()),
+            expression: (dragData, contextType) => dropDataTemplates.StringUtil(),
             assignment: stringUtilFromTypedContext,
             argument: stringUtilFromTypedContext
         },
@@ -1294,26 +1288,30 @@ var app = (function () {
         }
     };
 
-
     /**
-     * @param {string} contextName The name of the component in which the drop event occurs. If I
+     * @callback stateChangeCallback
+     * @param {Object.<string, *>} node - The ast node being created from the drop that occurred or null
+     * if nothing should happen
+     */
+    /**
+     * @callback dragEventHandler
+     * @param {DragEvent} dragEvent The DragEvent passed from the original event handler
+     */
+    /**
+     * @param {Object} dropConfig
+     * @param {string} dropConfig.contextName The name of the component in which the drop event occurs. If I
      * drop in something into an assigment, the context would be 'assignment'. See the structure above
      * in 'drag_and_drop_handlers.js'
-     * @param {DragEvent} dragEvent The DragEvent passed from the original event handler
-     * @param {string} contextType The data type of the context component
-     * @returns {Object}
+     * @param {string} [dropConfig.contextType] The data type of the context component
+     * @param {stateChangeCallback} dropConfig.stateChangeCallback What gets called to modify state once the drop
+     * has occurred and an ast node has been created and passed to this callback
+     * @returns {dragEventHandler}
      */
-    const createDropNodeFromContext = (contextName, dragEvent, contextType) => {
+    const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (dragEvent) => {
         const dragData = getDragData(dragEvent);
 
-        let node = dropContextMap[dragData.dragType][contextName](dragData, contextType);
-
-        return node;
-    };
-
-
-    const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (dragEvent) => {
-        const node = createDropNodeFromContext(contextName, dragEvent, contextType);
+        const node = dropContextMap[dragData.dragType][contextName](dragData, contextType);
+        
         stateChangeCallback(node);
     };
 
@@ -1619,7 +1617,7 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('SideNav', slots, []);
     	const doActionData = { "dragType": "expression" };
-    	const stringUtilData = { "dragType": "stringUtil" };
+    	const stringUtilData = { "dragType": "StringUtil" };
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -3155,7 +3153,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (56:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
+    // (58:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
     function create_each_block_1$1(ctx) {
     	let option;
     	let t_value = /*method*/ ctx[15] + "";
@@ -3170,7 +3168,7 @@ var app = (function () {
     			option.__value = option_value_value = /*method*/ ctx[15];
     			option.value = option.__value;
     			option.selected = option_selected_value = /*method*/ ctx[15] === /*self*/ ctx[2].utilityMethod;
-    			add_location(option, file$9, 56, 12, 1952);
+    			add_location(option, file$9, 58, 12, 2059);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -3197,14 +3195,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(56:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
+    		source: "(58:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:16) {:else}
+    // (68:16) {:else}
     function create_else_block$2(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -3305,14 +3303,14 @@ var app = (function () {
     		block,
     		id: create_else_block$2.name,
     		type: "else",
-    		source: "(66:16) {:else}",
+    		source: "(68:16) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (64:16) {#if argument.type === "UtilityCallExpression"}
+    // (66:16) {#if argument.type === "UtilityCallExpression"}
     function create_if_block$3(ctx) {
     	let utilitycallexpression;
     	let updating_parentRef;
@@ -3377,14 +3375,14 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(64:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
+    		source: "(66:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:8) {#each self.arguments as argument, i (i)}
+    // (63:8) {#each self.arguments as argument, i (i)}
     function create_each_block$3(key_1, ctx) {
     	let div;
     	let clearnodeprop;
@@ -3420,7 +3418,7 @@ var app = (function () {
     			t = space();
     			if_block.c();
     			attr_dev(div, "class", "arg-box svelte-48s71p");
-    			add_location(div, file$9, 61, 12, 2139);
+    			add_location(div, file$9, 63, 12, 2246);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -3511,7 +3509,7 @@ var app = (function () {
     		block,
     		id: create_each_block$3.name,
     		type: "each",
-    		source: "(61:8) {#each self.arguments as argument, i (i)}",
+    		source: "(63:8) {#each self.arguments as argument, i (i)}",
     		ctx
     	});
 
@@ -3574,10 +3572,10 @@ var app = (function () {
     			}
 
     			t3 = text("\n    )");
-    			add_location(select, file$9, 54, 69, 1823);
-    			add_location(span, file$9, 54, 4, 1758);
+    			add_location(select, file$9, 56, 69, 1930);
+    			add_location(span, file$9, 56, 4, 1865);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$9, 53, 0, 1723);
+    			add_location(p, file$9, 55, 0, 1830);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3712,20 +3710,17 @@ var app = (function () {
     	const onPropertyChange = event => {
     		const utilityMethod = event.target.value;
     		const util = utilities[utilityMethod];
-    		const items = util.args.map(argType => dropDataTemplates[argType + "Literal"]({}));
+    		util.args.map(argType => dropDataTemplates[argType + "Literal"]({}));
+    		$$invalidate(0, parentRef[accessor] = dropDataTemplates[self.utilityName](utilityMethod), parentRef);
+    	}; // parentRef[accessor] = {
+    	//     ...self,
+    	//     utilityMethod,
+    	//     "arguments": [
 
-    		$$invalidate(
-    			0,
-    			parentRef[accessor] = {
-    				...self,
-    				utilityMethod,
-    				"arguments": [...items],
-    				returns: util.returns
-    			},
-    			parentRef
-    		);
-    	};
-
+    	//         ...items
+    	//     ],
+    	//     returns: util.returns
+    	// };
     	// !filterType is when things don't have a type in their parent context
     	const matchParentTypeFilter = methodName => !filterType || utilities[methodName].returns === filterType;
 
@@ -4720,7 +4715,7 @@ var app = (function () {
     	const onMethodChange = payloadObj => {
     		// TODO: commit change to the store using the parentRef from here
     		//store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
-    		$$invalidate(3, parentRef[accessor] = dropDataTemplates.stringUtil(payloadObj.detail.methodName), parentRef);
+    		$$invalidate(3, parentRef[accessor] = dropDataTemplates.StringUtil(payloadObj.detail.methodName), parentRef);
     	};
 
     	const writable_props = ['parentRef', 'accessor'];

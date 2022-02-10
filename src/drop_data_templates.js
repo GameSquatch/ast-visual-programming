@@ -1,24 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
+import typeDefs from './type_definitions.js';
 
 const dropDataTemplates = {
-    "stringUtil": (method = "concat") => ({
-        type: "UtilityCallExpression",
-        utilityName: "StringUtil",
-        utilityMethod: method,
-        arguments: [
-            // {
-            //     type: "StringLiteral",
-            //     value: "",
-            //     returns: "String"
-            // },
-            // {
-            //     type: "StringLiteral",
-            //     value: "",
-            //     returns: "String"
-            // }
-        ],
-        returns: "String"
-    }),
+    "StringUtil": function(method = "concat") {
+        const methodDefinition = typeDefs['StringUtil'][method];
+        const definitionArgs = methodDefinition.args;
+
+        return {
+            type: "UtilityCallExpression",
+            utilityName: "StringUtil",
+            utilityMethod: method,
+            arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
+            returns: methodDefinition.returns
+        };
+    },
     "typeUtil": ({ name, method, returns, variableName }) => ({
         type: "UtilityCallExpression",
         variableName,

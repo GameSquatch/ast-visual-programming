@@ -14,7 +14,7 @@
     const onMethodChange = (payloadObj) => {
         // TODO: commit change to the store using the parentRef from here
         //store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
-        parentRef[accessor] = dropDataTemplates.stringUtil(payloadObj.detail.methodName);
+        parentRef[accessor] = dropDataTemplates.StringUtil(payloadObj.detail.methodName);
     };
     
     //onUpdated(() => console.log(`updated ${defArgNumber()} ${currentRef.value.callee.property.name}`));

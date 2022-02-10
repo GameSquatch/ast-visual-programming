@@ -57,7 +57,7 @@ const wrapWithExpression = (node) => {
 const stringUtilFromTypedContext = (dragData, contextType) => {
     const methodName = findStringUtilTypeMatch(contextType);
     if (methodName === null) return null;
-    return dropDataTemplates.stringUtil(methodName, contextType);
+    return dropDataTemplates.StringUtil(methodName, contextType);
 };
 
 
@@ -88,9 +88,9 @@ const dropContextMap = {
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },
-    stringUtil: {
-        flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.stringUtil()),
-        expression: (dragData, contextType) => dropDataTemplates.stringUtil(),
+    StringUtil: {
+        flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.StringUtil()),
+        expression: (dragData, contextType) => dropDataTemplates.StringUtil(),
         assignment: stringUtilFromTypedContext,
         argument: stringUtilFromTypedContext
     },

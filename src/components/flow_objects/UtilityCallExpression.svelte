@@ -27,14 +27,16 @@
         const util = utilities[utilityMethod];
         const items = util.args.map((argType) => dropDataTemplates[argType + "Literal"]({}));
 
-        parentRef[accessor] = {
-            ...self,
-            utilityMethod,
-            "arguments": [
-                ...items
-            ],
-            returns: util.returns
-        };
+        parentRef[accessor] = dropDataTemplates[self.utilityName](utilityMethod);
+
+        // parentRef[accessor] = {
+        //     ...self,
+        //     utilityMethod,
+        //     "arguments": [
+        //         ...items
+        //     ],
+        //     returns: util.returns
+        // };
     };
 
     // !filterType is when things don't have a type in their parent context

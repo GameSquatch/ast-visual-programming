@@ -2,7 +2,7 @@
     import FlowObjectSource from './FlowObjectSource.svelte';
     
     const doActionData = { "dragType": "expression" }
-    const stringUtilData = { "dragType": "stringUtil" }
+    const stringUtilData = { "dragType": "StringUtil" }
 </script>
 
 <div class="side-nav-wrapper">
