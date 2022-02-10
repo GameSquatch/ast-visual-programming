@@ -52,60 +52,51 @@
     }
 </script>
 
-
-<!-- <div class="tab-placeholder"> -->
-    <div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
-        {#if isDisplaying}
-        <div transition:slide="{{ duration: 300, easing: quintOut }}" class="flex tab-content">
-            <div class="flex-1 var-section">
-                <h4>Variables</h4>
-                <div class="flex w100 space-between var-container">
-                    <div class="flex-1">Name</div>
-                    <div class="flex-1">Type</div>
-                    <div class="flex-1">Default Value</div>
-                </div>
-
-                {#each info.variables as variable, i}
-                    <div on:dragstart={dragStart(variable)} draggable="true" class="flex w100 space-between var-container">
-                        <div class="flex-1">{variable.name}: </div>
-                        <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
-                        <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>
-                    </div>
-                {/each}
-                <div class="add-var-btn">
-                    <button on:click={addVariable}>Add Variable</button>
-                </div>
+<div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
+    {#if isDisplaying}
+    <div transition:slide="{{ duration: 300, easing: quintOut }}" class="flex tab-content">
+        <div class="flex-1 var-section">
+            <h4>Variables</h4>
+            <div class="flex w100 space-between var-container">
+                <div class="flex-1">Name</div>
+                <div class="flex-1">Type</div>
+                <div class="flex-1">Default Value</div>
             </div>
-            <div class="flex-1 param-section">
-                <h4>Parameters</h4>
-                {#each info.parameters as parameter, i}
-                <div draggable="true" on:dragstart={dragStart} class="flex w100 space-between var-container">
-                    <span>{parameter.name}: </span>
-                    <select value="{parameter.type}"><option value="String">String</option><option value="Integer">Integer</option></select>
+
+            {#each info.variables as variable, i}
+                <div on:dragstart={dragStart(variable)} draggable="true" class="flex w100 space-between var-container">
+                    <div class="flex-1">{variable.name}: </div>
+                    <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
+                    <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>
                 </div>
-                {/each}
-                <div class="add-var-btn">
-                    <button on:click={addParameter}>Add Variable</button>
-                </div>
+            {/each}
+            <div class="add-var-btn">
+                <button on:click={addVariable}>Add Variable</button>
             </div>
         </div>
-        {/if}
-
-
-        <div class="flex justify-center">
-            <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>Function Info</div>
+        <div class="flex-1 param-section">
+            <h4>Parameters</h4>
+            {#each info.parameters as parameter, i}
+            <div draggable="true" on:dragstart={dragStart} class="flex w100 space-between var-container">
+                <span>{parameter.name}: </span>
+                <select value="{parameter.type}"><option value="String">String</option><option value="Integer">Integer</option></select>
+            </div>
+            {/each}
+            <div class="add-var-btn">
+                <button on:click={addParameter}>Add Variable</button>
+            </div>
         </div>
     </div>
-<!-- </div> -->
+    {/if}
+
+
+    <div class="flex justify-center">
+        <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>Function Info</div>
+    </div>
+</div>
 
 
 <style>
-    .tab-placeholder {
-        position: relative;
-        padding: 26px 0;
-        z-index: 2;
-    }
-
     .tab-floater {
         z-index: 2;
         left: 0;
