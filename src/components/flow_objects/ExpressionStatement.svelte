@@ -2,6 +2,7 @@
     import { flowDropHandler } from "../../drag_and_drop_handlers.js";
     import constructors from "../../constructors.js";
     import ClearNodeProp from '../ClearNodeProp.svelte';
+    import DragHandle from '../DragHandle.svelte';
     import { moveExpressionDrag } from '../../drag_types.js';
 
     export let accessor;
@@ -65,12 +66,14 @@
 <div
     on:dragover|preventDefault={dragOverHandler}
     on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
-    on:dragstart|stopPropagation={handleDragStart}
     class="expression-container"
-    draggable="true"
+    on:dragstart|stopPropagation={handleDragStart}
 >
-    <button class="expression-delete-btn" on:click={deleteFlowStep}>Delete</button>
-    <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
+    <DragHandle  />
+    <div class="flex w100">
+        <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
+        <button on:click={deleteFlowStep}>Delete</button>
+    </div>
 
     {#if self && self.expression !== null}
         <svelte:component
@@ -94,10 +97,9 @@
 
 <style>
     .expression-container {
-        padding: 32px;
+        padding: 10px 32px 32px;
         border: 1px dashed black;
         position: relative;
-        max-width: 350px;
         z-index: 1;
     }
 
@@ -105,24 +107,11 @@
         margin-left: 20px;
         border-left: 1px dashed black;
         height: 30px;
-        /* transition: height 0.5s ease-out; */
     }
 
     .insert-drag-over {
         border-left: 2px dashed green;
         transition: height 0.3s ease-out;
         height: 45px;
-    }
-
-    .expression-delete-btn {
-        position: absolute;
-        opacity: 0;
-        top: 6px;
-        left: 6px;
-        transition: opacity 0.3s ease-out;
-    }
-
-    .expression-container:hover .expression-delete-btn {
-        opacity: 1;
     }
 </style>

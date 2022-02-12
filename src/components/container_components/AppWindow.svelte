@@ -39,6 +39,7 @@ class="app-window-wrapper">
         height: 100%;
         overflow: auto;
         padding-top: 75px;
+        padding: 75px 10px 10px;
         z-index: -1;
     }
 

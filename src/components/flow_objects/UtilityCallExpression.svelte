@@ -42,7 +42,6 @@
             <option value={method} selected={method === self.utilityMethod}>{method}</option>
         {/each}
     </select></span>
-    (
         {#each self.arguments as argument, i (i)}
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })} on:dragover={() => {}} class="arg-box">
                 <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({})} />
@@ -53,7 +52,6 @@
                 {/if}
             </div>
         {/each}
-    )
 </p>
 
 <style>

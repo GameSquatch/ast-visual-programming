@@ -64,8 +64,8 @@
             </div>
 
             {#each info.variables as variable, i}
-                <div on:dragstart={dragStart(variable)} draggable="true" class="flex w100 space-between var-container">
-                    <div class="flex-1">{variable.name}: </div>
+                <div on:dragstart={dragStart(variable)} class="flex w100 space-between var-container">
+                    <div class="var-name flex-1" draggable="true">{variable.name}: </div>
                     <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
                     <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>
                 </div>
@@ -98,6 +98,7 @@
 
 <style>
     .tab-floater {
+        --function-info-bg: #444;
         z-index: 2;
         left: 0;
         top: 0;
@@ -124,12 +125,19 @@
     .tab-content {
         height: 200px;
         overflow: auto;
-        background: #444;
+        background: var(--function-info-bg);
         color: white;
         box-shadow: 0 2px 8px 4px rgba(0, 0, 0, 0.45);
         z-index: 3;
     }
     .tab-content > div {
         padding: 12px;
+    }
+
+    .var-name {
+        user-select: none;
+        -webkit-user-select: none;
+        cursor: move;
+        background: var(--function-info-bg)
     }
 </style>

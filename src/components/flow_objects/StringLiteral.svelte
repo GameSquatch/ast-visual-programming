@@ -14,4 +14,4 @@
 </script>
 
 
-<input type="text" value={self.value} on:change={updateValue} />
+<input type="text" value={self.value} on:change={updateValue} on:dragStart|stopPropagation={() => {}} />
