@@ -1,5 +1,5 @@
 
-<div class="drag-handle" draggable="true"></div>
+<div class="drag-handle" draggable=true></div>
 
 
 <style>

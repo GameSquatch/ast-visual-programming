@@ -102,7 +102,7 @@ const dropContextMap = {
     },
     moveExpression: {
         flow: (dragData, contextType) => dragData.node,
-        expression: (dragData, contextType) => dragData.node,
+        expression: noNode,//(dragData, contextType) => dragData.node,
         assignment: noNode,
         argument: noNode
     }
@@ -129,6 +129,7 @@ const dropContextMap = {
  */
 const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (dragEvent) => {
     const dragData = getDragData(dragEvent);
+    console.log(dragData);
 
     const node = dropContextMap[dragData.dragType][contextName](dragData, contextType);
     

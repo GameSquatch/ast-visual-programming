@@ -9,7 +9,9 @@
     export let parentRef;
 
     $: self = parentRef[accessor];
+
     let isOverInsertSpot = false;
+    let beingDragged = false;
 
     function dragOverHandler(event) {
         // do something like change cursor
@@ -55,45 +57,63 @@
      * @param {DragEvent} event
      */
      function handleDragStart(event) {
-        const dragData = moveExpressionDrag(parentRef[accessor]);
-
+        const dragData = moveExpressionDrag(self);
+        
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
+        //beingDragged = true;
 
         deleteFlowStep(event);
     }
+
+    /** @param {DragEvent} event */
+    function checkDropCancel(event) {
+        if (event.dataTransfer.dropEffect === 'none') {
+            console.log(event.dataTransfer);
+            //const node = JSON.parse(event.dataTransfer.getData('text/json'));
+            //insertDrop(node);
+            //beingDragged = false;
+            event.preventDefault();
+            return;
+        }
+    }
 </script>
 
-<div
-    on:dragover|preventDefault={dragOverHandler}
-    on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
-    class="expression-container"
-    on:dragstart|stopPropagation={handleDragStart}
->
-    <DragHandle  />
-    <div class="flex w100">
-        <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
-        <button on:click={deleteFlowStep}>Delete</button>
+<div class:beingDragged>
+    <div
+        on:dragover|preventDefault={dragOverHandler}
+        on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
+        class="expression-container"
+        on:dragstart|stopPropagation={handleDragStart}
+        on:dragend|stopPropagation={checkDropCancel}
+    >
+        <DragHandle  />
+        <div class="flex w100">
+            {#if self.expression !== null}
+                <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
+            {/if}
+            <button on:click={deleteFlowStep}>Delete</button>
+        </div>
+    
+        {#if self && self.expression !== null}
+            <svelte:component
+                this={constructors[self.expression.type]}
+                accessor={"expression"}
+                bind:parentRef={parentRef[accessor]}
+            />
+        {:else}
+            <p class="dull-text">Drag an action here</p>
+        {/if}
     </div>
-
-    {#if self && self.expression !== null}
-        <svelte:component
-            this={constructors[self.expression.type]}
-            accessor={"expression"}
-            bind:parentRef={parentRef[accessor]}
-        />
-    {:else}
-        <p class="dull-text">Drag an action here</p>
-    {/if}
+    <div
+        on:dragover|preventDefault={insertDragOverHandler}
+        on:dragenter|preventDefault={insertDragEnter}
+        on:dragleave|preventDefault={insertDragLeave}
+        on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
+        on:drop|stopPropagation|preventDefault={removeInsertHover}
+        class="line-down-box"
+        class:insert-drag-over={isOverInsertSpot}
+    ></div>
 </div>
-<div
-    on:dragover|preventDefault={insertDragOverHandler}
-    on:dragenter|preventDefault={insertDragEnter}
-    on:dragleave|preventDefault={insertDragLeave}
-    on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
-    on:drop|stopPropagation|preventDefault={removeInsertHover}
-    class="line-down-box"
-    class:insert-drag-over={isOverInsertSpot}
-/>
 
 <style>
     .expression-container {
@@ -113,5 +133,9 @@
         border-left: 2px dashed green;
         transition: height 0.3s ease-out;
         height: 45px;
+    }
+
+    .beingDragged {
+        opacity: 0.4;
     }
 </style>
