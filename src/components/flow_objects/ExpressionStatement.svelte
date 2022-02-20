@@ -60,19 +60,18 @@
         const dragData = moveExpressionDrag(self);
         
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
-        //beingDragged = true;
+        beingDragged = true;
 
         deleteFlowStep(event);
     }
 
     /** @param {DragEvent} event */
     function checkDropCancel(event) {
+        console.log(event.dataTransfer);
         if (event.dataTransfer.dropEffect === 'none') {
-            console.log(event.dataTransfer);
             //const node = JSON.parse(event.dataTransfer.getData('text/json'));
             //insertDrop(node);
-            //beingDragged = false;
-            event.preventDefault();
+            beingDragged = false;
             return;
         }
     }
