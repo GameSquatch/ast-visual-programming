@@ -1,6 +1,6 @@
 {
-  "name": "vue_test",
-  "version": "0.0.0",
+  "name": "z-flow",
+  "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
