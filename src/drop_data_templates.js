@@ -14,14 +14,19 @@ const dropDataTemplates = {
             returns: methodDefinition.returns
         };
     },
-    "typeUtil": ({ name, method, returns, variableName }) => ({
-        type: "UtilityCallExpression",
-        variableName,
-        utilityName: name,
-        utilityMethod: method,
-        arguments: [],
-        returns
-    }),
+    "typeUtil": function({ name, method, returns, variableName }) {
+        const methodDefinition = typeDefs[name][method];
+        const definitionArgs = methodDefinition.args;
+
+        return {
+            type: "UtilityCallExpression",
+            variableName,
+            utilityName: name,
+            utilityMethod: method,
+            arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
+            returns
+        };
+    },
     "expression": () => {
         const newUuid = uuidv4();
         return {

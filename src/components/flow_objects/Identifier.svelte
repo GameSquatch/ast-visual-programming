@@ -19,8 +19,6 @@
             return;
         }
 
-        usesTypeMethod = true;
-
         const util = utilityDefinitions[self.returns][event.target.value];
         parentRef[accessor] = dropDataTemplates.typeUtil({
             name: self.returns,
@@ -28,6 +26,8 @@
             returns: util.returns,
             variableName: self.name
         });
+
+        usesTypeMethod = true;
     }
 </script>
     
