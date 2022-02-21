@@ -31,7 +31,10 @@
     }
 
     function dropModify(node) {
-        parentRef[accessor].expression = node;
+        if (node.type === 'ExpressionStatement')
+            parentRef[accessor].expression = node.expression;
+        else
+            parentRef[accessor].expression = node;
     }
 
     /**
@@ -61,19 +64,16 @@
         
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
         beingDragged = true;
-
-        deleteFlowStep(event);
     }
 
     /** @param {DragEvent} event */
     function checkDropCancel(event) {
-        console.log(event.dataTransfer);
         if (event.dataTransfer.dropEffect === 'none') {
-            //const node = JSON.parse(event.dataTransfer.getData('text/json'));
-            //insertDrop(node);
             beingDragged = false;
             return;
         }
+
+        deleteFlowStep(event);
     }
 </script>
 

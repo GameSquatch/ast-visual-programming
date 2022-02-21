@@ -1,5 +1,6 @@
 import dropDataTemplates from './drop_data_templates.js';
 import typeDefs from './type_definitions.js';
+import { v4 as uuidv4 } from 'uuid';
 
 
 const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
@@ -101,8 +102,11 @@ const dropContextMap = {
         argument: noNode
     },
     moveExpression: {
-        flow: (dragData, contextType) => dragData.node,
-        expression: noNode,//(dragData, contextType) => dragData.node,
+        flow: (dragData, contextType) => {
+            dragData.node.id = uuidv4();
+            return dragData.node;
+        },
+        expression: (dragData, contextType) => dragData.node,
         assignment: noNode,
         argument: noNode
     }
