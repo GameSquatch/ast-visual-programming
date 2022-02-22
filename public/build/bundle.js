@@ -3396,7 +3396,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (41:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
+    // (46:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
     function create_each_block_1$1(ctx) {
     	let option;
     	let t_value = /*method*/ ctx[15] + "";
@@ -3411,7 +3411,7 @@ var app = (function () {
     			option.__value = option_value_value = /*method*/ ctx[15];
     			option.value = option.__value;
     			option.selected = option_selected_value = /*method*/ ctx[15] === /*self*/ ctx[2].utilityMethod;
-    			add_location(option, file$9, 41, 12, 1483);
+    			add_location(option, file$9, 46, 12, 1595);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -3438,14 +3438,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(41:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
+    		source: "(46:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (50:16) {:else}
+    // (55:16) {:else}
     function create_else_block$2(ctx) {
     	let switch_instance;
     	let updating_parentRef;
@@ -3546,14 +3546,14 @@ var app = (function () {
     		block,
     		id: create_else_block$2.name,
     		type: "else",
-    		source: "(50:16) {:else}",
+    		source: "(55:16) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (48:16) {#if argument.type === "UtilityCallExpression"}
+    // (53:16) {#if argument.type === "UtilityCallExpression"}
     function create_if_block$3(ctx) {
     	let utilitycallexpression;
     	let updating_parentRef;
@@ -3618,14 +3618,14 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(48:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
+    		source: "(53:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:8) {#each self.arguments as argument, i (i)}
+    // (50:8) {#each self.arguments as argument, i (i)}
     function create_each_block$3(key_1, ctx) {
     	let div;
     	let clearnodeprop;
@@ -3663,7 +3663,7 @@ var app = (function () {
     			if_block.c();
     			t1 = space();
     			attr_dev(div, "class", "arg-box svelte-48s71p");
-    			add_location(div, file$9, 45, 12, 1664);
+    			add_location(div, file$9, 50, 12, 1776);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -3755,7 +3755,7 @@ var app = (function () {
     		block,
     		id: create_each_block$3.name,
     		type: "each",
-    		source: "(45:8) {#each self.arguments as argument, i (i)}",
+    		source: "(50:8) {#each self.arguments as argument, i (i)}",
     		ctx
     	});
 
@@ -3816,10 +3816,10 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(select, file$9, 39, 69, 1354);
-    			add_location(span, file$9, 39, 4, 1289);
+    			add_location(select, file$9, 44, 69, 1466);
+    			add_location(span, file$9, 44, 4, 1401);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$9, 38, 0, 1254);
+    			add_location(p, file$9, 43, 0, 1366);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3942,9 +3942,19 @@ var app = (function () {
 
     	const onPropertyChange = event => {
     		const utilityMethod = event.target.value;
-    		const util = utilities[utilityMethod];
-    		util.args.map(argType => dropDataTemplates[argType + "Literal"]({}));
-    		$$invalidate(0, parentRef[accessor] = dropDataTemplates[self.utilityName](utilityMethod), parentRef);
+    		const typeDef = typeDefs[self.utilityName][utilityMethod];
+    		const args = typeDef.args.map(argType => dropDataTemplates[argType + "Literal"]({}));
+
+    		$$invalidate(
+    			0,
+    			parentRef[accessor] = {
+    				...parentRef[accessor],
+    				utilityMethod,
+    				arguments: args,
+    				returns: typeDef.returns
+    			},
+    			parentRef
+    		);
     	};
 
     	// !filterType is when things don't have a type in their parent context

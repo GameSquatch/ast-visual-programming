@@ -16,10 +16,15 @@
 
     const onPropertyChange = (event) => {
         const utilityMethod = event.target.value;
-        const util = utilities[utilityMethod];
-        const items = util.args.map((argType) => dropDataTemplates[argType + "Literal"]({}));
+        const typeDef = typeDefs[self.utilityName][utilityMethod];
+        const args = typeDef.args.map((argType) => dropDataTemplates[argType + "Literal"]({}));
 
-        parentRef[accessor] = dropDataTemplates[self.utilityName](utilityMethod);
+        parentRef[accessor] = {
+            ...parentRef[accessor],
+            utilityMethod,
+            arguments: args,
+            returns: typeDef.returns
+        };
     };
 
     // !filterType is when things don't have a type in their parent context
