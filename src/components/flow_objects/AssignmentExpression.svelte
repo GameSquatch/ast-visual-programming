@@ -1,5 +1,6 @@
 <script>
     import constructors from '../../constructors.js';
+    import VarIdentifier from '../flow_objects/VarIdentifier.svelte';
     import { flowDropHandler } from '../../drag_and_drop_handlers.js';
     import ClearNodeProp from '../ClearNodeProp.svelte';
 
@@ -15,7 +16,7 @@
     }
 </script>
 
-<p>Assign <strong>{self.left.name}: {self.left.returns}</strong> to</p>
+<p>Assign <strong><VarIdentifier bind:parentRef={self} accessor={"left"} isArgument={false} />: {self.left.returns}</strong> to</p>
 <div class="assign-right-block" 
     on:dragover={()=>{}}
     on:drop|stopPropagation={flowDropHandler({ contextName: 'assignment', contextType: self.left.returns, stateChangeCallback: stateChangeOnDrop })}>

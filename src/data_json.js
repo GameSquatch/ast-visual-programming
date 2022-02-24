@@ -1,20 +1,23 @@
 import { v4 as uuidv4 } from 'uuid';
 
+const var1 = uuidv4();
+const var2 = uuidv4();
+
 const mockData = {
     "main": {
         "info": {
-            "variables": [
-                {
+            "variables": {
+                [var1]: {
                     "name": "aStr",
                     "value": "",
                     "type": "String"
                 },
-                {
+                [var2]: {
                     "name": "aNum",
                     "value": 0,
                     "type": "Integer"
                 }
-            ],
+            },
             "parameters": [],
         },
         "body": [
@@ -24,8 +27,8 @@ const mockData = {
                 "expression": {
                     "type": "AssignmentExpression",
                     "left": {
-                        "type": "Identifier",
-                        "name": "aStr",
+                        "type": "VarIdentifier",
+                        "refId": var1,
                         "returns": "String"
                     },
                     "right": {
@@ -39,8 +42,8 @@ const mockData = {
                                 "returns": "String"
                             },
                             {
-                                "type": "Identifier",
-                                "name": "aStr",
+                                "type": "VarIdentifier",
+                                "refId": var1,
                                 "returns": "String"
                             }
                         ],
@@ -54,15 +57,18 @@ const mockData = {
                 "expression": {
                     "type": "AssignmentExpression",
                     "left": {
-                        "type": "Identifier",
-                        "name": "aStr",
+                        "type": "VarIdentifier",
+                        "refId": var1,
                         "returns": "String"
                     },
                     "right": {
-                        "type": "UtilityCallExpression",
-                        "variableName": "aStr",
-                        "utilityName": "StringUtil",
-                        "utilityMethod": "concat",
+                        "type": "VarCallExpression",
+                        "variableName": {
+                            "type": "VarIdentifier",
+                            "refId": var1,
+                            "returns": "String"
+                        },
+                        "method": "concat",
                         "arguments": [
                             {
                                 "type": "StringLiteral",
@@ -80,8 +86,8 @@ const mockData = {
                 "expression": {
                     "type": "AssignmentExpression",
                     "left": {
-                        "type": "Identifier",
-                        "name": "aNum",
+                        "type": "VarIdentifier",
+                        "refId": var2,
                         "returns": "Integer"
                     },
                     "right": {
@@ -119,41 +125,6 @@ const mockData = {
                 "id": uuidv4(),
                 "expression": null
             },
-            {
-                "type": "ExpressionStatement",
-                "id": uuidv4(),
-                "expression": null
-            },
-            {
-                "type": "ExpressionStatement",
-                "id": uuidv4(),
-                "expression": null
-            },
-            {
-                "type": "ExpressionStatement",
-                "id": uuidv4(),
-                "expression": null
-            },
-            {
-                "type": "ExpressionStatement",
-                "id": uuidv4(),
-                "expression": null
-            },
-            {
-                "type": "ExpressionStatement",
-                "id": uuidv4(),
-                "expression": null
-            },
-            {
-                "type": "ExpressionStatement",
-                "id": uuidv4(),
-                "expression": null
-            },
-            {
-                "type": "ExpressionStatement",
-                "id": uuidv4(),
-                "expression": null
-            }
         ]
     }
 };

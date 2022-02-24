@@ -14,15 +14,14 @@ const dropDataTemplates = {
             returns: methodDefinition.returns
         };
     },
-    "typeUtil": function({ name, method, returns, variableName }) {
-        const methodDefinition = typeDefs[name][method];
+    "typeUtil": function({ method, returns, variableName }) {
+        const methodDefinition = typeDefs[variableName.returns][method];
         const definitionArgs = methodDefinition.args;
 
         return {
-            type: "UtilityCallExpression",
-            variableName,
-            utilityName: name,
-            utilityMethod: method,
+            type: "VarCallExpression",
+            variableName: {...variableName},
+            method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
             returns
         };
@@ -44,18 +43,18 @@ const dropDataTemplates = {
         },
         right: null
     }),
-    "variableExpression": ({ name = "", type = ""}) => ({
+    "variableExpression": ({ refId, type = ""}) => ({
         type: "AssignmentExpression",
         left: {
-            type: "Identifier",
-            name,
+            type: "VarIdentifier",
+            refId,
             returns: type
         },
         right: null
     }),
-    "variableValue": ({ name = "", type = "" }) => ({
-        type: "Identifier",
-        name,
+    "variableValue": ({ refId, type = "" }) => ({
+        type: "VarIdentifier",
+        refId,
         returns: type
     }),
     // Capitalizing because it matches the 'type' field in the AST

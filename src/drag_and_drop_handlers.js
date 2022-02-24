@@ -70,10 +70,10 @@ const variableFromTypedContext = (dragData, contextType) => {
     }
 
     const method = findReturnTypeMatch(dragData.data.type)(contextType);
-    if (method == null) alert("Types don't match and no methods exist to match the type");
+    if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? dropDataTemplates.typeUtil({name: dragData.data.type, method, returns: typeDefs[dragData.data.type][method].returns, variableName: dragData.data.name})
+        ? dropDataTemplates.typeUtil({ method: method, returns: contextType, variableName: { type: "VarIdentifier", refId: dragData.data.refId, returns: dragData.data.type } })
         : null;
 };
 
@@ -85,7 +85,7 @@ const dropContextMap = {
     variable: {
         // context name
         flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.variableExpression(dragData.data)),
-        expression: (dragData, contextType) => dropDataTemplates.variableExpression(dragData.data),
+        expression: (dragData, contextType) => {console.log('dragdata', dragData); return dropDataTemplates.variableExpression(dragData.data);},
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },

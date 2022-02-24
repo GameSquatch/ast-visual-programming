@@ -2,6 +2,7 @@
     import { slide } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
     import { variableDrag } from '../drag_types.js';
+    import { v4 as uuidv4 } from 'uuid';
 
     export let info;
 
@@ -30,18 +31,24 @@
     }
 
     function addVariable(event) {
-        info.variables = [...info.variables, {
-            "name": "newVar",
-            "type": "String",
-            "value": ""
-        }];
+        info.variables = {
+            ...info.variables,
+            [uuidv4()]: {
+                "name": "newVar",
+                "type": "String",
+                "value": ""
+            }
+        };
     }
 
     function addParameter(event) {
-        info.parameters = [...info.parameters, {
-            "name": "newParam",
-            "type": "String"
-        }];
+        info.parameters = [
+            ...info.parameters,
+            {
+                "name": "newParam",
+                "type": "String"
+            }
+        ];
     }
 
     function stopTimer(event) {
@@ -49,6 +56,15 @@
             clearTimeout(reShowTimer);
             reShowTimer = null;
         }
+    }
+
+    function testChangeVarName(varId) {
+        return (_) => {
+            info.variables[varId] = {
+                ...info.variables[varId],
+                name: "hello"
+            };
+        };
     }
 </script>
 
@@ -63,11 +79,12 @@
                 <div class="flex-1">Default Value</div>
             </div>
 
-            {#each info.variables as variable, i}
-                <div on:dragstart={dragStart(variable)} class="flex w100 space-between var-container">
-                    <div class="var-name flex-1" draggable="true">{variable.name}: </div>
-                    <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
-                    <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>
+            {#each Object.keys(info.variables) as varId (varId)}
+                {@const varObj = info.variables[varId]}
+                <div on:dragstart={dragStart({ ...varObj, refId: varId })} class="flex w100 space-between var-container">
+                    <div on:click={testChangeVarName(varId)} class="var-name flex-1" draggable="true">{varObj.name}: </div>
+                    <div class="flex-1"><select value="{varObj.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
+                    <div class="flex-1"><input type="text" value="{varObj.value}"></div>
                 </div>
             {/each}
             <div class="add-var-btn">
