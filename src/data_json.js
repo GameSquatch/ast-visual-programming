@@ -63,7 +63,7 @@ const mockData = {
                     },
                     "right": {
                         "type": "VarCallExpression",
-                        "variableName": {
+                        "variable": {
                             "type": "VarIdentifier",
                             "refId": var1,
                             "returns": "String"

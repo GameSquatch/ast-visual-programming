@@ -9,22 +9,22 @@
     export let parentRef;
     export let accessor;
     export let filterType;
-    export let isArgument;
+    export let isArgument = false;
 
     $: self = parentRef[accessor];
-    $: varTypeMethods = typeDefs[self.variableName.returns];
+    $: varTypeMethods = typeDefs[self.variable.returns];
     
 
     const onPropertyChange = (event) => {
         const method = event.target.value;
         if (method === '') {
             parentRef[accessor] = {
-                ...self.variableName
+                ...self.variable
             };
             return;
         }
 
-        const typeDef = typeDefs[self.variableName.returns][method];
+        const typeDef = typeDefs[self.variable.returns][method];
         const args = typeDef.args.map((argType) => dropDataTemplates[argType + "Literal"]({}));
 
         parentRef[accessor] = {
@@ -50,8 +50,8 @@
 </script>
 
 <p style="padding-left: 10px">
-    <span><VarIdentifier bind:parentRef={self} accessor={"variableName"} isArgument={false} />.<select on:change={onPropertyChange}>
-        <option value=""></option>
+    <span><VarIdentifier bind:parentRef={self} accessor={"variable"} isArgument={false} />.<select on:change={onPropertyChange}>
+        {#if !filterType || self.variable.returns === filterType}<option value=""></option>{/if}
         {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
             <option value={method} selected={method === self.method}>{method}</option>
         {/each}

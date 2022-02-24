@@ -14,13 +14,13 @@ const dropDataTemplates = {
             returns: methodDefinition.returns
         };
     },
-    "typeUtil": function({ method, returns, variableName }) {
-        const methodDefinition = typeDefs[variableName.returns][method];
+    "typeUtil": function({ method, returns, variable }) {
+        const methodDefinition = typeDefs[variable.returns][method];
         const definitionArgs = methodDefinition.args;
 
         return {
             type: "VarCallExpression",
-            variableName: {...variableName},
+            variable: {...variable},
             method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
             returns

@@ -22,7 +22,7 @@
         }
 
         const util = utilityDefinitions[self.returns][event.target.value];
-        parentRef[accessor] = dropDataTemplates.typeUtil({ method: event.target.value, returns: self.returns, variableName: self });
+        parentRef[accessor] = dropDataTemplates.typeUtil({ method: event.target.value, returns: self.returns, variable: self });
 
         usesTypeMethod = true;
     }

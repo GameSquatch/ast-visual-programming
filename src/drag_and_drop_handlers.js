@@ -73,7 +73,7 @@ const variableFromTypedContext = (dragData, contextType) => {
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? dropDataTemplates.typeUtil({ method: method, returns: contextType, variableName: { type: "VarIdentifier", refId: dragData.data.refId, returns: dragData.data.type } })
+        ? dropDataTemplates.typeUtil({ method: method, returns: contextType, variable: { type: "VarIdentifier", refId: dragData.data.refId, returns: dragData.data.type } })
         : null;
 };
 

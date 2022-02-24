@@ -1136,13 +1136,13 @@ var app = (function () {
                 returns: methodDefinition.returns
             };
         },
-        "typeUtil": function({ method, returns, variableName }) {
-            const methodDefinition = typeDefs[variableName.returns][method];
+        "typeUtil": function({ method, returns, variable }) {
+            const methodDefinition = typeDefs[variable.returns][method];
             const definitionArgs = methodDefinition.args;
 
             return {
                 type: "VarCallExpression",
-                variableName: {...variableName},
+                variable: {...variable},
                 method,
                 arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
                 returns
@@ -1263,7 +1263,7 @@ var app = (function () {
         if (method === null) alert("Types don't match and no methods exist to match the type");
         
         return method !== null
-            ? dropDataTemplates.typeUtil({ method: method, returns: contextType, variableName: { type: "VarIdentifier", refId: dragData.data.refId, returns: dragData.data.type } })
+            ? dropDataTemplates.typeUtil({ method: method, returns: contextType, variable: { type: "VarIdentifier", refId: dragData.data.refId, returns: dragData.data.type } })
             : null;
     };
 
@@ -2530,7 +2530,7 @@ var app = (function () {
                         },
                         "right": {
                             "type": "VarCallExpression",
-                            "variableName": {
+                            "variable": {
                                 "type": "VarIdentifier",
                                 "refId": var1,
                                 "returns": "String"
@@ -2785,7 +2785,7 @@ var app = (function () {
     const file$c = "src/components/flow_objects/ExpressionStatement.svelte";
 
     // (90:12) {#if self?.expression ?? false}
-    function create_if_block_1(ctx) {
+    function create_if_block_1$1(ctx) {
     	let clearnodeprop;
     	let current;
 
@@ -2823,7 +2823,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1.name,
+    		id: create_if_block_1$1.name,
     		type: "if",
     		source: "(90:12) {#if self?.expression ?? false}",
     		ctx
@@ -2986,7 +2986,7 @@ var app = (function () {
     	let mounted;
     	let dispose;
     	draghandle = new DragHandle({ $$inline: true });
-    	let if_block0 = (/*self*/ ctx[4]?.expression ?? false) && create_if_block_1(ctx);
+    	let if_block0 = (/*self*/ ctx[4]?.expression ?? false) && create_if_block_1$1(ctx);
     	const if_block_creators = [create_if_block$5, create_else_block$4];
     	const if_blocks = [];
 
@@ -3089,7 +3089,7 @@ var app = (function () {
     						transition_in(if_block0, 1);
     					}
     				} else {
-    					if_block0 = create_if_block_1(ctx);
+    					if_block0 = create_if_block_1$1(ctx);
     					if_block0.c();
     					transition_in(if_block0, 1);
     					if_block0.m(div0, t1);
@@ -3395,7 +3395,7 @@ var app = (function () {
     			option.__value = option_value_value = /*method*/ ctx[15];
     			option.value = option.__value;
     			option.selected = option_selected_value = /*method*/ ctx[15] === /*self*/ ctx[2].utilityMethod;
-    			add_location(option, file$b, 46, 12, 1595);
+    			add_location(option, file$b, 46, 12, 1555);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -3445,7 +3445,8 @@ var app = (function () {
     	function switch_props(ctx) {
     		let switch_instance_props = {
     			accessor: /*i*/ ctx[14],
-    			isArgument: true
+    			isArgument: true,
+    			filterType: /*argument*/ ctx[12].returns
     		};
 
     		if (/*self*/ ctx[2].arguments !== void 0) {
@@ -3479,6 +3480,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const switch_instance_changes = {};
     			if (dirty & /*self*/ 4) switch_instance_changes.accessor = /*i*/ ctx[14];
+    			if (dirty & /*self*/ 4) switch_instance_changes.filterType = /*argument*/ ctx[12].returns;
 
     			if (!updating_parentRef && dirty & /*self*/ 4) {
     				updating_parentRef = true;
@@ -3647,7 +3649,7 @@ var app = (function () {
     			if_block.c();
     			t1 = space();
     			attr_dev(div, "class", "arg-box svelte-48s71p");
-    			add_location(div, file$b, 50, 12, 1776);
+    			add_location(div, file$b, 50, 12, 1736);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -3749,11 +3751,7 @@ var app = (function () {
     function create_fragment$c(ctx) {
     	let p;
     	let span;
-
-    	let t0_value = (/*self*/ ctx[2].variableName
-    	? /*self*/ ctx[2].variableName
-    	: /*self*/ ctx[2].utilityName) + "";
-
+    	let t0_value = /*self*/ ctx[2].utilityName + "";
     	let t0;
     	let t1;
     	let select;
@@ -3800,7 +3798,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(select, file$b, 44, 69, 1466);
+    			add_location(select, file$b, 44, 29, 1426);
     			add_location(span, file$b, 44, 4, 1401);
     			set_style(p, "padding-left", "10px");
     			add_location(p, file$b, 43, 0, 1366);
@@ -3833,9 +3831,7 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*self*/ 4) && t0_value !== (t0_value = (/*self*/ ctx[2].variableName
-    			? /*self*/ ctx[2].variableName
-    			: /*self*/ ctx[2].utilityName) + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty & /*self*/ 4) && t0_value !== (t0_value = /*self*/ ctx[2].utilityName + "")) set_data_dev(t0, t0_value);
 
     			if (dirty & /*Object, utilities, matchParentTypeFilter, self*/ 44) {
     				each_value_1 = Object.keys(/*utilities*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
@@ -4144,9 +4140,9 @@ var app = (function () {
     			option.selected = true;
     			option.__value = "";
     			option.value = option.__value;
-    			add_location(option, file$a, 34, 8, 1131);
+    			add_location(option, file$a, 34, 8, 1127);
     			attr_dev(select, "class", select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[3] ? '' : 'type-method-select') + " svelte-1u7ziek"));
-    			add_location(select, file$a, 33, 4, 1034);
+    			add_location(select, file$a, 33, 4, 1030);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, select, anchor);
@@ -4222,7 +4218,7 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = option_value_value = /*typeMethod*/ ctx[10];
     			option.value = option.__value;
-    			add_location(option, file$a, 36, 12, 1280);
+    			add_location(option, file$a, 36, 12, 1276);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -4268,7 +4264,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr_dev(span, "class", "self svelte-1u7ziek");
-    			add_location(span, file$a, 31, 0, 925);
+    			add_location(span, file$a, 31, 0, 921);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4345,7 +4341,7 @@ var app = (function () {
     			parentRef[accessor] = dropDataTemplates.typeUtil({
     				method: event.target.value,
     				returns: self.returns,
-    				variableName: self
+    				variable: self
     			}),
     			parentRef
     		);
@@ -4504,6 +4500,36 @@ var app = (function () {
     	return child_ctx;
     }
 
+    // (54:8) {#if !filterType || self.variable.returns === filterType}
+    function create_if_block_1(ctx) {
+    	let option;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			option.__value = "";
+    			option.value = option.__value;
+    			add_location(option, file$9, 53, 65, 1813);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(54:8) {#if !filterType || self.variable.returns === filterType}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     // (55:8) {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
     function create_each_block_1$1(ctx) {
     	let option;
@@ -4518,22 +4544,22 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = option_value_value = /*method*/ ctx[16];
     			option.value = option.__value;
-    			option.selected = option_selected_value = /*method*/ ctx[16] === /*self*/ ctx[2].method;
-    			add_location(option, file$9, 55, 12, 1887);
+    			option.selected = option_selected_value = /*method*/ ctx[16] === /*self*/ ctx[3].method;
+    			add_location(option, file$9, 55, 12, 1941);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*varTypeMethods*/ 8 && t_value !== (t_value = /*method*/ ctx[16] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*varTypeMethods*/ 16 && t_value !== (t_value = /*method*/ ctx[16] + "")) set_data_dev(t, t_value);
 
-    			if (dirty & /*varTypeMethods*/ 8 && option_value_value !== (option_value_value = /*method*/ ctx[16])) {
+    			if (dirty & /*varTypeMethods*/ 16 && option_value_value !== (option_value_value = /*method*/ ctx[16])) {
     				prop_dev(option, "__value", option_value_value);
     				option.value = option.__value;
     			}
 
-    			if (dirty & /*varTypeMethods, self*/ 12 && option_selected_value !== (option_selected_value = /*method*/ ctx[16] === /*self*/ ctx[2].method)) {
+    			if (dirty & /*varTypeMethods, self*/ 24 && option_selected_value !== (option_selected_value = /*method*/ ctx[16] === /*self*/ ctx[3].method)) {
     				prop_dev(option, "selected", option_selected_value);
     			}
     		},
@@ -4572,8 +4598,8 @@ var app = (function () {
     			isArgument: true
     		};
 
-    		if (/*self*/ ctx[2].arguments !== void 0) {
-    			switch_instance_props.parentRef = /*self*/ ctx[2].arguments;
+    		if (/*self*/ ctx[3].arguments !== void 0) {
+    			switch_instance_props.parentRef = /*self*/ ctx[3].arguments;
     		}
 
     		return {
@@ -4602,11 +4628,11 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const switch_instance_changes = {};
-    			if (dirty & /*self*/ 4) switch_instance_changes.accessor = /*i*/ ctx[15];
+    			if (dirty & /*self*/ 8) switch_instance_changes.accessor = /*i*/ ctx[15];
 
-    			if (!updating_parentRef && dirty & /*self*/ 4) {
+    			if (!updating_parentRef && dirty & /*self*/ 8) {
     				updating_parentRef = true;
-    				switch_instance_changes.parentRef = /*self*/ ctx[2].arguments;
+    				switch_instance_changes.parentRef = /*self*/ ctx[3].arguments;
     				add_flush_callback(() => updating_parentRef = false);
     			}
 
@@ -4676,8 +4702,8 @@ var app = (function () {
     		filterType: /*argument*/ ctx[13].returns
     	};
 
-    	if (/*self*/ ctx[2].arguments !== void 0) {
-    		varcallexpression_props.parentRef = /*self*/ ctx[2].arguments;
+    	if (/*self*/ ctx[3].arguments !== void 0) {
+    		varcallexpression_props.parentRef = /*self*/ ctx[3].arguments;
     	}
 
     	varcallexpression = new VarCallExpression({
@@ -4697,12 +4723,12 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const varcallexpression_changes = {};
-    			if (dirty & /*self*/ 4) varcallexpression_changes.accessor = /*i*/ ctx[15];
-    			if (dirty & /*self*/ 4) varcallexpression_changes.filterType = /*argument*/ ctx[13].returns;
+    			if (dirty & /*self*/ 8) varcallexpression_changes.accessor = /*i*/ ctx[15];
+    			if (dirty & /*self*/ 8) varcallexpression_changes.filterType = /*argument*/ ctx[13].returns;
 
-    			if (!updating_parentRef && dirty & /*self*/ 4) {
+    			if (!updating_parentRef && dirty & /*self*/ 8) {
     				updating_parentRef = true;
-    				varcallexpression_changes.parentRef = /*self*/ ctx[2].arguments;
+    				varcallexpression_changes.parentRef = /*self*/ ctx[3].arguments;
     				add_flush_callback(() => updating_parentRef = false);
     			}
 
@@ -4771,7 +4797,7 @@ var app = (function () {
     			if_block.c();
     			t1 = space();
     			attr_dev(div, "class", "arg-box svelte-48s71p");
-    			add_location(div, file$9, 59, 12, 2061);
+    			add_location(div, file$9, 59, 12, 2115);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -4791,11 +4817,11 @@ var app = (function () {
     							if (is_function(flowDropHandler({
     								contextName: 'argument',
     								contextType: /*argument*/ ctx[13].returns,
-    								stateChangeCallback: /*dropArgument*/ ctx[6](/*i*/ ctx[15])
+    								stateChangeCallback: /*dropArgument*/ ctx[7](/*i*/ ctx[15])
     							}))) flowDropHandler({
     								contextName: 'argument',
     								contextType: /*argument*/ ctx[13].returns,
-    								stateChangeCallback: /*dropArgument*/ ctx[6](/*i*/ ctx[15])
+    								stateChangeCallback: /*dropArgument*/ ctx[7](/*i*/ ctx[15])
     							}).apply(this, arguments);
     						}),
     						false,
@@ -4811,7 +4837,7 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
     			const clearnodeprop_changes = {};
-    			if (dirty & /*parentRef, accessor, self*/ 7) clearnodeprop_changes.onClick = func;
+    			if (dirty & /*parentRef, accessor, self*/ 11) clearnodeprop_changes.onClick = func;
     			clearnodeprop.$set(clearnodeprop_changes);
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
@@ -4877,7 +4903,7 @@ var app = (function () {
     	let updating_parentRef;
     	let t0;
     	let select;
-    	let option;
+    	let if_block_anchor;
     	let t1;
     	let each_blocks = [];
     	let each1_lookup = new Map();
@@ -4889,13 +4915,10 @@ var app = (function () {
     		/*varidentifier_parentRef_binding*/ ctx[9](value);
     	}
 
-    	let varidentifier_props = {
-    		accessor: "variableName",
-    		isArgument: false
-    	};
+    	let varidentifier_props = { accessor: "variable", isArgument: false };
 
-    	if (/*self*/ ctx[2] !== void 0) {
-    		varidentifier_props.parentRef = /*self*/ ctx[2];
+    	if (/*self*/ ctx[3] !== void 0) {
+    		varidentifier_props.parentRef = /*self*/ ctx[3];
     	}
 
     	varidentifier = new VarIdentifier({
@@ -4904,7 +4927,8 @@ var app = (function () {
     		});
 
     	binding_callbacks.push(() => bind(varidentifier, 'parentRef', varidentifier_parentRef_binding));
-    	let each_value_1 = Object.keys(/*varTypeMethods*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
+    	let if_block = (!/*filterType*/ ctx[2] || /*self*/ ctx[3].variable.returns === /*filterType*/ ctx[2]) && create_if_block_1(ctx);
+    	let each_value_1 = Object.keys(/*varTypeMethods*/ ctx[4]).filter(/*matchParentTypeFilter*/ ctx[6]);
     	validate_each_argument(each_value_1);
     	let each_blocks_1 = [];
 
@@ -4912,7 +4936,7 @@ var app = (function () {
     		each_blocks_1[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
     	}
 
-    	let each_value = /*self*/ ctx[2].arguments;
+    	let each_value = /*self*/ ctx[3].arguments;
     	validate_each_argument(each_value);
     	const get_key = ctx => /*i*/ ctx[15];
     	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
@@ -4930,7 +4954,8 @@ var app = (function () {
     			create_component(varidentifier.$$.fragment);
     			t0 = text(".");
     			select = element("select");
-    			option = element("option");
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
 
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].c();
@@ -4942,13 +4967,10 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			option.__value = "";
-    			option.value = option.__value;
-    			add_location(option, file$9, 53, 8, 1764);
-    			add_location(select, file$9, 52, 95, 1718);
-    			add_location(span, file$9, 52, 4, 1627);
+    			add_location(select, file$9, 52, 91, 1710);
+    			add_location(span, file$9, 52, 4, 1623);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$9, 51, 0, 1592);
+    			add_location(p, file$9, 51, 0, 1588);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4959,7 +4981,8 @@ var app = (function () {
     			mount_component(varidentifier, span, null);
     			append_dev(span, t0);
     			append_dev(span, select);
-    			append_dev(select, option);
+    			if (if_block) if_block.m(select, null);
+    			append_dev(select, if_block_anchor);
 
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].m(select, null);
@@ -4974,23 +4997,34 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(select, "change", /*onPropertyChange*/ ctx[4], false, false, false);
+    				dispose = listen_dev(select, "change", /*onPropertyChange*/ ctx[5], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
     			const varidentifier_changes = {};
 
-    			if (!updating_parentRef && dirty & /*self*/ 4) {
+    			if (!updating_parentRef && dirty & /*self*/ 8) {
     				updating_parentRef = true;
-    				varidentifier_changes.parentRef = /*self*/ ctx[2];
+    				varidentifier_changes.parentRef = /*self*/ ctx[3];
     				add_flush_callback(() => updating_parentRef = false);
     			}
 
     			varidentifier.$set(varidentifier_changes);
 
-    			if (dirty & /*Object, varTypeMethods, matchParentTypeFilter, self*/ 44) {
-    				each_value_1 = Object.keys(/*varTypeMethods*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
+    			if (!/*filterType*/ ctx[2] || /*self*/ ctx[3].variable.returns === /*filterType*/ ctx[2]) {
+    				if (if_block) ; else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					if_block.m(select, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if (dirty & /*Object, varTypeMethods, matchParentTypeFilter, self*/ 88) {
+    				each_value_1 = Object.keys(/*varTypeMethods*/ ctx[4]).filter(/*matchParentTypeFilter*/ ctx[6]);
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -5013,8 +5047,8 @@ var app = (function () {
     				each_blocks_1.length = each_value_1.length;
     			}
 
-    			if (dirty & /*flowDropHandler, self, dropArgument, constructors, parentRef, accessor, dropDataTemplates*/ 71) {
-    				each_value = /*self*/ ctx[2].arguments;
+    			if (dirty & /*flowDropHandler, self, dropArgument, constructors, parentRef, accessor, dropDataTemplates*/ 139) {
+    				each_value = /*self*/ ctx[3].arguments;
     				validate_each_argument(each_value);
     				group_outros();
     				validate_each_keys(ctx, each_value, get_each_context$2, get_key);
@@ -5044,6 +5078,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(p);
     			destroy_component(varidentifier);
+    			if (if_block) if_block.d();
     			destroy_each(each_blocks_1, detaching);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -5078,17 +5113,17 @@ var app = (function () {
     	let { parentRef } = $$props;
     	let { accessor } = $$props;
     	let { filterType } = $$props;
-    	let { isArgument } = $$props;
+    	let { isArgument = false } = $$props;
 
     	const onPropertyChange = event => {
     		const method = event.target.value;
 
     		if (method === '') {
-    			$$invalidate(0, parentRef[accessor] = { ...self.variableName }, parentRef);
+    			$$invalidate(0, parentRef[accessor] = { ...self.variable }, parentRef);
     			return;
     		}
 
-    		const typeDef = typeDefs[self.variableName.returns][method];
+    		const typeDef = typeDefs[self.variable.returns][method];
     		const args = typeDef.args.map(argType => dropDataTemplates[argType + "Literal"]({}));
 
     		$$invalidate(
@@ -5120,7 +5155,7 @@ var app = (function () {
 
     	function varidentifier_parentRef_binding(value) {
     		self = value;
-    		(($$invalidate(2, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
+    		(($$invalidate(3, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
     	}
 
     	const func = (i, argument, _) => $$invalidate(0, parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({}), parentRef);
@@ -5128,21 +5163,21 @@ var app = (function () {
     	function varcallexpression_parentRef_binding(value) {
     		if ($$self.$$.not_equal(self.arguments, value)) {
     			self.arguments = value;
-    			(($$invalidate(2, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
+    			(($$invalidate(3, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
     		}
     	}
 
     	function switch_instance_parentRef_binding(value) {
     		if ($$self.$$.not_equal(self.arguments, value)) {
     			self.arguments = value;
-    			(($$invalidate(2, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
+    			(($$invalidate(3, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
     		}
     	}
 
     	$$self.$$set = $$props => {
     		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
-    		if ('filterType' in $$props) $$invalidate(7, filterType = $$props.filterType);
+    		if ('filterType' in $$props) $$invalidate(2, filterType = $$props.filterType);
     		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
     	};
 
@@ -5167,10 +5202,10 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
-    		if ('filterType' in $$props) $$invalidate(7, filterType = $$props.filterType);
+    		if ('filterType' in $$props) $$invalidate(2, filterType = $$props.filterType);
     		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
-    		if ('self' in $$props) $$invalidate(2, self = $$props.self);
-    		if ('varTypeMethods' in $$props) $$invalidate(3, varTypeMethods = $$props.varTypeMethods);
+    		if ('self' in $$props) $$invalidate(3, self = $$props.self);
+    		if ('varTypeMethods' in $$props) $$invalidate(4, varTypeMethods = $$props.varTypeMethods);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -5179,23 +5214,23 @@ var app = (function () {
 
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*parentRef, accessor*/ 3) {
-    			$$invalidate(2, self = parentRef[accessor]);
+    			$$invalidate(3, self = parentRef[accessor]);
     		}
 
-    		if ($$self.$$.dirty & /*self*/ 4) {
-    			$$invalidate(3, varTypeMethods = typeDefs[self.variableName.returns]);
+    		if ($$self.$$.dirty & /*self*/ 8) {
+    			$$invalidate(4, varTypeMethods = typeDefs[self.variable.returns]);
     		}
     	};
 
     	return [
     		parentRef,
     		accessor,
+    		filterType,
     		self,
     		varTypeMethods,
     		onPropertyChange,
     		matchParentTypeFilter,
     		dropArgument,
-    		filterType,
     		isArgument,
     		varidentifier_parentRef_binding,
     		func,
@@ -5211,7 +5246,7 @@ var app = (function () {
     		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
     			parentRef: 0,
     			accessor: 1,
-    			filterType: 7,
+    			filterType: 2,
     			isArgument: 8
     		});
 
@@ -5233,12 +5268,8 @@ var app = (function () {
     			console.warn("<VarCallExpression> was created without expected prop 'accessor'");
     		}
 
-    		if (/*filterType*/ ctx[7] === undefined && !('filterType' in props)) {
+    		if (/*filterType*/ ctx[2] === undefined && !('filterType' in props)) {
     			console.warn("<VarCallExpression> was created without expected prop 'filterType'");
-    		}
-
-    		if (/*isArgument*/ ctx[8] === undefined && !('isArgument' in props)) {
-    			console.warn("<VarCallExpression> was created without expected prop 'isArgument'");
     		}
     	}
 

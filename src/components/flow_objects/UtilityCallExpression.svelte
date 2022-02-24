@@ -42,7 +42,7 @@
 </script>
 
 <p style="padding-left: 10px">
-    <span>{self.variableName ? self.variableName : self.utilityName}.<select on:change={onPropertyChange}>
+    <span>{self.utilityName}.<select on:change={onPropertyChange}>
         {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
             <option value={method} selected={method === self.utilityMethod}>{method}</option>
         {/each}
@@ -53,7 +53,7 @@
                 {#if argument.type === "UtilityCallExpression"}
                     <svelte:self accessor={i} bind:parentRef={self.arguments} filterType={argument.returns} />
                 {:else}
-                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} />
+                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} filterType={argument.returns} />
                 {/if}
             </div>
         {/each}
