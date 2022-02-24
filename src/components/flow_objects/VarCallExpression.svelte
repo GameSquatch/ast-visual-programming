@@ -8,7 +8,7 @@
 
     export let parentRef;
     export let accessor;
-    export let filterType;
+    export let contextType;
     export let isArgument = false;
 
     $: self = parentRef[accessor];
@@ -35,8 +35,8 @@
         };
     };
 
-    // !filterType is when things don't have a type in their parent context
-    const matchParentTypeFilter = (methodName) => !filterType || varTypeMethods[methodName].returns === filterType;
+    // !contextType is when things don't have a type in their parent context
+    const matchParentTypeFilter = (methodName) => !contextType || varTypeMethods[methodName].returns === contextType;
 
 
     const dropArgument = (argIndex) => (node) => {
@@ -51,7 +51,7 @@
 
 <p style="padding-left: 10px">
     <span><VarIdentifier bind:parentRef={self} accessor={"variable"} isArgument={false} />.<select on:change={onPropertyChange}>
-        {#if !filterType || self.variable.returns === filterType}<option value=""></option>{/if}
+        {#if !contextType || self.variable.returns === contextType}<option value=""></option>{/if}
         {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
             <option value={method} selected={method === self.method}>{method}</option>
         {/each}
@@ -60,7 +60,7 @@
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })} on:dragover={() => {}} class="arg-box">
                 <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self accessor={i} bind:parentRef={self.arguments} filterType={argument.returns} />
+                    <svelte:self accessor={i} bind:parentRef={self.arguments} contextType={argument.returns} />
                 {:else}
                     <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} />
                 {/if}

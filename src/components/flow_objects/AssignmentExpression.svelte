@@ -25,7 +25,7 @@
         Drag an expression here
     {:else}
         <ClearNodeProp onClick={(_) => parentRef[accessor].right = null} />
-        <svelte:component this={constructors[self.right.type]} bind:parentRef={self} accessor={"right"} isArgument={true} filterType={self.left.returns} />
+        <svelte:component this={constructors[self.right.type]} bind:parentRef={self} accessor={"right"} isArgument={true} contextType={self.left.returns} />
     {/if}
 </div>
 

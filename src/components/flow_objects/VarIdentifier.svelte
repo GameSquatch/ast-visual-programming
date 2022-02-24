@@ -5,13 +5,13 @@
 
     export let parentRef;
     export let accessor;
-    export let filterType;
+    export let contextType;
     export let isArgument = false;
 
     let usesTypeMethod = false;
 
     $: self = parentRef[accessor];
-    $: utilities = utilityDefinitions[filterType ?? self.returns];
+    $: utilities = utilityDefinitions[contextType ?? self.returns];
 
     const typeMatches = (utilityKey) => utilities[utilityKey].returns === self.returns;
 
@@ -33,7 +33,7 @@
 {#if isArgument || usesTypeMethod}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>
         <option selected></option>
-        {#each Object.keys(utilityDefinitions[filterType ?? self.returns]).filter(typeMatches) as typeMethod}
+        {#each Object.keys(utilityDefinitions[contextType ?? self.returns]).filter(typeMatches) as typeMethod}
             <option>{typeMethod}</option>
         {/each}
     </select>

@@ -7,7 +7,7 @@
 
     export let parentRef;
     export let accessor;
-    export let filterType;
+    export let contextType;
     export let isArgument;
 
     $: self = parentRef[accessor];
@@ -27,8 +27,8 @@
         };
     };
 
-    // !filterType is when things don't have a type in their parent context
-    const matchParentTypeFilter = (methodName) => !filterType || utilities[methodName].returns === filterType;
+    // !contextType is when things don't have a type in their parent context
+    const matchParentTypeFilter = (methodName) => !contextType || utilities[methodName].returns === contextType;
 
 
     const addArgument = (argIndex) => (node) => {
@@ -51,9 +51,9 @@
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })} on:dragover={() => {}} class="arg-box">
                 <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self accessor={i} bind:parentRef={self.arguments} filterType={argument.returns} />
+                    <svelte:self accessor={i} bind:parentRef={self.arguments} contextType={argument.returns} />
                 {:else}
-                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} filterType={argument.returns} />
+                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} contextType={argument.returns} />
                 {/if}
             </div>
         {/each}
