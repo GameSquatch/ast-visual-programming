@@ -9,7 +9,7 @@
     let isDisplaying = false;
     let reShowTimer = null;
 
-    function tabToggle(event) {
+    function tabToggle(_) {
         isDisplaying = !isDisplaying;
     }
 
@@ -30,7 +30,7 @@
         reShowTimer = setTimeout(tabToggle, 1200);
     }
 
-    function addVariable(event) {
+    function addVariable(_) {
         info.variables = {
             ...info.variables,
             [uuidv4()]: {
@@ -41,7 +41,7 @@
         };
     }
 
-    function addParameter(event) {
+    function addParameter(_) {
         info.parameters = [
             ...info.parameters,
             {
@@ -51,19 +51,17 @@
         ];
     }
 
-    function stopTimer(event) {
+    function stopTimer(_) {
         if (reShowTimer) {
             clearTimeout(reShowTimer);
             reShowTimer = null;
         }
     }
 
-    function testChangeVarName(varId) {
-        return (_) => {
-            info.variables[varId] = {
-                ...info.variables[varId],
-                name: "hello"
-            };
+    function testChangeVarName(_, varId) {
+        info.variables[varId] = {
+            ...info.variables[varId],
+            name: "hello"
         };
     }
 </script>
@@ -82,8 +80,8 @@
             {#each Object.keys(info.variables) as varId (varId)}
                 {@const varObj = info.variables[varId]}
                 <div on:dragstart={dragStart({ ...varObj, refId: varId })} class="flex w100 space-between var-container">
-                    <div on:click={testChangeVarName(varId)} class="var-name flex-1" draggable="true">{varObj.name}: </div>
-                    <div class="flex-1"><select value="{varObj.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
+                    <div on:click={e => testChangeVarName(e, varId)} class="var-name flex-1" draggable="true">{varObj.name}: </div>
+                    <div class="flex-1"><select value="{varObj.returns}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
                     <div class="flex-1"><input type="text" value="{varObj.value}"></div>
                 </div>
             {/each}
@@ -96,7 +94,7 @@
             {#each info.parameters as parameter, i}
             <div draggable="true" on:dragstart={dragStart} class="flex w100 space-between var-container">
                 <span>{parameter.name}: </span>
-                <select value="{parameter.type}"><option value="String">String</option><option value="Integer">Integer</option></select>
+                <select value="{parameter.returns}"><option value="String">String</option><option value="Integer">Integer</option></select>
             </div>
             {/each}
             <div class="add-var-btn">

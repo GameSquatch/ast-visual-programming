@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import typeDefs from './type_definitions.js';
 
-const dropDataTemplates = {
+const nodeTemplates = {
     "StringUtil": function(method = "concat") {
         const methodDefinition = typeDefs['StringUtil'][method];
         const definitionArgs = methodDefinition.args;
@@ -14,7 +14,7 @@ const dropDataTemplates = {
             returns: methodDefinition.returns
         };
     },
-    "typeUtil": function({ method, returns, variable }) {
+    "varCallExpression": function({ method, returns, variable }) {
         const methodDefinition = typeDefs[variable.returns][method];
         const definitionArgs = methodDefinition.args;
 
@@ -52,10 +52,10 @@ const dropDataTemplates = {
         },
         right: null
     }),
-    "variableValue": ({ refId, type = "" }) => ({
+    "variableIdentifier": ({ refId, returns }) => ({
         type: "VarIdentifier",
         refId,
-        returns: type
+        returns
     }),
     // Capitalizing because it matches the 'type' field in the AST
     "StringLiteral": ({ value = "" }) => ({
@@ -71,4 +71,4 @@ const dropDataTemplates = {
     })
 };
 
-export default dropDataTemplates;
+export default nodeTemplates;

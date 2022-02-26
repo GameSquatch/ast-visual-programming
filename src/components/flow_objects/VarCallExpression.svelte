@@ -4,7 +4,7 @@
     import typeDefs from '../../type_definitions.js';
     import ClearNodeProp from '../ClearNodeProp.svelte';
     import constructors from '../../constructors.js';
-    import dropDataTemplates from '../../drop_data_templates.js';
+    import nodeTemplates from '../../node_templates.js';
 
     export let parentRef;
     export let accessor;
@@ -25,7 +25,7 @@
         }
 
         const typeDef = typeDefs[self.variable.returns][method];
-        const args = typeDef.args.map((argType) => dropDataTemplates[argType + "Literal"]({}));
+        const args = typeDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
 
         parentRef[accessor] = {
             ...parentRef[accessor],
@@ -58,11 +58,11 @@
     </select></span>
         {#each self.arguments as argument, i (i)}
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })} on:dragover={() => {}} class="arg-box">
-                <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({})} />
+                <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
                     <svelte:self accessor={i} bind:parentRef={self.arguments} contextType={argument.returns} />
                 {:else}
-                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} />
+                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} contextType={argument.returns} />
                 {/if}
             </div>
         {/each}

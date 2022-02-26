@@ -10,12 +10,12 @@ const mockData = {
                 [var1]: {
                     "name": "aStr",
                     "value": "",
-                    "type": "String"
+                    "returns": "String"
                 },
                 [var2]: {
                     "name": "aNum",
                     "value": 0,
-                    "type": "Integer"
+                    "returns": "Integer"
                 }
             },
             "parameters": [],
