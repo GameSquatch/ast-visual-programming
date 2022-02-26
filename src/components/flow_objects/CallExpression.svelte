@@ -1,7 +1,7 @@
 <script>
     import StringLiteral from './StringLiteral.svelte';
     import typeDefs from '../../type_definitions.js';
-    import dropDataTemplates from '../../drop_data_templates';
+    import nodeTemplates from '../../node_templates';
     import constructors from '../../constructors.js';
 
     export let parentRef;
@@ -14,7 +14,7 @@
     const onMethodChange = (payloadObj) => {
         // TODO: commit change to the store using the parentRef from here
         //store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
-        parentRef[accessor] = dropDataTemplates.StringUtil(payloadObj.detail.methodName);
+        parentRef[accessor] = nodeTemplates.StringUtil(payloadObj.detail.methodName);
     };
     
     //onUpdated(() => console.log(`updated ${defArgNumber()} ${currentRef.value.callee.property.name}`));

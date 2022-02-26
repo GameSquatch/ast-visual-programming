@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import typeDefs from './type_definitions.js';
 
-const dropDataTemplates = {
+const nodeTemplates = {
     "StringUtil": function(method = "concat") {
         const methodDefinition = typeDefs['StringUtil'][method];
         const definitionArgs = methodDefinition.args;
@@ -14,15 +14,14 @@ const dropDataTemplates = {
             returns: methodDefinition.returns
         };
     },
-    "typeUtil": function({ name, method, returns, variableName }) {
-        const methodDefinition = typeDefs[name][method];
+    "varCallExpression": function({ method, returns, variable }) {
+        const methodDefinition = typeDefs[variable.returns][method];
         const definitionArgs = methodDefinition.args;
 
         return {
-            type: "UtilityCallExpression",
-            variableName,
-            utilityName: name,
-            utilityMethod: method,
+            type: "VarCallExpression",
+            variable: {...variable},
+            method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
             returns
         };
@@ -44,19 +43,19 @@ const dropDataTemplates = {
         },
         right: null
     }),
-    "variableExpression": ({ name = "", type = ""}) => ({
+    "variableExpression": ({ refId, type = ""}) => ({
         type: "AssignmentExpression",
         left: {
-            type: "Identifier",
-            name,
+            type: "VarIdentifier",
+            refId,
             returns: type
         },
         right: null
     }),
-    "variableValue": ({ name = "", type = "" }) => ({
-        type: "Identifier",
-        name,
-        returns: type
+    "variableIdentifier": ({ refId, returns }) => ({
+        type: "VarIdentifier",
+        refId,
+        returns
     }),
     // Capitalizing because it matches the 'type' field in the AST
     "StringLiteral": ({ value = "" }) => ({
@@ -72,4 +71,4 @@ const dropDataTemplates = {
     })
 };
 
-export default dropDataTemplates;
+export default nodeTemplates;

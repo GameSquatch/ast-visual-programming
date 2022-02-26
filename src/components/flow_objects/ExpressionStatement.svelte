@@ -87,7 +87,7 @@
     >
         <DragHandle  />
         <div class="flex w100">
-            {#if self.expression !== null}
+            {#if self?.expression ?? false}
                 <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
             {/if}
             <button on:click={deleteFlowStep}>Delete</button>

@@ -2,13 +2,14 @@
     import { slide } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
     import { variableDrag } from '../drag_types.js';
+    import { v4 as uuidv4 } from 'uuid';
 
     export let info;
 
     let isDisplaying = false;
     let reShowTimer = null;
 
-    function tabToggle(event) {
+    function tabToggle(_) {
         isDisplaying = !isDisplaying;
     }
 
@@ -29,26 +30,39 @@
         reShowTimer = setTimeout(tabToggle, 1200);
     }
 
-    function addVariable(event) {
-        info.variables = [...info.variables, {
-            "name": "newVar",
-            "type": "String",
-            "value": ""
-        }];
+    function addVariable(_) {
+        info.variables = {
+            ...info.variables,
+            [uuidv4()]: {
+                "name": "newVar",
+                "type": "String",
+                "value": ""
+            }
+        };
     }
 
-    function addParameter(event) {
-        info.parameters = [...info.parameters, {
-            "name": "newParam",
-            "type": "String"
-        }];
+    function addParameter(_) {
+        info.parameters = [
+            ...info.parameters,
+            {
+                "name": "newParam",
+                "type": "String"
+            }
+        ];
     }
 
-    function stopTimer(event) {
+    function stopTimer(_) {
         if (reShowTimer) {
             clearTimeout(reShowTimer);
             reShowTimer = null;
         }
+    }
+
+    function changeVarName(varId, newName) {
+        info.variables[varId] = {
+            ...info.variables[varId],
+            name: newName
+        };
     }
 </script>
 
@@ -63,11 +77,15 @@
                 <div class="flex-1">Default Value</div>
             </div>
 
-            {#each info.variables as variable, i}
-                <div on:dragstart={dragStart(variable)} class="flex w100 space-between var-container">
-                    <div class="var-name flex-1" draggable="true">{variable.name}: </div>
-                    <div class="flex-1"><select value="{variable.type}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
-                    <div class="flex-1"><input type="text" bind:value="{variable.value}"></div>
+            {#each Object.keys(info.variables) as varId (varId)}
+                {@const varObj = info.variables[varId]}
+                <div on:dragstart={dragStart({ ...varObj, refId: varId })} class="flex w100 space-between var-container">
+                    <div class="flex-1">
+                        <div class="drag-var" draggable=true></div>
+                        <input value={varObj.name} type="text" on:change={e => changeVarName(varId, e.target.value)} class="var-name" />
+                    </div>
+                    <div class="flex-1"><select value="{varObj.returns}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
+                    <div class="flex-1"><input type="text" value="{varObj.value}"></div>
                 </div>
             {/each}
             <div class="add-var-btn">
@@ -79,7 +97,7 @@
             {#each info.parameters as parameter, i}
             <div draggable="true" on:dragstart={dragStart} class="flex w100 space-between var-container">
                 <span>{parameter.name}: </span>
-                <select value="{parameter.type}"><option value="String">String</option><option value="Integer">Integer</option></select>
+                <select value="{parameter.returns}"><option value="String">String</option><option value="Integer">Integer</option></select>
             </div>
             {/each}
             <div class="add-var-btn">
@@ -134,10 +152,15 @@
         padding: 12px;
     }
 
-    .var-name {
-        user-select: none;
-        -webkit-user-select: none;
+    .drag-var {
+        background: #ccc;
         cursor: move;
-        background: var(--function-info-bg)
+        width: 20px;
+        height: 15px;
+        display: inline-block;
+    }
+
+    input {
+        width: 80px;
     }
 </style>

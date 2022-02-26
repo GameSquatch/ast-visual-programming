@@ -1,4 +1,4 @@
-import dropDataTemplates from './drop_data_templates.js';
+import nodeTemplates from './node_templates.js';
 import typeDefs from './type_definitions.js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,8 +20,8 @@ const dragStartHandler = (dragData) => (event) => {
 
 
 const dragDataTypeMatchesContext = (dragData, contextType) => {
-    if ((dragData.data?.type ?? false) && contextType !== undefined) {
-        if (dragData.data.type !== contextType) {
+    if ((dragData.data?.returns ?? false) && contextType !== undefined) {
+        if (dragData.data.returns !== contextType) {
             return false;
         }
         return true;
@@ -44,7 +44,7 @@ const findStringUtilTypeMatch = findReturnTypeMatch("StringUtil");
 
 
 const wrapWithExpression = (node) => {
-    const expr = dropDataTemplates.expression();
+    const expr = nodeTemplates.expression();
     expr.expression = node;
     return expr;
 }
@@ -58,7 +58,7 @@ const wrapWithExpression = (node) => {
 const stringUtilFromTypedContext = (dragData, contextType) => {
     const methodName = findStringUtilTypeMatch(contextType);
     if (methodName === null) return null;
-    return dropDataTemplates.StringUtil(methodName, contextType);
+    return nodeTemplates.StringUtil(methodName, contextType);
 };
 
 
@@ -66,14 +66,18 @@ const variableFromTypedContext = (dragData, contextType) => {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
     
     if (variableTypeMatchesContext) {
-        return dropDataTemplates.variableValue(dragData.data);
+        return nodeTemplates.variableIdentifier(dragData.data);
     }
 
-    const method = findReturnTypeMatch(dragData.data.type)(contextType);
-    if (method == null) alert("Types don't match and no methods exist to match the type");
+    const method = findReturnTypeMatch(dragData.data.returns)(contextType);
+    if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? dropDataTemplates.typeUtil({name: dragData.data.type, method, returns: typeDefs[dragData.data.type][method].returns, variableName: dragData.data.name})
+        ? nodeTemplates.varCallExpression({
+            method: method,
+            returns: contextType,
+            variable: nodeTemplates.variableIdentifier({ refId: dragData.data.refId, returns: dragData.data.returns })
+        })
         : null;
 };
 
@@ -84,19 +88,19 @@ const dropContextMap = {
     // dragType
     variable: {
         // context name
-        flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.variableExpression(dragData.data)),
-        expression: (dragData, contextType) => dropDataTemplates.variableExpression(dragData.data),
+        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableExpression(dragData.data)),
+        expression: (dragData, contextType) => {console.log('dragdata', dragData); return nodeTemplates.variableExpression(dragData.data);},
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },
     StringUtil: {
-        flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.StringUtil()),
-        expression: (dragData, contextType) => dropDataTemplates.StringUtil(),
+        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.StringUtil()),
+        expression: (dragData, contextType) => nodeTemplates.StringUtil(),
         assignment: stringUtilFromTypedContext,
         argument: stringUtilFromTypedContext
     },
     expression: {
-        flow: (dragData, contextType) => dropDataTemplates.expression(),
+        flow: (dragData, contextType) => nodeTemplates.expression(),
         expression: noNode,
         assignment: noNode,
         argument: noNode

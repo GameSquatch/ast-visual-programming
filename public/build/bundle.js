@@ -208,9 +208,6 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
-    function set_input_value(input, value) {
-        input.value = value == null ? '' : value;
-    }
     function set_style(node, key, value, important) {
         if (value === null) {
             node.style.removeProperty(key);
@@ -635,6 +632,11 @@ var app = (function () {
         : typeof globalThis !== 'undefined'
             ? globalThis
             : global);
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
+    }
     function outro_and_destroy_block(block, lookup) {
         transition_out(block, 1, 1, () => {
             lookup.delete(block.key);
@@ -1121,7 +1123,7 @@ var app = (function () {
         }
     };
 
-    const dropDataTemplates = {
+    const nodeTemplates = {
         "StringUtil": function(method = "concat") {
             const methodDefinition = typeDefs['StringUtil'][method];
             const definitionArgs = methodDefinition.args;
@@ -1134,15 +1136,14 @@ var app = (function () {
                 returns: methodDefinition.returns
             };
         },
-        "typeUtil": function({ name, method, returns, variableName }) {
-            const methodDefinition = typeDefs[name][method];
+        "varCallExpression": function({ method, returns, variable }) {
+            const methodDefinition = typeDefs[variable.returns][method];
             const definitionArgs = methodDefinition.args;
 
             return {
-                type: "UtilityCallExpression",
-                variableName,
-                utilityName: name,
-                utilityMethod: method,
+                type: "VarCallExpression",
+                variable: {...variable},
+                method,
                 arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
                 returns
             };
@@ -1164,19 +1165,19 @@ var app = (function () {
             },
             right: null
         }),
-        "variableExpression": ({ name = "", type = ""}) => ({
+        "variableExpression": ({ refId, type = ""}) => ({
             type: "AssignmentExpression",
             left: {
-                type: "Identifier",
-                name,
+                type: "VarIdentifier",
+                refId,
                 returns: type
             },
             right: null
         }),
-        "variableValue": ({ name = "", type = "" }) => ({
-            type: "Identifier",
-            name,
-            returns: type
+        "variableIdentifier": ({ refId, returns }) => ({
+            type: "VarIdentifier",
+            refId,
+            returns
         }),
         // Capitalizing because it matches the 'type' field in the AST
         "StringLiteral": ({ value = "" }) => ({
@@ -1209,8 +1210,8 @@ var app = (function () {
 
 
     const dragDataTypeMatchesContext = (dragData, contextType) => {
-        if ((dragData.data?.type ?? false) && contextType !== undefined) {
-            if (dragData.data.type !== contextType) {
+        if ((dragData.data?.returns ?? false) && contextType !== undefined) {
+            if (dragData.data.returns !== contextType) {
                 return false;
             }
             return true;
@@ -1233,7 +1234,7 @@ var app = (function () {
 
 
     const wrapWithExpression = (node) => {
-        const expr = dropDataTemplates.expression();
+        const expr = nodeTemplates.expression();
         expr.expression = node;
         return expr;
     };
@@ -1247,7 +1248,7 @@ var app = (function () {
     const stringUtilFromTypedContext = (dragData, contextType) => {
         const methodName = findStringUtilTypeMatch(contextType);
         if (methodName === null) return null;
-        return dropDataTemplates.StringUtil(methodName, contextType);
+        return nodeTemplates.StringUtil(methodName, contextType);
     };
 
 
@@ -1255,14 +1256,18 @@ var app = (function () {
         const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
         
         if (variableTypeMatchesContext) {
-            return dropDataTemplates.variableValue(dragData.data);
+            return nodeTemplates.variableIdentifier(dragData.data);
         }
 
-        const method = findReturnTypeMatch(dragData.data.type)(contextType);
-        if (method == null) alert("Types don't match and no methods exist to match the type");
+        const method = findReturnTypeMatch(dragData.data.returns)(contextType);
+        if (method === null) alert("Types don't match and no methods exist to match the type");
         
         return method !== null
-            ? dropDataTemplates.typeUtil({name: dragData.data.type, method, returns: typeDefs[dragData.data.type][method].returns, variableName: dragData.data.name})
+            ? nodeTemplates.varCallExpression({
+                method: method,
+                returns: contextType,
+                variable: nodeTemplates.variableIdentifier({ refId: dragData.data.refId, returns: dragData.data.returns })
+            })
             : null;
     };
 
@@ -1273,19 +1278,19 @@ var app = (function () {
         // dragType
         variable: {
             // context name
-            flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.variableExpression(dragData.data)),
-            expression: (dragData, contextType) => dropDataTemplates.variableExpression(dragData.data),
+            flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableExpression(dragData.data)),
+            expression: (dragData, contextType) => {console.log('dragdata', dragData); return nodeTemplates.variableExpression(dragData.data);},
             assignment: variableFromTypedContext,
             argument: variableFromTypedContext
         },
         StringUtil: {
-            flow: (dragData, contextType) => wrapWithExpression(dropDataTemplates.StringUtil()),
-            expression: (dragData, contextType) => dropDataTemplates.StringUtil(),
+            flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.StringUtil()),
+            expression: (dragData, contextType) => nodeTemplates.StringUtil(),
             assignment: stringUtilFromTypedContext,
             argument: stringUtilFromTypedContext
         },
         expression: {
-            flow: (dragData, contextType) => dropDataTemplates.expression(),
+            flow: (dragData, contextType) => nodeTemplates.expression(),
             expression: noNode,
             assignment: noNode,
             argument: noNode
@@ -1329,9 +1334,9 @@ var app = (function () {
     };
 
     /* src/components/container_components/side_nav/FlowObjectSource.svelte generated by Svelte v3.46.4 */
-    const file$f = "src/components/container_components/side_nav/FlowObjectSource.svelte";
+    const file$h = "src/components/container_components/side_nav/FlowObjectSource.svelte";
 
-    function create_fragment$g(ctx) {
+    function create_fragment$i(ctx) {
     	let div;
     	let p;
     	let current;
@@ -1345,10 +1350,10 @@ var app = (function () {
     			div = element("div");
     			p = element("p");
     			if (default_slot) default_slot.c();
-    			add_location(p, file$f, 9, 4, 258);
+    			add_location(p, file$h, 9, 4, 258);
     			attr_dev(div, "class", "side-nav-tile");
     			attr_dev(div, "draggable", "true");
-    			add_location(div, file$f, 8, 0, 184);
+    			add_location(div, file$h, 8, 0, 184);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1403,7 +1408,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$g.name,
+    		id: create_fragment$i.name,
     		type: "component",
     		source: "",
     		ctx
@@ -1412,7 +1417,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$g($$self, $$props, $$invalidate) {
+    function instance$i($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('FlowObjectSource', slots, ['default']);
     	let { dragData } = $$props;
@@ -1444,13 +1449,13 @@ var app = (function () {
     class FlowObjectSource extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$g, create_fragment$g, safe_not_equal, { dragData: 1 });
+    		init(this, options, instance$i, create_fragment$i, safe_not_equal, { dragData: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "FlowObjectSource",
     			options,
-    			id: create_fragment$g.name
+    			id: create_fragment$i.name
     		});
 
     		const { ctx } = this.$$;
@@ -1493,7 +1498,7 @@ var app = (function () {
     const variableDrag = (variableData) => ({ "dragType": "variable", "data": variableData });
 
     /* src/components/container_components/side_nav/SideNav.svelte generated by Svelte v3.46.4 */
-    const file$e = "src/components/container_components/side_nav/SideNav.svelte";
+    const file$g = "src/components/container_components/side_nav/SideNav.svelte";
 
     // (8:8) <FlowObjectSource dragData={doActionDataDrag()}>
     function create_default_slot_1(ctx) {
@@ -1549,7 +1554,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$f(ctx) {
+    function create_fragment$h(ctx) {
     	let div2;
     	let div0;
     	let flowobjectsource0;
@@ -1585,11 +1590,11 @@ var app = (function () {
     			div1 = element("div");
     			create_component(flowobjectsource1.$$.fragment);
     			attr_dev(div0, "class", "project-structure-pane svelte-1jso9yl");
-    			add_location(div0, file$e, 6, 4, 200);
+    			add_location(div0, file$g, 6, 4, 200);
     			attr_dev(div1, "class", "utility-pane svelte-1jso9yl");
-    			add_location(div1, file$e, 10, 4, 343);
+    			add_location(div1, file$g, 10, 4, 343);
     			attr_dev(div2, "class", "side-nav-wrapper svelte-1jso9yl");
-    			add_location(div2, file$e, 5, 0, 165);
+    			add_location(div2, file$g, 5, 0, 165);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1639,7 +1644,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$f.name,
+    		id: create_fragment$h.name,
     		type: "component",
     		source: "",
     		ctx
@@ -1648,7 +1653,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$f($$self, $$props, $$invalidate) {
+    function instance$h($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('SideNav', slots, []);
     	const writable_props = [];
@@ -1669,13 +1674,13 @@ var app = (function () {
     class SideNav extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {});
+    		init(this, options, instance$h, create_fragment$h, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SideNav",
     			options,
-    			id: create_fragment$f.name
+    			id: create_fragment$h.name
     		});
     	}
     }
@@ -1715,25 +1720,27 @@ var app = (function () {
     }
 
     /* src/components/FunctionInfoTab.svelte generated by Svelte v3.46.4 */
-    const file$d = "src/components/FunctionInfoTab.svelte";
 
-    function get_each_context$4(ctx, list, i) {
+    const { Object: Object_1$3 } = globals;
+    const file$f = "src/components/FunctionInfoTab.svelte";
+
+    function get_each_context$5(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[10] = list[i];
-    	child_ctx[12] = i;
+    	child_ctx[11] = list[i];
+    	child_ctx[13] = i;
     	return child_ctx;
     }
 
-    function get_each_context_1$2(ctx, list, i) {
+    function get_each_context_1$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
-    	child_ctx[14] = list;
-    	child_ctx[12] = i;
+    	child_ctx[14] = list[i];
+    	const constants_0 = /*info*/ child_ctx[0].variables[/*varId*/ child_ctx[14]];
+    	child_ctx[15] = constants_0;
     	return child_ctx;
     }
 
-    // (56:4) {#if isDisplaying}
-    function create_if_block$5(ctx) {
+    // (70:4) {#if isDisplaying}
+    function create_if_block$6(ctx) {
     	let div8;
     	let div5;
     	let h40;
@@ -1745,6 +1752,8 @@ var app = (function () {
     	let t5;
     	let div2;
     	let t7;
+    	let each_blocks_1 = [];
+    	let each0_lookup = new Map();
     	let t8;
     	let div4;
     	let button0;
@@ -1759,12 +1768,15 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	let each_value_1 = /*info*/ ctx[0].variables;
+    	let each_value_1 = Object.keys(/*info*/ ctx[0].variables);
     	validate_each_argument(each_value_1);
-    	let each_blocks_1 = [];
+    	const get_key = ctx => /*varId*/ ctx[14];
+    	validate_each_keys(ctx, each_value_1, get_each_context_1$3, get_key);
 
     	for (let i = 0; i < each_value_1.length; i += 1) {
-    		each_blocks_1[i] = create_each_block_1$2(get_each_context_1$2(ctx, each_value_1, i));
+    		let child_ctx = get_each_context_1$3(ctx, each_value_1, i);
+    		let key = get_key(child_ctx);
+    		each0_lookup.set(key, each_blocks_1[i] = create_each_block_1$3(key, child_ctx));
     	}
 
     	let each_value = /*info*/ ctx[0].parameters;
@@ -1772,7 +1784,7 @@ var app = (function () {
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$4(get_each_context$4(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$5(get_each_context$5(ctx, each_value, i));
     	}
 
     	const block = {
@@ -1815,28 +1827,28 @@ var app = (function () {
     			div6 = element("div");
     			button1 = element("button");
     			button1.textContent = "Add Variable";
-    			add_location(h40, file$d, 58, 12, 1672);
+    			add_location(h40, file$f, 72, 12, 1966);
     			attr_dev(div0, "class", "flex-1");
-    			add_location(div0, file$d, 60, 16, 1771);
+    			add_location(div0, file$f, 74, 16, 2065);
     			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$d, 61, 16, 1818);
+    			add_location(div1, file$f, 75, 16, 2112);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$d, 62, 16, 1865);
+    			add_location(div2, file$f, 76, 16, 2159);
     			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$d, 59, 12, 1703);
-    			add_location(button0, file$d, 73, 16, 2527);
+    			add_location(div3, file$f, 73, 12, 1997);
+    			add_location(button0, file$f, 91, 16, 3088);
     			attr_dev(div4, "class", "add-var-btn");
-    			add_location(div4, file$d, 72, 12, 2485);
-    			attr_dev(div5, "class", "flex-1 var-section svelte-xmpv3d");
-    			add_location(div5, file$d, 57, 8, 1627);
-    			add_location(h41, file$d, 77, 12, 2669);
-    			add_location(button1, file$d, 85, 16, 3125);
+    			add_location(div4, file$f, 90, 12, 3046);
+    			attr_dev(div5, "class", "flex-1 var-section svelte-d9q3dk");
+    			add_location(div5, file$f, 71, 8, 1921);
+    			add_location(h41, file$f, 95, 12, 3230);
+    			add_location(button1, file$f, 103, 16, 3689);
     			attr_dev(div6, "class", "add-var-btn");
-    			add_location(div6, file$d, 84, 12, 3083);
-    			attr_dev(div7, "class", "flex-1 param-section svelte-xmpv3d");
-    			add_location(div7, file$d, 76, 8, 2622);
-    			attr_dev(div8, "class", "flex tab-content svelte-xmpv3d");
-    			add_location(div8, file$d, 56, 4, 1531);
+    			add_location(div6, file$f, 102, 12, 3647);
+    			attr_dev(div7, "class", "flex-1 param-section svelte-d9q3dk");
+    			add_location(div7, file$f, 94, 8, 3183);
+    			attr_dev(div8, "class", "flex tab-content svelte-d9q3dk");
+    			add_location(div8, file$f, 70, 4, 1825);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div8, anchor);
@@ -1884,28 +1896,11 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*dragStart, info*/ 9) {
-    				each_value_1 = /*info*/ ctx[0].variables;
+    			if (dirty & /*dragStart, info, Object, changeVarName*/ 137) {
+    				each_value_1 = Object.keys(/*info*/ ctx[0].variables);
     				validate_each_argument(each_value_1);
-    				let i;
-
-    				for (i = 0; i < each_value_1.length; i += 1) {
-    					const child_ctx = get_each_context_1$2(ctx, each_value_1, i);
-
-    					if (each_blocks_1[i]) {
-    						each_blocks_1[i].p(child_ctx, dirty);
-    					} else {
-    						each_blocks_1[i] = create_each_block_1$2(child_ctx);
-    						each_blocks_1[i].c();
-    						each_blocks_1[i].m(div5, t8);
-    					}
-    				}
-
-    				for (; i < each_blocks_1.length; i += 1) {
-    					each_blocks_1[i].d(1);
-    				}
-
-    				each_blocks_1.length = each_value_1.length;
+    				validate_each_keys(ctx, each_value_1, get_each_context_1$3, get_key);
+    				each_blocks_1 = update_keyed_each(each_blocks_1, dirty, get_key, 1, ctx, each_value_1, each0_lookup, div5, destroy_block, create_each_block_1$3, t8, get_each_context_1$3);
     			}
 
     			if (dirty & /*dragStart, info*/ 9) {
@@ -1914,12 +1909,12 @@ var app = (function () {
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$4(ctx, each_value, i);
+    					const child_ctx = get_each_context$5(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     					} else {
-    						each_blocks[i] = create_each_block$4(child_ctx);
+    						each_blocks[i] = create_each_block$5(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(div7, t13);
     					}
@@ -1949,7 +1944,11 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div8);
-    			destroy_each(each_blocks_1, detaching);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].d();
+    			}
+
     			destroy_each(each_blocks, detaching);
     			if (detaching && div8_transition) div8_transition.end();
     			mounted = false;
@@ -1959,97 +1958,117 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$5.name,
+    		id: create_if_block$6.name,
     		type: "if",
-    		source: "(56:4) {#if isDisplaying}",
+    		source: "(70:4) {#if isDisplaying}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:12) {#each info.variables as variable, i}
-    function create_each_block_1$2(ctx) {
-    	let div3;
-    	let div0;
-    	let t0_value = /*variable*/ ctx[13].name + "";
-    	let t0;
-    	let t1;
-    	let t2;
+    // (80:12) {#each Object.keys(info.variables) as varId (varId)}
+    function create_each_block_1$3(key_1, ctx) {
+    	let div4;
     	let div1;
+    	let div0;
+    	let t0;
+    	let input0;
+    	let input0_value_value;
+    	let t1;
+    	let div2;
     	let select;
     	let option0;
     	let option1;
     	let select_value_value;
-    	let t5;
-    	let div2;
-    	let input;
+    	let t4;
+    	let div3;
+    	let input1;
+    	let input1_value_value;
     	let mounted;
     	let dispose;
 
-    	function input_input_handler() {
-    		/*input_input_handler*/ ctx[7].call(input, /*each_value_1*/ ctx[14], /*i*/ ctx[12]);
+    	function change_handler(...args) {
+    		return /*change_handler*/ ctx[8](/*varId*/ ctx[14], ...args);
     	}
 
     	const block = {
+    		key: key_1,
+    		first: null,
     		c: function create() {
-    			div3 = element("div");
-    			div0 = element("div");
-    			t0 = text(t0_value);
-    			t1 = text(":");
-    			t2 = space();
+    			div4 = element("div");
     			div1 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			input0 = element("input");
+    			t1 = space();
+    			div2 = element("div");
     			select = element("select");
     			option0 = element("option");
     			option0.textContent = "String";
     			option1 = element("option");
     			option1.textContent = "Integer";
-    			t5 = space();
-    			div2 = element("div");
-    			input = element("input");
-    			attr_dev(div0, "class", "var-name flex-1 svelte-xmpv3d");
+    			t4 = space();
+    			div3 = element("div");
+    			input1 = element("input");
+    			attr_dev(div0, "class", "drag-var svelte-d9q3dk");
     			attr_dev(div0, "draggable", "true");
-    			add_location(div0, file$d, 67, 20, 2098);
+    			add_location(div0, file$f, 83, 24, 2527);
+    			input0.value = input0_value_value = /*varObj*/ ctx[15].name;
+    			attr_dev(input0, "type", "text");
+    			attr_dev(input0, "class", "var-name svelte-d9q3dk");
+    			add_location(input0, file$f, 84, 24, 2595);
+    			attr_dev(div1, "class", "flex-1");
+    			add_location(div1, file$f, 82, 20, 2482);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$d, 68, 72, 2240);
+    			add_location(option0, file$f, 86, 73, 2808);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$d, 68, 110, 2278);
-    			add_location(select, file$d, 68, 40, 2208);
-    			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$d, 68, 20, 2188);
-    			attr_dev(input, "type", "text");
-    			add_location(input, file$d, 69, 40, 2374);
+    			add_location(option1, file$f, 86, 111, 2846);
+    			add_location(select, file$f, 86, 40, 2775);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$d, 69, 20, 2354);
-    			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$d, 66, 16, 1991);
+    			add_location(div2, file$f, 86, 20, 2755);
+    			attr_dev(input1, "type", "text");
+    			input1.value = input1_value_value = /*varObj*/ ctx[15].value;
+    			attr_dev(input1, "class", "svelte-d9q3dk");
+    			add_location(input1, file$f, 87, 40, 2942);
+    			attr_dev(div3, "class", "flex-1");
+    			add_location(div3, file$f, 87, 20, 2922);
+    			attr_dev(div4, "class", "flex w100 space-between var-container");
+    			add_location(div4, file$f, 81, 16, 2356);
+    			this.first = div4;
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div0);
-    			append_dev(div0, t0);
-    			append_dev(div0, t1);
-    			append_dev(div3, t2);
-    			append_dev(div3, div1);
-    			append_dev(div1, select);
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, div1);
+    			append_dev(div1, div0);
+    			append_dev(div1, t0);
+    			append_dev(div1, input0);
+    			append_dev(div4, t1);
+    			append_dev(div4, div2);
+    			append_dev(div2, select);
     			append_dev(select, option0);
     			append_dev(select, option1);
-    			select_option(select, /*variable*/ ctx[13].type);
-    			append_dev(div3, t5);
-    			append_dev(div3, div2);
-    			append_dev(div2, input);
-    			set_input_value(input, /*variable*/ ctx[13].value);
+    			select_option(select, /*varObj*/ ctx[15].returns);
+    			append_dev(div4, t4);
+    			append_dev(div4, div3);
+    			append_dev(div3, input1);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "input", input_input_handler),
+    					listen_dev(input0, "change", change_handler, false, false, false),
     					listen_dev(
-    						div3,
+    						div4,
     						"dragstart",
     						function () {
-    							if (is_function(/*dragStart*/ ctx[3](/*variable*/ ctx[13]))) /*dragStart*/ ctx[3](/*variable*/ ctx[13]).apply(this, arguments);
+    							if (is_function(/*dragStart*/ ctx[3]({
+    								.../*varObj*/ ctx[15],
+    								refId: /*varId*/ ctx[14]
+    							}))) /*dragStart*/ ctx[3]({
+    								.../*varObj*/ ctx[15],
+    								refId: /*varId*/ ctx[14]
+    							}).apply(this, arguments);
     						},
     						false,
     						false,
@@ -2062,18 +2081,21 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*info*/ 1 && t0_value !== (t0_value = /*variable*/ ctx[13].name + "")) set_data_dev(t0, t0_value);
 
-    			if (dirty & /*info*/ 1 && select_value_value !== (select_value_value = /*variable*/ ctx[13].type)) {
-    				select_option(select, /*variable*/ ctx[13].type);
+    			if (dirty & /*info*/ 1 && input0_value_value !== (input0_value_value = /*varObj*/ ctx[15].name) && input0.value !== input0_value_value) {
+    				prop_dev(input0, "value", input0_value_value);
     			}
 
-    			if (dirty & /*info*/ 1 && input.value !== /*variable*/ ctx[13].value) {
-    				set_input_value(input, /*variable*/ ctx[13].value);
+    			if (dirty & /*info*/ 1 && select_value_value !== (select_value_value = /*varObj*/ ctx[15].returns)) {
+    				select_option(select, /*varObj*/ ctx[15].returns);
+    			}
+
+    			if (dirty & /*info*/ 1 && input1_value_value !== (input1_value_value = /*varObj*/ ctx[15].value) && input1.value !== input1_value_value) {
+    				prop_dev(input1, "value", input1_value_value);
     			}
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div4);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -2081,20 +2103,20 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block_1$2.name,
+    		id: create_each_block_1$3.name,
     		type: "each",
-    		source: "(66:12) {#each info.variables as variable, i}",
+    		source: "(80:12) {#each Object.keys(info.variables) as varId (varId)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (79:12) {#each info.parameters as parameter, i}
-    function create_each_block$4(ctx) {
+    // (97:12) {#each info.parameters as parameter, i}
+    function create_each_block$5(ctx) {
     	let div;
     	let span;
-    	let t0_value = /*parameter*/ ctx[10].name + "";
+    	let t0_value = /*parameter*/ ctx[11].name + "";
     	let t0;
     	let t1;
     	let t2;
@@ -2117,17 +2139,17 @@ var app = (function () {
     			option0.textContent = "String";
     			option1 = element("option");
     			option1.textContent = "Integer";
-    			add_location(span, file$d, 80, 16, 2863);
+    			add_location(span, file$f, 98, 16, 3424);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$d, 81, 49, 2944);
+    			add_location(option0, file$f, 99, 52, 3508);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$d, 81, 87, 2982);
-    			add_location(select, file$d, 81, 16, 2911);
+    			add_location(option1, file$f, 99, 90, 3546);
+    			add_location(select, file$f, 99, 16, 3472);
     			attr_dev(div, "draggable", "true");
     			attr_dev(div, "class", "flex w100 space-between var-container");
-    			add_location(div, file$d, 79, 12, 2753);
+    			add_location(div, file$f, 97, 12, 3314);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2138,7 +2160,7 @@ var app = (function () {
     			append_dev(div, select);
     			append_dev(select, option0);
     			append_dev(select, option1);
-    			select_option(select, /*parameter*/ ctx[10].type);
+    			select_option(select, /*parameter*/ ctx[11].returns);
 
     			if (!mounted) {
     				dispose = listen_dev(div, "dragstart", /*dragStart*/ ctx[3], false, false, false);
@@ -2146,10 +2168,10 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*info*/ 1 && t0_value !== (t0_value = /*parameter*/ ctx[10].name + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*info*/ 1 && t0_value !== (t0_value = /*parameter*/ ctx[11].name + "")) set_data_dev(t0, t0_value);
 
-    			if (dirty & /*info*/ 1 && select_value_value !== (select_value_value = /*parameter*/ ctx[10].type)) {
-    				select_option(select, /*parameter*/ ctx[10].type);
+    			if (dirty & /*info*/ 1 && select_value_value !== (select_value_value = /*parameter*/ ctx[11].returns)) {
+    				select_option(select, /*parameter*/ ctx[11].returns);
     			}
     		},
     		d: function destroy(detaching) {
@@ -2161,16 +2183,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$4.name,
+    		id: create_each_block$5.name,
     		type: "each",
-    		source: "(79:12) {#each info.parameters as parameter, i}",
+    		source: "(97:12) {#each info.parameters as parameter, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$e(ctx) {
+    function create_fragment$g(ctx) {
     	let div2;
     	let t0;
     	let div1;
@@ -2178,7 +2200,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*isDisplaying*/ ctx[1] && create_if_block$5(ctx);
+    	let if_block = /*isDisplaying*/ ctx[1] && create_if_block$6(ctx);
 
     	const block = {
     		c: function create() {
@@ -2188,13 +2210,13 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			div0.textContent = "Function Info";
-    			attr_dev(div0, "class", "tab-toggle svelte-xmpv3d");
+    			attr_dev(div0, "class", "tab-toggle svelte-d9q3dk");
     			toggle_class(div0, "isDisplaying", /*isDisplaying*/ ctx[1]);
-    			add_location(div0, file$d, 93, 8, 3282);
+    			add_location(div0, file$f, 111, 8, 3846);
     			attr_dev(div1, "class", "flex justify-center");
-    			add_location(div1, file$d, 92, 4, 3240);
-    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-xmpv3d");
-    			add_location(div2, file$d, 54, 0, 1438);
+    			add_location(div1, file$f, 110, 4, 3804);
+    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-d9q3dk");
+    			add_location(div2, file$f, 68, 0, 1732);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2225,7 +2247,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$5(ctx);
+    					if_block = create_if_block$6(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div2, t0);
@@ -2263,7 +2285,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$e.name,
+    		id: create_fragment$g.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2272,14 +2294,14 @@ var app = (function () {
     	return block;
     }
 
-    function instance$e($$self, $$props, $$invalidate) {
+    function instance$g($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('FunctionInfoTab', slots, []);
     	let { info } = $$props;
     	let isDisplaying = false;
     	let reShowTimer = null;
 
-    	function tabToggle(event) {
+    	function tabToggle(_) {
     		$$invalidate(1, isDisplaying = !isDisplaying);
     	}
 
@@ -2299,42 +2321,43 @@ var app = (function () {
     		reShowTimer = setTimeout(tabToggle, 1200);
     	}
 
-    	function addVariable(event) {
+    	function addVariable(_) {
     		$$invalidate(
     			0,
-    			info.variables = [
+    			info.variables = {
     				...info.variables,
-    				{
+    				[v4()]: {
     					"name": "newVar",
     					"type": "String",
     					"value": ""
     				}
-    			],
+    			},
     			info
     		);
     	}
 
-    	function addParameter(event) {
+    	function addParameter(_) {
     		$$invalidate(0, info.parameters = [...info.parameters, { "name": "newParam", "type": "String" }], info);
     	}
 
-    	function stopTimer(event) {
+    	function stopTimer(_) {
     		if (reShowTimer) {
     			clearTimeout(reShowTimer);
     			reShowTimer = null;
     		}
     	}
 
+    	function changeVarName(varId, newName) {
+    		$$invalidate(0, info.variables[varId] = { ...info.variables[varId], name: newName }, info);
+    	}
+
     	const writable_props = ['info'];
 
-    	Object.keys($$props).forEach(key => {
+    	Object_1$3.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<FunctionInfoTab> was created with unknown prop '${key}'`);
     	});
 
-    	function input_input_handler(each_value_1, i) {
-    		each_value_1[i].value = this.value;
-    		$$invalidate(0, info);
-    	}
+    	const change_handler = (varId, e) => changeVarName(varId, e.target.value);
 
     	$$self.$$set = $$props => {
     		if ('info' in $$props) $$invalidate(0, info = $$props.info);
@@ -2344,6 +2367,7 @@ var app = (function () {
     		slide,
     		quintOut,
     		variableDrag,
+    		uuidv4: v4,
     		info,
     		isDisplaying,
     		reShowTimer,
@@ -2352,7 +2376,8 @@ var app = (function () {
     		functionInfoDrop,
     		addVariable,
     		addParameter,
-    		stopTimer
+    		stopTimer,
+    		changeVarName
     	});
 
     	$$self.$inject_state = $$props => {
@@ -2373,20 +2398,21 @@ var app = (function () {
     		addVariable,
     		addParameter,
     		stopTimer,
-    		input_input_handler
+    		changeVarName,
+    		change_handler
     	];
     }
 
     class FunctionInfoTab extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, { info: 0 });
+    		init(this, options, instance$g, create_fragment$g, safe_not_equal, { info: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "FunctionInfoTab",
     			options,
-    			id: create_fragment$e.name
+    			id: create_fragment$g.name
     		});
 
     		const { ctx } = this.$$;
@@ -2454,21 +2480,24 @@ var app = (function () {
         return { set, update, subscribe };
     }
 
+    const var1 = v4();
+    const var2 = v4();
+
     const mockData = {
         "main": {
             "info": {
-                "variables": [
-                    {
+                "variables": {
+                    [var1]: {
                         "name": "aStr",
                         "value": "",
-                        "type": "String"
+                        "returns": "String"
                     },
-                    {
+                    [var2]: {
                         "name": "aNum",
                         "value": 0,
-                        "type": "Integer"
+                        "returns": "Integer"
                     }
-                ],
+                },
                 "parameters": [],
             },
             "body": [
@@ -2478,8 +2507,8 @@ var app = (function () {
                     "expression": {
                         "type": "AssignmentExpression",
                         "left": {
-                            "type": "Identifier",
-                            "name": "aStr",
+                            "type": "VarIdentifier",
+                            "refId": var1,
                             "returns": "String"
                         },
                         "right": {
@@ -2493,8 +2522,8 @@ var app = (function () {
                                     "returns": "String"
                                 },
                                 {
-                                    "type": "Identifier",
-                                    "name": "aStr",
+                                    "type": "VarIdentifier",
+                                    "refId": var1,
                                     "returns": "String"
                                 }
                             ],
@@ -2508,15 +2537,18 @@ var app = (function () {
                     "expression": {
                         "type": "AssignmentExpression",
                         "left": {
-                            "type": "Identifier",
-                            "name": "aStr",
+                            "type": "VarIdentifier",
+                            "refId": var1,
                             "returns": "String"
                         },
                         "right": {
-                            "type": "UtilityCallExpression",
-                            "variableName": "aStr",
-                            "utilityName": "StringUtil",
-                            "utilityMethod": "concat",
+                            "type": "VarCallExpression",
+                            "variable": {
+                                "type": "VarIdentifier",
+                                "refId": var1,
+                                "returns": "String"
+                            },
+                            "method": "concat",
                             "arguments": [
                                 {
                                     "type": "StringLiteral",
@@ -2534,8 +2566,8 @@ var app = (function () {
                     "expression": {
                         "type": "AssignmentExpression",
                         "left": {
-                            "type": "Identifier",
-                            "name": "aNum",
+                            "type": "VarIdentifier",
+                            "refId": var2,
                             "returns": "Integer"
                         },
                         "right": {
@@ -2573,41 +2605,6 @@ var app = (function () {
                     "id": v4(),
                     "expression": null
                 },
-                {
-                    "type": "ExpressionStatement",
-                    "id": v4(),
-                    "expression": null
-                },
-                {
-                    "type": "ExpressionStatement",
-                    "id": v4(),
-                    "expression": null
-                },
-                {
-                    "type": "ExpressionStatement",
-                    "id": v4(),
-                    "expression": null
-                },
-                {
-                    "type": "ExpressionStatement",
-                    "id": v4(),
-                    "expression": null
-                },
-                {
-                    "type": "ExpressionStatement",
-                    "id": v4(),
-                    "expression": null
-                },
-                {
-                    "type": "ExpressionStatement",
-                    "id": v4(),
-                    "expression": null
-                },
-                {
-                    "type": "ExpressionStatement",
-                    "id": v4(),
-                    "expression": null
-                }
             ]
         }
     };
@@ -2618,9 +2615,9 @@ var app = (function () {
 
     /* src/components/ClearNodeProp.svelte generated by Svelte v3.46.4 */
 
-    const file$c = "src/components/ClearNodeProp.svelte";
+    const file$e = "src/components/ClearNodeProp.svelte";
 
-    function create_fragment$d(ctx) {
+    function create_fragment$f(ctx) {
     	let button;
     	let mounted;
     	let dispose;
@@ -2630,7 +2627,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Clear";
     			attr_dev(button, "class", "delete-btn");
-    			add_location(button, file$c, 4, 0, 44);
+    			add_location(button, file$e, 4, 0, 44);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2667,7 +2664,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$d.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2676,7 +2673,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$d($$self, $$props, $$invalidate) {
+    function instance$f($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('ClearNodeProp', slots, []);
     	let { onClick } = $$props;
@@ -2706,13 +2703,13 @@ var app = (function () {
     class ClearNodeProp extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { onClick: 0 });
+    		init(this, options, instance$f, create_fragment$f, safe_not_equal, { onClick: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ClearNodeProp",
     			options,
-    			id: create_fragment$d.name
+    			id: create_fragment$f.name
     		});
 
     		const { ctx } = this.$$;
@@ -2734,9 +2731,9 @@ var app = (function () {
 
     /* src/components/DragHandle.svelte generated by Svelte v3.46.4 */
 
-    const file$b = "src/components/DragHandle.svelte";
+    const file$d = "src/components/DragHandle.svelte";
 
-    function create_fragment$c(ctx) {
+    function create_fragment$e(ctx) {
     	let div;
 
     	const block = {
@@ -2744,7 +2741,7 @@ var app = (function () {
     			div = element("div");
     			attr_dev(div, "class", "drag-handle svelte-1tyonyw");
     			attr_dev(div, "draggable", "true");
-    			add_location(div, file$b, 1, 0, 1);
+    			add_location(div, file$d, 1, 0, 1);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2762,7 +2759,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$c.name,
+    		id: create_fragment$e.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2771,7 +2768,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$c($$self, $$props) {
+    function instance$e($$self, $$props) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('DragHandle', slots, []);
     	const writable_props = [];
@@ -2786,22 +2783,22 @@ var app = (function () {
     class DragHandle extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {});
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "DragHandle",
     			options,
-    			id: create_fragment$c.name
+    			id: create_fragment$e.name
     		});
     	}
     }
 
     /* src/components/flow_objects/ExpressionStatement.svelte generated by Svelte v3.46.4 */
-    const file$a = "src/components/flow_objects/ExpressionStatement.svelte";
+    const file$c = "src/components/flow_objects/ExpressionStatement.svelte";
 
-    // (90:12) {#if self.expression !== null}
-    function create_if_block_1(ctx) {
+    // (90:12) {#if self?.expression ?? false}
+    function create_if_block_1$1(ctx) {
     	let clearnodeprop;
     	let current;
 
@@ -2839,9 +2836,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1.name,
+    		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(90:12) {#if self.expression !== null}",
+    		source: "(90:12) {#if self?.expression ?? false}",
     		ctx
     	});
 
@@ -2849,7 +2846,7 @@ var app = (function () {
     }
 
     // (102:8) {:else}
-    function create_else_block$3(ctx) {
+    function create_else_block$4(ctx) {
     	let p;
 
     	const block = {
@@ -2857,7 +2854,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Drag an action here";
     			attr_dev(p, "class", "dull-text");
-    			add_location(p, file$a, 102, 12, 2843);
+    			add_location(p, file$c, 102, 12, 2844);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -2872,7 +2869,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$3.name,
+    		id: create_else_block$4.name,
     		type: "else",
     		source: "(102:8) {:else}",
     		ctx
@@ -2882,7 +2879,7 @@ var app = (function () {
     }
 
     // (96:8) {#if self && self.expression !== null}
-    function create_if_block$4(ctx) {
+    function create_if_block$5(ctx) {
     	let switch_instance;
     	let updating_parentRef;
     	let switch_instance_anchor;
@@ -2976,7 +2973,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$5.name,
     		type: "if",
     		source: "(96:8) {#if self && self.expression !== null}",
     		ctx
@@ -2985,7 +2982,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$b(ctx) {
+    function create_fragment$d(ctx) {
     	let div3;
     	let div1;
     	let draghandle;
@@ -3002,8 +2999,8 @@ var app = (function () {
     	let mounted;
     	let dispose;
     	draghandle = new DragHandle({ $$inline: true });
-    	let if_block0 = /*self*/ ctx[4].expression !== null && create_if_block_1(ctx);
-    	const if_block_creators = [create_if_block$4, create_else_block$3];
+    	let if_block0 = (/*self*/ ctx[4]?.expression ?? false) && create_if_block_1$1(ctx);
+    	const if_block_creators = [create_if_block$5, create_else_block$4];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -3029,17 +3026,17 @@ var app = (function () {
     			if_block1.c();
     			t4 = space();
     			div2 = element("div");
-    			add_location(button, file$a, 92, 12, 2502);
+    			add_location(button, file$c, 92, 12, 2503);
     			attr_dev(div0, "class", "flex w100");
-    			add_location(div0, file$a, 88, 8, 2316);
+    			add_location(div0, file$c, 88, 8, 2316);
     			attr_dev(div1, "class", "expression-container svelte-1sbi4ac");
-    			add_location(div1, file$a, 80, 4, 1946);
+    			add_location(div1, file$c, 80, 4, 1946);
     			attr_dev(div2, "class", "line-down-box svelte-1sbi4ac");
     			toggle_class(div2, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
-    			add_location(div2, file$a, 105, 4, 2917);
+    			add_location(div2, file$c, 105, 4, 2918);
     			attr_dev(div3, "class", "svelte-1sbi4ac");
     			toggle_class(div3, "beingDragged", /*beingDragged*/ ctx[3]);
-    			add_location(div3, file$a, 79, 0, 1917);
+    			add_location(div3, file$c, 79, 0, 1917);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3097,7 +3094,7 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*self*/ ctx[4].expression !== null) {
+    			if (/*self*/ ctx[4]?.expression ?? false) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
 
@@ -3105,7 +3102,7 @@ var app = (function () {
     						transition_in(if_block0, 1);
     					}
     				} else {
-    					if_block0 = create_if_block_1(ctx);
+    					if_block0 = create_if_block_1$1(ctx);
     					if_block0.c();
     					transition_in(if_block0, 1);
     					if_block0.m(div0, t1);
@@ -3179,7 +3176,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$d.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3196,7 +3193,7 @@ var app = (function () {
     	
     } // something
 
-    function instance$b($$self, $$props, $$invalidate) {
+    function instance$d($$self, $$props, $$invalidate) {
     	let self;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('ExpressionStatement', slots, []);
@@ -3340,13 +3337,13 @@ var app = (function () {
     class ExpressionStatement extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { accessor: 1, parentRef: 0 });
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { accessor: 1, parentRef: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ExpressionStatement",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$d.name
     		});
 
     		const { ctx } = this.$$;
@@ -3380,24 +3377,24 @@ var app = (function () {
 
     /* src/components/flow_objects/UtilityCallExpression.svelte generated by Svelte v3.46.4 */
 
-    const { Object: Object_1$1 } = globals;
-    const file$9 = "src/components/flow_objects/UtilityCallExpression.svelte";
+    const { Object: Object_1$2 } = globals;
+    const file$b = "src/components/flow_objects/UtilityCallExpression.svelte";
 
-    function get_each_context$3(ctx, list, i) {
+    function get_each_context$4(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[12] = list[i];
     	child_ctx[14] = i;
     	return child_ctx;
     }
 
-    function get_each_context_1$1(ctx, list, i) {
+    function get_each_context_1$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[15] = list[i];
     	return child_ctx;
     }
 
     // (46:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
-    function create_each_block_1$1(ctx) {
+    function create_each_block_1$2(ctx) {
     	let option;
     	let t_value = /*method*/ ctx[15] + "";
     	let t;
@@ -3411,7 +3408,7 @@ var app = (function () {
     			option.__value = option_value_value = /*method*/ ctx[15];
     			option.value = option.__value;
     			option.selected = option_selected_value = /*method*/ ctx[15] === /*self*/ ctx[2].utilityMethod;
-    			add_location(option, file$9, 46, 12, 1595);
+    			add_location(option, file$b, 46, 12, 1546);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -3436,7 +3433,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block_1$1.name,
+    		id: create_each_block_1$2.name,
     		type: "each",
     		source: "(46:8) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
     		ctx
@@ -3446,7 +3443,7 @@ var app = (function () {
     }
 
     // (55:16) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$3(ctx) {
     	let switch_instance;
     	let updating_parentRef;
     	let switch_instance_anchor;
@@ -3461,7 +3458,8 @@ var app = (function () {
     	function switch_props(ctx) {
     		let switch_instance_props = {
     			accessor: /*i*/ ctx[14],
-    			isArgument: true
+    			isArgument: true,
+    			contextType: /*argument*/ ctx[12].returns
     		};
 
     		if (/*self*/ ctx[2].arguments !== void 0) {
@@ -3495,6 +3493,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const switch_instance_changes = {};
     			if (dirty & /*self*/ 4) switch_instance_changes.accessor = /*i*/ ctx[14];
+    			if (dirty & /*self*/ 4) switch_instance_changes.contextType = /*argument*/ ctx[12].returns;
 
     			if (!updating_parentRef && dirty & /*self*/ 4) {
     				updating_parentRef = true;
@@ -3544,7 +3543,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$3.name,
     		type: "else",
     		source: "(55:16) {:else}",
     		ctx
@@ -3554,7 +3553,7 @@ var app = (function () {
     }
 
     // (53:16) {#if argument.type === "UtilityCallExpression"}
-    function create_if_block$3(ctx) {
+    function create_if_block$4(ctx) {
     	let utilitycallexpression;
     	let updating_parentRef;
     	let current;
@@ -3565,7 +3564,7 @@ var app = (function () {
 
     	let utilitycallexpression_props = {
     		accessor: /*i*/ ctx[14],
-    		filterType: /*argument*/ ctx[12].returns
+    		contextType: /*argument*/ ctx[12].returns
     	};
 
     	if (/*self*/ ctx[2].arguments !== void 0) {
@@ -3590,7 +3589,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const utilitycallexpression_changes = {};
     			if (dirty & /*self*/ 4) utilitycallexpression_changes.accessor = /*i*/ ctx[14];
-    			if (dirty & /*self*/ 4) utilitycallexpression_changes.filterType = /*argument*/ ctx[12].returns;
+    			if (dirty & /*self*/ 4) utilitycallexpression_changes.contextType = /*argument*/ ctx[12].returns;
 
     			if (!updating_parentRef && dirty & /*self*/ 4) {
     				updating_parentRef = true;
@@ -3616,7 +3615,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$4.name,
     		type: "if",
     		source: "(53:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
     		ctx
@@ -3626,7 +3625,7 @@ var app = (function () {
     }
 
     // (50:8) {#each self.arguments as argument, i (i)}
-    function create_each_block$3(key_1, ctx) {
+    function create_each_block$4(key_1, ctx) {
     	let div;
     	let clearnodeprop;
     	let t0;
@@ -3642,7 +3641,7 @@ var app = (function () {
     	}
 
     	clearnodeprop = new ClearNodeProp({ props: { onClick: func }, $$inline: true });
-    	const if_block_creators = [create_if_block$3, create_else_block$2];
+    	const if_block_creators = [create_if_block$4, create_else_block$3];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -3663,7 +3662,7 @@ var app = (function () {
     			if_block.c();
     			t1 = space();
     			attr_dev(div, "class", "arg-box svelte-48s71p");
-    			add_location(div, file$9, 50, 12, 1776);
+    			add_location(div, file$b, 50, 12, 1727);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -3694,7 +3693,7 @@ var app = (function () {
     						false,
     						true
     					),
-    					listen_dev(div, "dragover", dragover_handler$1, false, false, false)
+    					listen_dev(div, "dragover", dragover_handler$2, false, false, false)
     				];
 
     				mounted = true;
@@ -3753,7 +3752,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$3.name,
+    		id: create_each_block$4.name,
     		type: "each",
     		source: "(50:8) {#each self.arguments as argument, i (i)}",
     		ctx
@@ -3762,14 +3761,10 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$a(ctx) {
+    function create_fragment$c(ctx) {
     	let p;
     	let span;
-
-    	let t0_value = (/*self*/ ctx[2].variableName
-    	? /*self*/ ctx[2].variableName
-    	: /*self*/ ctx[2].utilityName) + "";
-
+    	let t0_value = /*self*/ ctx[2].utilityName + "";
     	let t0;
     	let t1;
     	let select;
@@ -3784,18 +3779,18 @@ var app = (function () {
     	let each_blocks_1 = [];
 
     	for (let i = 0; i < each_value_1.length; i += 1) {
-    		each_blocks_1[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
+    		each_blocks_1[i] = create_each_block_1$2(get_each_context_1$2(ctx, each_value_1, i));
     	}
 
     	let each_value = /*self*/ ctx[2].arguments;
     	validate_each_argument(each_value);
     	const get_key = ctx => /*i*/ ctx[14];
-    	validate_each_keys(ctx, each_value, get_each_context$3, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$4, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$3(ctx, each_value, i);
+    		let child_ctx = get_each_context$4(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
+    		each1_lookup.set(key, each_blocks[i] = create_each_block$4(key, child_ctx));
     	}
 
     	const block = {
@@ -3816,10 +3811,10 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(select, file$9, 44, 69, 1466);
-    			add_location(span, file$9, 44, 4, 1401);
+    			add_location(select, file$b, 44, 29, 1417);
+    			add_location(span, file$b, 44, 4, 1392);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$9, 43, 0, 1366);
+    			add_location(p, file$b, 43, 0, 1357);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3849,9 +3844,7 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*self*/ 4) && t0_value !== (t0_value = (/*self*/ ctx[2].variableName
-    			? /*self*/ ctx[2].variableName
-    			: /*self*/ ctx[2].utilityName) + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty & /*self*/ 4) && t0_value !== (t0_value = /*self*/ ctx[2].utilityName + "")) set_data_dev(t0, t0_value);
 
     			if (dirty & /*Object, utilities, matchParentTypeFilter, self*/ 44) {
     				each_value_1 = Object.keys(/*utilities*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
@@ -3859,12 +3852,12 @@ var app = (function () {
     				let i;
 
     				for (i = 0; i < each_value_1.length; i += 1) {
-    					const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
+    					const child_ctx = get_each_context_1$2(ctx, each_value_1, i);
 
     					if (each_blocks_1[i]) {
     						each_blocks_1[i].p(child_ctx, dirty);
     					} else {
-    						each_blocks_1[i] = create_each_block_1$1(child_ctx);
+    						each_blocks_1[i] = create_each_block_1$2(child_ctx);
     						each_blocks_1[i].c();
     						each_blocks_1[i].m(select, null);
     					}
@@ -3877,12 +3870,12 @@ var app = (function () {
     				each_blocks_1.length = each_value_1.length;
     			}
 
-    			if (dirty & /*flowDropHandler, self, addArgument, constructors, parentRef, accessor, dropDataTemplates*/ 71) {
+    			if (dirty & /*flowDropHandler, self, addArgument, constructors, parentRef, accessor, nodeTemplates*/ 71) {
     				each_value = /*self*/ ctx[2].arguments;
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$3, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, p, outro_and_destroy_block, create_each_block$3, null, get_each_context$3);
+    				validate_each_keys(ctx, each_value, get_each_context$4, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, p, outro_and_destroy_block, create_each_block$4, null, get_each_context$4);
     				check_outros();
     			}
     		},
@@ -3917,7 +3910,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3926,24 +3919,24 @@ var app = (function () {
     	return block;
     }
 
-    const dragover_handler$1 = () => {
+    const dragover_handler$2 = () => {
     	
     };
 
-    function instance$a($$self, $$props, $$invalidate) {
+    function instance$c($$self, $$props, $$invalidate) {
     	let self;
     	let utilities;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('UtilityCallExpression', slots, []);
     	let { parentRef } = $$props;
     	let { accessor } = $$props;
-    	let { filterType } = $$props;
+    	let { contextType } = $$props;
     	let { isArgument } = $$props;
 
     	const onPropertyChange = event => {
     		const utilityMethod = event.target.value;
     		const typeDef = typeDefs[self.utilityName][utilityMethod];
-    		const args = typeDef.args.map(argType => dropDataTemplates[argType + "Literal"]({}));
+    		const args = typeDef.args.map(argType => nodeTemplates[argType + "Literal"]({}));
 
     		$$invalidate(
     			0,
@@ -3957,8 +3950,8 @@ var app = (function () {
     		);
     	};
 
-    	// !filterType is when things don't have a type in their parent context
-    	const matchParentTypeFilter = methodName => !filterType || utilities[methodName].returns === filterType;
+    	// !contextType is when things don't have a type in their parent context
+    	const matchParentTypeFilter = methodName => !contextType || utilities[methodName].returns === contextType;
 
     	const addArgument = argIndex => node => {
     		if (node === null) return;
@@ -3966,13 +3959,13 @@ var app = (function () {
     		$$invalidate(0, parentRef[accessor].aruments = [...self.arguments], parentRef);
     	};
 
-    	const writable_props = ['parentRef', 'accessor', 'filterType', 'isArgument'];
+    	const writable_props = ['parentRef', 'accessor', 'contextType', 'isArgument'];
 
-    	Object_1$1.keys($$props).forEach(key => {
+    	Object_1$2.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<UtilityCallExpression> was created with unknown prop '${key}'`);
     	});
 
-    	const func = (i, argument, _) => $$invalidate(0, parentRef[accessor].arguments[i] = dropDataTemplates[argument.returns + "Literal"]({}), parentRef);
+    	const func = (i, argument, _) => $$invalidate(0, parentRef[accessor].arguments[i] = nodeTemplates[argument.returns + "Literal"]({}), parentRef);
 
     	function utilitycallexpression_parentRef_binding(value) {
     		if ($$self.$$.not_equal(self.arguments, value)) {
@@ -3991,7 +3984,7 @@ var app = (function () {
     	$$self.$$set = $$props => {
     		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
-    		if ('filterType' in $$props) $$invalidate(7, filterType = $$props.filterType);
+    		if ('contextType' in $$props) $$invalidate(7, contextType = $$props.contextType);
     		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
     	};
 
@@ -4000,10 +3993,10 @@ var app = (function () {
     		typeDefs,
     		ClearNodeProp,
     		constructors,
-    		dropDataTemplates,
+    		nodeTemplates,
     		parentRef,
     		accessor,
-    		filterType,
+    		contextType,
     		isArgument,
     		onPropertyChange,
     		matchParentTypeFilter,
@@ -4015,7 +4008,7 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
     		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
-    		if ('filterType' in $$props) $$invalidate(7, filterType = $$props.filterType);
+    		if ('contextType' in $$props) $$invalidate(7, contextType = $$props.contextType);
     		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
     		if ('self' in $$props) $$invalidate(2, self = $$props.self);
     		if ('utilities' in $$props) $$invalidate(3, utilities = $$props.utilities);
@@ -4043,7 +4036,7 @@ var app = (function () {
     		onPropertyChange,
     		matchParentTypeFilter,
     		addArgument,
-    		filterType,
+    		contextType,
     		isArgument,
     		func,
     		utilitycallexpression_parentRef_binding,
@@ -4055,10 +4048,10 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {
     			parentRef: 0,
     			accessor: 1,
-    			filterType: 7,
+    			contextType: 7,
     			isArgument: 8
     		});
 
@@ -4066,7 +4059,7 @@ var app = (function () {
     			component: this,
     			tagName: "UtilityCallExpression",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$c.name
     		});
 
     		const { ctx } = this.$$;
@@ -4080,8 +4073,8 @@ var app = (function () {
     			console.warn("<UtilityCallExpression> was created without expected prop 'accessor'");
     		}
 
-    		if (/*filterType*/ ctx[7] === undefined && !('filterType' in props)) {
-    			console.warn("<UtilityCallExpression> was created without expected prop 'filterType'");
+    		if (/*contextType*/ ctx[7] === undefined && !('contextType' in props)) {
+    			console.warn("<UtilityCallExpression> was created without expected prop 'contextType'");
     		}
 
     		if (/*isArgument*/ ctx[8] === undefined && !('isArgument' in props)) {
@@ -4105,11 +4098,11 @@ var app = (function () {
     		throw new Error("<UtilityCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get filterType() {
+    	get contextType() {
     		throw new Error("<UtilityCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set filterType(value) {
+    	set contextType(value) {
     		throw new Error("<UtilityCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
@@ -4119,6 +4112,1213 @@ var app = (function () {
 
     	set isArgument(value) {
     		throw new Error("<UtilityCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/components/flow_objects/VarIdentifier.svelte generated by Svelte v3.46.4 */
+
+    const { Object: Object_1$1 } = globals;
+    const file$a = "src/components/flow_objects/VarIdentifier.svelte";
+
+    function get_each_context$3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[10] = list[i];
+    	return child_ctx;
+    }
+
+    // (33:0) {#if isArgument || usesTypeMethod}
+    function create_if_block$3(ctx) {
+    	let select;
+    	let option;
+    	let select_class_value;
+    	let mounted;
+    	let dispose;
+    	let each_value = Object.keys(/*typeMethods*/ ctx[3]).filter(/*typeMatches*/ ctx[5]);
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			select = element("select");
+    			option = element("option");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			option.selected = true;
+    			option.__value = "";
+    			option.value = option.__value;
+    			add_location(option, file$a, 34, 8, 1099);
+    			attr_dev(select, "class", select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[2] ? '' : 'type-method-select') + " svelte-1u7ziek"));
+    			add_location(select, file$a, 33, 4, 1002);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, select, anchor);
+    			append_dev(select, option);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(select, null);
+    			}
+
+    			if (!mounted) {
+    				dispose = listen_dev(select, "change", /*methodSelected*/ ctx[6], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*Object, typeMethods, typeMatches*/ 40) {
+    				each_value = Object.keys(/*typeMethods*/ ctx[3]).filter(/*typeMatches*/ ctx[5]);
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$3(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$3(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(select, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (dirty & /*usesTypeMethod*/ 4 && select_class_value !== (select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[2] ? '' : 'type-method-select') + " svelte-1u7ziek"))) {
+    				attr_dev(select, "class", select_class_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(select);
+    			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$3.name,
+    		type: "if",
+    		source: "(33:0) {#if isArgument || usesTypeMethod}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (36:8) {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}
+    function create_each_block$3(ctx) {
+    	let option;
+    	let t_value = /*typeMethod*/ ctx[10] + "";
+    	let t;
+    	let option_value_value;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			t = text(t_value);
+    			option.__value = option_value_value = /*typeMethod*/ ctx[10];
+    			option.value = option.__value;
+    			add_location(option, file$a, 36, 12, 1213);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    			append_dev(option, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*typeMethods*/ 8 && t_value !== (t_value = /*typeMethod*/ ctx[10] + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*typeMethods*/ 8 && option_value_value !== (option_value_value = /*typeMethod*/ ctx[10])) {
+    				prop_dev(option, "__value", option_value_value);
+    				option.value = option.__value;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$3.name,
+    		type: "each",
+    		source: "(36:8) {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$b(ctx) {
+    	let span;
+    	let t0_value = /*$ast*/ ctx[4].main.info.variables[/*self*/ ctx[1].refId].name + "";
+    	let t0;
+    	let t1;
+    	let if_block_anchor;
+    	let if_block = (/*isArgument*/ ctx[0] || /*usesTypeMethod*/ ctx[2]) && create_if_block$3(ctx);
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			attr_dev(span, "class", "self svelte-1u7ziek");
+    			add_location(span, file$a, 31, 0, 893);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+    			append_dev(span, t0);
+    			insert_dev(target, t1, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*$ast, self*/ 18 && t0_value !== (t0_value = /*$ast*/ ctx[4].main.info.variables[/*self*/ ctx[1].refId].name + "")) set_data_dev(t0, t0_value);
+
+    			if (/*isArgument*/ ctx[0] || /*usesTypeMethod*/ ctx[2]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$3(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    			if (detaching) detach_dev(t1);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$b.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$b($$self, $$props, $$invalidate) {
+    	let self;
+    	let typeMethods;
+    	let $ast;
+    	validate_store(ast, 'ast');
+    	component_subscribe($$self, ast, $$value => $$invalidate(4, $ast = $$value));
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('VarIdentifier', slots, []);
+    	let { parentRef } = $$props;
+    	let { accessor } = $$props;
+    	let { contextType } = $$props;
+    	let { isArgument = false } = $$props;
+    	let usesTypeMethod = false;
+    	const typeMatches = utilityKey => typeMethods[utilityKey].returns === self.returns;
+
+    	function methodSelected(event) {
+    		if (!event.target.value) {
+    			$$invalidate(2, usesTypeMethod = false);
+    			return;
+    		}
+
+    		typeDefs[self.returns][event.target.value];
+
+    		$$invalidate(
+    			7,
+    			parentRef[accessor] = nodeTemplates.varCallExpression({
+    				method: event.target.value,
+    				returns: self.returns,
+    				variable: self
+    			}),
+    			parentRef
+    		);
+
+    		$$invalidate(2, usesTypeMethod = true);
+    	}
+
+    	const writable_props = ['parentRef', 'accessor', 'contextType', 'isArgument'];
+
+    	Object_1$1.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<VarIdentifier> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('parentRef' in $$props) $$invalidate(7, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(8, accessor = $$props.accessor);
+    		if ('contextType' in $$props) $$invalidate(9, contextType = $$props.contextType);
+    		if ('isArgument' in $$props) $$invalidate(0, isArgument = $$props.isArgument);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		typeDefs,
+    		nodeTemplates,
+    		ast,
+    		parentRef,
+    		accessor,
+    		contextType,
+    		isArgument,
+    		usesTypeMethod,
+    		typeMatches,
+    		methodSelected,
+    		self,
+    		typeMethods,
+    		$ast
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('parentRef' in $$props) $$invalidate(7, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(8, accessor = $$props.accessor);
+    		if ('contextType' in $$props) $$invalidate(9, contextType = $$props.contextType);
+    		if ('isArgument' in $$props) $$invalidate(0, isArgument = $$props.isArgument);
+    		if ('usesTypeMethod' in $$props) $$invalidate(2, usesTypeMethod = $$props.usesTypeMethod);
+    		if ('self' in $$props) $$invalidate(1, self = $$props.self);
+    		if ('typeMethods' in $$props) $$invalidate(3, typeMethods = $$props.typeMethods);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*parentRef, accessor*/ 384) {
+    			$$invalidate(1, self = parentRef[accessor]);
+    		}
+
+    		if ($$self.$$.dirty & /*contextType, self*/ 514) {
+    			$$invalidate(3, typeMethods = typeDefs[contextType ?? self.returns]);
+    		}
+    	};
+
+    	return [
+    		isArgument,
+    		self,
+    		usesTypeMethod,
+    		typeMethods,
+    		$ast,
+    		typeMatches,
+    		methodSelected,
+    		parentRef,
+    		accessor,
+    		contextType
+    	];
+    }
+
+    class VarIdentifier extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$b, create_fragment$b, safe_not_equal, {
+    			parentRef: 7,
+    			accessor: 8,
+    			contextType: 9,
+    			isArgument: 0
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "VarIdentifier",
+    			options,
+    			id: create_fragment$b.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*parentRef*/ ctx[7] === undefined && !('parentRef' in props)) {
+    			console.warn("<VarIdentifier> was created without expected prop 'parentRef'");
+    		}
+
+    		if (/*accessor*/ ctx[8] === undefined && !('accessor' in props)) {
+    			console.warn("<VarIdentifier> was created without expected prop 'accessor'");
+    		}
+
+    		if (/*contextType*/ ctx[9] === undefined && !('contextType' in props)) {
+    			console.warn("<VarIdentifier> was created without expected prop 'contextType'");
+    		}
+    	}
+
+    	get parentRef() {
+    		throw new Error("<VarIdentifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set parentRef(value) {
+    		throw new Error("<VarIdentifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get accessor() {
+    		throw new Error("<VarIdentifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set accessor(value) {
+    		throw new Error("<VarIdentifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get contextType() {
+    		throw new Error("<VarIdentifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set contextType(value) {
+    		throw new Error("<VarIdentifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get isArgument() {
+    		throw new Error("<VarIdentifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isArgument(value) {
+    		throw new Error("<VarIdentifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/components/flow_objects/VarCallExpression.svelte generated by Svelte v3.46.4 */
+
+    const { Object: Object_1 } = globals;
+    const file$9 = "src/components/flow_objects/VarCallExpression.svelte";
+
+    function get_each_context$2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[13] = list[i];
+    	child_ctx[15] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_1$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[16] = list[i];
+    	return child_ctx;
+    }
+
+    // (54:8) {#if !contextType || self.variable.returns === contextType}
+    function create_if_block_1(ctx) {
+    	let option;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			option.__value = "";
+    			option.value = option.__value;
+    			add_location(option, file$9, 53, 67, 1806);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(54:8) {#if !contextType || self.variable.returns === contextType}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (55:8) {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
+    function create_each_block_1$1(ctx) {
+    	let option;
+    	let t_value = /*method*/ ctx[16] + "";
+    	let t;
+    	let option_value_value;
+    	let option_selected_value;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			t = text(t_value);
+    			option.__value = option_value_value = /*method*/ ctx[16];
+    			option.value = option.__value;
+    			option.selected = option_selected_value = /*method*/ ctx[16] === /*self*/ ctx[3].method;
+    			add_location(option, file$9, 55, 12, 1934);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    			append_dev(option, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*varTypeMethods*/ 16 && t_value !== (t_value = /*method*/ ctx[16] + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*varTypeMethods*/ 16 && option_value_value !== (option_value_value = /*method*/ ctx[16])) {
+    				prop_dev(option, "__value", option_value_value);
+    				option.value = option.__value;
+    			}
+
+    			if (dirty & /*varTypeMethods, self*/ 24 && option_selected_value !== (option_selected_value = /*method*/ ctx[16] === /*self*/ ctx[3].method)) {
+    				prop_dev(option, "selected", option_selected_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1$1.name,
+    		type: "each",
+    		source: "(55:8) {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (64:16) {:else}
+    function create_else_block$2(ctx) {
+    	let switch_instance;
+    	let updating_parentRef;
+    	let switch_instance_anchor;
+    	let current;
+
+    	function switch_instance_parentRef_binding(value) {
+    		/*switch_instance_parentRef_binding*/ ctx[12](value);
+    	}
+
+    	var switch_value = constructors[/*argument*/ ctx[13].type];
+
+    	function switch_props(ctx) {
+    		let switch_instance_props = {
+    			accessor: /*i*/ ctx[15],
+    			isArgument: true,
+    			contextType: /*argument*/ ctx[13].returns
+    		};
+
+    		if (/*self*/ ctx[3].arguments !== void 0) {
+    			switch_instance_props.parentRef = /*self*/ ctx[3].arguments;
+    		}
+
+    		return {
+    			props: switch_instance_props,
+    			$$inline: true
+    		};
+    	}
+
+    	if (switch_value) {
+    		switch_instance = new switch_value(switch_props(ctx));
+    		binding_callbacks.push(() => bind(switch_instance, 'parentRef', switch_instance_parentRef_binding));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			if (switch_instance) create_component(switch_instance.$$.fragment);
+    			switch_instance_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (switch_instance) {
+    				mount_component(switch_instance, target, anchor);
+    			}
+
+    			insert_dev(target, switch_instance_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const switch_instance_changes = {};
+    			if (dirty & /*self*/ 8) switch_instance_changes.accessor = /*i*/ ctx[15];
+    			if (dirty & /*self*/ 8) switch_instance_changes.contextType = /*argument*/ ctx[13].returns;
+
+    			if (!updating_parentRef && dirty & /*self*/ 8) {
+    				updating_parentRef = true;
+    				switch_instance_changes.parentRef = /*self*/ ctx[3].arguments;
+    				add_flush_callback(() => updating_parentRef = false);
+    			}
+
+    			if (switch_value !== (switch_value = constructors[/*argument*/ ctx[13].type])) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props(ctx));
+    					binding_callbacks.push(() => bind(switch_instance, 'parentRef', switch_instance_parentRef_binding));
+    					create_component(switch_instance.$$.fragment);
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+    				} else {
+    					switch_instance = null;
+    				}
+    			} else if (switch_value) {
+    				switch_instance.$set(switch_instance_changes);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(switch_instance_anchor);
+    			if (switch_instance) destroy_component(switch_instance, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$2.name,
+    		type: "else",
+    		source: "(64:16) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (62:16) {#if argument.type === "UtilityCallExpression"}
+    function create_if_block$2(ctx) {
+    	let varcallexpression;
+    	let updating_parentRef;
+    	let current;
+
+    	function varcallexpression_parentRef_binding(value) {
+    		/*varcallexpression_parentRef_binding*/ ctx[11](value);
+    	}
+
+    	let varcallexpression_props = {
+    		accessor: /*i*/ ctx[15],
+    		contextType: /*argument*/ ctx[13].returns
+    	};
+
+    	if (/*self*/ ctx[3].arguments !== void 0) {
+    		varcallexpression_props.parentRef = /*self*/ ctx[3].arguments;
+    	}
+
+    	varcallexpression = new VarCallExpression({
+    			props: varcallexpression_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(varcallexpression, 'parentRef', varcallexpression_parentRef_binding));
+
+    	const block = {
+    		c: function create() {
+    			create_component(varcallexpression.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(varcallexpression, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const varcallexpression_changes = {};
+    			if (dirty & /*self*/ 8) varcallexpression_changes.accessor = /*i*/ ctx[15];
+    			if (dirty & /*self*/ 8) varcallexpression_changes.contextType = /*argument*/ ctx[13].returns;
+
+    			if (!updating_parentRef && dirty & /*self*/ 8) {
+    				updating_parentRef = true;
+    				varcallexpression_changes.parentRef = /*self*/ ctx[3].arguments;
+    				add_flush_callback(() => updating_parentRef = false);
+    			}
+
+    			varcallexpression.$set(varcallexpression_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(varcallexpression.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(varcallexpression.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(varcallexpression, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$2.name,
+    		type: "if",
+    		source: "(62:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (59:8) {#each self.arguments as argument, i (i)}
+    function create_each_block$2(key_1, ctx) {
+    	let div;
+    	let clearnodeprop;
+    	let t0;
+    	let current_block_type_index;
+    	let if_block;
+    	let t1;
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	function func(...args) {
+    		return /*func*/ ctx[10](/*i*/ ctx[15], /*argument*/ ctx[13], ...args);
+    	}
+
+    	clearnodeprop = new ClearNodeProp({ props: { onClick: func }, $$inline: true });
+    	const if_block_creators = [create_if_block$2, create_else_block$2];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*argument*/ ctx[13].type === "UtilityCallExpression") return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			div = element("div");
+    			create_component(clearnodeprop.$$.fragment);
+    			t0 = space();
+    			if_block.c();
+    			t1 = space();
+    			attr_dev(div, "class", "arg-box svelte-48s71p");
+    			add_location(div, file$9, 59, 12, 2108);
+    			this.first = div;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			mount_component(clearnodeprop, div, null);
+    			append_dev(div, t0);
+    			if_blocks[current_block_type_index].m(div, null);
+    			append_dev(div, t1);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(
+    						div,
+    						"drop",
+    						stop_propagation(function () {
+    							if (is_function(flowDropHandler({
+    								contextName: 'argument',
+    								contextType: /*argument*/ ctx[13].returns,
+    								stateChangeCallback: /*dropArgument*/ ctx[7](/*i*/ ctx[15])
+    							}))) flowDropHandler({
+    								contextName: 'argument',
+    								contextType: /*argument*/ ctx[13].returns,
+    								stateChangeCallback: /*dropArgument*/ ctx[7](/*i*/ ctx[15])
+    							}).apply(this, arguments);
+    						}),
+    						false,
+    						false,
+    						true
+    					),
+    					listen_dev(div, "dragover", dragover_handler$1, false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const clearnodeprop_changes = {};
+    			if (dirty & /*parentRef, accessor, self*/ 11) clearnodeprop_changes.onClick = func;
+    			clearnodeprop.$set(clearnodeprop_changes);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div, t1);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(clearnodeprop.$$.fragment, local);
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(clearnodeprop.$$.fragment, local);
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_component(clearnodeprop);
+    			if_blocks[current_block_type_index].d();
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$2.name,
+    		type: "each",
+    		source: "(59:8) {#each self.arguments as argument, i (i)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$a(ctx) {
+    	let p;
+    	let span;
+    	let varidentifier;
+    	let updating_parentRef;
+    	let t0;
+    	let select;
+    	let if_block_anchor;
+    	let t1;
+    	let each_blocks = [];
+    	let each1_lookup = new Map();
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	function varidentifier_parentRef_binding(value) {
+    		/*varidentifier_parentRef_binding*/ ctx[9](value);
+    	}
+
+    	let varidentifier_props = { accessor: "variable", isArgument: false };
+
+    	if (/*self*/ ctx[3] !== void 0) {
+    		varidentifier_props.parentRef = /*self*/ ctx[3];
+    	}
+
+    	varidentifier = new VarIdentifier({
+    			props: varidentifier_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(varidentifier, 'parentRef', varidentifier_parentRef_binding));
+    	let if_block = (!/*contextType*/ ctx[2] || /*self*/ ctx[3].variable.returns === /*contextType*/ ctx[2]) && create_if_block_1(ctx);
+    	let each_value_1 = Object.keys(/*varTypeMethods*/ ctx[4]).filter(/*matchParentTypeFilter*/ ctx[6]);
+    	validate_each_argument(each_value_1);
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
+    	}
+
+    	let each_value = /*self*/ ctx[3].arguments;
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*i*/ ctx[15];
+    	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$2(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			span = element("span");
+    			create_component(varidentifier.$$.fragment);
+    			t0 = text(".");
+    			select = element("select");
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t1 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			add_location(select, file$9, 52, 91, 1701);
+    			add_location(span, file$9, 52, 4, 1614);
+    			set_style(p, "padding-left", "10px");
+    			add_location(p, file$9, 51, 0, 1579);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, span);
+    			mount_component(varidentifier, span, null);
+    			append_dev(span, t0);
+    			append_dev(span, select);
+    			if (if_block) if_block.m(select, null);
+    			append_dev(select, if_block_anchor);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(select, null);
+    			}
+
+    			append_dev(p, t1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(p, null);
+    			}
+
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(select, "change", /*onPropertyChange*/ ctx[5], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const varidentifier_changes = {};
+
+    			if (!updating_parentRef && dirty & /*self*/ 8) {
+    				updating_parentRef = true;
+    				varidentifier_changes.parentRef = /*self*/ ctx[3];
+    				add_flush_callback(() => updating_parentRef = false);
+    			}
+
+    			varidentifier.$set(varidentifier_changes);
+
+    			if (!/*contextType*/ ctx[2] || /*self*/ ctx[3].variable.returns === /*contextType*/ ctx[2]) {
+    				if (if_block) ; else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					if_block.m(select, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if (dirty & /*Object, varTypeMethods, matchParentTypeFilter, self*/ 88) {
+    				each_value_1 = Object.keys(/*varTypeMethods*/ ctx[4]).filter(/*matchParentTypeFilter*/ ctx[6]);
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks_1[i] = create_each_block_1$1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(select, null);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+
+    				each_blocks_1.length = each_value_1.length;
+    			}
+
+    			if (dirty & /*flowDropHandler, self, dropArgument, constructors, parentRef, accessor, nodeTemplates*/ 139) {
+    				each_value = /*self*/ ctx[3].arguments;
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context$2, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, p, outro_and_destroy_block, create_each_block$2, null, get_each_context$2);
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(varidentifier.$$.fragment, local);
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(varidentifier.$$.fragment, local);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    			destroy_component(varidentifier);
+    			if (if_block) if_block.d();
+    			destroy_each(each_blocks_1, detaching);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$a.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    const dragover_handler$1 = () => {
+    	
+    };
+
+    function instance$a($$self, $$props, $$invalidate) {
+    	let self;
+    	let varTypeMethods;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('VarCallExpression', slots, []);
+    	let { parentRef } = $$props;
+    	let { accessor } = $$props;
+    	let { contextType } = $$props;
+    	let { isArgument = false } = $$props;
+
+    	const onPropertyChange = event => {
+    		const method = event.target.value;
+
+    		if (method === '') {
+    			$$invalidate(0, parentRef[accessor] = { ...self.variable }, parentRef);
+    			return;
+    		}
+
+    		const typeDef = typeDefs[self.variable.returns][method];
+    		const args = typeDef.args.map(argType => nodeTemplates[argType + "Literal"]({}));
+
+    		$$invalidate(
+    			0,
+    			parentRef[accessor] = {
+    				...parentRef[accessor],
+    				method,
+    				arguments: args,
+    				returns: typeDef.returns
+    			},
+    			parentRef
+    		);
+    	};
+
+    	// !contextType is when things don't have a type in their parent context
+    	const matchParentTypeFilter = methodName => !contextType || varTypeMethods[methodName].returns === contextType;
+
+    	const dropArgument = argIndex => node => {
+    		if (node === null) return;
+    		self.arguments.splice(argIndex, 1, node);
+    		$$invalidate(0, parentRef[accessor].aruments = [...self.arguments], parentRef);
+    	};
+
+    	const writable_props = ['parentRef', 'accessor', 'contextType', 'isArgument'];
+
+    	Object_1.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<VarCallExpression> was created with unknown prop '${key}'`);
+    	});
+
+    	function varidentifier_parentRef_binding(value) {
+    		self = value;
+    		(($$invalidate(3, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
+    	}
+
+    	const func = (i, argument, _) => $$invalidate(0, parentRef[accessor].arguments[i] = nodeTemplates[argument.returns + "Literal"]({}), parentRef);
+
+    	function varcallexpression_parentRef_binding(value) {
+    		if ($$self.$$.not_equal(self.arguments, value)) {
+    			self.arguments = value;
+    			(($$invalidate(3, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
+    		}
+    	}
+
+    	function switch_instance_parentRef_binding(value) {
+    		if ($$self.$$.not_equal(self.arguments, value)) {
+    			self.arguments = value;
+    			(($$invalidate(3, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
+    		}
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
+    		if ('contextType' in $$props) $$invalidate(2, contextType = $$props.contextType);
+    		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		VarIdentifier,
+    		flowDropHandler,
+    		typeDefs,
+    		ClearNodeProp,
+    		constructors,
+    		nodeTemplates,
+    		parentRef,
+    		accessor,
+    		contextType,
+    		isArgument,
+    		onPropertyChange,
+    		matchParentTypeFilter,
+    		dropArgument,
+    		self,
+    		varTypeMethods
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('parentRef' in $$props) $$invalidate(0, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
+    		if ('contextType' in $$props) $$invalidate(2, contextType = $$props.contextType);
+    		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+    		if ('self' in $$props) $$invalidate(3, self = $$props.self);
+    		if ('varTypeMethods' in $$props) $$invalidate(4, varTypeMethods = $$props.varTypeMethods);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*parentRef, accessor*/ 3) {
+    			$$invalidate(3, self = parentRef[accessor]);
+    		}
+
+    		if ($$self.$$.dirty & /*self*/ 8) {
+    			$$invalidate(4, varTypeMethods = typeDefs[self.variable.returns]);
+    		}
+    	};
+
+    	return [
+    		parentRef,
+    		accessor,
+    		contextType,
+    		self,
+    		varTypeMethods,
+    		onPropertyChange,
+    		matchParentTypeFilter,
+    		dropArgument,
+    		isArgument,
+    		varidentifier_parentRef_binding,
+    		func,
+    		varcallexpression_parentRef_binding,
+    		switch_instance_parentRef_binding
+    	];
+    }
+
+    class VarCallExpression extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
+    			parentRef: 0,
+    			accessor: 1,
+    			contextType: 2,
+    			isArgument: 8
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "VarCallExpression",
+    			options,
+    			id: create_fragment$a.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*parentRef*/ ctx[0] === undefined && !('parentRef' in props)) {
+    			console.warn("<VarCallExpression> was created without expected prop 'parentRef'");
+    		}
+
+    		if (/*accessor*/ ctx[1] === undefined && !('accessor' in props)) {
+    			console.warn("<VarCallExpression> was created without expected prop 'accessor'");
+    		}
+
+    		if (/*contextType*/ ctx[2] === undefined && !('contextType' in props)) {
+    			console.warn("<VarCallExpression> was created without expected prop 'contextType'");
+    		}
+    	}
+
+    	get parentRef() {
+    		throw new Error("<VarCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set parentRef(value) {
+    		throw new Error("<VarCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get accessor() {
+    		throw new Error("<VarCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set accessor(value) {
+    		throw new Error("<VarCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get contextType() {
+    		throw new Error("<VarCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set contextType(value) {
+    		throw new Error("<VarCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get isArgument() {
+    		throw new Error("<VarCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isArgument(value) {
+    		throw new Error("<VarCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -4298,7 +5498,7 @@ var app = (function () {
     /* src/components/flow_objects/CallExpression.svelte generated by Svelte v3.46.4 */
     const file$7 = "src/components/flow_objects/CallExpression.svelte";
 
-    function get_each_context$2(ctx, list, i) {
+    function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[9] = list[i];
     	child_ctx[11] = i;
@@ -4440,7 +5640,7 @@ var app = (function () {
     			div = element("div");
     			create_component(stringliteral.$$.fragment);
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$7, 37, 20, 1695);
+    			add_location(div, file$7, 37, 20, 1682);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4594,7 +5794,7 @@ var app = (function () {
     }
 
     // (30:20) {#if argument.type === "CallExpression"}
-    function create_if_block$2(ctx) {
+    function create_if_block$1(ctx) {
     	let callexpression;
     	let updating_parentRef;
     	let current;
@@ -4652,7 +5852,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$2.name,
+    		id: create_if_block$1.name,
     		type: "if",
     		source: "(30:20) {#if argument.type === \\\"CallExpression\\\"}",
     		ctx
@@ -4662,12 +5862,12 @@ var app = (function () {
     }
 
     // (28:12) {#each self.arguments as argument, i (i)}
-    function create_each_block$2(key_1, ctx) {
+    function create_each_block$1(key_1, ctx) {
     	let div;
     	let current_block_type_index;
     	let if_block;
     	let current;
-    	const if_block_creators = [create_if_block$2, create_else_block$1];
+    	const if_block_creators = [create_if_block$1, create_else_block$1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -4685,7 +5885,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr_dev(div, "class", "arg-box svelte-k9g395");
-    			add_location(div, file$7, 28, 16, 1220);
+    			add_location(div, file$7, 28, 16, 1207);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -4738,7 +5938,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$2.name,
+    		id: create_each_block$1.name,
     		type: "each",
     		source: "(28:12) {#each self.arguments as argument, i (i)}",
     		ctx
@@ -4786,12 +5986,12 @@ var app = (function () {
     	let each_value = /*self*/ ctx[0].arguments;
     	validate_each_argument(each_value);
     	const get_key = ctx => /*i*/ ctx[11];
-    	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$2(ctx, each_value, i);
+    		let child_ctx = get_each_context$1(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
     	}
 
     	let each_1_else = null;
@@ -4816,9 +6016,9 @@ var app = (function () {
     			}
 
     			t1 = text("\n        )");
-    			add_location(span, file$7, 24, 4, 975);
+    			add_location(span, file$7, 24, 4, 962);
     			set_style(p, "padding-left", "10px");
-    			add_location(p, file$7, 23, 0, 940);
+    			add_location(p, file$7, 23, 0, 927);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4883,8 +6083,8 @@ var app = (function () {
     				each_value = /*self*/ ctx[0].arguments;
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$2, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, span, outro_and_destroy_block, create_each_block$2, t1, get_each_context$2);
+    				validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, span, outro_and_destroy_block, create_each_block$1, t1, get_each_context$1);
     				check_outros();
 
     				if (!each_value.length && each_1_else) {
@@ -4959,7 +6159,7 @@ var app = (function () {
     	const onMethodChange = payloadObj => {
     		// TODO: commit change to the store using the parentRef from here
     		//store.commit('changeMethod', { refObj: parent.value, accessor: props.accessor, ...payloadObj });
-    		$$invalidate(3, parentRef[accessor] = dropDataTemplates.StringUtil(payloadObj.detail.methodName), parentRef);
+    		$$invalidate(3, parentRef[accessor] = nodeTemplates.StringUtil(payloadObj.detail.methodName), parentRef);
     	};
 
     	const writable_props = ['parentRef', 'accessor'];
@@ -5002,7 +6202,7 @@ var app = (function () {
     	$$self.$capture_state = () => ({
     		StringLiteral,
     		typeDefs,
-    		dropDataTemplates,
+    		nodeTemplates,
     		constructors,
     		parentRef,
     		accessor,
@@ -5090,201 +6290,29 @@ var app = (function () {
 
     /* src/components/flow_objects/Identifier.svelte generated by Svelte v3.46.4 */
 
-    const { Object: Object_1 } = globals;
     const file$6 = "src/components/flow_objects/Identifier.svelte";
-
-    function get_each_context$1(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[8] = list[i];
-    	return child_ctx;
-    }
-
-    // (36:0) {#if isArgument || usesTypeMethod}
-    function create_if_block$1(ctx) {
-    	let select;
-    	let option;
-    	let select_class_value;
-    	let mounted;
-    	let dispose;
-    	let each_value = Object.keys(typeDefs[/*self*/ ctx[1].returns]).filter(/*typeMatches*/ ctx[3]);
-    	validate_each_argument(each_value);
-    	let each_blocks = [];
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
-    	}
-
-    	const block = {
-    		c: function create() {
-    			select = element("select");
-    			option = element("option");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			option.selected = true;
-    			option.__value = "";
-    			option.value = option.__value;
-    			add_location(option, file$6, 37, 8, 1094);
-    			attr_dev(select, "class", select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[2] ? '' : 'type-method-select') + " svelte-o897rk"));
-    			add_location(select, file$6, 36, 4, 997);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, select, anchor);
-    			append_dev(select, option);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(select, null);
-    			}
-
-    			if (!mounted) {
-    				dispose = listen_dev(select, "change", /*methodSelected*/ ctx[4], false, false, false);
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*Object, utilityDefinitions, self, typeMatches*/ 10) {
-    				each_value = Object.keys(typeDefs[/*self*/ ctx[1].returns]).filter(/*typeMatches*/ ctx[3]);
-    				validate_each_argument(each_value);
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(select, null);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-
-    				each_blocks.length = each_value.length;
-    			}
-
-    			if (dirty & /*usesTypeMethod*/ 4 && select_class_value !== (select_class_value = "" + (null_to_empty(/*usesTypeMethod*/ ctx[2] ? '' : 'type-method-select') + " svelte-o897rk"))) {
-    				attr_dev(select, "class", select_class_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(select);
-    			destroy_each(each_blocks, detaching);
-    			mounted = false;
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$1.name,
-    		type: "if",
-    		source: "(36:0) {#if isArgument || usesTypeMethod}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (39:8) {#each Object.keys(utilityDefinitions[self.returns]).filter(typeMatches) as typeMethod}
-    function create_each_block$1(ctx) {
-    	let option;
-    	let t_value = /*typeMethod*/ ctx[8] + "";
-    	let t;
-    	let option_value_value;
-
-    	const block = {
-    		c: function create() {
-    			option = element("option");
-    			t = text(t_value);
-    			option.__value = option_value_value = /*typeMethod*/ ctx[8];
-    			option.value = option.__value;
-    			add_location(option, file$6, 39, 12, 1229);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, option, anchor);
-    			append_dev(option, t);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*self*/ 2 && t_value !== (t_value = /*typeMethod*/ ctx[8] + "")) set_data_dev(t, t_value);
-
-    			if (dirty & /*self*/ 2 && option_value_value !== (option_value_value = /*typeMethod*/ ctx[8])) {
-    				prop_dev(option, "__value", option_value_value);
-    				option.value = option.__value;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(option);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block$1.name,
-    		type: "each",
-    		source: "(39:8) {#each Object.keys(utilityDefinitions[self.returns]).filter(typeMatches) as typeMethod}",
-    		ctx
-    	});
-
-    	return block;
-    }
 
     function create_fragment$7(ctx) {
     	let span;
-    	let t0_value = /*self*/ ctx[1].name + "";
-    	let t0;
-    	let t1;
-    	let if_block_anchor;
-    	let if_block = (/*isArgument*/ ctx[0] || /*usesTypeMethod*/ ctx[2]) && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
     			span = element("span");
-    			t0 = text(t0_value);
-    			t1 = space();
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
-    			attr_dev(span, "class", "self svelte-o897rk");
-    			add_location(span, file$6, 34, 0, 920);
+    			span.textContent = `${/*self*/ ctx[0].name}`;
+    			attr_dev(span, "class", "self svelte-195lgj9");
+    			add_location(span, file$6, 8, 0, 113);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
-    			append_dev(span, t0);
-    			insert_dev(target, t1, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, if_block_anchor, anchor);
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*self*/ 2 && t0_value !== (t0_value = /*self*/ ctx[1].name + "")) set_data_dev(t0, t0_value);
-
-    			if (/*isArgument*/ ctx[0] || /*usesTypeMethod*/ ctx[2]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block$1(ctx);
-    					if_block.c();
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
+    		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(span);
-    			if (detaching) detach_dev(t1);
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -5300,101 +6328,41 @@ var app = (function () {
     }
 
     function instance$7($$self, $$props, $$invalidate) {
-    	let self;
-    	let utilities;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Identifier', slots, []);
     	let { parentRef } = $$props;
     	let { accessor } = $$props;
-    	let { isArgument = false } = $$props;
-    	let usesTypeMethod = false;
-    	const typeMatches = utilityKey => utilities[utilityKey].returns === self.returns;
+    	let self = parentRef[accessor];
+    	const writable_props = ['parentRef', 'accessor'];
 
-    	function methodSelected(event) {
-    		if (!event.target.value) {
-    			$$invalidate(2, usesTypeMethod = false);
-    			return;
-    		}
-
-    		const util = typeDefs[self.returns][event.target.value];
-
-    		$$invalidate(
-    			5,
-    			parentRef[accessor] = dropDataTemplates.typeUtil({
-    				name: self.returns,
-    				method: event.target.value,
-    				returns: util.returns,
-    				variableName: self.name
-    			}),
-    			parentRef
-    		);
-
-    		$$invalidate(2, usesTypeMethod = true);
-    	}
-
-    	const writable_props = ['parentRef', 'accessor', 'isArgument'];
-
-    	Object_1.keys($$props).forEach(key => {
+    	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Identifier> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
-    		if ('parentRef' in $$props) $$invalidate(5, parentRef = $$props.parentRef);
-    		if ('accessor' in $$props) $$invalidate(6, accessor = $$props.accessor);
-    		if ('isArgument' in $$props) $$invalidate(0, isArgument = $$props.isArgument);
+    		if ('parentRef' in $$props) $$invalidate(1, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(2, accessor = $$props.accessor);
     	};
 
-    	$$self.$capture_state = () => ({
-    		utilityDefinitions: typeDefs,
-    		dropDataTemplates,
-    		parentRef,
-    		accessor,
-    		isArgument,
-    		usesTypeMethod,
-    		typeMatches,
-    		methodSelected,
-    		self,
-    		utilities
-    	});
+    	$$self.$capture_state = () => ({ parentRef, accessor, self });
 
     	$$self.$inject_state = $$props => {
-    		if ('parentRef' in $$props) $$invalidate(5, parentRef = $$props.parentRef);
-    		if ('accessor' in $$props) $$invalidate(6, accessor = $$props.accessor);
-    		if ('isArgument' in $$props) $$invalidate(0, isArgument = $$props.isArgument);
-    		if ('usesTypeMethod' in $$props) $$invalidate(2, usesTypeMethod = $$props.usesTypeMethod);
-    		if ('self' in $$props) $$invalidate(1, self = $$props.self);
-    		if ('utilities' in $$props) utilities = $$props.utilities;
+    		if ('parentRef' in $$props) $$invalidate(1, parentRef = $$props.parentRef);
+    		if ('accessor' in $$props) $$invalidate(2, accessor = $$props.accessor);
+    		if ('self' in $$props) $$invalidate(0, self = $$props.self);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*parentRef, accessor*/ 96) {
-    			$$invalidate(1, self = parentRef[accessor]);
-    		}
-
-    		if ($$self.$$.dirty & /*self*/ 2) {
-    			utilities = typeDefs[self.returns];
-    		}
-    	};
-
-    	return [
-    		isArgument,
-    		self,
-    		usesTypeMethod,
-    		typeMatches,
-    		methodSelected,
-    		parentRef,
-    		accessor
-    	];
+    	return [self, parentRef, accessor];
     }
 
     class Identifier extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { parentRef: 5, accessor: 6, isArgument: 0 });
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { parentRef: 1, accessor: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -5406,11 +6374,11 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*parentRef*/ ctx[5] === undefined && !('parentRef' in props)) {
+    		if (/*parentRef*/ ctx[1] === undefined && !('parentRef' in props)) {
     			console.warn("<Identifier> was created without expected prop 'parentRef'");
     		}
 
-    		if (/*accessor*/ ctx[6] === undefined && !('accessor' in props)) {
+    		if (/*accessor*/ ctx[2] === undefined && !('accessor' in props)) {
     			console.warn("<Identifier> was created without expected prop 'accessor'");
     		}
     	}
@@ -5428,14 +6396,6 @@ var app = (function () {
     	}
 
     	set accessor(value) {
-    		throw new Error("<Identifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isArgument() {
-    		throw new Error("<Identifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isArgument(value) {
     		throw new Error("<Identifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -5890,7 +6850,7 @@ var app = (function () {
     /* src/components/flow_objects/AssignmentExpression.svelte generated by Svelte v3.46.4 */
     const file$3 = "src/components/flow_objects/AssignmentExpression.svelte";
 
-    // (25:4) {:else}
+    // (26:4) {:else}
     function create_else_block(ctx) {
     	let clearnodeprop;
     	let t;
@@ -5900,12 +6860,12 @@ var app = (function () {
     	let current;
 
     	clearnodeprop = new ClearNodeProp({
-    			props: { onClick: /*func*/ ctx[4] },
+    			props: { onClick: /*func*/ ctx[5] },
     			$$inline: true
     		});
 
     	function switch_instance_parentRef_binding(value) {
-    		/*switch_instance_parentRef_binding*/ ctx[5](value);
+    		/*switch_instance_parentRef_binding*/ ctx[6](value);
     	}
 
     	var switch_value = constructors[/*self*/ ctx[2].right.type];
@@ -5914,7 +6874,7 @@ var app = (function () {
     		let switch_instance_props = {
     			accessor: "right",
     			isArgument: true,
-    			filterType: /*self*/ ctx[2].left.returns
+    			contextType: /*self*/ ctx[2].left.returns
     		};
 
     		if (/*self*/ ctx[2] !== void 0) {
@@ -5952,10 +6912,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const clearnodeprop_changes = {};
-    			if (dirty & /*parentRef, accessor*/ 3) clearnodeprop_changes.onClick = /*func*/ ctx[4];
+    			if (dirty & /*parentRef, accessor*/ 3) clearnodeprop_changes.onClick = /*func*/ ctx[5];
     			clearnodeprop.$set(clearnodeprop_changes);
     			const switch_instance_changes = {};
-    			if (dirty & /*self*/ 4) switch_instance_changes.filterType = /*self*/ ctx[2].left.returns;
+    			if (dirty & /*self*/ 4) switch_instance_changes.contextType = /*self*/ ctx[2].left.returns;
 
     			if (!updating_parentRef && dirty & /*self*/ 4) {
     				updating_parentRef = true;
@@ -6011,14 +6971,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(25:4) {:else}",
+    		source: "(26:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (23:4) {#if self.right === null}
+    // (24:4) {#if self.right === null}
     function create_if_block(ctx) {
     	let t;
 
@@ -6041,7 +7001,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(23:4) {#if self.right === null}",
+    		source: "(24:4) {#if self.right === null}",
     		ctx
     	});
 
@@ -6052,19 +7012,36 @@ var app = (function () {
     	let p;
     	let t0;
     	let strong;
-    	let t1_value = /*self*/ ctx[2].left.name + "";
+    	let varidentifier;
+    	let updating_parentRef;
     	let t1;
+    	let t2_value = /*self*/ ctx[2].left.returns + "";
     	let t2;
-    	let t3_value = /*self*/ ctx[2].left.returns + "";
     	let t3;
     	let t4;
-    	let t5;
     	let div;
     	let current_block_type_index;
     	let if_block;
     	let current;
     	let mounted;
     	let dispose;
+
+    	function varidentifier_parentRef_binding(value) {
+    		/*varidentifier_parentRef_binding*/ ctx[4](value);
+    	}
+
+    	let varidentifier_props = { accessor: "left", isArgument: false };
+
+    	if (/*self*/ ctx[2] !== void 0) {
+    		varidentifier_props.parentRef = /*self*/ ctx[2];
+    	}
+
+    	varidentifier = new VarIdentifier({
+    			props: varidentifier_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(varidentifier, 'parentRef', varidentifier_parentRef_binding));
     	const if_block_creators = [create_if_block, create_else_block];
     	const if_blocks = [];
 
@@ -6081,17 +7058,17 @@ var app = (function () {
     			p = element("p");
     			t0 = text("Assign ");
     			strong = element("strong");
-    			t1 = text(t1_value);
-    			t2 = text(": ");
-    			t3 = text(t3_value);
-    			t4 = text(" to");
-    			t5 = space();
+    			create_component(varidentifier.$$.fragment);
+    			t1 = text(": ");
+    			t2 = text(t2_value);
+    			t3 = text(" to");
+    			t4 = space();
     			div = element("div");
     			if_block.c();
-    			add_location(strong, file$3, 17, 10, 427);
-    			add_location(p, file$3, 17, 0, 417);
+    			add_location(strong, file$3, 18, 10, 497);
+    			add_location(p, file$3, 18, 0, 487);
     			attr_dev(div, "class", "assign-right-block svelte-v13rfq");
-    			add_location(div, file$3, 18, 0, 489);
+    			add_location(div, file$3, 19, 0, 619);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6100,11 +7077,11 @@ var app = (function () {
     			insert_dev(target, p, anchor);
     			append_dev(p, t0);
     			append_dev(p, strong);
+    			mount_component(varidentifier, strong, null);
     			append_dev(strong, t1);
     			append_dev(strong, t2);
-    			append_dev(strong, t3);
-    			append_dev(p, t4);
-    			insert_dev(target, t5, anchor);
+    			append_dev(p, t3);
+    			insert_dev(target, t4, anchor);
     			insert_dev(target, div, anchor);
     			if_blocks[current_block_type_index].m(div, null);
     			current = true;
@@ -6137,8 +7114,16 @@ var app = (function () {
     		},
     		p: function update(new_ctx, [dirty]) {
     			ctx = new_ctx;
-    			if ((!current || dirty & /*self*/ 4) && t1_value !== (t1_value = /*self*/ ctx[2].left.name + "")) set_data_dev(t1, t1_value);
-    			if ((!current || dirty & /*self*/ 4) && t3_value !== (t3_value = /*self*/ ctx[2].left.returns + "")) set_data_dev(t3, t3_value);
+    			const varidentifier_changes = {};
+
+    			if (!updating_parentRef && dirty & /*self*/ 4) {
+    				updating_parentRef = true;
+    				varidentifier_changes.parentRef = /*self*/ ctx[2];
+    				add_flush_callback(() => updating_parentRef = false);
+    			}
+
+    			varidentifier.$set(varidentifier_changes);
+    			if ((!current || dirty & /*self*/ 4) && t2_value !== (t2_value = /*self*/ ctx[2].left.returns + "")) set_data_dev(t2, t2_value);
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
 
@@ -6167,16 +7152,19 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(varidentifier.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
+    			transition_out(varidentifier.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(p);
-    			if (detaching) detach_dev(t5);
+    			destroy_component(varidentifier);
+    			if (detaching) detach_dev(t4);
     			if (detaching) detach_dev(div);
     			if_blocks[current_block_type_index].d();
     			mounted = false;
@@ -6217,6 +7205,11 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<AssignmentExpression> was created with unknown prop '${key}'`);
     	});
 
+    	function varidentifier_parentRef_binding(value) {
+    		self = value;
+    		(($$invalidate(2, self), $$invalidate(0, parentRef)), $$invalidate(1, accessor));
+    	}
+
     	const func = _ => $$invalidate(0, parentRef[accessor].right = null, parentRef);
 
     	function switch_instance_parentRef_binding(value) {
@@ -6231,6 +7224,7 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		constructors,
+    		VarIdentifier,
     		flowDropHandler,
     		ClearNodeProp,
     		parentRef,
@@ -6260,6 +7254,7 @@ var app = (function () {
     		accessor,
     		self,
     		stateChangeOnDrop,
+    		varidentifier_parentRef_binding,
     		func,
     		switch_instance_parentRef_binding
     	];
@@ -6310,12 +7305,14 @@ var app = (function () {
     const constructors = {
         "ExpressionStatement": ExpressionStatement,
         "UtilityCallExpression": UtilityCallExpression,
+        "VarCallExpression": VarCallExpression,
         "CallExpression": CallExpression,
         "Identifier": Identifier,
         "MemberExpression": MemberExpression,
         "StringLiteral": StringLiteral,
         "IntegerLiteral": IntegerLiteral,
-        "AssignmentExpression": AssignmentExpression
+        "AssignmentExpression": AssignmentExpression,
+        "VarIdentifier": VarIdentifier
     };
 
     function squish(node, params) {
