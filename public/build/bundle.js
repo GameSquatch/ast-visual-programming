@@ -1827,28 +1827,28 @@ var app = (function () {
     			div6 = element("div");
     			button1 = element("button");
     			button1.textContent = "Add Variable";
-    			add_location(h40, file$f, 72, 12, 1964);
+    			add_location(h40, file$f, 72, 12, 1966);
     			attr_dev(div0, "class", "flex-1");
-    			add_location(div0, file$f, 74, 16, 2063);
+    			add_location(div0, file$f, 74, 16, 2065);
     			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$f, 75, 16, 2110);
+    			add_location(div1, file$f, 75, 16, 2112);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$f, 76, 16, 2157);
+    			add_location(div2, file$f, 76, 16, 2159);
     			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$f, 73, 12, 1995);
-    			add_location(button0, file$f, 88, 16, 2945);
+    			add_location(div3, file$f, 73, 12, 1997);
+    			add_location(button0, file$f, 91, 16, 3088);
     			attr_dev(div4, "class", "add-var-btn");
-    			add_location(div4, file$f, 87, 12, 2903);
-    			attr_dev(div5, "class", "flex-1 var-section svelte-xmpv3d");
-    			add_location(div5, file$f, 71, 8, 1919);
-    			add_location(h41, file$f, 92, 12, 3087);
-    			add_location(button1, file$f, 100, 16, 3546);
+    			add_location(div4, file$f, 90, 12, 3046);
+    			attr_dev(div5, "class", "flex-1 var-section svelte-d9q3dk");
+    			add_location(div5, file$f, 71, 8, 1921);
+    			add_location(h41, file$f, 95, 12, 3230);
+    			add_location(button1, file$f, 103, 16, 3689);
     			attr_dev(div6, "class", "add-var-btn");
-    			add_location(div6, file$f, 99, 12, 3504);
-    			attr_dev(div7, "class", "flex-1 param-section svelte-xmpv3d");
-    			add_location(div7, file$f, 91, 8, 3040);
-    			attr_dev(div8, "class", "flex tab-content svelte-xmpv3d");
-    			add_location(div8, file$f, 70, 4, 1823);
+    			add_location(div6, file$f, 102, 12, 3647);
+    			attr_dev(div7, "class", "flex-1 param-section svelte-d9q3dk");
+    			add_location(div7, file$f, 94, 8, 3183);
+    			attr_dev(div8, "class", "flex tab-content svelte-d9q3dk");
+    			add_location(div8, file$f, 70, 4, 1825);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div8, anchor);
@@ -1896,7 +1896,7 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*dragStart, info, Object, testChangeVarName*/ 137) {
+    			if (dirty & /*dragStart, info, Object, changeVarName*/ 137) {
     				each_value_1 = Object.keys(/*info*/ ctx[0].variables);
     				validate_each_argument(each_value_1);
     				validate_each_keys(ctx, each_value_1, get_each_context_1$3, get_key);
@@ -1969,87 +1969,97 @@ var app = (function () {
 
     // (80:12) {#each Object.keys(info.variables) as varId (varId)}
     function create_each_block_1$3(key_1, ctx) {
-    	let div3;
-    	let div0;
-    	let t0_value = /*varObj*/ ctx[15].name + "";
-    	let t0;
-    	let t1;
-    	let t2;
+    	let div4;
     	let div1;
+    	let div0;
+    	let t0;
+    	let input0;
+    	let input0_value_value;
+    	let t1;
+    	let div2;
     	let select;
     	let option0;
     	let option1;
     	let select_value_value;
-    	let t5;
-    	let div2;
-    	let input;
-    	let input_value_value;
+    	let t4;
+    	let div3;
+    	let input1;
+    	let input1_value_value;
     	let mounted;
     	let dispose;
 
-    	function click_handler(...args) {
-    		return /*click_handler*/ ctx[8](/*varId*/ ctx[14], ...args);
+    	function change_handler(...args) {
+    		return /*change_handler*/ ctx[8](/*varId*/ ctx[14], ...args);
     	}
 
     	const block = {
     		key: key_1,
     		first: null,
     		c: function create() {
-    			div3 = element("div");
-    			div0 = element("div");
-    			t0 = text(t0_value);
-    			t1 = text(":");
-    			t2 = space();
+    			div4 = element("div");
     			div1 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			input0 = element("input");
+    			t1 = space();
+    			div2 = element("div");
     			select = element("select");
     			option0 = element("option");
     			option0.textContent = "String";
     			option1 = element("option");
     			option1.textContent = "Integer";
-    			t5 = space();
-    			div2 = element("div");
-    			input = element("input");
-    			attr_dev(div0, "class", "var-name flex-1 svelte-xmpv3d");
+    			t4 = space();
+    			div3 = element("div");
+    			input1 = element("input");
+    			attr_dev(div0, "class", "drag-var svelte-d9q3dk");
     			attr_dev(div0, "draggable", "true");
-    			add_location(div0, file$f, 82, 20, 2480);
+    			add_location(div0, file$f, 83, 24, 2527);
+    			input0.value = input0_value_value = /*varObj*/ ctx[15].name;
+    			attr_dev(input0, "type", "text");
+    			attr_dev(input0, "class", "var-name svelte-d9q3dk");
+    			add_location(input0, file$f, 84, 24, 2595);
+    			attr_dev(div1, "class", "flex-1");
+    			add_location(div1, file$f, 82, 20, 2482);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$f, 83, 73, 2665);
+    			add_location(option0, file$f, 86, 73, 2808);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$f, 83, 111, 2703);
-    			add_location(select, file$f, 83, 40, 2632);
-    			attr_dev(div1, "class", "flex-1");
-    			add_location(div1, file$f, 83, 20, 2612);
-    			attr_dev(input, "type", "text");
-    			input.value = input_value_value = /*varObj*/ ctx[15].value;
-    			add_location(input, file$f, 84, 40, 2799);
+    			add_location(option1, file$f, 86, 111, 2846);
+    			add_location(select, file$f, 86, 40, 2775);
     			attr_dev(div2, "class", "flex-1");
-    			add_location(div2, file$f, 84, 20, 2779);
-    			attr_dev(div3, "class", "flex w100 space-between var-container");
-    			add_location(div3, file$f, 81, 16, 2354);
-    			this.first = div3;
+    			add_location(div2, file$f, 86, 20, 2755);
+    			attr_dev(input1, "type", "text");
+    			input1.value = input1_value_value = /*varObj*/ ctx[15].value;
+    			attr_dev(input1, "class", "svelte-d9q3dk");
+    			add_location(input1, file$f, 87, 40, 2942);
+    			attr_dev(div3, "class", "flex-1");
+    			add_location(div3, file$f, 87, 20, 2922);
+    			attr_dev(div4, "class", "flex w100 space-between var-container");
+    			add_location(div4, file$f, 81, 16, 2356);
+    			this.first = div4;
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div0);
-    			append_dev(div0, t0);
-    			append_dev(div0, t1);
-    			append_dev(div3, t2);
-    			append_dev(div3, div1);
-    			append_dev(div1, select);
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, div1);
+    			append_dev(div1, div0);
+    			append_dev(div1, t0);
+    			append_dev(div1, input0);
+    			append_dev(div4, t1);
+    			append_dev(div4, div2);
+    			append_dev(div2, select);
     			append_dev(select, option0);
     			append_dev(select, option1);
     			select_option(select, /*varObj*/ ctx[15].returns);
-    			append_dev(div3, t5);
-    			append_dev(div3, div2);
-    			append_dev(div2, input);
+    			append_dev(div4, t4);
+    			append_dev(div4, div3);
+    			append_dev(div3, input1);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div0, "click", click_handler, false, false, false),
+    					listen_dev(input0, "change", change_handler, false, false, false),
     					listen_dev(
-    						div3,
+    						div4,
     						"dragstart",
     						function () {
     							if (is_function(/*dragStart*/ ctx[3]({
@@ -2071,18 +2081,21 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*info*/ 1 && t0_value !== (t0_value = /*varObj*/ ctx[15].name + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*info*/ 1 && input0_value_value !== (input0_value_value = /*varObj*/ ctx[15].name) && input0.value !== input0_value_value) {
+    				prop_dev(input0, "value", input0_value_value);
+    			}
 
     			if (dirty & /*info*/ 1 && select_value_value !== (select_value_value = /*varObj*/ ctx[15].returns)) {
     				select_option(select, /*varObj*/ ctx[15].returns);
     			}
 
-    			if (dirty & /*info*/ 1 && input_value_value !== (input_value_value = /*varObj*/ ctx[15].value) && input.value !== input_value_value) {
-    				prop_dev(input, "value", input_value_value);
+    			if (dirty & /*info*/ 1 && input1_value_value !== (input1_value_value = /*varObj*/ ctx[15].value) && input1.value !== input1_value_value) {
+    				prop_dev(input1, "value", input1_value_value);
     			}
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div4);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -2099,7 +2112,7 @@ var app = (function () {
     	return block;
     }
 
-    // (94:12) {#each info.parameters as parameter, i}
+    // (97:12) {#each info.parameters as parameter, i}
     function create_each_block$5(ctx) {
     	let div;
     	let span;
@@ -2126,17 +2139,17 @@ var app = (function () {
     			option0.textContent = "String";
     			option1 = element("option");
     			option1.textContent = "Integer";
-    			add_location(span, file$f, 95, 16, 3281);
+    			add_location(span, file$f, 98, 16, 3424);
     			option0.__value = "String";
     			option0.value = option0.__value;
-    			add_location(option0, file$f, 96, 52, 3365);
+    			add_location(option0, file$f, 99, 52, 3508);
     			option1.__value = "Integer";
     			option1.value = option1.__value;
-    			add_location(option1, file$f, 96, 90, 3403);
-    			add_location(select, file$f, 96, 16, 3329);
+    			add_location(option1, file$f, 99, 90, 3546);
+    			add_location(select, file$f, 99, 16, 3472);
     			attr_dev(div, "draggable", "true");
     			attr_dev(div, "class", "flex w100 space-between var-container");
-    			add_location(div, file$f, 94, 12, 3171);
+    			add_location(div, file$f, 97, 12, 3314);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2172,7 +2185,7 @@ var app = (function () {
     		block,
     		id: create_each_block$5.name,
     		type: "each",
-    		source: "(94:12) {#each info.parameters as parameter, i}",
+    		source: "(97:12) {#each info.parameters as parameter, i}",
     		ctx
     	});
 
@@ -2197,13 +2210,13 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			div0.textContent = "Function Info";
-    			attr_dev(div0, "class", "tab-toggle svelte-xmpv3d");
+    			attr_dev(div0, "class", "tab-toggle svelte-d9q3dk");
     			toggle_class(div0, "isDisplaying", /*isDisplaying*/ ctx[1]);
-    			add_location(div0, file$f, 108, 8, 3703);
+    			add_location(div0, file$f, 111, 8, 3846);
     			attr_dev(div1, "class", "flex justify-center");
-    			add_location(div1, file$f, 107, 4, 3661);
-    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-xmpv3d");
-    			add_location(div2, file$f, 68, 0, 1730);
+    			add_location(div1, file$f, 110, 4, 3804);
+    			attr_dev(div2, "class", "absolute w100 tab-floater svelte-d9q3dk");
+    			add_location(div2, file$f, 68, 0, 1732);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2334,8 +2347,8 @@ var app = (function () {
     		}
     	}
 
-    	function testChangeVarName(_, varId) {
-    		$$invalidate(0, info.variables[varId] = { ...info.variables[varId], name: "hello" }, info);
+    	function changeVarName(varId, newName) {
+    		$$invalidate(0, info.variables[varId] = { ...info.variables[varId], name: newName }, info);
     	}
 
     	const writable_props = ['info'];
@@ -2344,7 +2357,7 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<FunctionInfoTab> was created with unknown prop '${key}'`);
     	});
 
-    	const click_handler = (varId, e) => testChangeVarName(e, varId);
+    	const change_handler = (varId, e) => changeVarName(varId, e.target.value);
 
     	$$self.$$set = $$props => {
     		if ('info' in $$props) $$invalidate(0, info = $$props.info);
@@ -2364,7 +2377,7 @@ var app = (function () {
     		addVariable,
     		addParameter,
     		stopTimer,
-    		testChangeVarName
+    		changeVarName
     	});
 
     	$$self.$inject_state = $$props => {
@@ -2385,8 +2398,8 @@ var app = (function () {
     		addVariable,
     		addParameter,
     		stopTimer,
-    		testChangeVarName,
-    		click_handler
+    		changeVarName,
+    		change_handler
     	];
     }
 

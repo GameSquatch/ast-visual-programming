@@ -58,10 +58,10 @@
         }
     }
 
-    function testChangeVarName(_, varId) {
+    function changeVarName(varId, newName) {
         info.variables[varId] = {
             ...info.variables[varId],
-            name: "hello"
+            name: newName
         };
     }
 </script>
@@ -80,7 +80,10 @@
             {#each Object.keys(info.variables) as varId (varId)}
                 {@const varObj = info.variables[varId]}
                 <div on:dragstart={dragStart({ ...varObj, refId: varId })} class="flex w100 space-between var-container">
-                    <div on:click={e => testChangeVarName(e, varId)} class="var-name flex-1" draggable="true">{varObj.name}: </div>
+                    <div class="flex-1">
+                        <div class="drag-var" draggable=true></div>
+                        <input value={varObj.name} type="text" on:change={e => changeVarName(varId, e.target.value)} class="var-name" />
+                    </div>
                     <div class="flex-1"><select value="{varObj.returns}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
                     <div class="flex-1"><input type="text" value="{varObj.value}"></div>
                 </div>
@@ -149,10 +152,15 @@
         padding: 12px;
     }
 
-    .var-name {
-        user-select: none;
-        -webkit-user-select: none;
+    .drag-var {
+        background: #ccc;
         cursor: move;
-        background: var(--function-info-bg)
+        width: 20px;
+        height: 15px;
+        display: inline-block;
+    }
+
+    input {
+        width: 80px;
     }
 </style>
