@@ -58,10 +58,16 @@ const wrapWithExpression = (node) => {
 const stringUtilFromTypedContext = (dragData, contextType) => {
     const methodName = findStringUtilTypeMatch(contextType);
     if (methodName === null) return null;
-    return nodeTemplates.StringUtil(methodName, contextType);
+    return nodeTemplates.StringUtil(methodName);
 };
 
 
+/**
+ * Creates an AST node for dropping a variable into a typed context
+ * @param {{ name: string, refId: string, returns: string, value: string }} dragData 
+ * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
+ * @returns {Object}
+ */
 const variableFromTypedContext = (dragData, contextType) => {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
     
@@ -89,7 +95,7 @@ const dropContextMap = {
     variable: {
         // context name
         flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableExpression(dragData.data)),
-        expression: (dragData, contextType) => {console.log('dragdata', dragData); return nodeTemplates.variableExpression(dragData.data);},
+        expression: (dragData, contextType) => nodeTemplates.variableExpression(dragData.data),
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },

@@ -43,12 +43,12 @@ const nodeTemplates = {
         },
         right: null
     }),
-    "variableExpression": ({ refId, type = ""}) => ({
+    "variableExpression": ({ refId, returns }) => ({
         type: "AssignmentExpression",
         left: {
             type: "VarIdentifier",
             refId,
-            returns: type
+            returns
         },
         right: null
     }),
