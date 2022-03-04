@@ -34,15 +34,6 @@ const nodeTemplates = {
             expression: null
         };
     },
-    "AssignmentExpression": ({ name = "", type = ""}) => ({
-        type: "AssignmentExpression",
-        left: {
-            type: "Identifier",
-            name,
-            returns: type
-        },
-        right: null
-    }),
     "variableAssignment": ({ refId, returns }) => ({
         type: "AssignmentExpression",
         left: {

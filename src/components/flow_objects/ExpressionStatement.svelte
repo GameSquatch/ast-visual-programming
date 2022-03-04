@@ -1,4 +1,5 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
     import { flowDropHandler } from "../../drag_and_drop_handlers.js";
     import constructors from "../../constructors.js";
     import ClearNodeProp from '../ClearNodeProp.svelte';
@@ -12,6 +13,7 @@
 
     let isOverInsertSpot = false;
     let beingDragged = false;
+    const dispatch = createEventDispatcher();
 
     function dragOverHandler(event) {
         // do something like change cursor
@@ -37,11 +39,13 @@
             parentRef[accessor].expression = node;
     }
 
-    /**
-     * @param {DragEvent} event
-     */
     function insertDrop(node) {
         if (node === null) {
+            return;
+        }
+
+        if (node.currentIndex ?? false) {
+            dispatch('moveExpression', { ...node, newIndex: accessor + 1 });
             return;
         }
 
@@ -60,7 +64,7 @@
      * @param {DragEvent} event
      */
      function handleDragStart(event) {
-        const dragData = moveExpressionDrag(self);
+        const dragData = moveExpressionDrag(self, accessor);
         
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
         beingDragged = true;
@@ -68,12 +72,7 @@
 
     /** @param {DragEvent} event */
     function checkDropCancel(event) {
-        if (event.dataTransfer.dropEffect === 'none') {
-            beingDragged = false;
-            return;
-        }
-
-        deleteFlowStep(event);
+        beingDragged = false;
     }
 </script>
 

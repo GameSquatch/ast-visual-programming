@@ -135,15 +135,6 @@ const nodeTemplates = {
             expression: null
         };
     },
-    "AssignmentExpression": ({ name = "", type = ""}) => ({
-        type: "AssignmentExpression",
-        left: {
-            type: "Identifier",
-            name,
-            returns: type
-        },
-        right: null
-    }),
     "variableAssignment": ({ refId, returns }) => ({
         type: "AssignmentExpression",
         left: {
@@ -328,8 +319,8 @@ const dropContextMap = {
     },
     moveExpression: {
         flow: (dragData, contextType) => {
-            dragData.node.id = uuid.v4();
-            return dragData.node;
+            //dragData.node.id = uuidv4();
+            return { node: dragData.node, currentIndex: dragData.currentIndex };
         },
         expression: (dragData, contextType) => dragData.node,
         assignment: noNode,
@@ -371,9 +362,10 @@ const stringUtilDataDrag = () => ({ "dragType": "StringUtil" });
  * Creates the drag start data for moving an ExpressionStatement within a flow
  * @param {Object.<string, *>} expressionNode The portion of the AST that represents the expression
  * and the subtree under it.
+ * @param {number} [currentIndex] If the expression is within a list (most likely), it's current place within that list
  * @returns {{ dragType: string, node: Object.<string, *> }}
  */
-const moveExpressionDrag = (expressionNode) => ({ "dragType": "moveExpression", "node": expressionNode });
+const moveExpressionDrag = (expressionNode, currentIndex) => ({ "dragType": "moveExpression", "node": expressionNode, currentIndex });
 
 
 /**

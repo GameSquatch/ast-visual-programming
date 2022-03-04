@@ -5,9 +5,10 @@ const stringUtilDataDrag = () => ({ "dragType": "StringUtil" });
  * Creates the drag start data for moving an ExpressionStatement within a flow
  * @param {Object.<string, *>} expressionNode The portion of the AST that represents the expression
  * and the subtree under it.
+ * @param {number} [currentIndex] If the expression is within a list (most likely), it's current place within that list
  * @returns {{ dragType: string, node: Object.<string, *> }}
  */
-const moveExpressionDrag = (expressionNode) => ({ "dragType": "moveExpression", "node": expressionNode });
+const moveExpressionDrag = (expressionNode, currentIndex) => ({ "dragType": "moveExpression", "node": expressionNode, currentIndex });
 
 
 /**
