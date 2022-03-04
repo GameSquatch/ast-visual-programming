@@ -94,8 +94,8 @@ const dropContextMap = {
     // dragType
     variable: {
         // context name
-        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableExpression(dragData.data)),
-        expression: (dragData, contextType) => nodeTemplates.variableExpression(dragData.data),
+        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableAssignment(dragData.data)),
+        expression: (dragData, contextType) => nodeTemplates.variableAssignment(dragData.data),
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },

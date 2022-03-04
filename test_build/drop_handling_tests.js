@@ -469,8 +469,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved to another place in a flow', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -497,8 +497,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto another expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -525,8 +525,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto assignment', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -551,8 +551,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto argument', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({

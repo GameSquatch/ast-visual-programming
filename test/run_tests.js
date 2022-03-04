@@ -1,7 +1,7 @@
 'use strict';
 
-var chai = require('chai');
 var uuid = require('uuid');
+var chai = require('chai');
 
 const typeDefs =  {
     "StringUtil": {
@@ -144,7 +144,7 @@ const nodeTemplates = {
         },
         right: null
     }),
-    "variableExpression": ({ refId, returns }) => ({
+    "variableAssignment": ({ refId, returns }) => ({
         type: "AssignmentExpression",
         left: {
             type: "VarIdentifier",
@@ -171,6 +171,65 @@ const nodeTemplates = {
         returns: "Integer"
     })
 };
+
+suite('Creating flow nodes', function() {
+    test('Creating default StringUtil', function() {
+        const node = nodeTemplates.StringUtil();
+        const methodDef = typeDefs.StringUtil.concat;
+
+        chai.assert.ownInclude(node, {
+            type: "UtilityCallExpression",
+            utilityMethod: "concat",
+            utilityName: "StringUtil",
+            returns: methodDef.returns
+        }, "Default StringUtil node has incorrect properties");
+        chai.assert.equal(node.arguments.length, 2, "Default concat method of StringUtil did not create 2 arguments by default");
+
+        for (let i = 0; i < node.arguments.length; ++i) {
+            const nodeArg = node.arguments[i];
+
+            chai.assert.ownInclude(nodeArg, {
+                type: "StringLiteral",
+                returns: "String",
+                value: ""
+            }, "Default arguments for default StringUtil are not the correct literals");
+        }
+    });
+
+
+    test('Creating StringUtil with existing method', function() {
+        const node = nodeTemplates.StringUtil("trim");
+        const methodDef = typeDefs.StringUtil.trim;
+
+        chai.assert.ownInclude(node, {
+            type: "UtilityCallExpression",
+            utilityMethod: "trim",
+            utilityName: "StringUtil",
+            returns: methodDef.returns
+        }, "StringUtil node has incorrect properties");
+        chai.assert.equal(node.arguments.length, 1, "Passed in method of StringUtil did not create 1 argument");
+
+        for (let i = 0; i < node.arguments.length; ++i) {
+            const nodeArg = node.arguments[i];
+
+            chai.assert.ownInclude(nodeArg, {
+                type: "StringLiteral",
+                returns: "String",
+                value: ""
+            }, "Argument for StringUtil are not the correct literals");
+        }
+    });
+
+
+    test('Creating StringUtil with non-existing method', function() {
+        try {
+            const node = nodeTemplates.StringUtil("imaginary");
+            chai.assert.fail("Passing in a non-existing method to the StringUtil creator should throw undefined errors");
+        } catch (e) {
+            chai.assert(true);
+        }
+    });
+});
 
 const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
 
@@ -250,8 +309,8 @@ const dropContextMap = {
     // dragType
     variable: {
         // context name
-        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableExpression(dragData.data)),
-        expression: (dragData, contextType) => nodeTemplates.variableExpression(dragData.data),
+        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableAssignment(dragData.data)),
+        expression: (dragData, contextType) => nodeTemplates.variableAssignment(dragData.data),
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },
@@ -851,8 +910,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved to another place in a flow', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -879,8 +938,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto another expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -907,8 +966,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto assignment', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -933,8 +992,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto argument', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableExpression({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableExpression({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -956,63 +1015,4 @@ suite('Moving and dropping an existing expression', function() {
         handlerFn(mockVariableDragEvent);
     });
 
-});
-
-suite('Creating flow nodes', function() {
-    test('Creating default StringUtil', function() {
-        const node = nodeTemplates.StringUtil();
-        const methodDef = typeDefs.StringUtil.concat;
-
-        chai.assert.ownInclude(node, {
-            type: "UtilityCallExpression",
-            utilityMethod: "concat",
-            utilityName: "StringUtil",
-            returns: methodDef.returns
-        }, "Default StringUtil node has incorrect properties");
-        chai.assert.equal(node.arguments.length, 2, "Default concat method of StringUtil did not create 2 arguments by default");
-
-        for (let i = 0; i < node.arguments.length; ++i) {
-            const nodeArg = node.arguments[i];
-
-            chai.assert.ownInclude(nodeArg, {
-                type: "StringLiteral",
-                returns: "String",
-                value: ""
-            }, "Default arguments for default StringUtil are not the correct literals");
-        }
-    });
-
-
-    test('Creating StringUtil with existing method', function() {
-        const node = nodeTemplates.StringUtil("trim");
-        const methodDef = typeDefs.StringUtil.trim;
-
-        chai.assert.ownInclude(node, {
-            type: "UtilityCallExpression",
-            utilityMethod: "trim",
-            utilityName: "StringUtil",
-            returns: methodDef.returns
-        }, "StringUtil node has incorrect properties");
-        chai.assert.equal(node.arguments.length, 1, "Passed in method of StringUtil did not create 1 argument");
-
-        for (let i = 0; i < node.arguments.length; ++i) {
-            const nodeArg = node.arguments[i];
-
-            chai.assert.ownInclude(nodeArg, {
-                type: "StringLiteral",
-                returns: "String",
-                value: ""
-            }, "Argument for StringUtil are not the correct literals");
-        }
-    });
-
-
-    test('Creating StringUtil with non-existing method', function() {
-        try {
-            const node = nodeTemplates.StringUtil("imaginary");
-            chai.assert.fail("Passing in a non-existing method to the StringUtil creator should throw undefined errors");
-        } catch (e) {
-            chai.assert(true);
-        }
-    });
 });
