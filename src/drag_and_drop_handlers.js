@@ -113,10 +113,9 @@ const dropContextMap = {
     },
     moveExpression: {
         flow: (dragData, contextType) => {
-            //dragData.node.id = uuidv4();
             return { node: dragData.node, currentIndex: dragData.currentIndex };
         },
-        expression: (dragData, contextType) => dragData.node,
+        expression: (dragData, contextType) => ({ node: dragData.node, currentIndex: dragData.currentIndex }),
         assignment: noNode,
         argument: noNode
     }

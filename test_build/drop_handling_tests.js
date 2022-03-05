@@ -471,17 +471,16 @@ suite('Moving and dropping an existing expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
         mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
         mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
-        const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
+        const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode, 0));
 
         const handlerFn = flowDropHandler({
             contextName: 'flow',
             stateChangeCallback: function(nodeCreated) {
-                assert.notStrictEqual(nodeCreated.id, mockExpressionNode.id, "When moved, the expression did not change ids (I'll want to change this later if I can)");
-                assert.strictEqual(nodeCreated.type, mockExpressionNode.type, "Node type doesn't match after expression move");
-                assert.strictEqual(JSON.stringify(nodeCreated.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
+                assert.strictEqual(nodeCreated.node.id, mockExpressionNode.id, "When moved, the expression changed ids");
+                assert.strictEqual(nodeCreated.node.type, mockExpressionNode.type, "Node type doesn't match after expression move");
+                assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
-
 
         const mockVariableDragEvent = {
             dataTransfer: {

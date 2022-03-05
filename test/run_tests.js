@@ -1,7 +1,7 @@
 'use strict';
 
-var uuid = require('uuid');
 var chai = require('chai');
+var uuid = require('uuid');
 
 const typeDefs =  {
     "StringUtil": {
@@ -163,65 +163,6 @@ const nodeTemplates = {
     })
 };
 
-suite('Creating flow nodes', function() {
-    test('Creating default StringUtil', function() {
-        const node = nodeTemplates.StringUtil();
-        const methodDef = typeDefs.StringUtil.concat;
-
-        chai.assert.ownInclude(node, {
-            type: "UtilityCallExpression",
-            utilityMethod: "concat",
-            utilityName: "StringUtil",
-            returns: methodDef.returns
-        }, "Default StringUtil node has incorrect properties");
-        chai.assert.equal(node.arguments.length, 2, "Default concat method of StringUtil did not create 2 arguments by default");
-
-        for (let i = 0; i < node.arguments.length; ++i) {
-            const nodeArg = node.arguments[i];
-
-            chai.assert.ownInclude(nodeArg, {
-                type: "StringLiteral",
-                returns: "String",
-                value: ""
-            }, "Default arguments for default StringUtil are not the correct literals");
-        }
-    });
-
-
-    test('Creating StringUtil with existing method', function() {
-        const node = nodeTemplates.StringUtil("trim");
-        const methodDef = typeDefs.StringUtil.trim;
-
-        chai.assert.ownInclude(node, {
-            type: "UtilityCallExpression",
-            utilityMethod: "trim",
-            utilityName: "StringUtil",
-            returns: methodDef.returns
-        }, "StringUtil node has incorrect properties");
-        chai.assert.equal(node.arguments.length, 1, "Passed in method of StringUtil did not create 1 argument");
-
-        for (let i = 0; i < node.arguments.length; ++i) {
-            const nodeArg = node.arguments[i];
-
-            chai.assert.ownInclude(nodeArg, {
-                type: "StringLiteral",
-                returns: "String",
-                value: ""
-            }, "Argument for StringUtil are not the correct literals");
-        }
-    });
-
-
-    test('Creating StringUtil with non-existing method', function() {
-        try {
-            const node = nodeTemplates.StringUtil("imaginary");
-            chai.assert.fail("Passing in a non-existing method to the StringUtil creator should throw undefined errors");
-        } catch (e) {
-            chai.assert(true);
-        }
-    });
-});
-
 const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
 
 
@@ -319,7 +260,6 @@ const dropContextMap = {
     },
     moveExpression: {
         flow: (dragData, contextType) => {
-            //dragData.node.id = uuidv4();
             return { node: dragData.node, currentIndex: dragData.currentIndex };
         },
         expression: (dragData, contextType) => dragData.node,
@@ -904,14 +844,14 @@ suite('Moving and dropping an existing expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
         mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
         mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
-        const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
+        const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode, 0));
 
         const handlerFn = flowDropHandler({
             contextName: 'flow',
             stateChangeCallback: function(nodeCreated) {
-                chai.assert.notStrictEqual(nodeCreated.id, mockExpressionNode.id, "When moved, the expression did not change ids (I'll want to change this later if I can)");
-                chai.assert.strictEqual(nodeCreated.type, mockExpressionNode.type, "Node type doesn't match after expression move");
-                chai.assert.strictEqual(JSON.stringify(nodeCreated.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
+                chai.assert.strictEqual(nodeCreated.node.id, mockExpressionNode.id, "When moved, the expression changed ids");
+                chai.assert.strictEqual(nodeCreated.node.type, mockExpressionNode.type, "Node type doesn't match after expression move");
+                chai.assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
 
@@ -1007,4 +947,63 @@ suite('Moving and dropping an existing expression', function() {
         handlerFn(mockVariableDragEvent);
     });
 
+});
+
+suite('Creating flow nodes', function() {
+    test('Creating default StringUtil', function() {
+        const node = nodeTemplates.StringUtil();
+        const methodDef = typeDefs.StringUtil.concat;
+
+        chai.assert.ownInclude(node, {
+            type: "UtilityCallExpression",
+            utilityMethod: "concat",
+            utilityName: "StringUtil",
+            returns: methodDef.returns
+        }, "Default StringUtil node has incorrect properties");
+        chai.assert.equal(node.arguments.length, 2, "Default concat method of StringUtil did not create 2 arguments by default");
+
+        for (let i = 0; i < node.arguments.length; ++i) {
+            const nodeArg = node.arguments[i];
+
+            chai.assert.ownInclude(nodeArg, {
+                type: "StringLiteral",
+                returns: "String",
+                value: ""
+            }, "Default arguments for default StringUtil are not the correct literals");
+        }
+    });
+
+
+    test('Creating StringUtil with existing method', function() {
+        const node = nodeTemplates.StringUtil("trim");
+        const methodDef = typeDefs.StringUtil.trim;
+
+        chai.assert.ownInclude(node, {
+            type: "UtilityCallExpression",
+            utilityMethod: "trim",
+            utilityName: "StringUtil",
+            returns: methodDef.returns
+        }, "StringUtil node has incorrect properties");
+        chai.assert.equal(node.arguments.length, 1, "Passed in method of StringUtil did not create 1 argument");
+
+        for (let i = 0; i < node.arguments.length; ++i) {
+            const nodeArg = node.arguments[i];
+
+            chai.assert.ownInclude(nodeArg, {
+                type: "StringLiteral",
+                returns: "String",
+                value: ""
+            }, "Argument for StringUtil are not the correct literals");
+        }
+    });
+
+
+    test('Creating StringUtil with non-existing method', function() {
+        try {
+            const node = nodeTemplates.StringUtil("imaginary");
+            chai.assert.fail("Passing in a non-existing method to the StringUtil creator should throw undefined errors");
+        } catch (e) {
+            chai.assert(true);
+        }
+    });
 });

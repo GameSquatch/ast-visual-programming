@@ -15,7 +15,7 @@
     
 <style>
     .side-nav-wrapper {
-        width: 33%;
+        width: 25%;
         max-width: 500px;
         height: 100%;
         background: #ddd;

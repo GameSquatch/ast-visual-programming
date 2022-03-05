@@ -33,6 +33,9 @@
     }
 
     function dropModify(node) {
+        if (node.currentIndex ?? false)
+            parentRef.splice(node.currentIndex, 1);
+
         if (node.type === 'ExpressionStatement')
             parentRef[accessor].expression = node.expression;
         else
@@ -50,14 +53,7 @@
         }
 
         parentRef.splice(accessor + 1, 0, node);
-
-        parentRef = [...parentRef];
-    }
-
-    function deleteFlowStep(_) {
-        parentRef.splice(accessor, 1);
-
-        parentRef = [...parentRef];
+        parentRef = parentRef;
     }
 
     /**
@@ -89,7 +85,7 @@
             {#if self?.expression ?? false}
                 <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
             {/if}
-            <button on:click={deleteFlowStep}>Delete</button>
+            <button on:click={() => dispatch('delete', accessor)}>Delete</button>
         </div>
     
         {#if self && self.expression !== null}

@@ -19,10 +19,17 @@
 
     function handleMoveExpression({ node, currentIndex, newIndex }) {
         if (newIndex === currentIndex + 1) return;
+
         $ast.main.body.splice(currentIndex, 1);
         newIndex = currentIndex < newIndex ? newIndex - 1 : newIndex;
         $ast.main.body.splice(newIndex, 0, node);
-        $ast.main.body = [ ...$ast.main.body ];
+
+        $ast.main.body = $ast.main.body;
+    }
+
+    function deleteFlowStep(index) {
+        $ast.main.body.splice(index, 1);
+        $ast.main.body = $ast.main.body;
     }
 </script>
     
@@ -36,7 +43,12 @@ class="app-window-wrapper">
     <div class="flow-wrapper">
         {#each $ast.main.body as flowObject, i (flowObject.id)}
             <div animate:flip="{{duration: 400}}" transition:squish|local="{{duration: 300, opacity: 0.4, start: 0.2}}">
-                <svelte:component this={constructors[flowObject.type]} bind:parentRef={$ast.main.body} accessor={i} on:moveExpression={(event) => handleMoveExpression(event.detail)} />
+                <svelte:component
+                    on:delete={(event) => deleteFlowStep(event.detail)}
+                    this={constructors[flowObject.type]}
+                    bind:parentRef={$ast.main.body}
+                    accessor={i}
+                    on:moveExpression={(event) => handleMoveExpression(event.detail)} />
             </div>
         {/each}
     </div>
