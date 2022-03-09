@@ -10,7 +10,7 @@
     export let contextType;
     export let isArgument = false;
 
-    $: varTypeMethods = typeDefs[nodeData.variable.returns];
+    const varTypeMethods = typeDefs[nodeData.variable.returns];
     
 
     const onPropertyChange = (event) => {

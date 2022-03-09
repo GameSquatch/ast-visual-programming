@@ -9,7 +9,7 @@
 
     let usesTypeMethod = false;
 
-    $: typeMethods = typeDefs[contextType ?? nodeData.returns];
+    const typeMethods = typeDefs[contextType ?? nodeData.returns];
 
     const typeMatches = (utilityKey) => typeMethods[utilityKey].returns === nodeData.returns;
 

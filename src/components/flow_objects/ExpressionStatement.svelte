@@ -31,15 +31,18 @@
     }
 
     function dropModify(node) {
-        if (node.currentIndex ?? false)
-            nodeData.splice(node.currentIndex, 1);
+        if (node.currentIndex !== undefined) {
+            dispatch('delete', node.currentIndex);
+            node = node.node;
+        }
 
         if (node.type === 'ExpressionStatement')
             nodeData.expression = node.expression;
         else
             nodeData.expression = node;
-    }
 
+    }
+    
     function insertDrop(node) {
         if (node === null) {
             return;

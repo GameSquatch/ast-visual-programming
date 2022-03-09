@@ -9,10 +9,9 @@
     export let contextType;
     export let isArgument;
 
-    $: utilities = typeDefs[nodeData.utilityName];
-    
+    const utilities = typeDefs[nodeData.utilityName];
 
-    const onPropertyChange = (event) => {
+    function onPropertyChange(event) {
         const utilityMethod = event.target.value;
         const typeDef = typeDefs[nodeData.utilityName][utilityMethod];
         const args = typeDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
