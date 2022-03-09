@@ -47,7 +47,7 @@
             return;
         }
 
-        if (node.currentIndex ?? false) {
+        if (node.currentIndex !== undefined) {
             dispatch('moveExpression', { ...node, newIndex: accessor + 1 });
             return;
         }

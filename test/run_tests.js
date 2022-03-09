@@ -262,7 +262,7 @@ const dropContextMap = {
         flow: (dragData, contextType) => {
             return { node: dragData.node, currentIndex: dragData.currentIndex };
         },
-        expression: (dragData, contextType) => dragData.node,
+        expression: (dragData, contextType) => ({ node: dragData.node, currentIndex: dragData.currentIndex }),
         assignment: noNode,
         argument: noNode
     }
@@ -854,7 +854,6 @@ suite('Moving and dropping an existing expression', function() {
                 chai.assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
-
 
         const mockVariableDragEvent = {
             dataTransfer: {

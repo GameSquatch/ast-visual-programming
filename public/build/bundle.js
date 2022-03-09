@@ -2870,7 +2870,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Drag an action here";
     			attr_dev(p, "class", "dull-text");
-    			add_location(p, file$c, 97, 12, 2923);
+    			add_location(p, file$c, 97, 12, 2928);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -3042,17 +3042,17 @@ var app = (function () {
     			if_block1.c();
     			t4 = space();
     			div2 = element("div");
-    			add_location(button, file$c, 87, 12, 2562);
+    			add_location(button, file$c, 87, 12, 2567);
     			attr_dev(div0, "class", "flex w100");
-    			add_location(div0, file$c, 83, 8, 2375);
+    			add_location(div0, file$c, 83, 8, 2380);
     			attr_dev(div1, "class", "expression-container svelte-1sbi4ac");
-    			add_location(div1, file$c, 75, 4, 2005);
+    			add_location(div1, file$c, 75, 4, 2010);
     			attr_dev(div2, "class", "line-down-box svelte-1sbi4ac");
     			toggle_class(div2, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
-    			add_location(div2, file$c, 100, 4, 2997);
+    			add_location(div2, file$c, 100, 4, 3002);
     			attr_dev(div3, "class", "svelte-1sbi4ac");
     			toggle_class(div3, "beingDragged", /*beingDragged*/ ctx[3]);
-    			add_location(div3, file$c, 74, 0, 1976);
+    			add_location(div3, file$c, 74, 0, 1981);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3241,7 +3241,7 @@ var app = (function () {
     			return;
     		}
 
-    		if (node.currentIndex ?? false) {
+    		if (node.currentIndex !== undefined) {
     			dispatch('moveExpression', { ...node, newIndex: accessor + 1 });
     			return;
     		}
