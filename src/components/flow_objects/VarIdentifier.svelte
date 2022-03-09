@@ -3,17 +3,15 @@
     import nodeTemplates from '../../node_templates.js';
     import ast from '../../store/stores.js';
 
-    export let parentRef;
-    export let accessor;
+    export let nodeData;
     export let contextType;
     export let isArgument = false;
 
     let usesTypeMethod = false;
 
-    $: self = parentRef[accessor];
-    $: typeMethods = typeDefs[contextType ?? self.returns];
+    $: typeMethods = typeDefs[contextType ?? nodeData.returns];
 
-    const typeMatches = (utilityKey) => typeMethods[utilityKey].returns === self.returns;
+    const typeMatches = (utilityKey) => typeMethods[utilityKey].returns === nodeData.returns;
 
     function methodSelected(event) {
         if (!event.target.value) {
@@ -21,15 +19,19 @@
             return;
         }
 
-        const util = typeDefs[self.returns][event.target.value];
-        parentRef[accessor] = nodeTemplates.varCallExpression({ method: event.target.value, returns: self.returns, variable: self });
+        nodeData = nodeTemplates.varCallExpression({
+            method: event.target.value,
+            returns: nodeData.returns,
+            variable: nodeData
+        });
 
         usesTypeMethod = true;
     }
 </script>
     
-
-<span class="self">{$ast.main.info.variables[self.refId].name}</span>
+{#if nodeData.refId}
+    <span class="self">{$ast.main.info.variables[nodeData.refId].name}</span>
+{/if}
 {#if isArgument || usesTypeMethod}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>
         <option selected></option>

@@ -6,29 +6,27 @@
     import constructors from '../../constructors.js';
     import nodeTemplates from '../../node_templates.js';
 
-    export let parentRef;
-    export let accessor;
+    export let nodeData;
     export let contextType;
     export let isArgument = false;
 
-    $: self = parentRef[accessor];
-    $: varTypeMethods = typeDefs[self.variable.returns];
+    $: varTypeMethods = typeDefs[nodeData.variable.returns];
     
 
     const onPropertyChange = (event) => {
         const method = event.target.value;
         if (method === '') {
-            parentRef[accessor] = {
-                ...self.variable
+            nodeData = {
+                ...nodeData.variable
             };
             return;
         }
 
-        const typeDef = typeDefs[self.variable.returns][method];
+        const typeDef = typeDefs[nodeData.variable.returns][method];
         const args = typeDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
 
-        parentRef[accessor] = {
-            ...parentRef[accessor],
+        nodeData = {
+            ...nodeData,
             method,
             arguments: args,
             returns: typeDef.returns
@@ -42,27 +40,27 @@
     const dropArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        self.arguments.splice(argIndex, 1, node);
-        parentRef[accessor].aruments = [
-            ...self.arguments
+        nodeData.arguments.splice(argIndex, 1, node);
+        nodeData.aruments = [
+            ...nodeData.arguments
         ];
     };
 </script>
 
 <p style="padding-left: 10px">
-    <span><VarIdentifier bind:parentRef={self} accessor={"variable"} isArgument={false} />.<select on:change={onPropertyChange}>
-        {#if !contextType || self.variable.returns === contextType}<option value=""></option>{/if}
+    <span><VarIdentifier bind:nodeData={nodeData.variable} isArgument={false} />.<select on:change={onPropertyChange}>
+        {#if !contextType || nodeData.variable.returns === contextType}<option value=""></option>{/if}
         {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
-            <option value={method} selected={method === self.method}>{method}</option>
+            <option value={method} selected={method === nodeData.method}>{method}</option>
         {/each}
     </select></span>
-        {#each self.arguments as argument, i (i)}
+        {#each nodeData.arguments as argument, i (i)}
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })} on:dragover={() => {}} class="arg-box">
-                <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
+                <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self accessor={i} bind:parentRef={self.arguments} contextType={argument.returns} />
+                    <svelte:self bind:nodeData={argument} contextType={argument.returns} />
                 {:else}
-                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} contextType={argument.returns} />
+                    <svelte:component this={constructors[argument.type]} bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
                 {/if}
             </div>
         {/each}

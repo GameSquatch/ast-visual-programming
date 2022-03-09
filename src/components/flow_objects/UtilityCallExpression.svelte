@@ -5,22 +5,20 @@
     import constructors from '../../constructors.js';
     import nodeTemplates from '../../node_templates.js';
 
-    export let parentRef;
-    export let accessor;
+    export let nodeData;
     export let contextType;
     export let isArgument;
 
-    $: self = parentRef[accessor];
-    $: utilities = typeDefs[self.utilityName];
+    $: utilities = typeDefs[nodeData.utilityName];
     
 
     const onPropertyChange = (event) => {
         const utilityMethod = event.target.value;
-        const typeDef = typeDefs[self.utilityName][utilityMethod];
+        const typeDef = typeDefs[nodeData.utilityName][utilityMethod];
         const args = typeDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
 
-        parentRef[accessor] = {
-            ...parentRef[accessor],
+        nodeData = {
+            ...nodeData,
             utilityMethod,
             arguments: args,
             returns: typeDef.returns
@@ -34,26 +32,26 @@
     const addArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        self.arguments.splice(argIndex, 1, node);
-        parentRef[accessor].aruments = [
-            ...self.arguments
+        nodeData.arguments.splice(argIndex, 1, node);
+        nodeData.aruments = [
+            ...nodeData.arguments
         ];
     };
 </script>
 
 <p style="padding-left: 10px">
-    <span>{self.utilityName}.<select on:change={onPropertyChange}>
+    <span>{nodeData.utilityName}.<select on:change={onPropertyChange}>
         {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
-            <option value={method} selected={method === self.utilityMethod}>{method}</option>
+            <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
         {/each}
     </select></span>
-        {#each self.arguments as argument, i (i)}
+        {#each nodeData.arguments as argument, i (i)}
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })} on:dragover={() => {}} class="arg-box">
-                <ClearNodeProp onClick={(_) => parentRef[accessor].arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
+                <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self accessor={i} bind:parentRef={self.arguments} contextType={argument.returns} />
+                    <svelte:self bind:nodeData={argument} contextType={argument.returns} />
                 {:else}
-                    <svelte:component this={constructors[argument.type]} accessor={i} bind:parentRef={self.arguments} isArgument={true} contextType={argument.returns} />
+                    <svelte:component this={constructors[argument.type]} bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
                 {/if}
             </div>
         {/each}

@@ -1,12 +1,9 @@
 <script>
-    export let parentRef;
-    export let accessor;
-
-    let self = parentRef[accessor];
+    export let nodeData;
 </script>
     
 
-<span class="self">{self.name}</span>
+<span class="self">{nodeData.name}</span>
 
 
 <style>

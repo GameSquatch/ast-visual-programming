@@ -469,8 +469,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved to another place in a flow', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode, 0));
 
         const handlerFn = flowDropHandler({
@@ -496,16 +496,16 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto another expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
             contextName: 'expression',
             stateChangeCallback: function(nodeCreated) {
-                assert.strictEqual(nodeCreated.id, mockExpressionNode.id, "When moved, the expression changed ids");
-                assert.strictEqual(nodeCreated.type, mockExpressionNode.type, "Node type doesn't match after expression move");
-                assert.strictEqual(JSON.stringify(nodeCreated.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
+                assert.strictEqual(nodeCreated.node.id, mockExpressionNode.id, "When moved, the expression changed ids");
+                assert.strictEqual(nodeCreated.node.type, mockExpressionNode.type, "Node type doesn't match after expression move");
+                assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
 

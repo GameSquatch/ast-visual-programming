@@ -1,18 +1,15 @@
 <script>
-    export let parentRef;
-    export let accessor;
-
-    $: self = parentRef[accessor];
+    export let nodeData;
 
     /**
      * @param {Event} event
      */
     function updateValue(event) {
-        parentRef[accessor] = {
-            ...parentRef[accessor],
+        nodeData = {
+            ...nodeData,
             value: event.target.valueAsNumber
         };
     }
 </script>
 
-<input type="number" value={self.value} on:change={updateValue} />
+<input type="number" value={nodeData.value} on:change={updateValue} />
