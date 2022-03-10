@@ -4,7 +4,7 @@
     import ast from '../../store/stores.js';
 
     export let nodeData;
-    export let contextType;
+    export let contextType = null;
     export let isArgument = false;
 
     let usesTypeMethod = false;
@@ -28,6 +28,7 @@
         usesTypeMethod = true;
     }
 </script>
+
     
 {#if nodeData.refId}
     <span class="self">{$ast.main.info.variables[nodeData.refId].name}</span>
@@ -44,7 +45,7 @@
 
 <style>
     .self {
-        padding: 4px 2px;
+        padding: 4px 0;
     }
     .self:hover + .type-method-select, .type-method-select:hover {
         opacity: 1;

@@ -33,7 +33,7 @@
     function dropModify(node) {
         if (node.currentIndex !== undefined) {
             dispatch('delete', node.currentIndex);
-            node = node.node;
+            node = node.moveData;
         }
 
         if (node.type === 'ExpressionStatement')
@@ -54,8 +54,6 @@
         }
 
         dispatch('insertAfter', node);
-        // parentRef.splice(accessor + 1, 0, node);
-        // parentRef = parentRef;
     }
 
     /**
