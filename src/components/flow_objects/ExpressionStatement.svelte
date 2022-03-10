@@ -74,6 +74,7 @@
 
 <div class:beingDragged>
     <div
+        tabindex=0
         on:dragover|preventDefault={dragOverHandler}
         on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
         class="expression-container"
@@ -114,6 +115,9 @@
         border: 1px dashed black;
         position: relative;
         z-index: 1;
+    }
+    .expression-container:focus {
+        border: 2px dashed blue;
     }
 
     .line-down-box {
