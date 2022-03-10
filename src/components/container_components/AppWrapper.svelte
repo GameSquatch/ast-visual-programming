@@ -1,11 +1,11 @@
 <script>
     import SideNav from './side_nav/SideNav.svelte';
-    import AppWindow from './AppWindow.svelte';
+    import FlowController from './FlowController.svelte';
 </script>
     
 <div class="content-wrapper">
     <SideNav />
-    <AppWindow />
+    <FlowController />
 </div>
     
 <style>
