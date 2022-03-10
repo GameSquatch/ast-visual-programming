@@ -1,17 +1,14 @@
 <script>
-    export let parentRef;
-    export let accessor;
+    export let nodeData;
     export let isArgument;
 
-    $: self = parentRef[accessor];
-
     function updateValue(event) {
-        parentRef[accessor] = {
-            ...parentRef[accessor],
+        nodeData = {
+            ...nodeData,
             value: event.target.value
         };
     }
 </script>
 
 
-<input type="text" value={self.value} on:change={updateValue} on:dragStart|stopPropagation={() => {}} />
+<input type="text" value={nodeData.value} on:change={updateValue} on:dragStart|stopPropagation={() => {}} />

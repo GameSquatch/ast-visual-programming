@@ -262,7 +262,7 @@ const dropContextMap = {
         flow: (dragData, contextType) => {
             return { node: dragData.node, currentIndex: dragData.currentIndex };
         },
-        expression: (dragData, contextType) => dragData.node,
+        expression: (dragData, contextType) => ({ node: dragData.node, currentIndex: dragData.currentIndex }),
         assignment: noNode,
         argument: noNode
     }
@@ -842,8 +842,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved to another place in a flow', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode, 0));
 
         const handlerFn = flowDropHandler({
@@ -854,7 +854,6 @@ suite('Moving and dropping an existing expression', function() {
                 chai.assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
-
 
         const mockVariableDragEvent = {
             dataTransfer: {
@@ -870,16 +869,16 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto another expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
             contextName: 'expression',
             stateChangeCallback: function(nodeCreated) {
-                chai.assert.strictEqual(nodeCreated.id, mockExpressionNode.id, "When moved, the expression changed ids");
-                chai.assert.strictEqual(nodeCreated.type, mockExpressionNode.type, "Node type doesn't match after expression move");
-                chai.assert.strictEqual(JSON.stringify(nodeCreated.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
+                chai.assert.strictEqual(nodeCreated.node.id, mockExpressionNode.id, "When moved, the expression changed ids");
+                chai.assert.strictEqual(nodeCreated.node.type, mockExpressionNode.type, "Node type doesn't match after expression move");
+                chai.assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
 

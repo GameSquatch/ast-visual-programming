@@ -7,9 +7,7 @@
     import { moveExpressionDrag } from '../../drag_types.js';
 
     export let accessor;
-    export let parentRef;
-
-    $: self = parentRef[accessor];
+    export let nodeData;
 
     let isOverInsertSpot = false;
     let beingDragged = false;
@@ -33,34 +31,38 @@
     }
 
     function dropModify(node) {
-        if (node.currentIndex ?? false)
-            parentRef.splice(node.currentIndex, 1);
+        if (node.currentIndex !== undefined) {
+            dispatch('delete', node.currentIndex);
+            node = node.node;
+        }
 
         if (node.type === 'ExpressionStatement')
-            parentRef[accessor].expression = node.expression;
+            nodeData.expression = node.expression;
         else
-            parentRef[accessor].expression = node;
-    }
+            nodeData.expression = node;
 
+    }
+    
     function insertDrop(node) {
         if (node === null) {
             return;
         }
 
-        if (node.currentIndex ?? false) {
+        if (node.currentIndex !== undefined) {
             dispatch('moveExpression', { ...node, newIndex: accessor + 1 });
             return;
         }
 
-        parentRef.splice(accessor + 1, 0, node);
-        parentRef = parentRef;
+        dispatch('insertAfter', node);
+        // parentRef.splice(accessor + 1, 0, node);
+        // parentRef = parentRef;
     }
 
     /**
      * @param {DragEvent} event
      */
      function handleDragStart(event) {
-        const dragData = moveExpressionDrag(self, accessor);
+        const dragData = moveExpressionDrag(nodeData, accessor);
         
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
         beingDragged = true;
@@ -82,17 +84,16 @@
     >
         <DragHandle  />
         <div class="flex w100">
-            {#if self?.expression ?? false}
-                <ClearNodeProp onClick={(_) => parentRef[accessor].expression = null} />
+            {#if nodeData?.expression ?? false}
+                <ClearNodeProp onClick={(_) => nodeData.expression = null} />
             {/if}
             <button on:click={() => dispatch('delete', accessor)}>Delete</button>
         </div>
     
-        {#if self && self.expression !== null}
+        {#if nodeData && nodeData.expression !== null}
             <svelte:component
-                this={constructors[self.expression.type]}
-                accessor={"expression"}
-                bind:parentRef={parentRef[accessor]}
+                this={constructors[nodeData.expression.type]}
+                bind:nodeData={nodeData.expression}
             />
         {:else}
             <p class="dull-text">Drag an action here</p>

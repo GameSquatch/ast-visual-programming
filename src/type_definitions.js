@@ -52,9 +52,7 @@ const typeDefs =  {
             "returns": "String"
         },
         "length": {
-            "args": [
-                "String"
-            ],
+            "args": [],
             "infiniteArgs": false,
             "returns": "Integer"
         }

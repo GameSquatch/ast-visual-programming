@@ -31,6 +31,11 @@
         $ast.main.body.splice(index, 1);
         $ast.main.body = $ast.main.body;
     }
+
+    function insertAfterStep(index, dataToInsert) {
+        $ast.main.body.splice(index + 1, 0, dataToInsert);
+        $ast.main.body = $ast.main.body;
+    }
 </script>
     
 <div
@@ -45,8 +50,9 @@ class="app-window-wrapper">
             <div animate:flip="{{duration: 400}}" transition:squish|local="{{duration: 300, opacity: 0.4, start: 0.2}}">
                 <svelte:component
                     on:delete={(event) => deleteFlowStep(event.detail)}
+                    on:insertAfter={(event) => insertAfterStep(i, event.detail)}
                     this={constructors[flowObject.type]}
-                    bind:parentRef={$ast.main.body}
+                    bind:nodeData={flowObject}
                     accessor={i}
                     on:moveExpression={(event) => handleMoveExpression(event.detail)} />
             </div>
