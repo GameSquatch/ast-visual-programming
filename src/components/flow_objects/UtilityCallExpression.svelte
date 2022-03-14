@@ -7,7 +7,7 @@
 
     export let nodeData;
     export let contextType;
-    export let isArgument;
+    export let isArgument = false;
 
     const utilities = typeDefs[nodeData.utilityName];
 
@@ -38,7 +38,7 @@
     };
 </script>
 
-<p style="padding-left: 10px">
+<div>
     <span>{nodeData.utilityName}.<select on:change={onPropertyChange}>
         {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
             <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
@@ -48,13 +48,13 @@
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })} on:dragover={() => {}} class="arg-box">
                 <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self bind:nodeData={argument} contextType={argument.returns} />
+                    <svelte:self bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
                 {:else}
                     <svelte:component this={constructors[argument.type]} bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
                 {/if}
             </div>
         {/each}
-</p>
+</div>
 
 <style>
     .arg-box {

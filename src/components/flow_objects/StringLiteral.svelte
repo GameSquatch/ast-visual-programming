@@ -1,6 +1,6 @@
 <script>
     export let nodeData;
-    export let isArgument;
+    export let isArgument = false;
 
     function updateValue(event) {
         nodeData = {

@@ -22,7 +22,7 @@
         Drag an expression here
     {:else}
         <ClearNodeProp onClick={(_) => nodeData.right = null} />
-        <svelte:component this={constructors[nodeData.right.type]} bind:nodeData={nodeData.right} isArgument={true} contextType={nodeData.left.returns} />
+        <svelte:component this={constructors[nodeData.right.type]} bind:nodeData={nodeData.right} contextType={nodeData.left.returns} />
     {/if}
 </div>
 

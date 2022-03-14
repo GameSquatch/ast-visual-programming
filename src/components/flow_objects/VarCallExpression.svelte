@@ -22,7 +22,7 @@
             return;
         }
 
-        const typeDef = typeDefs[nodeData.variable.returns][method];
+        const typeDef = varTypeMethods[method];
         const args = typeDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
 
         nodeData = {
@@ -47,7 +47,7 @@
     };
 </script>
 
-<p style="padding-left: 10px">
+<div style="padding-left: 10px">
     <span><VarIdentifier bind:nodeData={nodeData.variable} isArgument={false} />.<select on:change={onPropertyChange}>
         {#if !contextType || nodeData.variable.returns === contextType}<option value=""></option>{/if}
         {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
@@ -57,14 +57,14 @@
         {#each nodeData.arguments as argument, i (i)}
             <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })} on:dragover={() => {}} class="arg-box">
                 <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
-                {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self bind:nodeData={argument} contextType={argument.returns} />
+                {#if argument.type === "VarCallExpression"}
+                    <svelte:self bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
                 {:else}
                     <svelte:component this={constructors[argument.type]} bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
                 {/if}
             </div>
         {/each}
-</p>
+</div>
 
 <style>
     .arg-box {

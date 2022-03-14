@@ -115,6 +115,7 @@
         border: 1px dashed black;
         position: relative;
         z-index: 1;
+        overflow-x: auto;
     }
     .expression-container:focus {
         border: 2px dashed blue;

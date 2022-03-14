@@ -12,6 +12,7 @@
     const typeMethods = typeDefs[contextType ?? nodeData.returns];
 
     const typeMatches = (utilityKey) => typeMethods[utilityKey].returns === nodeData.returns;
+    const availableMethods = (contextType ?? false) ? Object.keys(typeMethods).filter(typeMatches) : [];
 
     function methodSelected(event) {
         if (!event.target.value) {
@@ -29,11 +30,11 @@
     }
 </script>
 
-    
+
 {#if nodeData.refId}
     <span class="self">{$ast.main.info.variables[nodeData.refId].name}</span>
 {/if}
-{#if isArgument || usesTypeMethod}
+{#if availableMethods.length > 0}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>
         <option selected></option>
         {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}
