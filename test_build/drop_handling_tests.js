@@ -476,9 +476,9 @@ suite('Moving and dropping an existing expression', function() {
         const handlerFn = flowDropHandler({
             contextName: 'flow',
             stateChangeCallback: function(nodeCreated) {
-                assert.strictEqual(nodeCreated.node.id, mockExpressionNode.id, "When moved, the expression changed ids");
-                assert.strictEqual(nodeCreated.node.type, mockExpressionNode.type, "Node type doesn't match after expression move");
-                assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
+                assert.strictEqual(nodeCreated.moveData.id, mockExpressionNode.id, "When moved, the expression changed ids");
+                assert.strictEqual(nodeCreated.moveData.type, mockExpressionNode.type, "Node type doesn't match after expression move");
+                assert.strictEqual(JSON.stringify(nodeCreated.moveData.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
 
@@ -503,9 +503,9 @@ suite('Moving and dropping an existing expression', function() {
         const handlerFn = flowDropHandler({
             contextName: 'expression',
             stateChangeCallback: function(nodeCreated) {
-                assert.strictEqual(nodeCreated.node.id, mockExpressionNode.id, "When moved, the expression changed ids");
-                assert.strictEqual(nodeCreated.node.type, mockExpressionNode.type, "Node type doesn't match after expression move");
-                assert.strictEqual(JSON.stringify(nodeCreated.node.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
+                assert.strictEqual(nodeCreated.moveData.id, mockExpressionNode.id, "When moved, the expression changed ids");
+                assert.strictEqual(nodeCreated.moveData.type, mockExpressionNode.type, "Node type doesn't match after expression move");
+                assert.strictEqual(JSON.stringify(nodeCreated.moveData.expression), JSON.stringify(mockExpressionNode.expression), "Moved expression inners don't match anymore after move");
             }
         });
 
