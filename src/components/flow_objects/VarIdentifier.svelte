@@ -53,7 +53,6 @@
     }
 
     .type-method-select {
-        padding: 8px;
         opacity: 0;
         transition: opacity 0.3s ease-out;
     }

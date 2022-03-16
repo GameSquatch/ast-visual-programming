@@ -29,6 +29,14 @@ const typeDefs =  {
             ],
             "infiniteArgs": false,
             "returns": "String"
+        },
+        "substring": {
+            "args": [
+                "Integer",
+                "String"
+            ],
+            "infiniteArgs": false,
+            "returns": "String"
         }
     },
     "String": {

@@ -2,12 +2,14 @@
     import { flowDropHandler } from '../../drag_and_drop_handlers.js'
     import typeDefs from '../../type_definitions.js';
     import ClearNodeProp from '../ClearNodeProp.svelte';
+    import Argument from '../Argument.svelte';
     import constructors from '../../constructors.js';
     import nodeTemplates from '../../node_templates.js';
 
     export let nodeData;
     export let contextType;
     export let isArgument = false;
+    export let argLevel = 1;
 
     const utilities = typeDefs[nodeData.utilityName];
 
@@ -36,31 +38,38 @@
             ...nodeData.arguments
         ];
     };
+
+    function onClear(i, argument) {
+        nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})
+    }
 </script>
 
-<div>
-    <span>{nodeData.utilityName}.<select on:change={onPropertyChange}>
-        {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
-            <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
-        {/each}
-    </select></span>
+<div class="component-wrapper">
+    <p><strong>{nodeData.utilityName}</strong></p>
+    <div class="method-container">
+        <select on:change={onPropertyChange}>
+            {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
+                <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
+            {/each}
+        </select>
+        => {nodeData.returns}
+    </div>
+    <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
-            <div on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })} on:dragover={() => {}} class="arg-box">
+            <Argument {argLevel} 
+                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })(event.detail)}
+                onClear={() => onClear(i, argument)}>
+
                 <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
+                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} />
                 {:else}
-                    <svelte:component this={constructors[argument.type]} bind:nodeData={argument} isArgument={true} contextType={argument.returns} />
+                    <svelte:component this={constructors[argument.type]} bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} />
                 {/if}
-            </div>
+            </Argument>
         {/each}
+    </div>
 </div>
 
 <style>
-    .arg-box {
-        margin-left: 10px;
-        padding: 2px;
-        border: 1px solid black;
-        position: relative;
-    }
 </style>

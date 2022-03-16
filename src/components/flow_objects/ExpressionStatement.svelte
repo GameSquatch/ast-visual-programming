@@ -86,7 +86,7 @@
             {#if nodeData?.expression ?? false}
                 <ClearNodeProp onClick={(_) => nodeData.expression = null} />
             {/if}
-            <button on:click={() => dispatch('delete', accessor)}>Delete</button>
+            <button class="delete-btn" on:click={() => dispatch('delete', accessor)}>Delete</button>
         </div>
     
         {#if nodeData && nodeData.expression !== null}
@@ -116,6 +116,7 @@
         position: relative;
         z-index: 1;
         overflow-x: auto;
+        display: inline-block;
     }
     .expression-container:focus {
         border: 2px dashed blue;

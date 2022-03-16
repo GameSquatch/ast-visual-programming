@@ -76,3 +76,20 @@ body {
 .ovflw-auto {
     overflow: auto;
 }
+
+.delete-btn {
+    display: none;
+}
+
+
+.component-wrapper {
+    padding-left: 10px;
+}
+
+.method-container {
+    padding: 4px 0;
+}
+
+/* .arguments-wrapper {
+    background: #eee;
+} */
