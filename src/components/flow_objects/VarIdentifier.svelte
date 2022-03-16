@@ -47,6 +47,7 @@
 <style>
     .self {
         padding: 4px 0;
+        font-weight: bold;
     }
     .self:hover + .type-method-select, .type-method-select:hover {
         opacity: 1;
