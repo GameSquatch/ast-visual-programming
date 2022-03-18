@@ -12,10 +12,10 @@
     export let isArgument = false;
     export let argLevel = 1;
 
-    const varTypeMethods = typeDefs[nodeData.variable.returns];
-    
 
-    const onPropertyChange = (event) => {
+    let varTypeMethods = typeDefs[nodeData.variable.returns];
+
+    function onPropertyChange(event) {
         const method = event.target.value;
         if (method === '') {
             nodeData = {
@@ -33,7 +33,7 @@
             arguments: args,
             returns: typeDef.returns
         };
-    };
+    }
 
     // !contextType is when things don't have a type in their parent context
     const matchParentTypeFilter = (methodName) => !contextType || varTypeMethods[methodName].returns === contextType;
@@ -69,7 +69,7 @@
             <Argument {argLevel} 
                 on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}>
-                
+
                 <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "VarCallExpression"}
                     <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} />

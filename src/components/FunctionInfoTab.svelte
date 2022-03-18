@@ -35,7 +35,7 @@
             ...info.variables,
             [uuidv4()]: {
                 "name": "newVar",
-                "type": "String",
+                "returns": "String",
                 "value": ""
             }
         };
@@ -46,7 +46,7 @@
             ...info.parameters,
             {
                 "name": "newParam",
-                "type": "String"
+                "returns": "String"
             }
         ];
     }
@@ -63,6 +63,14 @@
             ...info.variables[varId],
             name: newName
         };
+    }
+
+
+    function varTypeChange(event, id) {
+        info.variables[id] = {
+            ...info.variables[id],
+            "returns": event.target.value
+        }
     }
 </script>
 
@@ -84,7 +92,7 @@
                         <div class="drag-var" draggable=true></div>
                         <input value={varObj.name} type="text" on:change={e => changeVarName(varId, e.target.value)} class="var-name" />
                     </div>
-                    <div class="flex-1"><select value="{varObj.returns}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
+                    <div class="flex-1"><select on:change={(event) => varTypeChange(event, varId)} value="{varObj.returns}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
                     <div class="flex-1"><input type="text" value="{varObj.value}"></div>
                 </div>
             {/each}
