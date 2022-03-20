@@ -239,13 +239,7 @@ suite('StringUtil drop handling', function() {
         const handlerFn = flowDropHandler({
             contextName: 'flow',
             stateChangeCallback: function(nodeCreated) {
-                assert.ownInclude(nodeCreated, {
-                    type: "ExpressionStatement"
-                }, "Created node isn't wrapped in an expression");
-                assert.notEqual(nodeCreated.expression, undefined, "Expression wrap has no expression prop");
-                assert.notEqual(nodeCreated.id, undefined, "Expression wrap has no id");
-
-                isStringUtil({ node: nodeCreated.expression, method: "concat" });
+                assert.strictEqual(nodeCreated, null, "StringUtil dropped in a flow is not return null");
             }
         });
 
@@ -265,7 +259,7 @@ suite('StringUtil drop handling', function() {
         const handlerFn = flowDropHandler({
             contextName: 'expression',
             stateChangeCallback: function(nodeCreated) {
-                isStringUtil({ node: nodeCreated, method: "concat" });
+                assert.strictEqual(nodeCreated, null, "StringUtil dropped in a flow is not return null");
             }
         });
 
