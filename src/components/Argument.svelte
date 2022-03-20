@@ -3,6 +3,7 @@
 
     export let argLevel;
     export let onClear = () => {};
+    export let returnType;
 
     let argLevelClass = "level-1n";
     if (argLevel % 3 === 0) {
@@ -16,7 +17,7 @@
 
 
 <div class="flex wrapper">
-    <p class="gt-symbol" on:click={onClear}>&gt; </p>
+    <p class="gt-symbol" on:click={onClear}><span class="small-text">{returnType}</span> &gt; </p>
     <div on:drop|stopPropagation={(event) => dispatch('innerDrop', event)}
         on:dragover={() => {}}
         class="flex-1  argument-container {argLevelClass}">
@@ -32,7 +33,7 @@
     }
 
     .gt-symbol {
-        padding: 4px 8px 0 0;
+        padding: 4px 8px 2px 0;
         cursor: pointer;
     }
 

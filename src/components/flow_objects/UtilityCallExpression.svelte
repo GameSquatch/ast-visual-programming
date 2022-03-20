@@ -52,13 +52,14 @@
                 <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
             {/each}
         </select>
-        => {nodeData.returns}
+        <span class="small-text">=&gt; {nodeData.returns}</span>
     </div>
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
             <Argument {argLevel} 
                 on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })(event.detail)}
-                onClear={() => onClear(i, argument)}>
+                onClear={() => onClear(i, argument)}
+                returnType={argument.returns}>
 
                 <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}

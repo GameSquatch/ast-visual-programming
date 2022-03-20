@@ -6,8 +6,8 @@
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "prod": "node server.js",
-    "test": "rollup -c rollup_test.config.js && npx mocha --ui tdd",
-    "comp-test": "rollup -c rollup_component_test.config.js && npx mocha --ui tdd --require global-jsdom/register"
+    "test": "rollup -c rollup_test.config.js && npx mocha --ui tdd test/run_tests.js",
+    "comp-test": "rollup -c rollup_component_test.config.js && npx mocha --ui tdd --require global-jsdom/register test/run_component_tests.js"
   },
   "dependencies": {
     "express": "^4.17.3",

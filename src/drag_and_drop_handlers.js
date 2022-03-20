@@ -99,8 +99,8 @@ const dropContextMap = {
         argument: variableFromTypedContext
     },
     StringUtil: {
-        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.StringUtil()),
-        expression: (dragData, contextType) => nodeTemplates.StringUtil(),
+        flow: noNode,
+        expression: noNode,
         assignment: stringUtilFromTypedContext,
         argument: stringUtilFromTypedContext
     },
@@ -111,9 +111,7 @@ const dropContextMap = {
         argument: noNode
     },
     moveExpression: {
-        flow: (dragData, contextType) => {
-            return { moveData: dragData.node, currentIndex: dragData.currentIndex };
-        },
+        flow: (dragData, contextType) => ({ moveData: dragData.node, currentIndex: dragData.currentIndex }),
         expression: (dragData, contextType) => ({ moveData: dragData.node, currentIndex: dragData.currentIndex }),
         assignment: noNode,
         argument: noNode

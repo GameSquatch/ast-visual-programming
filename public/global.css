@@ -77,6 +77,10 @@ body {
     overflow: auto;
 }
 
+.small-text {
+    font-size: 8pt;
+}
+
 .delete-btn {
     display: none;
 }
