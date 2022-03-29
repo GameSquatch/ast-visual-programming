@@ -1,6 +1,6 @@
 <script>
     import FlowObjectSource from './FlowObjectSource.svelte';
-    import { doActionDataDrag, stringUtilDataDrag } from '../../../drag_types.js';
+    import { doActionDataDrag, stringUtilDataDrag } from '../../../drag_start_data_creators.js';
 </script>
 
 <div class="side-nav-wrapper">

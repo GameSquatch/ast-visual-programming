@@ -4,7 +4,7 @@
     import constructors from "../../constructors.js";
     import ClearNodeProp from '../ClearNodeProp.svelte';
     import DragHandle from '../DragHandle.svelte';
-    import { moveExpressionDrag } from '../../drag_types.js';
+    import { moveExpressionDrag } from '../../drag_start_data_creators.js';
 
     export let accessor;
     export let nodeData;
@@ -56,9 +56,7 @@
         dispatch('insertAfter', node);
     }
 
-    /**
-     * @param {DragEvent} event
-     */
+    /** @type {DragHandler} */
      function handleDragStart(event) {
         const dragData = moveExpressionDrag(nodeData, accessor);
         
@@ -66,7 +64,7 @@
         beingDragged = true;
     }
 
-    /** @param {DragEvent} event */
+    /** @type {DragHandler} */
     function checkDropCancel(event) {
         beingDragged = false;
     }

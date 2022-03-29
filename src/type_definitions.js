@@ -1,4 +1,4 @@
-
+/** @type {TypeDefinitionWrapper} */
 const typeDefs =  {
     "StringUtil": {
         "concat": {
