@@ -37,6 +37,14 @@
  * @property {string} returns
  */
 
+/** @typedef {Identifier|VarIdentifier|ExpressionNode|AssignmentExpression|VarCallExpression|UtilityCallExpression|Literal} ASTNode */
+
+/**
+ * @typedef {Object} Identifier
+ * @property {string} type
+ * @property {string} name
+ */
+
 /**
  * @typedef {Object} VarIdentifier
  * @property {string} type
