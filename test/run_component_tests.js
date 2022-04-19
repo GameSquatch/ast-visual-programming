@@ -1372,7 +1372,7 @@ function create_if_block_1$2(ctx) {
 	let current;
 
 	clearnodeprop = new ClearNodeProp({
-			props: { onClick: /*func*/ ctx[12] },
+			props: { onClick: /*func*/ ctx[13] },
 			$$inline: true
 		});
 
@@ -1386,7 +1386,7 @@ function create_if_block_1$2(ctx) {
 		},
 		p: function update(ctx, dirty) {
 			const clearnodeprop_changes = {};
-			if (dirty & /*nodeData*/ 1) clearnodeprop_changes.onClick = /*func*/ ctx[12];
+			if (dirty & /*nodeData*/ 1) clearnodeprop_changes.onClick = /*func*/ ctx[13];
 			clearnodeprop.$set(clearnodeprop_changes);
 		},
 		i: function intro(local) {
@@ -1414,7 +1414,7 @@ function create_if_block_1$2(ctx) {
 	return block;
 }
 
-// (95:8) {:else}
+// (96:8) {:else}
 function create_else_block$3(ctx) {
 	let p;
 
@@ -1423,7 +1423,7 @@ function create_else_block$3(ctx) {
 			p = internal.element("p");
 			p.textContent = "Drag an action here";
 			internal.attr_dev(p, "class", "dull-text");
-			internal.add_location(p, file$a, 95, 12, 2881);
+			internal.add_location(p, file$a, 96, 12, 2947);
 		},
 		m: function mount(target, anchor) {
 			internal.insert_dev(target, p, anchor);
@@ -1440,7 +1440,7 @@ function create_else_block$3(ctx) {
 		block,
 		id: create_else_block$3.name,
 		type: "else",
-		source: "(95:8) {:else}",
+		source: "(96:8) {:else}",
 		ctx
 	});
 
@@ -1455,13 +1455,15 @@ function create_if_block$4(ctx) {
 	let current;
 
 	function switch_instance_nodeData_binding(value) {
-		/*switch_instance_nodeData_binding*/ ctx[14](value);
+		/*switch_instance_nodeData_binding*/ ctx[15](value);
 	}
 
 	var switch_value = constructors[/*nodeData*/ ctx[0].expression.type];
 
 	function switch_props(ctx) {
-		let switch_instance_props = {};
+		let switch_instance_props = {
+			nodePath: /*nodePath*/ ctx[2] + ".expression"
+		};
 
 		if (/*nodeData*/ ctx[0].expression !== void 0) {
 			switch_instance_props.nodeData = /*nodeData*/ ctx[0].expression;
@@ -1493,6 +1495,7 @@ function create_if_block$4(ctx) {
 		},
 		p: function update(ctx, dirty) {
 			const switch_instance_changes = {};
+			if (dirty & /*nodePath*/ 4) switch_instance_changes.nodePath = /*nodePath*/ ctx[2] + ".expression";
 
 			if (!updating_nodeData && dirty & /*nodeData*/ 1) {
 				updating_nodeData = true;
@@ -1596,18 +1599,18 @@ function create_fragment$a(ctx) {
 			t4 = internal.space();
 			div2 = internal.element("div");
 			internal.attr_dev(button, "class", "delete-btn");
-			internal.add_location(button, file$a, 86, 12, 2530);
+			internal.add_location(button, file$a, 86, 12, 2544);
 			internal.attr_dev(div0, "class", "flex w100");
-			internal.add_location(div0, file$a, 82, 8, 2350);
+			internal.add_location(div0, file$a, 82, 8, 2364);
 			internal.attr_dev(div1, "tabindex", "0");
 			internal.attr_dev(div1, "class", "expression-container svelte-5e8c7l");
-			internal.add_location(div1, file$a, 73, 4, 1961);
+			internal.add_location(div1, file$a, 74, 4, 1986);
 			internal.attr_dev(div2, "class", "line-down-box svelte-5e8c7l");
-			internal.toggle_class(div2, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
-			internal.add_location(div2, file$a, 98, 4, 2955);
+			internal.toggle_class(div2, "insert-drag-over", /*isOverInsertSpot*/ ctx[3]);
+			internal.add_location(div2, file$a, 99, 4, 3021);
 			internal.attr_dev(div3, "class", "svelte-5e8c7l");
-			internal.toggle_class(div3, "beingDragged", /*beingDragged*/ ctx[3]);
-			internal.add_location(div3, file$a, 72, 0, 1932);
+			internal.toggle_class(div3, "beingDragged", /*beingDragged*/ ctx[4]);
+			internal.add_location(div3, file$a, 73, 0, 1957);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1629,36 +1632,36 @@ function create_fragment$a(ctx) {
 
 			if (!mounted) {
 				dispose = [
-					internal.listen_dev(button, "click", /*click_handler*/ ctx[13], false, false, false),
+					internal.listen_dev(button, "click", /*click_handler*/ ctx[14], false, false, false),
 					internal.listen_dev(div1, "dragover", internal.prevent_default(dragOverHandler$1), false, true, false),
 					internal.listen_dev(
 						div1,
 						"drop",
 						internal.stop_propagation(internal.prevent_default(flowDropHandler({
 							contextName: 'expression',
-							stateChangeCallback: /*dropModify*/ ctx[8]
+							stateChangeCallback: /*dropModify*/ ctx[9]
 						}))),
 						false,
 						true,
 						true
 					),
-					internal.listen_dev(div1, "dragstart", internal.stop_propagation(/*handleDragStart*/ ctx[10]), false, false, true),
-					internal.listen_dev(div1, "dragend", internal.stop_propagation(/*checkDropCancel*/ ctx[11]), false, false, true),
+					internal.listen_dev(div1, "dragstart", internal.stop_propagation(/*handleDragStart*/ ctx[11]), false, false, true),
+					internal.listen_dev(div1, "dragend", internal.stop_propagation(/*checkDropCancel*/ ctx[12]), false, false, true),
 					internal.listen_dev(div2, "dragover", internal.prevent_default(insertDragOverHandler), false, true, false),
-					internal.listen_dev(div2, "dragenter", internal.prevent_default(/*insertDragEnter*/ ctx[5]), false, true, false),
-					internal.listen_dev(div2, "dragleave", internal.prevent_default(/*insertDragLeave*/ ctx[6]), false, true, false),
+					internal.listen_dev(div2, "dragenter", internal.prevent_default(/*insertDragEnter*/ ctx[6]), false, true, false),
+					internal.listen_dev(div2, "dragleave", internal.prevent_default(/*insertDragLeave*/ ctx[7]), false, true, false),
 					internal.listen_dev(
 						div2,
 						"drop",
 						internal.stop_propagation(internal.prevent_default(flowDropHandler({
 							contextName: 'flow',
-							stateChangeCallback: /*insertDrop*/ ctx[9]
+							stateChangeCallback: /*insertDrop*/ ctx[10]
 						}))),
 						false,
 						true,
 						true
 					),
-					internal.listen_dev(div2, "drop", internal.stop_propagation(internal.prevent_default(/*removeInsertHover*/ ctx[7])), false, true, true)
+					internal.listen_dev(div2, "drop", internal.stop_propagation(internal.prevent_default(/*removeInsertHover*/ ctx[8])), false, true, true)
 				];
 
 				mounted = true;
@@ -1714,12 +1717,12 @@ function create_fragment$a(ctx) {
 				if_block1.m(div1, null);
 			}
 
-			if (dirty & /*isOverInsertSpot*/ 4) {
-				internal.toggle_class(div2, "insert-drag-over", /*isOverInsertSpot*/ ctx[2]);
+			if (dirty & /*isOverInsertSpot*/ 8) {
+				internal.toggle_class(div2, "insert-drag-over", /*isOverInsertSpot*/ ctx[3]);
 			}
 
-			if (dirty & /*beingDragged*/ 8) {
-				internal.toggle_class(div3, "beingDragged", /*beingDragged*/ ctx[3]);
+			if (dirty & /*beingDragged*/ 16) {
+				internal.toggle_class(div3, "beingDragged", /*beingDragged*/ ctx[4]);
 			}
 		},
 		i: function intro(local) {
@@ -1769,20 +1772,21 @@ function instance$a($$self, $$props, $$invalidate) {
 	internal.validate_slots('ExpressionStatement', slots, []);
 	let { accessor } = $$props;
 	let { nodeData } = $$props;
+	let { nodePath } = $$props;
 	let isOverInsertSpot = false;
 	let beingDragged = false;
 	const dispatch = svelte.createEventDispatcher();
 
 	function insertDragEnter(event) {
-		$$invalidate(2, isOverInsertSpot = true);
+		$$invalidate(3, isOverInsertSpot = true);
 	}
 
 	function insertDragLeave(event) {
-		$$invalidate(2, isOverInsertSpot = false);
+		$$invalidate(3, isOverInsertSpot = false);
 	}
 
 	function removeInsertHover(event) {
-		$$invalidate(2, isOverInsertSpot = false);
+		$$invalidate(3, isOverInsertSpot = false);
 	}
 
 	function dropModify(node) {
@@ -1811,15 +1815,15 @@ function instance$a($$self, $$props, $$invalidate) {
 	function handleDragStart(event) {
 		const dragData = moveExpressionDrag(nodeData, accessor);
 		event.dataTransfer.setData('text/json', JSON.stringify(dragData));
-		$$invalidate(3, beingDragged = true);
+		$$invalidate(4, beingDragged = true);
 	}
 
 	/** @type {DragHandler} */
 	function checkDropCancel(event) {
-		$$invalidate(3, beingDragged = false);
+		$$invalidate(4, beingDragged = false);
 	}
 
-	const writable_props = ['accessor', 'nodeData'];
+	const writable_props = ['accessor', 'nodeData', 'nodePath'];
 
 	Object.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<ExpressionStatement> was created with unknown prop '${key}'`);
@@ -1838,6 +1842,7 @@ function instance$a($$self, $$props, $$invalidate) {
 	$$self.$$set = $$props => {
 		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
+		if ('nodePath' in $$props) $$invalidate(2, nodePath = $$props.nodePath);
 	};
 
 	$$self.$capture_state = () => ({
@@ -1849,6 +1854,7 @@ function instance$a($$self, $$props, $$invalidate) {
 		moveExpressionDrag,
 		accessor,
 		nodeData,
+		nodePath,
 		isOverInsertSpot,
 		beingDragged,
 		dispatch,
@@ -1866,8 +1872,9 @@ function instance$a($$self, $$props, $$invalidate) {
 	$$self.$inject_state = $$props => {
 		if ('accessor' in $$props) $$invalidate(1, accessor = $$props.accessor);
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
-		if ('isOverInsertSpot' in $$props) $$invalidate(2, isOverInsertSpot = $$props.isOverInsertSpot);
-		if ('beingDragged' in $$props) $$invalidate(3, beingDragged = $$props.beingDragged);
+		if ('nodePath' in $$props) $$invalidate(2, nodePath = $$props.nodePath);
+		if ('isOverInsertSpot' in $$props) $$invalidate(3, isOverInsertSpot = $$props.isOverInsertSpot);
+		if ('beingDragged' in $$props) $$invalidate(4, beingDragged = $$props.beingDragged);
 	};
 
 	if ($$props && "$$inject" in $$props) {
@@ -1877,6 +1884,7 @@ function instance$a($$self, $$props, $$invalidate) {
 	return [
 		nodeData,
 		accessor,
+		nodePath,
 		isOverInsertSpot,
 		beingDragged,
 		dispatch,
@@ -1896,7 +1904,7 @@ function instance$a($$self, $$props, $$invalidate) {
 class ExpressionStatement extends internal.SvelteComponentDev {
 	constructor(options) {
 		super(options);
-		internal.init(this, options, instance$a, create_fragment$a, internal.safe_not_equal, { accessor: 1, nodeData: 0 });
+		internal.init(this, options, instance$a, create_fragment$a, internal.safe_not_equal, { accessor: 1, nodeData: 0, nodePath: 2 });
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
 			component: this,
@@ -1915,6 +1923,10 @@ class ExpressionStatement extends internal.SvelteComponentDev {
 		if (/*nodeData*/ ctx[0] === undefined && !('nodeData' in props)) {
 			console.warn("<ExpressionStatement> was created without expected prop 'nodeData'");
 		}
+
+		if (/*nodePath*/ ctx[2] === undefined && !('nodePath' in props)) {
+			console.warn("<ExpressionStatement> was created without expected prop 'nodePath'");
+		}
 	}
 
 	get accessor() {
@@ -1930,6 +1942,14 @@ class ExpressionStatement extends internal.SvelteComponentDev {
 	}
 
 	set nodeData(value) {
+		throw new Error("<ExpressionStatement>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	get nodePath() {
+		throw new Error("<ExpressionStatement>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
 		throw new Error("<ExpressionStatement>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
 }
@@ -1964,11 +1984,11 @@ function create_fragment$9(ctx) {
 			if (default_slot) default_slot.c();
 			internal.attr_dev(span, "class", "small-text");
 			internal.add_location(span, file$9, 19, 44, 461);
-			internal.attr_dev(p, "class", "gt-symbol svelte-yyx2qe");
+			internal.attr_dev(p, "class", "gt-symbol svelte-1w5dope");
 			internal.add_location(p, file$9, 19, 4, 421);
-			internal.attr_dev(div0, "class", div0_class_value = "flex-1 argument-container " + /*argLevelClass*/ ctx[2] + " svelte-yyx2qe");
+			internal.attr_dev(div0, "class", div0_class_value = "flex-1 argument-container " + /*argLevelClass*/ ctx[2] + " svelte-1w5dope");
 			internal.add_location(div0, file$9, 20, 4, 520);
-			internal.attr_dev(div1, "class", "flex wrapper svelte-yyx2qe");
+			internal.attr_dev(div1, "class", "flex wrapper svelte-1w5dope");
 			internal.add_location(div1, file$9, 18, 0, 390);
 		},
 		l: function claim(nodes) {
@@ -2027,7 +2047,7 @@ function create_fragment$9(ctx) {
 				}
 			}
 
-			if (!current || dirty & /*argLevelClass*/ 4 && div0_class_value !== (div0_class_value = "flex-1 argument-container " + /*argLevelClass*/ ctx[2] + " svelte-yyx2qe")) {
+			if (!current || dirty & /*argLevelClass*/ 4 && div0_class_value !== (div0_class_value = "flex-1 argument-container " + /*argLevelClass*/ ctx[2] + " svelte-1w5dope")) {
 				internal.attr_dev(div0, "class", div0_class_value);
 			}
 		},
@@ -2185,22 +2205,22 @@ const file$8 = "src/components/flow_objects/UtilityCallExpression.svelte";
 
 function get_each_context$3(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[14] = list[i];
-	child_ctx[15] = list;
-	child_ctx[16] = i;
+	child_ctx[15] = list[i];
+	child_ctx[16] = list;
+	child_ctx[17] = i;
 	return child_ctx;
 }
 
 function get_each_context_1$1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[17] = list[i];
+	child_ctx[18] = list[i];
 	return child_ctx;
 }
 
-// (51:12) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
+// (52:12) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
 function create_each_block_1$1(ctx) {
 	let option;
-	let t_value = /*method*/ ctx[17] + "";
+	let t_value = /*method*/ ctx[18] + "";
 	let t;
 	let option_selected_value;
 
@@ -2208,17 +2228,17 @@ function create_each_block_1$1(ctx) {
 		c: function create() {
 			option = internal.element("option");
 			t = internal.text(t_value);
-			option.__value = /*method*/ ctx[17];
+			option.__value = /*method*/ ctx[18];
 			option.value = option.__value;
-			option.selected = option_selected_value = /*method*/ ctx[17] === /*nodeData*/ ctx[0].utilityMethod;
-			internal.add_location(option, file$8, 51, 16, 1744);
+			option.selected = option_selected_value = /*method*/ ctx[18] === /*nodeData*/ ctx[0].utilityMethod;
+			internal.add_location(option, file$8, 52, 16, 1769);
 		},
 		m: function mount(target, anchor) {
 			internal.insert_dev(target, option, anchor);
 			internal.append_dev(option, t);
 		},
 		p: function update(ctx, dirty) {
-			if (dirty & /*nodeData*/ 1 && option_selected_value !== (option_selected_value = /*method*/ ctx[17] === /*nodeData*/ ctx[0].utilityMethod)) {
+			if (dirty & /*nodeData*/ 1 && option_selected_value !== (option_selected_value = /*method*/ ctx[18] === /*nodeData*/ ctx[0].utilityMethod)) {
 				internal.prop_dev(option, "selected", option_selected_value);
 			}
 		},
@@ -2231,14 +2251,14 @@ function create_each_block_1$1(ctx) {
 		block,
 		id: create_each_block_1$1.name,
 		type: "each",
-		source: "(51:12) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
+		source: "(52:12) {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}",
 		ctx
 	});
 
 	return block;
 }
 
-// (67:16) {:else}
+// (68:16) {:else}
 function create_else_block$2(ctx) {
 	let switch_instance;
 	let updating_nodeData;
@@ -2246,20 +2266,21 @@ function create_else_block$2(ctx) {
 	let current;
 
 	function switch_instance_nodeData_binding(value) {
-		/*switch_instance_nodeData_binding*/ ctx[11](value, /*argument*/ ctx[14], /*each_value*/ ctx[15], /*i*/ ctx[16]);
+		/*switch_instance_nodeData_binding*/ ctx[12](value, /*argument*/ ctx[15], /*each_value*/ ctx[16], /*i*/ ctx[17]);
 	}
 
-	var switch_value = constructors[/*argument*/ ctx[14].type];
+	var switch_value = constructors[/*argument*/ ctx[15].type];
 
 	function switch_props(ctx) {
 		let switch_instance_props = {
 			argLevel: /*argLevel*/ ctx[1] + 1,
 			isArgument: true,
-			contextType: /*argument*/ ctx[14].returns
+			contextType: /*argument*/ ctx[15].returns,
+			nodePath: /*nodePath*/ ctx[2] + ".arguments." + /*i*/ ctx[17]
 		};
 
-		if (/*argument*/ ctx[14] !== void 0) {
-			switch_instance_props.nodeData = /*argument*/ ctx[14];
+		if (/*argument*/ ctx[15] !== void 0) {
+			switch_instance_props.nodeData = /*argument*/ ctx[15];
 		}
 
 		return {
@@ -2290,15 +2311,16 @@ function create_else_block$2(ctx) {
 			ctx = new_ctx;
 			const switch_instance_changes = {};
 			if (dirty & /*argLevel*/ 2) switch_instance_changes.argLevel = /*argLevel*/ ctx[1] + 1;
-			if (dirty & /*nodeData*/ 1) switch_instance_changes.contextType = /*argument*/ ctx[14].returns;
+			if (dirty & /*nodeData*/ 1) switch_instance_changes.contextType = /*argument*/ ctx[15].returns;
+			if (dirty & /*nodePath, nodeData*/ 5) switch_instance_changes.nodePath = /*nodePath*/ ctx[2] + ".arguments." + /*i*/ ctx[17];
 
 			if (!updating_nodeData && dirty & /*nodeData*/ 1) {
 				updating_nodeData = true;
-				switch_instance_changes.nodeData = /*argument*/ ctx[14];
+				switch_instance_changes.nodeData = /*argument*/ ctx[15];
 				internal.add_flush_callback(() => updating_nodeData = false);
 			}
 
-			if (switch_value !== (switch_value = constructors[/*argument*/ ctx[14].type])) {
+			if (switch_value !== (switch_value = constructors[/*argument*/ ctx[15].type])) {
 				if (switch_instance) {
 					internal.group_outros();
 					const old_component = switch_instance;
@@ -2342,31 +2364,32 @@ function create_else_block$2(ctx) {
 		block,
 		id: create_else_block$2.name,
 		type: "else",
-		source: "(67:16) {:else}",
+		source: "(68:16) {:else}",
 		ctx
 	});
 
 	return block;
 }
 
-// (65:16) {#if argument.type === "UtilityCallExpression"}
+// (66:16) {#if argument.type === "UtilityCallExpression"}
 function create_if_block$3(ctx) {
 	let utilitycallexpression;
 	let updating_nodeData;
 	let current;
 
 	function utilitycallexpression_nodeData_binding(value) {
-		/*utilitycallexpression_nodeData_binding*/ ctx[10](value, /*argument*/ ctx[14], /*each_value*/ ctx[15], /*i*/ ctx[16]);
+		/*utilitycallexpression_nodeData_binding*/ ctx[11](value, /*argument*/ ctx[15], /*each_value*/ ctx[16], /*i*/ ctx[17]);
 	}
 
 	let utilitycallexpression_props = {
 		argLevel: /*argLevel*/ ctx[1] + 1,
 		isArgument: true,
-		contextType: /*argument*/ ctx[14].returns
+		contextType: /*argument*/ ctx[15].returns,
+		nodePath: /*nodePath*/ ctx[2] + ".arguments." + /*i*/ ctx[17]
 	};
 
-	if (/*argument*/ ctx[14] !== void 0) {
-		utilitycallexpression_props.nodeData = /*argument*/ ctx[14];
+	if (/*argument*/ ctx[15] !== void 0) {
+		utilitycallexpression_props.nodeData = /*argument*/ ctx[15];
 	}
 
 	utilitycallexpression = new UtilityCallExpression({
@@ -2388,11 +2411,12 @@ function create_if_block$3(ctx) {
 			ctx = new_ctx;
 			const utilitycallexpression_changes = {};
 			if (dirty & /*argLevel*/ 2) utilitycallexpression_changes.argLevel = /*argLevel*/ ctx[1] + 1;
-			if (dirty & /*nodeData*/ 1) utilitycallexpression_changes.contextType = /*argument*/ ctx[14].returns;
+			if (dirty & /*nodeData*/ 1) utilitycallexpression_changes.contextType = /*argument*/ ctx[15].returns;
+			if (dirty & /*nodePath, nodeData*/ 5) utilitycallexpression_changes.nodePath = /*nodePath*/ ctx[2] + ".arguments." + /*i*/ ctx[17];
 
 			if (!updating_nodeData && dirty & /*nodeData*/ 1) {
 				updating_nodeData = true;
-				utilitycallexpression_changes.nodeData = /*argument*/ ctx[14];
+				utilitycallexpression_changes.nodeData = /*argument*/ ctx[15];
 				internal.add_flush_callback(() => updating_nodeData = false);
 			}
 
@@ -2416,14 +2440,14 @@ function create_if_block$3(ctx) {
 		block,
 		id: create_if_block$3.name,
 		type: "if",
-		source: "(65:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
+		source: "(66:16) {#if argument.type === \\\"UtilityCallExpression\\\"}",
 		ctx
 	});
 
 	return block;
 }
 
-// (59:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>
+// (60:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>
 function create_default_slot$1(ctx) {
 	let clearnodeprop;
 	let t0;
@@ -2433,7 +2457,7 @@ function create_default_slot$1(ctx) {
 	let current;
 
 	function func(...args) {
-		return /*func*/ ctx[9](/*i*/ ctx[16], /*argument*/ ctx[14], ...args);
+		return /*func*/ ctx[10](/*i*/ ctx[17], /*argument*/ ctx[15], ...args);
 	}
 
 	clearnodeprop = new ClearNodeProp({ props: { onClick: func }, $$inline: true });
@@ -2441,7 +2465,7 @@ function create_default_slot$1(ctx) {
 	const if_blocks = [];
 
 	function select_block_type(ctx, dirty) {
-		if (/*argument*/ ctx[14].type === "UtilityCallExpression") return 0;
+		if (/*argument*/ ctx[15].type === "UtilityCallExpression") return 0;
 		return 1;
 	}
 
@@ -2516,32 +2540,32 @@ function create_default_slot$1(ctx) {
 		block,
 		id: create_default_slot$1.name,
 		type: "slot",
-		source: "(59:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>",
+		source: "(60:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>",
 		ctx
 	});
 
 	return block;
 }
 
-// (58:8) {#each nodeData.arguments as argument, i (i)}
+// (59:8) {#each nodeData.arguments as argument, i (i)}
 function create_each_block$3(key_1, ctx) {
 	let first;
 	let argument;
 	let current;
 
 	function func_1() {
-		return /*func_1*/ ctx[12](/*i*/ ctx[16], /*argument*/ ctx[14]);
+		return /*func_1*/ ctx[13](/*i*/ ctx[17], /*argument*/ ctx[15]);
 	}
 
 	function innerDrop_handler(...args) {
-		return /*innerDrop_handler*/ ctx[13](/*argument*/ ctx[14], /*i*/ ctx[16], ...args);
+		return /*innerDrop_handler*/ ctx[14](/*argument*/ ctx[15], /*i*/ ctx[17], ...args);
 	}
 
 	argument = new Argument({
 			props: {
 				argLevel: /*argLevel*/ ctx[1],
 				onClear: func_1,
-				returnType: /*argument*/ ctx[14].returns,
+				returnType: /*argument*/ ctx[15].returns,
 				$$slots: { default: [create_default_slot$1] },
 				$$scope: { ctx }
 			},
@@ -2568,9 +2592,9 @@ function create_each_block$3(key_1, ctx) {
 			const argument_changes = {};
 			if (dirty & /*argLevel*/ 2) argument_changes.argLevel = /*argLevel*/ ctx[1];
 			if (dirty & /*nodeData*/ 1) argument_changes.onClear = func_1;
-			if (dirty & /*nodeData*/ 1) argument_changes.returnType = /*argument*/ ctx[14].returns;
+			if (dirty & /*nodeData*/ 1) argument_changes.returnType = /*argument*/ ctx[15].returns;
 
-			if (dirty & /*$$scope, argLevel, nodeData*/ 1048579) {
+			if (dirty & /*$$scope, argLevel, nodeData, nodePath*/ 2097159) {
 				argument_changes.$$scope = { dirty, ctx };
 			}
 
@@ -2595,7 +2619,7 @@ function create_each_block$3(key_1, ctx) {
 		block,
 		id: create_each_block$3.name,
 		type: "each",
-		source: "(58:8) {#each nodeData.arguments as argument, i (i)}",
+		source: "(59:8) {#each nodeData.arguments as argument, i (i)}",
 		ctx
 	});
 
@@ -2623,7 +2647,7 @@ function create_fragment$8(ctx) {
 	let current;
 	let mounted;
 	let dispose;
-	let each_value_1 = Object.keys(/*utilities*/ ctx[2]).filter(/*matchParentTypeFilter*/ ctx[4]);
+	let each_value_1 = Object.keys(/*utilities*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
 	internal.validate_each_argument(each_value_1);
 	let each_blocks_1 = [];
 
@@ -2633,7 +2657,7 @@ function create_fragment$8(ctx) {
 
 	let each_value = /*nodeData*/ ctx[0].arguments;
 	internal.validate_each_argument(each_value);
-	const get_key = ctx => /*i*/ ctx[16];
+	const get_key = ctx => /*i*/ ctx[17];
 	internal.validate_each_keys(ctx, each_value, get_each_context$3, get_key);
 
 	for (let i = 0; i < each_value.length; i += 1) {
@@ -2667,17 +2691,17 @@ function create_fragment$8(ctx) {
 				each_blocks[i].c();
 			}
 
-			internal.add_location(strong, file$8, 47, 7, 1520);
-			internal.add_location(p, file$8, 47, 4, 1517);
-			internal.add_location(select, file$8, 49, 8, 1607);
+			internal.add_location(strong, file$8, 48, 7, 1545);
+			internal.add_location(p, file$8, 48, 4, 1542);
+			internal.add_location(select, file$8, 50, 8, 1632);
 			internal.attr_dev(span, "class", "small-text");
-			internal.add_location(span, file$8, 54, 8, 1876);
+			internal.add_location(span, file$8, 55, 8, 1901);
 			internal.attr_dev(div0, "class", "method-container");
-			internal.add_location(div0, file$8, 48, 4, 1568);
+			internal.add_location(div0, file$8, 49, 4, 1593);
 			internal.attr_dev(div1, "class", "arguments-wrapper");
-			internal.add_location(div1, file$8, 56, 4, 1948);
+			internal.add_location(div1, file$8, 57, 4, 1973);
 			internal.attr_dev(div2, "class", "component-wrapper");
-			internal.add_location(div2, file$8, 46, 0, 1481);
+			internal.add_location(div2, file$8, 47, 0, 1506);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2709,15 +2733,15 @@ function create_fragment$8(ctx) {
 			current = true;
 
 			if (!mounted) {
-				dispose = internal.listen_dev(select, "change", /*onPropertyChange*/ ctx[3], false, false, false);
+				dispose = internal.listen_dev(select, "change", /*onPropertyChange*/ ctx[4], false, false, false);
 				mounted = true;
 			}
 		},
 		p: function update(ctx, [dirty]) {
 			if ((!current || dirty & /*nodeData*/ 1) && t0_value !== (t0_value = /*nodeData*/ ctx[0].utilityName + "")) internal.set_data_dev(t0, t0_value);
 
-			if (dirty & /*Object, utilities, matchParentTypeFilter, nodeData*/ 21) {
-				each_value_1 = Object.keys(/*utilities*/ ctx[2]).filter(/*matchParentTypeFilter*/ ctx[4]);
+			if (dirty & /*Object, utilities, matchParentTypeFilter, nodeData*/ 41) {
+				each_value_1 = Object.keys(/*utilities*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
 				internal.validate_each_argument(each_value_1);
 				let i;
 
@@ -2742,7 +2766,7 @@ function create_fragment$8(ctx) {
 
 			if ((!current || dirty & /*nodeData*/ 1) && t4_value !== (t4_value = /*nodeData*/ ctx[0].returns + "")) internal.set_data_dev(t4, t4_value);
 
-			if (dirty & /*argLevel, onClear, nodeData, flowDropHandler, addArgument, constructors, nodeTemplates*/ 99) {
+			if (dirty & /*argLevel, onClear, nodeData, flowDropHandler, addArgument, nodePath, constructors, nodeTemplates*/ 199) {
 				each_value = /*nodeData*/ ctx[0].arguments;
 				internal.validate_each_argument(each_value);
 				internal.group_outros();
@@ -2798,6 +2822,7 @@ function instance$8($$self, $$props, $$invalidate) {
 	let { contextType } = $$props;
 	let { isArgument = false } = $$props;
 	let { argLevel = 1 } = $$props;
+	let { nodePath } = $$props;
 	const utilities = typeDefs[nodeData.utilityName];
 
 	function onPropertyChange(event) {
@@ -2826,7 +2851,7 @@ function instance$8($$self, $$props, $$invalidate) {
 		$$invalidate(0, nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({}), nodeData);
 	}
 
-	const writable_props = ['nodeData', 'contextType', 'isArgument', 'argLevel'];
+	const writable_props = ['nodeData', 'contextType', 'isArgument', 'argLevel', 'nodePath'];
 
 	Object_1$2.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<UtilityCallExpression> was created with unknown prop '${key}'`);
@@ -2854,9 +2879,10 @@ function instance$8($$self, $$props, $$invalidate) {
 
 	$$self.$$set = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
-		if ('contextType' in $$props) $$invalidate(7, contextType = $$props.contextType);
-		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+		if ('contextType' in $$props) $$invalidate(8, contextType = $$props.contextType);
+		if ('isArgument' in $$props) $$invalidate(9, isArgument = $$props.isArgument);
 		if ('argLevel' in $$props) $$invalidate(1, argLevel = $$props.argLevel);
+		if ('nodePath' in $$props) $$invalidate(2, nodePath = $$props.nodePath);
 	};
 
 	$$self.$capture_state = () => ({
@@ -2870,6 +2896,7 @@ function instance$8($$self, $$props, $$invalidate) {
 		contextType,
 		isArgument,
 		argLevel,
+		nodePath,
 		utilities,
 		onPropertyChange,
 		matchParentTypeFilter,
@@ -2879,9 +2906,10 @@ function instance$8($$self, $$props, $$invalidate) {
 
 	$$self.$inject_state = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
-		if ('contextType' in $$props) $$invalidate(7, contextType = $$props.contextType);
-		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+		if ('contextType' in $$props) $$invalidate(8, contextType = $$props.contextType);
+		if ('isArgument' in $$props) $$invalidate(9, isArgument = $$props.isArgument);
 		if ('argLevel' in $$props) $$invalidate(1, argLevel = $$props.argLevel);
+		if ('nodePath' in $$props) $$invalidate(2, nodePath = $$props.nodePath);
 	};
 
 	if ($$props && "$$inject" in $$props) {
@@ -2891,6 +2919,7 @@ function instance$8($$self, $$props, $$invalidate) {
 	return [
 		nodeData,
 		argLevel,
+		nodePath,
 		utilities,
 		onPropertyChange,
 		matchParentTypeFilter,
@@ -2912,9 +2941,10 @@ class UtilityCallExpression extends internal.SvelteComponentDev {
 
 		internal.init(this, options, instance$8, create_fragment$8, internal.safe_not_equal, {
 			nodeData: 0,
-			contextType: 7,
-			isArgument: 8,
-			argLevel: 1
+			contextType: 8,
+			isArgument: 9,
+			argLevel: 1,
+			nodePath: 2
 		});
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
@@ -2931,8 +2961,12 @@ class UtilityCallExpression extends internal.SvelteComponentDev {
 			console.warn("<UtilityCallExpression> was created without expected prop 'nodeData'");
 		}
 
-		if (/*contextType*/ ctx[7] === undefined && !('contextType' in props)) {
+		if (/*contextType*/ ctx[8] === undefined && !('contextType' in props)) {
 			console.warn("<UtilityCallExpression> was created without expected prop 'contextType'");
+		}
+
+		if (/*nodePath*/ ctx[2] === undefined && !('nodePath' in props)) {
+			console.warn("<UtilityCallExpression> was created without expected prop 'nodePath'");
 		}
 	}
 
@@ -2967,6 +3001,14 @@ class UtilityCallExpression extends internal.SvelteComponentDev {
 	set argLevel(value) {
 		throw new Error("<UtilityCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
+
+	get nodePath() {
+		throw new Error("<UtilityCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
+		throw new Error("<UtilityCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
 }
 
 /* src/components/flow_objects/VarIdentifier.svelte generated by Svelte v3.46.4 */
@@ -2976,11 +3018,11 @@ const file$7 = "src/components/flow_objects/VarIdentifier.svelte";
 
 function get_each_context$2(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[9] = list[i];
+	child_ctx[10] = list[i];
 	return child_ctx;
 }
 
-// (34:0) {#if nodeData.refId}
+// (35:0) {#if nodeData.refId}
 function create_if_block_1$1(ctx) {
 	let span;
 	let t_value = /*$ast*/ ctx[2].main.info.variables[/*nodeData*/ ctx[0].refId].name + "";
@@ -2991,7 +3033,7 @@ function create_if_block_1$1(ctx) {
 			span = internal.element("span");
 			t = internal.text(t_value);
 			internal.attr_dev(span, "class", "self svelte-ipghco");
-			internal.add_location(span, file$7, 34, 4, 952);
+			internal.add_location(span, file$7, 35, 4, 977);
 		},
 		m: function mount(target, anchor) {
 			internal.insert_dev(target, span, anchor);
@@ -3009,14 +3051,14 @@ function create_if_block_1$1(ctx) {
 		block,
 		id: create_if_block_1$1.name,
 		type: "if",
-		source: "(34:0) {#if nodeData.refId}",
+		source: "(35:0) {#if nodeData.refId}",
 		ctx
 	});
 
 	return block;
 }
 
-// (37:0) {#if availableMethods.length > 0}
+// (38:0) {#if availableMethods.length > 0}
 function create_if_block$2(ctx) {
 	let select;
 	let option;
@@ -3043,9 +3085,9 @@ function create_if_block$2(ctx) {
 			option.selected = true;
 			option.__value = "";
 			option.value = option.__value;
-			internal.add_location(option, file$7, 38, 8, 1167);
+			internal.add_location(option, file$7, 39, 8, 1192);
 			internal.attr_dev(select, "class", select_class_value = "" + (internal.null_to_empty(/*usesTypeMethod*/ ctx[1] ? '' : 'type-method-select') + " svelte-ipghco"));
-			internal.add_location(select, file$7, 37, 4, 1070);
+			internal.add_location(select, file$7, 38, 4, 1095);
 		},
 		m: function mount(target, anchor) {
 			internal.insert_dev(target, select, anchor);
@@ -3101,26 +3143,26 @@ function create_if_block$2(ctx) {
 		block,
 		id: create_if_block$2.name,
 		type: "if",
-		source: "(37:0) {#if availableMethods.length > 0}",
+		source: "(38:0) {#if availableMethods.length > 0}",
 		ctx
 	});
 
 	return block;
 }
 
-// (40:8) {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}
+// (41:8) {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}
 function create_each_block$2(ctx) {
 	let option;
-	let t_value = /*typeMethod*/ ctx[9] + "";
+	let t_value = /*typeMethod*/ ctx[10] + "";
 	let t;
 
 	const block = {
 		c: function create() {
 			option = internal.element("option");
 			t = internal.text(t_value);
-			option.__value = /*typeMethod*/ ctx[9];
+			option.__value = /*typeMethod*/ ctx[10];
 			option.value = option.__value;
-			internal.add_location(option, file$7, 40, 12, 1281);
+			internal.add_location(option, file$7, 41, 12, 1306);
 		},
 		m: function mount(target, anchor) {
 			internal.insert_dev(target, option, anchor);
@@ -3136,7 +3178,7 @@ function create_each_block$2(ctx) {
 		block,
 		id: create_each_block$2.name,
 		type: "each",
-		source: "(40:8) {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}",
+		source: "(41:8) {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}",
 		ctx
 	});
 
@@ -3211,6 +3253,7 @@ function instance$7($$self, $$props, $$invalidate) {
 	let { nodeData } = $$props;
 	let { contextType = null } = $$props;
 	let { isArgument = false } = $$props;
+	let { nodePath } = $$props;
 	let usesTypeMethod = false;
 	const typeMethods = typeDefs[contextType ?? nodeData.returns];
 	const typeMatches = utilityKey => typeMethods[utilityKey].returns === nodeData.returns;
@@ -3234,7 +3277,7 @@ function instance$7($$self, $$props, $$invalidate) {
 		$$invalidate(1, usesTypeMethod = true);
 	}
 
-	const writable_props = ['nodeData', 'contextType', 'isArgument'];
+	const writable_props = ['nodeData', 'contextType', 'isArgument', 'nodePath'];
 
 	Object_1$1.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<VarIdentifier> was created with unknown prop '${key}'`);
@@ -3244,6 +3287,7 @@ function instance$7($$self, $$props, $$invalidate) {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
 		if ('contextType' in $$props) $$invalidate(7, contextType = $$props.contextType);
 		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+		if ('nodePath' in $$props) $$invalidate(9, nodePath = $$props.nodePath);
 	};
 
 	$$self.$capture_state = () => ({
@@ -3253,6 +3297,7 @@ function instance$7($$self, $$props, $$invalidate) {
 		nodeData,
 		contextType,
 		isArgument,
+		nodePath,
 		usesTypeMethod,
 		typeMethods,
 		typeMatches,
@@ -3265,6 +3310,7 @@ function instance$7($$self, $$props, $$invalidate) {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
 		if ('contextType' in $$props) $$invalidate(7, contextType = $$props.contextType);
 		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+		if ('nodePath' in $$props) $$invalidate(9, nodePath = $$props.nodePath);
 		if ('usesTypeMethod' in $$props) $$invalidate(1, usesTypeMethod = $$props.usesTypeMethod);
 	};
 
@@ -3281,7 +3327,8 @@ function instance$7($$self, $$props, $$invalidate) {
 		availableMethods,
 		methodSelected,
 		contextType,
-		isArgument
+		isArgument,
+		nodePath
 	];
 }
 
@@ -3292,7 +3339,8 @@ class VarIdentifier extends internal.SvelteComponentDev {
 		internal.init(this, options, instance$7, create_fragment$7, internal.safe_not_equal, {
 			nodeData: 0,
 			contextType: 7,
-			isArgument: 8
+			isArgument: 8,
+			nodePath: 9
 		});
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
@@ -3307,6 +3355,10 @@ class VarIdentifier extends internal.SvelteComponentDev {
 
 		if (/*nodeData*/ ctx[0] === undefined && !('nodeData' in props)) {
 			console.warn("<VarIdentifier> was created without expected prop 'nodeData'");
+		}
+
+		if (/*nodePath*/ ctx[9] === undefined && !('nodePath' in props)) {
+			console.warn("<VarIdentifier> was created without expected prop 'nodePath'");
 		}
 	}
 
@@ -3333,6 +3385,14 @@ class VarIdentifier extends internal.SvelteComponentDev {
 	set isArgument(value) {
 		throw new Error("<VarIdentifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
+
+	get nodePath() {
+		throw new Error("<VarIdentifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
+		throw new Error("<VarIdentifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
 }
 
 /* src/components/flow_objects/VarCallExpression.svelte generated by Svelte v3.46.4 */
@@ -3342,19 +3402,19 @@ const file$6 = "src/components/flow_objects/VarCallExpression.svelte";
 
 function get_each_context$1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[15] = list[i];
-	child_ctx[16] = list;
-	child_ctx[17] = i;
+	child_ctx[16] = list[i];
+	child_ctx[17] = list;
+	child_ctx[18] = i;
 	return child_ctx;
 }
 
 function get_each_context_1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[18] = list[i];
+	child_ctx[19] = list[i];
 	return child_ctx;
 }
 
-// (60:12) {#if !contextType || nodeData.variable.returns === contextType}
+// (61:12) {#if !contextType || nodeData.variable.returns === contextType}
 function create_if_block_1(ctx) {
 	let option;
 
@@ -3363,7 +3423,7 @@ function create_if_block_1(ctx) {
 			option = internal.element("option");
 			option.__value = "";
 			option.value = option.__value;
-			internal.add_location(option, file$6, 59, 75, 1952);
+			internal.add_location(option, file$6, 60, 75, 1977);
 		},
 		m: function mount(target, anchor) {
 			internal.insert_dev(target, option, anchor);
@@ -3377,17 +3437,17 @@ function create_if_block_1(ctx) {
 		block,
 		id: create_if_block_1.name,
 		type: "if",
-		source: "(60:12) {#if !contextType || nodeData.variable.returns === contextType}",
+		source: "(61:12) {#if !contextType || nodeData.variable.returns === contextType}",
 		ctx
 	});
 
 	return block;
 }
 
-// (61:12) {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
+// (62:12) {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
 function create_each_block_1(ctx) {
 	let option;
-	let t_value = /*method*/ ctx[18] + "";
+	let t_value = /*method*/ ctx[19] + "";
 	let t;
 	let option_selected_value;
 
@@ -3395,17 +3455,17 @@ function create_each_block_1(ctx) {
 		c: function create() {
 			option = internal.element("option");
 			t = internal.text(t_value);
-			option.__value = /*method*/ ctx[18];
+			option.__value = /*method*/ ctx[19];
 			option.value = option.__value;
-			option.selected = option_selected_value = /*method*/ ctx[18] === /*nodeData*/ ctx[0].method;
-			internal.add_location(option, file$6, 61, 16, 2088);
+			option.selected = option_selected_value = /*method*/ ctx[19] === /*nodeData*/ ctx[0].method;
+			internal.add_location(option, file$6, 62, 16, 2113);
 		},
 		m: function mount(target, anchor) {
 			internal.insert_dev(target, option, anchor);
 			internal.append_dev(option, t);
 		},
 		p: function update(ctx, dirty) {
-			if (dirty & /*nodeData*/ 1 && option_selected_value !== (option_selected_value = /*method*/ ctx[18] === /*nodeData*/ ctx[0].method)) {
+			if (dirty & /*nodeData*/ 1 && option_selected_value !== (option_selected_value = /*method*/ ctx[19] === /*nodeData*/ ctx[0].method)) {
 				internal.prop_dev(option, "selected", option_selected_value);
 			}
 		},
@@ -3418,14 +3478,14 @@ function create_each_block_1(ctx) {
 		block,
 		id: create_each_block_1.name,
 		type: "each",
-		source: "(61:12) {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}",
+		source: "(62:12) {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}",
 		ctx
 	});
 
 	return block;
 }
 
-// (77:16) {:else}
+// (78:16) {:else}
 function create_else_block$1(ctx) {
 	let switch_instance;
 	let updating_nodeData;
@@ -3433,20 +3493,21 @@ function create_else_block$1(ctx) {
 	let current;
 
 	function switch_instance_nodeData_binding(value) {
-		/*switch_instance_nodeData_binding*/ ctx[12](value, /*argument*/ ctx[15], /*each_value*/ ctx[16], /*i*/ ctx[17]);
+		/*switch_instance_nodeData_binding*/ ctx[13](value, /*argument*/ ctx[16], /*each_value*/ ctx[17], /*i*/ ctx[18]);
 	}
 
-	var switch_value = constructors[/*argument*/ ctx[15].type];
+	var switch_value = constructors[/*argument*/ ctx[16].type];
 
 	function switch_props(ctx) {
 		let switch_instance_props = {
 			argLevel: /*argLevel*/ ctx[2] + 1,
 			isArgument: true,
-			contextType: /*argument*/ ctx[15].returns
+			contextType: /*argument*/ ctx[16].returns,
+			nodePath: /*nodePath*/ ctx[3] + ".arguments." + /*i*/ ctx[18]
 		};
 
-		if (/*argument*/ ctx[15] !== void 0) {
-			switch_instance_props.nodeData = /*argument*/ ctx[15];
+		if (/*argument*/ ctx[16] !== void 0) {
+			switch_instance_props.nodeData = /*argument*/ ctx[16];
 		}
 
 		return {
@@ -3477,15 +3538,16 @@ function create_else_block$1(ctx) {
 			ctx = new_ctx;
 			const switch_instance_changes = {};
 			if (dirty & /*argLevel*/ 4) switch_instance_changes.argLevel = /*argLevel*/ ctx[2] + 1;
-			if (dirty & /*nodeData*/ 1) switch_instance_changes.contextType = /*argument*/ ctx[15].returns;
+			if (dirty & /*nodeData*/ 1) switch_instance_changes.contextType = /*argument*/ ctx[16].returns;
+			if (dirty & /*nodePath, nodeData*/ 9) switch_instance_changes.nodePath = /*nodePath*/ ctx[3] + ".arguments." + /*i*/ ctx[18];
 
 			if (!updating_nodeData && dirty & /*nodeData*/ 1) {
 				updating_nodeData = true;
-				switch_instance_changes.nodeData = /*argument*/ ctx[15];
+				switch_instance_changes.nodeData = /*argument*/ ctx[16];
 				internal.add_flush_callback(() => updating_nodeData = false);
 			}
 
-			if (switch_value !== (switch_value = constructors[/*argument*/ ctx[15].type])) {
+			if (switch_value !== (switch_value = constructors[/*argument*/ ctx[16].type])) {
 				if (switch_instance) {
 					internal.group_outros();
 					const old_component = switch_instance;
@@ -3529,31 +3591,32 @@ function create_else_block$1(ctx) {
 		block,
 		id: create_else_block$1.name,
 		type: "else",
-		source: "(77:16) {:else}",
+		source: "(78:16) {:else}",
 		ctx
 	});
 
 	return block;
 }
 
-// (75:16) {#if argument.type === "VarCallExpression"}
+// (76:16) {#if argument.type === "VarCallExpression"}
 function create_if_block$1(ctx) {
 	let varcallexpression;
 	let updating_nodeData;
 	let current;
 
 	function varcallexpression_nodeData_binding(value) {
-		/*varcallexpression_nodeData_binding*/ ctx[11](value, /*argument*/ ctx[15], /*each_value*/ ctx[16], /*i*/ ctx[17]);
+		/*varcallexpression_nodeData_binding*/ ctx[12](value, /*argument*/ ctx[16], /*each_value*/ ctx[17], /*i*/ ctx[18]);
 	}
 
 	let varcallexpression_props = {
 		argLevel: /*argLevel*/ ctx[2] + 1,
 		isArgument: true,
-		contextType: /*argument*/ ctx[15].returns
+		contextType: /*argument*/ ctx[16].returns,
+		nodePath: /*nodePath*/ ctx[3] + ".arguments." + /*i*/ ctx[18]
 	};
 
-	if (/*argument*/ ctx[15] !== void 0) {
-		varcallexpression_props.nodeData = /*argument*/ ctx[15];
+	if (/*argument*/ ctx[16] !== void 0) {
+		varcallexpression_props.nodeData = /*argument*/ ctx[16];
 	}
 
 	varcallexpression = new VarCallExpression({
@@ -3575,11 +3638,12 @@ function create_if_block$1(ctx) {
 			ctx = new_ctx;
 			const varcallexpression_changes = {};
 			if (dirty & /*argLevel*/ 4) varcallexpression_changes.argLevel = /*argLevel*/ ctx[2] + 1;
-			if (dirty & /*nodeData*/ 1) varcallexpression_changes.contextType = /*argument*/ ctx[15].returns;
+			if (dirty & /*nodeData*/ 1) varcallexpression_changes.contextType = /*argument*/ ctx[16].returns;
+			if (dirty & /*nodePath, nodeData*/ 9) varcallexpression_changes.nodePath = /*nodePath*/ ctx[3] + ".arguments." + /*i*/ ctx[18];
 
 			if (!updating_nodeData && dirty & /*nodeData*/ 1) {
 				updating_nodeData = true;
-				varcallexpression_changes.nodeData = /*argument*/ ctx[15];
+				varcallexpression_changes.nodeData = /*argument*/ ctx[16];
 				internal.add_flush_callback(() => updating_nodeData = false);
 			}
 
@@ -3603,14 +3667,14 @@ function create_if_block$1(ctx) {
 		block,
 		id: create_if_block$1.name,
 		type: "if",
-		source: "(75:16) {#if argument.type === \\\"VarCallExpression\\\"}",
+		source: "(76:16) {#if argument.type === \\\"VarCallExpression\\\"}",
 		ctx
 	});
 
 	return block;
 }
 
-// (69:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>
+// (70:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>
 function create_default_slot(ctx) {
 	let clearnodeprop;
 	let t0;
@@ -3620,7 +3684,7 @@ function create_default_slot(ctx) {
 	let current;
 
 	function func(...args) {
-		return /*func*/ ctx[10](/*i*/ ctx[17], /*argument*/ ctx[15], ...args);
+		return /*func*/ ctx[11](/*i*/ ctx[18], /*argument*/ ctx[16], ...args);
 	}
 
 	clearnodeprop = new ClearNodeProp({ props: { onClick: func }, $$inline: true });
@@ -3628,7 +3692,7 @@ function create_default_slot(ctx) {
 	const if_blocks = [];
 
 	function select_block_type(ctx, dirty) {
-		if (/*argument*/ ctx[15].type === "VarCallExpression") return 0;
+		if (/*argument*/ ctx[16].type === "VarCallExpression") return 0;
 		return 1;
 	}
 
@@ -3703,32 +3767,32 @@ function create_default_slot(ctx) {
 		block,
 		id: create_default_slot.name,
 		type: "slot",
-		source: "(69:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>",
+		source: "(70:12) <Argument {argLevel}                  on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })(event.detail)}                 onClear={() => onClear(i, argument)}                 returnType={argument.returns}>",
 		ctx
 	});
 
 	return block;
 }
 
-// (68:8) {#each nodeData.arguments as argument, i (i)}
+// (69:8) {#each nodeData.arguments as argument, i (i)}
 function create_each_block$1(key_1, ctx) {
 	let first;
 	let argument;
 	let current;
 
 	function func_1() {
-		return /*func_1*/ ctx[13](/*i*/ ctx[17], /*argument*/ ctx[15]);
+		return /*func_1*/ ctx[14](/*i*/ ctx[18], /*argument*/ ctx[16]);
 	}
 
 	function innerDrop_handler(...args) {
-		return /*innerDrop_handler*/ ctx[14](/*argument*/ ctx[15], /*i*/ ctx[17], ...args);
+		return /*innerDrop_handler*/ ctx[15](/*argument*/ ctx[16], /*i*/ ctx[18], ...args);
 	}
 
 	argument = new Argument({
 			props: {
 				argLevel: /*argLevel*/ ctx[2],
 				onClear: func_1,
-				returnType: /*argument*/ ctx[15].returns,
+				returnType: /*argument*/ ctx[16].returns,
 				$$slots: { default: [create_default_slot] },
 				$$scope: { ctx }
 			},
@@ -3755,9 +3819,9 @@ function create_each_block$1(key_1, ctx) {
 			const argument_changes = {};
 			if (dirty & /*argLevel*/ 4) argument_changes.argLevel = /*argLevel*/ ctx[2];
 			if (dirty & /*nodeData*/ 1) argument_changes.onClear = func_1;
-			if (dirty & /*nodeData*/ 1) argument_changes.returnType = /*argument*/ ctx[15].returns;
+			if (dirty & /*nodeData*/ 1) argument_changes.returnType = /*argument*/ ctx[16].returns;
 
-			if (dirty & /*$$scope, argLevel, nodeData*/ 2097157) {
+			if (dirty & /*$$scope, argLevel, nodeData, nodePath*/ 4194317) {
 				argument_changes.$$scope = { dirty, ctx };
 			}
 
@@ -3782,7 +3846,7 @@ function create_each_block$1(key_1, ctx) {
 		block,
 		id: create_each_block$1.name,
 		type: "each",
-		source: "(68:8) {#each nodeData.arguments as argument, i (i)}",
+		source: "(69:8) {#each nodeData.arguments as argument, i (i)}",
 		ctx
 	});
 
@@ -3813,7 +3877,7 @@ function create_fragment$6(ctx) {
 	let dispose;
 
 	function varidentifier_nodeData_binding(value) {
-		/*varidentifier_nodeData_binding*/ ctx[9](value);
+		/*varidentifier_nodeData_binding*/ ctx[10](value);
 	}
 
 	let varidentifier_props = { isArgument: false };
@@ -3829,7 +3893,7 @@ function create_fragment$6(ctx) {
 
 	internal.binding_callbacks.push(() => internal.bind(varidentifier, 'nodeData', varidentifier_nodeData_binding));
 	let if_block = (!/*contextType*/ ctx[1] || /*nodeData*/ ctx[0].variable.returns === /*contextType*/ ctx[1]) && create_if_block_1(ctx);
-	let each_value_1 = Object.keys(/*varTypeMethods*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
+	let each_value_1 = Object.keys(/*varTypeMethods*/ ctx[4]).filter(/*matchParentTypeFilter*/ ctx[6]);
 	internal.validate_each_argument(each_value_1);
 	let each_blocks_1 = [];
 
@@ -3839,7 +3903,7 @@ function create_fragment$6(ctx) {
 
 	let each_value = /*nodeData*/ ctx[0].arguments;
 	internal.validate_each_argument(each_value);
-	const get_key = ctx => /*i*/ ctx[17];
+	const get_key = ctx => /*i*/ ctx[18];
 	internal.validate_each_keys(ctx, each_value, get_each_context$1, get_key);
 
 	for (let i = 0; i < each_value.length; i += 1) {
@@ -3875,17 +3939,17 @@ function create_fragment$6(ctx) {
 				each_blocks[i].c();
 			}
 
-			internal.add_location(strong, file$6, 56, 7, 1704);
-			internal.add_location(p, file$6, 56, 4, 1701);
-			internal.add_location(select, file$6, 58, 8, 1839);
+			internal.add_location(strong, file$6, 57, 7, 1729);
+			internal.add_location(p, file$6, 57, 4, 1726);
+			internal.add_location(select, file$6, 59, 8, 1864);
 			internal.attr_dev(span, "class", "small-text");
-			internal.add_location(span, file$6, 64, 8, 2213);
+			internal.add_location(span, file$6, 65, 8, 2238);
 			internal.attr_dev(div0, "class", "method-container");
-			internal.add_location(div0, file$6, 57, 4, 1800);
+			internal.add_location(div0, file$6, 58, 4, 1825);
 			internal.attr_dev(div1, "class", "arguments-wrapper");
-			internal.add_location(div1, file$6, 66, 4, 2285);
+			internal.add_location(div1, file$6, 67, 4, 2310);
 			internal.attr_dev(div2, "class", "component-wrapper");
-			internal.add_location(div2, file$6, 55, 0, 1665);
+			internal.add_location(div2, file$6, 56, 0, 1690);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3919,7 +3983,7 @@ function create_fragment$6(ctx) {
 			current = true;
 
 			if (!mounted) {
-				dispose = internal.listen_dev(select, "change", /*onPropertyChange*/ ctx[4], false, false, false);
+				dispose = internal.listen_dev(select, "change", /*onPropertyChange*/ ctx[5], false, false, false);
 				mounted = true;
 			}
 		},
@@ -3945,8 +4009,8 @@ function create_fragment$6(ctx) {
 				if_block = null;
 			}
 
-			if (dirty & /*Object, varTypeMethods, matchParentTypeFilter, nodeData*/ 41) {
-				each_value_1 = Object.keys(/*varTypeMethods*/ ctx[3]).filter(/*matchParentTypeFilter*/ ctx[5]);
+			if (dirty & /*Object, varTypeMethods, matchParentTypeFilter, nodeData*/ 81) {
+				each_value_1 = Object.keys(/*varTypeMethods*/ ctx[4]).filter(/*matchParentTypeFilter*/ ctx[6]);
 				internal.validate_each_argument(each_value_1);
 				let i;
 
@@ -3971,7 +4035,7 @@ function create_fragment$6(ctx) {
 
 			if ((!current || dirty & /*nodeData*/ 1) && t3_value !== (t3_value = /*nodeData*/ ctx[0].returns + "")) internal.set_data_dev(t3, t3_value);
 
-			if (dirty & /*argLevel, onClear, nodeData, flowDropHandler, dropArgument, constructors, nodeTemplates*/ 197) {
+			if (dirty & /*argLevel, onClear, nodeData, flowDropHandler, dropArgument, nodePath, constructors, nodeTemplates*/ 397) {
 				each_value = /*nodeData*/ ctx[0].arguments;
 				internal.validate_each_argument(each_value);
 				internal.group_outros();
@@ -4032,6 +4096,7 @@ function instance$6($$self, $$props, $$invalidate) {
 	let { contextType } = $$props;
 	let { isArgument = false } = $$props;
 	let { argLevel = 1 } = $$props;
+	let { nodePath } = $$props;
 	let varTypeMethods = typeDefs[nodeData.variable.returns];
 
 	function onPropertyChange(event) {
@@ -4066,7 +4131,7 @@ function instance$6($$self, $$props, $$invalidate) {
 		$$invalidate(0, nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({}), nodeData);
 	}
 
-	const writable_props = ['nodeData', 'contextType', 'isArgument', 'argLevel'];
+	const writable_props = ['nodeData', 'contextType', 'isArgument', 'argLevel', 'nodePath'];
 
 	Object_1.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<VarCallExpression> was created with unknown prop '${key}'`);
@@ -4102,8 +4167,9 @@ function instance$6($$self, $$props, $$invalidate) {
 	$$self.$$set = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
 		if ('contextType' in $$props) $$invalidate(1, contextType = $$props.contextType);
-		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+		if ('isArgument' in $$props) $$invalidate(9, isArgument = $$props.isArgument);
 		if ('argLevel' in $$props) $$invalidate(2, argLevel = $$props.argLevel);
+		if ('nodePath' in $$props) $$invalidate(3, nodePath = $$props.nodePath);
 	};
 
 	$$self.$capture_state = () => ({
@@ -4118,6 +4184,7 @@ function instance$6($$self, $$props, $$invalidate) {
 		contextType,
 		isArgument,
 		argLevel,
+		nodePath,
 		varTypeMethods,
 		onPropertyChange,
 		matchParentTypeFilter,
@@ -4128,9 +4195,10 @@ function instance$6($$self, $$props, $$invalidate) {
 	$$self.$inject_state = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
 		if ('contextType' in $$props) $$invalidate(1, contextType = $$props.contextType);
-		if ('isArgument' in $$props) $$invalidate(8, isArgument = $$props.isArgument);
+		if ('isArgument' in $$props) $$invalidate(9, isArgument = $$props.isArgument);
 		if ('argLevel' in $$props) $$invalidate(2, argLevel = $$props.argLevel);
-		if ('varTypeMethods' in $$props) $$invalidate(3, varTypeMethods = $$props.varTypeMethods);
+		if ('nodePath' in $$props) $$invalidate(3, nodePath = $$props.nodePath);
+		if ('varTypeMethods' in $$props) $$invalidate(4, varTypeMethods = $$props.varTypeMethods);
 	};
 
 	if ($$props && "$$inject" in $$props) {
@@ -4141,6 +4209,7 @@ function instance$6($$self, $$props, $$invalidate) {
 		nodeData,
 		contextType,
 		argLevel,
+		nodePath,
 		varTypeMethods,
 		onPropertyChange,
 		matchParentTypeFilter,
@@ -4163,8 +4232,9 @@ class VarCallExpression extends internal.SvelteComponentDev {
 		internal.init(this, options, instance$6, create_fragment$6, internal.safe_not_equal, {
 			nodeData: 0,
 			contextType: 1,
-			isArgument: 8,
-			argLevel: 2
+			isArgument: 9,
+			argLevel: 2,
+			nodePath: 3
 		});
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
@@ -4183,6 +4253,10 @@ class VarCallExpression extends internal.SvelteComponentDev {
 
 		if (/*contextType*/ ctx[1] === undefined && !('contextType' in props)) {
 			console.warn("<VarCallExpression> was created without expected prop 'contextType'");
+		}
+
+		if (/*nodePath*/ ctx[3] === undefined && !('nodePath' in props)) {
+			console.warn("<VarCallExpression> was created without expected prop 'nodePath'");
 		}
 	}
 
@@ -4217,6 +4291,14 @@ class VarCallExpression extends internal.SvelteComponentDev {
 	set argLevel(value) {
 		throw new Error("<VarCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
+
+	get nodePath() {
+		throw new Error("<VarCallExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
+		throw new Error("<VarCallExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
 }
 
 /* src/components/flow_objects/Identifier.svelte generated by Svelte v3.46.4 */
@@ -4233,7 +4315,7 @@ function create_fragment$5(ctx) {
 			span = internal.element("span");
 			t = internal.text(t_value);
 			internal.attr_dev(span, "class", "self svelte-195lgj9");
-			internal.add_location(span, file$5, 5, 0, 50);
+			internal.add_location(span, file$5, 6, 0, 75);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4267,7 +4349,8 @@ function instance$5($$self, $$props, $$invalidate) {
 	let { $$slots: slots = {}, $$scope } = $$props;
 	internal.validate_slots('Identifier', slots, []);
 	let { nodeData } = $$props;
-	const writable_props = ['nodeData'];
+	let { nodePath } = $$props;
+	const writable_props = ['nodeData', 'nodePath'];
 
 	Object.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Identifier> was created with unknown prop '${key}'`);
@@ -4275,25 +4358,27 @@ function instance$5($$self, $$props, $$invalidate) {
 
 	$$self.$$set = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
+		if ('nodePath' in $$props) $$invalidate(1, nodePath = $$props.nodePath);
 	};
 
-	$$self.$capture_state = () => ({ nodeData });
+	$$self.$capture_state = () => ({ nodeData, nodePath });
 
 	$$self.$inject_state = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
+		if ('nodePath' in $$props) $$invalidate(1, nodePath = $$props.nodePath);
 	};
 
 	if ($$props && "$$inject" in $$props) {
 		$$self.$inject_state($$props.$$inject);
 	}
 
-	return [nodeData];
+	return [nodeData, nodePath];
 }
 
 class Identifier extends internal.SvelteComponentDev {
 	constructor(options) {
 		super(options);
-		internal.init(this, options, instance$5, create_fragment$5, internal.safe_not_equal, { nodeData: 0 });
+		internal.init(this, options, instance$5, create_fragment$5, internal.safe_not_equal, { nodeData: 0, nodePath: 1 });
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
 			component: this,
@@ -4308,6 +4393,10 @@ class Identifier extends internal.SvelteComponentDev {
 		if (/*nodeData*/ ctx[0] === undefined && !('nodeData' in props)) {
 			console.warn("<Identifier> was created without expected prop 'nodeData'");
 		}
+
+		if (/*nodePath*/ ctx[1] === undefined && !('nodePath' in props)) {
+			console.warn("<Identifier> was created without expected prop 'nodePath'");
+		}
 	}
 
 	get nodeData() {
@@ -4315,6 +4404,14 @@ class Identifier extends internal.SvelteComponentDev {
 	}
 
 	set nodeData(value) {
+		throw new Error("<Identifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	get nodePath() {
+		throw new Error("<Identifier>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
 		throw new Error("<Identifier>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
 }
@@ -4334,7 +4431,7 @@ function create_fragment$4(ctx) {
 			input = internal.element("input");
 			internal.attr_dev(input, "type", "text");
 			input.value = input_value_value = /*nodeData*/ ctx[0].value;
-			internal.add_location(input, file$4, 13, 0, 217);
+			internal.add_location(input, file$4, 14, 0, 242);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4385,12 +4482,13 @@ function instance$4($$self, $$props, $$invalidate) {
 	internal.validate_slots('StringLiteral', slots, []);
 	let { nodeData } = $$props;
 	let { isArgument = false } = $$props;
+	let { nodePath } = $$props;
 
 	function updateValue(event) {
 		$$invalidate(0, nodeData = { ...nodeData, value: event.target.value });
 	}
 
-	const writable_props = ['nodeData', 'isArgument'];
+	const writable_props = ['nodeData', 'isArgument', 'nodePath'];
 
 	Object.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<StringLiteral> was created with unknown prop '${key}'`);
@@ -4399,26 +4497,33 @@ function instance$4($$self, $$props, $$invalidate) {
 	$$self.$$set = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
 		if ('isArgument' in $$props) $$invalidate(2, isArgument = $$props.isArgument);
+		if ('nodePath' in $$props) $$invalidate(3, nodePath = $$props.nodePath);
 	};
 
-	$$self.$capture_state = () => ({ nodeData, isArgument, updateValue });
+	$$self.$capture_state = () => ({
+		nodeData,
+		isArgument,
+		nodePath,
+		updateValue
+	});
 
 	$$self.$inject_state = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
 		if ('isArgument' in $$props) $$invalidate(2, isArgument = $$props.isArgument);
+		if ('nodePath' in $$props) $$invalidate(3, nodePath = $$props.nodePath);
 	};
 
 	if ($$props && "$$inject" in $$props) {
 		$$self.$inject_state($$props.$$inject);
 	}
 
-	return [nodeData, updateValue, isArgument];
+	return [nodeData, updateValue, isArgument, nodePath];
 }
 
 class StringLiteral extends internal.SvelteComponentDev {
 	constructor(options) {
 		super(options);
-		internal.init(this, options, instance$4, create_fragment$4, internal.safe_not_equal, { nodeData: 0, isArgument: 2 });
+		internal.init(this, options, instance$4, create_fragment$4, internal.safe_not_equal, { nodeData: 0, isArgument: 2, nodePath: 3 });
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
 			component: this,
@@ -4432,6 +4537,10 @@ class StringLiteral extends internal.SvelteComponentDev {
 
 		if (/*nodeData*/ ctx[0] === undefined && !('nodeData' in props)) {
 			console.warn("<StringLiteral> was created without expected prop 'nodeData'");
+		}
+
+		if (/*nodePath*/ ctx[3] === undefined && !('nodePath' in props)) {
+			console.warn("<StringLiteral> was created without expected prop 'nodePath'");
 		}
 	}
 
@@ -4448,6 +4557,14 @@ class StringLiteral extends internal.SvelteComponentDev {
 	}
 
 	set isArgument(value) {
+		throw new Error("<StringLiteral>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	get nodePath() {
+		throw new Error("<StringLiteral>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
 		throw new Error("<StringLiteral>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
 }
@@ -4467,7 +4584,7 @@ function create_fragment$3(ctx) {
 			input = internal.element("input");
 			internal.attr_dev(input, "type", "number");
 			input.value = input_value_value = /*nodeData*/ ctx[0].value;
-			internal.add_location(input, file$3, 14, 0, 233);
+			internal.add_location(input, file$3, 15, 0, 258);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4509,6 +4626,7 @@ function instance$3($$self, $$props, $$invalidate) {
 	let { $$slots: slots = {}, $$scope } = $$props;
 	internal.validate_slots('IntegerLiteral', slots, []);
 	let { nodeData } = $$props;
+	let { nodePath } = $$props;
 
 	/**
  * @param {Event} event
@@ -4520,7 +4638,7 @@ function instance$3($$self, $$props, $$invalidate) {
 		});
 	}
 
-	const writable_props = ['nodeData'];
+	const writable_props = ['nodeData', 'nodePath'];
 
 	Object.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<IntegerLiteral> was created with unknown prop '${key}'`);
@@ -4528,25 +4646,27 @@ function instance$3($$self, $$props, $$invalidate) {
 
 	$$self.$$set = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
+		if ('nodePath' in $$props) $$invalidate(2, nodePath = $$props.nodePath);
 	};
 
-	$$self.$capture_state = () => ({ nodeData, updateValue });
+	$$self.$capture_state = () => ({ nodeData, nodePath, updateValue });
 
 	$$self.$inject_state = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
+		if ('nodePath' in $$props) $$invalidate(2, nodePath = $$props.nodePath);
 	};
 
 	if ($$props && "$$inject" in $$props) {
 		$$self.$inject_state($$props.$$inject);
 	}
 
-	return [nodeData, updateValue];
+	return [nodeData, updateValue, nodePath];
 }
 
 class IntegerLiteral extends internal.SvelteComponentDev {
 	constructor(options) {
 		super(options);
-		internal.init(this, options, instance$3, create_fragment$3, internal.safe_not_equal, { nodeData: 0 });
+		internal.init(this, options, instance$3, create_fragment$3, internal.safe_not_equal, { nodeData: 0, nodePath: 2 });
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
 			component: this,
@@ -4561,6 +4681,10 @@ class IntegerLiteral extends internal.SvelteComponentDev {
 		if (/*nodeData*/ ctx[0] === undefined && !('nodeData' in props)) {
 			console.warn("<IntegerLiteral> was created without expected prop 'nodeData'");
 		}
+
+		if (/*nodePath*/ ctx[2] === undefined && !('nodePath' in props)) {
+			console.warn("<IntegerLiteral> was created without expected prop 'nodePath'");
+		}
 	}
 
 	get nodeData() {
@@ -4570,12 +4694,20 @@ class IntegerLiteral extends internal.SvelteComponentDev {
 	set nodeData(value) {
 		throw new Error("<IntegerLiteral>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
+
+	get nodePath() {
+		throw new Error("<IntegerLiteral>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
+		throw new Error("<IntegerLiteral>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
 }
 
 /* src/components/flow_objects/AssignmentExpression.svelte generated by Svelte v3.46.4 */
 const file$2 = "src/components/flow_objects/AssignmentExpression.svelte";
 
-// (31:8) {:else}
+// (32:8) {:else}
 function create_else_block(ctx) {
 	let clearnodeprop;
 	let t;
@@ -4585,19 +4717,20 @@ function create_else_block(ctx) {
 	let current;
 
 	clearnodeprop = new ClearNodeProp({
-			props: { onClick: /*func*/ ctx[3] },
+			props: { onClick: /*func*/ ctx[4] },
 			$$inline: true
 		});
 
 	function switch_instance_nodeData_binding(value) {
-		/*switch_instance_nodeData_binding*/ ctx[4](value);
+		/*switch_instance_nodeData_binding*/ ctx[5](value);
 	}
 
 	var switch_value = constructors[/*nodeData*/ ctx[0].right.type];
 
 	function switch_props(ctx) {
 		let switch_instance_props = {
-			contextType: /*nodeData*/ ctx[0].left.returns
+			contextType: /*nodeData*/ ctx[0].left.returns,
+			nodePath: /*nodePath*/ ctx[1] + ".right"
 		};
 
 		if (/*nodeData*/ ctx[0].right !== void 0) {
@@ -4635,10 +4768,11 @@ function create_else_block(ctx) {
 		},
 		p: function update(ctx, dirty) {
 			const clearnodeprop_changes = {};
-			if (dirty & /*nodeData*/ 1) clearnodeprop_changes.onClick = /*func*/ ctx[3];
+			if (dirty & /*nodeData*/ 1) clearnodeprop_changes.onClick = /*func*/ ctx[4];
 			clearnodeprop.$set(clearnodeprop_changes);
 			const switch_instance_changes = {};
 			if (dirty & /*nodeData*/ 1) switch_instance_changes.contextType = /*nodeData*/ ctx[0].left.returns;
+			if (dirty & /*nodePath*/ 2) switch_instance_changes.nodePath = /*nodePath*/ ctx[1] + ".right";
 
 			if (!updating_nodeData && dirty & /*nodeData*/ 1) {
 				updating_nodeData = true;
@@ -4694,14 +4828,14 @@ function create_else_block(ctx) {
 		block,
 		id: create_else_block.name,
 		type: "else",
-		source: "(31:8) {:else}",
+		source: "(32:8) {:else}",
 		ctx
 	});
 
 	return block;
 }
 
-// (29:8) {#if nodeData.right === null}
+// (30:8) {#if nodeData.right === null}
 function create_if_block(ctx) {
 	let t;
 
@@ -4724,7 +4858,7 @@ function create_if_block(ctx) {
 		block,
 		id: create_if_block.name,
 		type: "if",
-		source: "(29:8) {#if nodeData.right === null}",
+		source: "(30:8) {#if nodeData.right === null}",
 		ctx
 	});
 
@@ -4757,10 +4891,13 @@ function create_fragment$2(ctx) {
 	let dispose;
 
 	function varidentifier_nodeData_binding(value) {
-		/*varidentifier_nodeData_binding*/ ctx[2](value);
+		/*varidentifier_nodeData_binding*/ ctx[3](value);
 	}
 
-	let varidentifier_props = { isArgument: false };
+	let varidentifier_props = {
+		isArgument: false,
+		nodePath: /*nodePath*/ ctx[1] + ".left"
+	};
 
 	if (/*nodeData*/ ctx[0].left !== void 0) {
 		varidentifier_props.nodeData = /*nodeData*/ ctx[0].left;
@@ -4804,18 +4941,18 @@ function create_fragment$2(ctx) {
 			t8 = internal.space();
 			div1 = internal.element("div");
 			if_block.c();
-			internal.add_location(p0, file$2, 17, 8, 469);
-			internal.add_location(strong, file$2, 19, 12, 529);
-			internal.add_location(p1, file$2, 18, 8, 513);
-			internal.add_location(p2, file$2, 21, 8, 634);
+			internal.add_location(p0, file$2, 18, 8, 494);
+			internal.add_location(strong, file$2, 20, 12, 554);
+			internal.add_location(p1, file$2, 19, 8, 538);
+			internal.add_location(p2, file$2, 22, 8, 689);
 			internal.attr_dev(div0, "class", "set-block svelte-1m97shb");
-			internal.add_location(div0, file$2, 16, 4, 437);
+			internal.add_location(div0, file$2, 17, 4, 462);
 			internal.attr_dev(p3, "class", "equality-symbol svelte-1m97shb");
-			internal.add_location(p3, file$2, 23, 4, 659);
+			internal.add_location(p3, file$2, 24, 4, 714);
 			internal.attr_dev(div1, "class", "assign-right-block flex-1 svelte-1m97shb");
-			internal.add_location(div1, file$2, 24, 4, 698);
+			internal.add_location(div1, file$2, 25, 4, 753);
 			internal.attr_dev(div2, "class", "flex");
-			internal.add_location(div2, file$2, 15, 0, 414);
+			internal.add_location(div2, file$2, 16, 0, 439);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4850,11 +4987,11 @@ function create_fragment$2(ctx) {
 							if (internal.is_function(flowDropHandler({
 								contextName: 'assignment',
 								contextType: /*nodeData*/ ctx[0].left.returns,
-								stateChangeCallback: /*stateChangeOnDrop*/ ctx[1]
+								stateChangeCallback: /*stateChangeOnDrop*/ ctx[2]
 							}))) flowDropHandler({
 								contextName: 'assignment',
 								contextType: /*nodeData*/ ctx[0].left.returns,
-								stateChangeCallback: /*stateChangeOnDrop*/ ctx[1]
+								stateChangeCallback: /*stateChangeOnDrop*/ ctx[2]
 							}).apply(this, arguments);
 						}),
 						false,
@@ -4870,6 +5007,7 @@ function create_fragment$2(ctx) {
 			ctx = new_ctx;
 			if ((!current || dirty & /*nodeData*/ 1) && t1_value !== (t1_value = /*nodeData*/ ctx[0].left.returns + "")) internal.set_data_dev(t1, t1_value);
 			const varidentifier_changes = {};
+			if (dirty & /*nodePath*/ 2) varidentifier_changes.nodePath = /*nodePath*/ ctx[1] + ".left";
 
 			if (!updating_nodeData && dirty & /*nodeData*/ 1) {
 				updating_nodeData = true;
@@ -4943,13 +5081,14 @@ function instance$2($$self, $$props, $$invalidate) {
 	let { $$slots: slots = {}, $$scope } = $$props;
 	internal.validate_slots('AssignmentExpression', slots, []);
 	let { nodeData } = $$props;
+	let { nodePath } = $$props;
 
 	const stateChangeOnDrop = node => {
 		if (node === null) return;
 		$$invalidate(0, nodeData.right = node, nodeData);
 	};
 
-	const writable_props = ['nodeData'];
+	const writable_props = ['nodeData', 'nodePath'];
 
 	Object.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<AssignmentExpression> was created with unknown prop '${key}'`);
@@ -4973,6 +5112,7 @@ function instance$2($$self, $$props, $$invalidate) {
 
 	$$self.$$set = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
+		if ('nodePath' in $$props) $$invalidate(1, nodePath = $$props.nodePath);
 	};
 
 	$$self.$capture_state = () => ({
@@ -4981,11 +5121,13 @@ function instance$2($$self, $$props, $$invalidate) {
 		flowDropHandler,
 		ClearNodeProp,
 		nodeData,
+		nodePath,
 		stateChangeOnDrop
 	});
 
 	$$self.$inject_state = $$props => {
 		if ('nodeData' in $$props) $$invalidate(0, nodeData = $$props.nodeData);
+		if ('nodePath' in $$props) $$invalidate(1, nodePath = $$props.nodePath);
 	};
 
 	if ($$props && "$$inject" in $$props) {
@@ -4994,6 +5136,7 @@ function instance$2($$self, $$props, $$invalidate) {
 
 	return [
 		nodeData,
+		nodePath,
 		stateChangeOnDrop,
 		varidentifier_nodeData_binding,
 		func,
@@ -5004,7 +5147,7 @@ function instance$2($$self, $$props, $$invalidate) {
 class AssignmentExpression extends internal.SvelteComponentDev {
 	constructor(options) {
 		super(options);
-		internal.init(this, options, instance$2, create_fragment$2, internal.safe_not_equal, { nodeData: 0 });
+		internal.init(this, options, instance$2, create_fragment$2, internal.safe_not_equal, { nodeData: 0, nodePath: 1 });
 
 		internal.dispatch_dev("SvelteRegisterComponent", {
 			component: this,
@@ -5019,6 +5162,10 @@ class AssignmentExpression extends internal.SvelteComponentDev {
 		if (/*nodeData*/ ctx[0] === undefined && !('nodeData' in props)) {
 			console.warn("<AssignmentExpression> was created without expected prop 'nodeData'");
 		}
+
+		if (/*nodePath*/ ctx[1] === undefined && !('nodePath' in props)) {
+			console.warn("<AssignmentExpression> was created without expected prop 'nodePath'");
+		}
 	}
 
 	get nodeData() {
@@ -5026,6 +5173,14 @@ class AssignmentExpression extends internal.SvelteComponentDev {
 	}
 
 	set nodeData(value) {
+		throw new Error("<AssignmentExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	get nodePath() {
+		throw new Error("<AssignmentExpression>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set nodePath(value) {
 		throw new Error("<AssignmentExpression>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
 }
@@ -5092,7 +5247,10 @@ function create_each_block(key_1, ctx) {
 	var switch_value = constructors[/*flowObject*/ ctx[19].type];
 
 	function switch_props(ctx) {
-		let switch_instance_props = { accessor: /*i*/ ctx[21] };
+		let switch_instance_props = {
+			accessor: /*i*/ ctx[21],
+			nodePath: `ast.main.body.${/*i*/ ctx[21]}`
+		};
 
 		if (/*flowObject*/ ctx[19] !== void 0) {
 			switch_instance_props.nodeData = /*flowObject*/ ctx[19];
@@ -5134,6 +5292,7 @@ function create_each_block(key_1, ctx) {
 			ctx = new_ctx;
 			const switch_instance_changes = {};
 			if (dirty & /*$ast*/ 4) switch_instance_changes.accessor = /*i*/ ctx[21];
+			if (dirty & /*$ast*/ 4) switch_instance_changes.nodePath = `ast.main.body.${/*i*/ ctx[21]}`;
 
 			if (!updating_nodeData && dirty & /*$ast*/ 4) {
 				updating_nodeData = true;
@@ -5285,7 +5444,7 @@ function create_fragment$1(ctx) {
 			internal.add_location(div0, file$1, 76, 8, 2180);
 			internal.attr_dev(div1, "class", "bumper-zone svelte-1ezr4ng");
 			internal.toggle_class(div1, "hoverDrag", /*hoverAppend*/ ctx[1]);
-			internal.add_location(div1, file$1, 95, 8, 3206);
+			internal.add_location(div1, file$1, 96, 8, 3258);
 			internal.attr_dev(div2, "class", "flow-wrapper svelte-1ezr4ng");
 			internal.add_location(div2, file$1, 75, 4, 2145);
 			internal.attr_dev(div3, "class", "app-window-wrapper svelte-1ezr4ng");
@@ -5573,11 +5732,11 @@ class FlowController extends internal.SvelteComponentDev {
 	}
 }
 
-suite('testing', function() {
-    test('it works?', function() {
+suite('FlowController', function() {
+    test('Render mock data json', function() {
         const { getAllByText } = svelte$1.render(FlowController);
 
-        chai.assert.isAbove(getAllByText("Drag an action here").length, 2, "Not above two");
+        chai.assert.strictEqual(getAllByText("Drag an action here").length, 4, "Flow controller isn't rendering empty expression statements");
     });
 });
 

@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { flowDropHandler } from '../src/drag_and_drop_handlers.js';
-import { variableDrag, stringUtilDataDrag, doActionDataDrag, moveExpressionDrag } from '../src/drag_types.js';
+import { variableDrag, stringUtilDataDrag, doActionDataDrag, moveExpressionDrag } from '../src/drag_start_data_creators.js';
 import typeDefs from '../src/type_definitions.js';
 import nodeTemplates from '../src/node_templates.js';
 import { v4 as uuidv4 } from 'uuid';
