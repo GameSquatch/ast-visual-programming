@@ -10,6 +10,7 @@
     export let contextType;
     export let isArgument = false;
     export let argLevel = 1;
+    export let nodePath;
 
     const utilities = typeDefs[nodeData.utilityName];
 
@@ -63,9 +64,15 @@
 
                 <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} />
+                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} nodePath={nodePath + ".arguments." + i} />
                 {:else}
-                    <svelte:component this={constructors[argument.type]} bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} />
+                    <svelte:component
+                        this={constructors[argument.type]}
+                        bind:nodeData={argument}
+                        argLevel={argLevel + 1}
+                        isArgument={true}
+                        contextType={argument.returns}
+                        nodePath={nodePath + ".arguments." + i} />
                 {/if}
             </Argument>
         {/each}

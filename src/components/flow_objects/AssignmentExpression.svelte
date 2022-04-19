@@ -5,6 +5,7 @@
     import ClearNodeProp from '../ClearNodeProp.svelte';
 
     export let nodeData;
+    export let nodePath;
 
     const stateChangeOnDrop = (node) => {
         if (node === null) return;
@@ -17,7 +18,7 @@
     <div class="set-block">
         <p>Set {nodeData.left.returns},</p>
         <p>
-            <strong><VarIdentifier bind:nodeData={nodeData.left} isArgument={false} /></strong>
+            <strong><VarIdentifier bind:nodeData={nodeData.left} isArgument={false} nodePath={nodePath + ".left"} /></strong>
         </p>
         <p>to</p>
     </div>
@@ -30,7 +31,7 @@
             Drag an expression here
         {:else}
             <ClearNodeProp onClick={(_) => nodeData.right = null} />
-            <svelte:component this={constructors[nodeData.right.type]} bind:nodeData={nodeData.right} contextType={nodeData.left.returns} />
+            <svelte:component this={constructors[nodeData.right.type]} bind:nodeData={nodeData.right} contextType={nodeData.left.returns} nodePath={nodePath + ".right"} />
         {/if}
     </div>
 </div>

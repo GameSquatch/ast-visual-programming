@@ -89,7 +89,8 @@ class="app-window-wrapper">
                     this={constructors[flowObject.type]}
                     bind:nodeData={flowObject}
                     accessor={i}
-                    on:moveExpression={(event) => handleMoveExpression(event.detail)} />
+                    on:moveExpression={(event) => handleMoveExpression(event.detail)}
+                    nodePath={`ast.main.body.${i}`} />
             </div>
         {/each}
 

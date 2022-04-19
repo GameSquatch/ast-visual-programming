@@ -6,6 +6,7 @@
     export let nodeData;
     export let contextType = null;
     export let isArgument = false;
+    export let nodePath;
 
     let usesTypeMethod = false;
 

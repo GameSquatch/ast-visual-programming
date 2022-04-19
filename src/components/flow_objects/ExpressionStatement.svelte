@@ -8,6 +8,7 @@
 
     export let accessor;
     export let nodeData;
+    export let nodePath;
 
     let isOverInsertSpot = false;
     let beingDragged = false;
@@ -71,14 +72,13 @@
 </script>
 
 <div class:beingDragged>
-    <div
-        tabindex=0
+    <div tabindex=0
         on:dragover|preventDefault={dragOverHandler}
         on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
         class="expression-container"
         on:dragstart|stopPropagation={handleDragStart}
-        on:dragend|stopPropagation={checkDropCancel}
-    >
+        on:dragend|stopPropagation={checkDropCancel} >
+
         <DragHandle  />
         <div class="flex w100">
             {#if nodeData?.expression ?? false}
@@ -91,6 +91,7 @@
             <svelte:component
                 this={constructors[nodeData.expression.type]}
                 bind:nodeData={nodeData.expression}
+                nodePath={nodePath + ".expression"}
             />
         {:else}
             <p class="dull-text">Drag an action here</p>

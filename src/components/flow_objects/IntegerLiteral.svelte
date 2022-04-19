@@ -1,5 +1,6 @@
 <script>
     export let nodeData;
+    export let nodePath;
 
     /**
      * @param {Event} event
