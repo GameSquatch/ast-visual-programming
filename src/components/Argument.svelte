@@ -20,7 +20,7 @@
     <p class="gt-symbol" on:click={onClear}><span class="small-text">{returnType}</span> &gt; </p>
     <div on:drop|stopPropagation={(event) => dispatch('innerDrop', event)}
         on:dragover={() => {}}
-        class="flex-1  argument-container {argLevelClass}">
+        class="flex-1 argument-container {argLevelClass}">
 
         <slot></slot>
     </div>
@@ -30,6 +30,7 @@
 <style>
     .wrapper {
         margin-bottom: 8px;
+        white-space: nowrap;
     }
 
     .gt-symbol {
