@@ -93,7 +93,7 @@
                         <input value={varObj.name} type="text" on:change={e => changeVarName(varId, e.target.value)} class="var-name" />
                     </div>
                     <div class="flex-1"><select on:change={(event) => varTypeChange(event, varId)} value="{varObj.returns}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
-                    <div class="flex-1"><input type="text" value="{varObj.value}"></div>
+                    <div class="flex-1"><input type={varObj.returns === "Integer" ? "number" : "text"} value="{varObj.value}"></div>
                 </div>
             {/each}
             <div class="add-var-btn">
