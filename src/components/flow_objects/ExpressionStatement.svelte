@@ -32,6 +32,8 @@
     }
 
     function dropModify(node) {
+        if (node === null) return;
+        
         if (node.currentIndex !== undefined) {
             dispatch('delete', node.currentIndex);
             node = node.moveData;
