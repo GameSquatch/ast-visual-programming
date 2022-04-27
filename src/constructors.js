@@ -5,7 +5,7 @@ import Identifier from './components/flow_objects/Identifier.svelte';
 import StringLiteral from './components/flow_objects/StringLiteral.svelte';
 import IntegerLiteral from './components/flow_objects/IntegerLiteral.svelte';
 import AssignmentExpression from './components/flow_objects/AssignmentExpression.svelte';
-import VarIdentifier from './components/flow_objects/VarIdentifier.svelte';
+import FunctionRefIdentifier from './components/flow_objects/FunctionRefIdentifier.svelte';
 
 // Constructors to use in <svelte:component> tags, keyed by the 'type' from the AST
 const constructors = {
@@ -16,7 +16,7 @@ const constructors = {
     "StringLiteral": StringLiteral,
     "IntegerLiteral": IntegerLiteral,
     "AssignmentExpression": AssignmentExpression,
-    "VarIdentifier": VarIdentifier
+    "FunctionRefIdentifier": FunctionRefIdentifier
 };
 
 export default constructors;

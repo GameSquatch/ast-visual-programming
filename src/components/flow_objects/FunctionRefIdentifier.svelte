@@ -33,7 +33,7 @@
 
 
 {#if nodeData.refId}
-    <span class="self">{$ast.main.info.variables[nodeData.refId].name}</span>
+    <span class="self">{$ast.main.info[nodeData.fnRefType][nodeData.refId].name}</span>
 {/if}
 {#if availableMethods.length > 0}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>

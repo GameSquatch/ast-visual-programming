@@ -1,10 +1,20 @@
 <script>
-    import { slide } from 'svelte/transition';
-    import { quintOut } from 'svelte/easing';
-    import { variableDrag } from '../drag_start_data_creators.js';
-    import { v4 as uuidv4 } from 'uuid';
+    import { slide } from "svelte/transition";
+    import { quintOut } from "svelte/easing";
+    import { functionRefObjectDrag } from "../drag_start_data_creators.js";
+    import { v4 as uuidv4 } from "uuid";
 
     export let info;
+
+    // TYPES
+    /**
+     * @typedef {Object} VariableData
+     * @property {string} name
+     * @property {string} type
+     * @property {string|number} value
+     * @property {string} [fnRefType]
+     */
+    // END TYPES
 
     let isDisplaying = false;
     let reShowTimer = null;
@@ -14,11 +24,12 @@
     }
 
     /**
-     * @param {DragEvent} event
+     * @param {VariableData} variableDragged
+     * @returns {(event: DragEvent) => undefined}
      */
     const dragStart = (variableDragged) => (event) => {
-        const dragData = variableDrag(variableDragged);
-        event.dataTransfer.setData('text/json', JSON.stringify(dragData));
+        const dragData = functionRefObjectDrag(variableDragged);
+        event.dataTransfer.setData("text/json", JSON.stringify(dragData));
         isDisplaying = false;
         // Will auto-drop the menu after you've dropped a variable or parameter
         // document.addEventListener('drop', functionInfoDrop, true);
@@ -26,7 +37,7 @@
 
     function functionInfoDrop(event) {
         isDisplaying = true;
-        document.removeEventListener('drop', functionInfoDrop, true);
+        document.removeEventListener("drop", functionInfoDrop, true);
         reShowTimer = setTimeout(tabToggle, 1200);
     }
 
@@ -34,21 +45,22 @@
         info.variables = {
             ...info.variables,
             [uuidv4()]: {
-                "name": "newVar",
-                "returns": "String",
-                "value": ""
-            }
+                name: "newVar",
+                returns: "String",
+                value: "",
+            },
         };
     }
 
     function addParameter(_) {
-        info.parameters = [
+        info.parameters = {
             ...info.parameters,
-            {
-                "name": "newParam",
-                "returns": "String"
-            }
-        ];
+            [uuidv4()]: {
+                name: "newParam",
+                returns: "String",
+                defaultValue: "",
+            },
+        };
     }
 
     function stopTimer(_) {
@@ -58,69 +70,150 @@
         }
     }
 
-    function changeVarName(varId, newName) {
-        info.variables[varId] = {
-            ...info.variables[varId],
-            name: newName
+    function changeRefName(refId, newName, infoKey) {
+        info[infoKey][refId] = {
+            ...info[infoKey][refId],
+            name: newName,
         };
     }
-
 
     function varTypeChange(event, id) {
         info.variables[id] = {
             ...info.variables[id],
-            "returns": event.target.value
-        }
+            returns: event.target.value,
+        };
     }
 </script>
 
 <div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
     {#if isDisplaying}
-    <div transition:slide="{{ duration: 300, easing: quintOut }}" class="flex tab-content">
-        <div class="flex-1 var-section">
-            <h4>Variables</h4>
-            <div class="flex w100 space-between var-container">
-                <div class="flex-1">Name</div>
-                <div class="flex-1">Type</div>
-                <div class="flex-1">Default Value</div>
-            </div>
-
-            {#each Object.keys(info.variables) as varId (varId)}
-                {@const varObj = info.variables[varId]}
-                <div on:dragstart={dragStart({ ...varObj, refId: varId })} class="flex w100 space-between var-container">
-                    <div class="flex-1">
-                        <div class="drag-var" draggable=true></div>
-                        <input value={varObj.name} type="text" on:change={e => changeVarName(varId, e.target.value)} class="var-name" />
-                    </div>
-                    <div class="flex-1"><select on:change={(event) => varTypeChange(event, varId)} value="{varObj.returns}"><option value="String">String</option><option value="Integer">Integer</option></select></div>
-                    <div class="flex-1"><input type={varObj.returns === "Integer" ? "number" : "text"} value="{varObj.value}"></div>
+        <div
+            transition:slide={{ duration: 300, easing: quintOut }}
+            class="tab-content"
+        >
+            <!-- ***** VARIABLE SECTION ***** -->
+            <div class="section">
+                <h4>Variables</h4>
+                <div class="flex w100 space-between var-container">
+                    <div class="flex-1">Name</div>
+                    <div class="flex-1">Type</div>
+                    <div class="flex-1">Default Value</div>
                 </div>
-            {/each}
-            <div class="add-var-btn">
-                <button on:click={addVariable}>Add Variable</button>
+
+                {#each Object.keys(info.variables) as varId (varId)}
+                    {@const varObj = info.variables[varId]}
+                    <div
+                        on:dragstart={dragStart({
+                            ...varObj,
+                            refId: varId,
+                            fnRefType: "variables",
+                        })}
+                        class="flex w100 space-between var-container"
+                    >
+                        <div class="flex-1">
+                            <div class="drag-var" draggable="true" />
+                            <input
+                                value={varObj.name}
+                                type="text"
+                                on:change={(e) =>
+                                    changeRefName(
+                                        varId,
+                                        e.target.value,
+                                        "variables"
+                                    )}
+                                class="var-name"
+                            />
+                        </div>
+                        <div class="flex-1">
+                            <select
+                                on:change={(event) =>
+                                    varTypeChange(event, varId)}
+                                value={varObj.returns}
+                                ><option value="String">String</option><option
+                                    value="Integer">Integer</option
+                                ></select
+                            >
+                        </div>
+                        <div class="flex-1">
+                            <input
+                                type={varObj.returns === "Integer"
+                                    ? "number"
+                                    : "text"}
+                                value={varObj.value}
+                            />
+                        </div>
+                    </div>
+                {/each}
+                <div class="add-var-btn">
+                    <button on:click={addVariable}>Add Variable</button>
+                </div>
             </div>
+            <!-- ***** ***** -->
+
+            <div class="separator-line-horiz" />
+
+            <!-- ***** PARAMETER SECTION ***** -->
+            <div class="section">
+                <h4>Parameters</h4>
+                {#each Object.keys(info.parameters) as paramId (paramId)}
+                    {@const paramObj = info.parameters[paramId]}
+                    <div
+                        draggable="true"
+                        on:dragstart={dragStart({
+                            ...paramObj,
+                            refId: paramId,
+                            fnRefType: "parameters",
+                        })}
+                        class="flex w100 space-between var-container"
+                    >
+                        <div class="flex-1">
+                            <div class="drag-var" draggable="true" />
+                            <input
+                                value={paramObj.name}
+                                type="text"
+                                on:change={(e) =>
+                                    changeRefName(
+                                        paramId,
+                                        e.target.value,
+                                        "parameters"
+                                    )}
+                                class="var-name"
+                            />
+                        </div>
+                        <div class="flex-1">
+                            <select
+                                on:change={(event) =>
+                                    varTypeChange(event, paramId)}
+                                value={paramObj.returns}
+                                ><option value="String">String</option><option
+                                    value="Integer">Integer</option
+                                ></select
+                            >
+                        </div>
+                        <div class="flex-1">
+                            <input
+                                type={paramObj.returns === "Integer"
+                                    ? "number"
+                                    : "text"}
+                                value={paramObj.value}
+                            />
+                        </div>
+                    </div>
+                {/each}
+                <div class="add-var-btn">
+                    <button on:click={addParameter}>Add Parameter</button>
+                </div>
+            </div>
+            <!-- ***** ***** -->
         </div>
-        <div class="flex-1 param-section">
-            <h4>Parameters</h4>
-            {#each info.parameters as parameter, i}
-            <div draggable="true" on:dragstart={dragStart} class="flex w100 space-between var-container">
-                <span>{parameter.name}: </span>
-                <select value="{parameter.returns}"><option value="String">String</option><option value="Integer">Integer</option></select>
-            </div>
-            {/each}
-            <div class="add-var-btn">
-                <button on:click={addParameter}>Add Variable</button>
-            </div>
-        </div>
-    </div>
     {/if}
 
-
     <div class="flex justify-center">
-        <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>Function Info</div>
+        <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>
+            Function Info
+        </div>
     </div>
 </div>
-
 
 <style>
     .tab-floater {
@@ -149,14 +242,14 @@
     }
 
     .tab-content {
-        height: 200px;
+        height: 275px;
         overflow: auto;
         background: var(--function-info-bg);
         color: white;
         box-shadow: 0 2px 8px 4px rgba(0, 0, 0, 0.45);
         z-index: 3;
     }
-    .tab-content > div {
+    .tab-content > .section {
         padding: 12px;
     }
 
@@ -168,7 +261,13 @@
         display: inline-block;
     }
 
-    input {
+    /* input {
         width: 80px;
+    } */
+
+    .separator-line-horiz {
+        height: 2px;
+        background-color: #aaa;
+        padding: 0 10px;
     }
 </style>

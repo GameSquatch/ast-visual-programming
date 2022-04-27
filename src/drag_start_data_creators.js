@@ -7,7 +7,7 @@ const stringUtilDataDrag = () => ({ dragType: "StringUtil" });
 const moveExpressionDrag = (expressionNode, currentIndex) => ({ dragType: "moveExpression", node: expressionNode, currentIndex });
 
 /** @type {VariableDragStartDataCreator} */
-const variableDrag = (variableData) => ({ dragType: "variable", data: variableData });
+const functionRefObjectDrag = (variableData) => ({ dragType: "functionRef", data: variableData });
 
 
-export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, variableDrag };
+export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, functionRefObjectDrag };

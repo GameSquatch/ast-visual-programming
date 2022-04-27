@@ -18,7 +18,7 @@ const mockData = {
                     "returns": "Integer"
                 }
             },
-            "parameters": [],
+            "parameters": {},
         },
         "body": [
             {
@@ -27,9 +27,10 @@ const mockData = {
                 "expression": {
                     "type": "AssignmentExpression",
                     "left": {
-                        "type": "VarIdentifier",
+                        "type": "FunctionRefIdentifier",
                         "refId": var1,
-                        "returns": "String"
+                        "returns": "String",
+                        "fnRefType": "variables"
                     },
                     "right": {
                         "type": "UtilityCallExpression",
@@ -42,9 +43,10 @@ const mockData = {
                                 "returns": "String"
                             },
                             {
-                                "type": "VarIdentifier",
+                                "type": "FunctionRefIdentifier",
                                 "refId": var1,
-                                "returns": "String"
+                                "returns": "String",
+                                "fnRefType": "variables"
                             }
                         ],
                         "returns": "String"
@@ -57,16 +59,18 @@ const mockData = {
                 "expression": {
                     "type": "AssignmentExpression",
                     "left": {
-                        "type": "VarIdentifier",
+                        "type": "FunctionRefIdentifier",
                         "refId": var1,
-                        "returns": "String"
+                        "returns": "String",
+                        "fnRefType": "variables"
                     },
                     "right": {
                         "type": "VarCallExpression",
                         "variable": {
-                            "type": "VarIdentifier",
+                            "type": "FunctionRefIdentifier",
                             "refId": var1,
-                            "returns": "String"
+                            "returns": "String",
+                            "fnRefType": "variables"
                         },
                         "method": "concat",
                         "arguments": [
@@ -86,9 +90,10 @@ const mockData = {
                 "expression": {
                     "type": "AssignmentExpression",
                     "left": {
-                        "type": "VarIdentifier",
+                        "type": "FunctionRefIdentifier",
                         "refId": var2,
-                        "returns": "Integer"
+                        "returns": "Integer",
+                        "fnRefType": "variables"
                     },
                     "right": {
                         "type": "UtilityCallExpression",

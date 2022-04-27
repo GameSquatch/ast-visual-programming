@@ -1,5 +1,11 @@
 /** @typedef {() => DragStartConfig} DragStartDataCreator */
-/** @typedef {{ name: string, type: string, value: string|number }} VariableData */
+/**
+ * @typedef {Object} VariableData
+ * @property {string} name
+ * @property {string} type
+ * @property {string|number} value
+ * @property {string} [fnRefType]
+ */
 
 /**
  * @callback MoveExpressionDragStartDataCreator Creates the drag start data for moving an ExpressionStatement within a flow
@@ -19,7 +25,7 @@
 
 /**
  * @callback VariableDragStartDataCreator Creates the drag start data for dragging a variable from a function info tab
- * @param {VariableData}
+ * @param {VariableData} variableData
  * @returns {DragStartConfig}
  */
 
@@ -37,7 +43,7 @@
  * @property {string} returns
  */
 
-/** @typedef {Identifier|VarIdentifier|ExpressionNode|AssignmentExpression|VarCallExpression|UtilityCallExpression|Literal} ASTNode */
+/** @typedef {Identifier|FunctionRefIdentifier|ExpressionNode|AssignmentExpression|VarCallExpression|UtilityCallExpression|Literal} ASTNode */
 
 /**
  * @typedef {Object} Identifier
@@ -46,10 +52,11 @@
  */
 
 /**
- * @typedef {Object} VarIdentifier
+ * @typedef {Object} FunctionRefIdentifier
  * @property {string} type
  * @property {string} refId
  * @property {string} returns
+ * @property {string} fnRefType
  */
 
 /**
@@ -62,8 +69,8 @@
 /**
  * @typedef {Object} AssignmentExpression
  * @property {string} type
- * @property {VarIdentifier} left
- * @property {VarIdentifier|VarCallExpression|UtilityCallExpression} right
+ * @property {FunctionRefIdentifier} left
+ * @property {FunctionRefIdentifier|VarCallExpression|UtilityCallExpression} right
  */
 
 /**

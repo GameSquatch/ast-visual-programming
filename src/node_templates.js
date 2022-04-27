@@ -36,19 +36,21 @@ const nodeTemplates = {
             expression: null
         };
     },
-    variableAssignment: ({ refId, returns }) => ({
+    variableAssignment: ({ refId, returns, fnRefType }) => ({
         type: "AssignmentExpression",
         left: {
-            type: "VarIdentifier",
+            type: "FunctionRefIdentifier",
             refId,
-            returns
+            returns,
+            fnRefType
         },
         right: null
     }),
-    variableIdentifier: ({ refId, returns }) => ({
-        type: "VarIdentifier",
+    variableIdentifier: ({ refId, returns, fnRefType }) => ({
+        type: "FunctionRefIdentifier",
         refId,
-        returns
+        returns,
+        fnRefType
     }),
     // Capitalizing because it matches the 'type' field in the AST
     StringLiteral: ({ value = "" }) => ({

@@ -91,7 +91,7 @@ const noNode = (dragData, contextType) => null;
 
 const dropContextMap = {
     // dragType
-    variable: {
+    functionRef: {
         // context name
         flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableAssignment(dragData.data)),
         expression: (dragData, contextType) => nodeTemplates.variableAssignment(dragData.data),
