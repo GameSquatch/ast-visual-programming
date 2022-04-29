@@ -8,9 +8,9 @@
 
     // TYPES
     /**
-     * @typedef {Object} VariableData
+     * @typedef {Object} FunctionRefData
      * @property {string} name
-     * @property {string} type
+     * @property {string} returns
      * @property {string|number} value
      * @property {string} [fnRefType]
      */
@@ -24,11 +24,11 @@
     }
 
     /**
-     * @param {VariableData} variableDragged
+     * @param {FunctionRefData} fnRefDragged
      * @returns {(event: DragEvent) => undefined}
      */
-    const dragStart = (variableDragged) => (event) => {
-        const dragData = functionRefObjectDrag(variableDragged);
+    const dragStart = (fnRefDragged) => (event) => {
+        const dragData = functionRefObjectDrag(fnRefDragged);
         event.dataTransfer.setData("text/json", JSON.stringify(dragData));
         isDisplaying = false;
         // Will auto-drop the menu after you've dropped a variable or parameter

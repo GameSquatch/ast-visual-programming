@@ -63,7 +63,8 @@ const stringUtilFromTypedContext = (dragData, contextType) => {
 
 /**
  * Creates an AST node for dropping a variable into a typed context
- * @param {{ name: string, refId: string, returns: string, value: string }} dragData 
+ * @param {Object} dragData
+ * @param {{ name: string, refId: string, returns: string, value: string, fnRefType?: string }} dragData.data
  * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
  * @returns {Object}
  */
@@ -71,17 +72,18 @@ const variableFromTypedContext = (dragData, contextType) => {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
     
     if (variableTypeMatchesContext) {
-        return nodeTemplates.variableIdentifier(dragData.data);
+        return nodeTemplates.functionRefIdentifer(dragData.data);
     }
 
     const method = findReturnTypeMatch(dragData.data.returns)(contextType);
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? nodeTemplates.varCallExpression({
+        ? nodeTemplates.functionRefCallExpression({
             method: method,
             returns: contextType,
-            variable: nodeTemplates.variableIdentifier({ refId: dragData.data.refId, returns: dragData.data.returns })
+            refData: nodeTemplates.functionRefIdentifer(dragData.data),
+            fnRefType: drag.data.fnRefType
         })
         : null;
 };
@@ -93,8 +95,8 @@ const dropContextMap = {
     // dragType
     functionRef: {
         // context name
-        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableAssignment(dragData.data)),
-        expression: (dragData, contextType) => nodeTemplates.variableAssignment(dragData.data),
+        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.functionRefAssignment(dragData.data)),
+        expression: (dragData, contextType) => nodeTemplates.functionRefAssignment(dragData.data),
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },

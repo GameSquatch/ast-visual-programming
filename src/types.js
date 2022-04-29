@@ -1,8 +1,8 @@
 /** @typedef {() => DragStartConfig} DragStartDataCreator */
 /**
- * @typedef {Object} VariableData
+ * @typedef {Object} FunctionRefData
  * @property {string} name
- * @property {string} type
+ * @property {string} returns
  * @property {string|number} value
  * @property {string} [fnRefType]
  */
@@ -20,12 +20,12 @@
  * @property {string} dragType
  * @property {ExpressionNode} [node]
  * @property {number} [currentIndex]
- * @property {VariableData} [data]
+ * @property {FunctionRefData} [data]
  */
 
 /**
  * @callback VariableDragStartDataCreator Creates the drag start data for dragging a variable from a function info tab
- * @param {VariableData} variableData
+ * @param {FunctionRefData} fnRefData
  * @returns {DragStartConfig}
  */
 
@@ -43,7 +43,7 @@
  * @property {string} returns
  */
 
-/** @typedef {Identifier|FunctionRefIdentifier|ExpressionNode|AssignmentExpression|VarCallExpression|UtilityCallExpression|Literal} ASTNode */
+/** @typedef {Identifier|FunctionRefIdentifier|ExpressionNode|AssignmentExpression|FunctionRefCallExpression|UtilityCallExpression|Literal} ASTNode */
 
 /**
  * @typedef {Object} Identifier
@@ -70,11 +70,11 @@
  * @typedef {Object} AssignmentExpression
  * @property {string} type
  * @property {FunctionRefIdentifier} left
- * @property {FunctionRefIdentifier|VarCallExpression|UtilityCallExpression} right
+ * @property {FunctionRefIdentifier|FunctionRefCallExpression|UtilityCallExpression} right
  */
 
 /**
- * @typedef {Object} VarCallExpression
+ * @typedef {Object} FunctionRefCallExpression
  * @property {string} type
  * @property {Literal} variable
  * @property {string} method
@@ -94,10 +94,10 @@
 /**
  * @typedef NodeTemplates
  * @property {(method: string) => UtilityCallExpression} StringUtil
- * @property {(options: {method: string, returns: string, variable: Literal}) => VarCallExpression} varCallExpression
+ * @property {(options: {method: string, returns: string, refData: FunctionRefData, fnRefType: string }) => FunctionRefCallExpression} functionRefCallExpression
  * @property {() => ExpressionNode} expression
- * @property {(options: {refId: string, returns: string}) => AssignmentExpression} variableAssignment
- * @property {(options: {refId: string, returns: string}) => VariableIdentifier} variableIdentifier
+ * @property {(options: {refId: string, returns: string}) => AssignmentExpression} functionRefAssignment
+ * @property {(options: {refId: string, returns: string}) => VariableIdentifier} functionRefIdentifer
  * @property {(options: {value: string}) => Literal} StringLiteral
  * @property {(options: {value: number}) => Literal} IntegerLiteral
  */

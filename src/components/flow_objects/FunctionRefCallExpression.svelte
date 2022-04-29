@@ -14,13 +14,13 @@
     export let nodePath;
 
 
-    let varTypeMethods = typeDefs[nodeData.variable.returns];
+    let varTypeMethods = typeDefs[nodeData.refData.returns];
 
     function onPropertyChange(event) {
         const method = event.target.value;
         if (method === '') {
             nodeData = {
-                ...nodeData.variable
+                ...nodeData.refData
             };
             return;
         }
@@ -55,10 +55,10 @@
 </script>
 
 <div class="component-wrapper">
-    <p><strong><FunctionRefIdentifier bind:nodeData={nodeData.variable} isArgument={false} nodePath={nodePath + ".variable"} /></strong></p>
+    <p><strong><FunctionRefIdentifier bind:nodeData={nodeData.refData} isArgument={false} nodePath={nodePath + ".variable"} /></strong></p>
     <div class="method-container">
         <select on:change={onPropertyChange}>
-            {#if !contextType || nodeData.variable.returns === contextType}<option value=""></option>{/if}
+            {#if !contextType || nodeData.refData.returns === contextType}<option value=""></option>{/if}
             {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
                 <option value={method} selected={method === nodeData.method}>{method}</option>
             {/each}

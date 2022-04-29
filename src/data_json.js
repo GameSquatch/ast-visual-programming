@@ -65,8 +65,8 @@ const mockData = {
                         "fnRefType": "variables"
                     },
                     "right": {
-                        "type": "VarCallExpression",
-                        "variable": {
+                        "type": "FunctionRefCallExpression",
+                        "refData": {
                             "type": "FunctionRefIdentifier",
                             "refId": var1,
                             "returns": "String",

@@ -1,6 +1,6 @@
 import ExpressionStatement from './components/flow_objects/ExpressionStatement.svelte';
 import UtilityCallExpression from './components/flow_objects/UtilityCallExpression.svelte';
-import VarCallExpression from './components/flow_objects/VarCallExpression.svelte';
+import FunctionRefCallExpression from './components/flow_objects/FunctionRefCallExpression.svelte';
 import Identifier from './components/flow_objects/Identifier.svelte';
 import StringLiteral from './components/flow_objects/StringLiteral.svelte';
 import IntegerLiteral from './components/flow_objects/IntegerLiteral.svelte';
@@ -11,7 +11,7 @@ import FunctionRefIdentifier from './components/flow_objects/FunctionRefIdentifi
 const constructors = {
     "ExpressionStatement": ExpressionStatement,
     "UtilityCallExpression": UtilityCallExpression,
-    "VarCallExpression": VarCallExpression,
+    "FunctionRefCallExpression": FunctionRefCallExpression,
     "Identifier": Identifier,
     "StringLiteral": StringLiteral,
     "IntegerLiteral": IntegerLiteral,
