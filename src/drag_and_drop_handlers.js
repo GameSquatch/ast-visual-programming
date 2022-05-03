@@ -83,7 +83,7 @@ const variableFromTypedContext = (dragData, contextType) => {
             method: method,
             returns: contextType,
             refData: nodeTemplates.functionRefIdentifer(dragData.data),
-            fnRefType: drag.data.fnRefType
+            fnRefType: dragData.data.fnRefType
         })
         : null;
 };
@@ -100,7 +100,7 @@ const dropContextMap = {
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },
-    StringUtil: {
+    stringUtil: {
         flow: noNode,
         expression: noNode,
         assignment: stringUtilFromTypedContext,
@@ -148,3 +148,24 @@ const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (
 };
 
 export { dragStartHandler, flowDropHandler };
+
+/**
+ * dragStart data looks like this:
+ * {
+ *   "dragType": "expression" | "StringUtil" | "moveExpression" | etc,
+ *   "node": undefined | {
+ *     AST Node
+ *   },
+ *   "data": undefined | {
+ *     stuff
+ *   }
+ * }
+ * 
+ * This goes through the dropContextMap like so
+ * 
+ * dragData | dragType
+ *             | filters -> (dragData, dropEvent) => Node?
+ *          | functionRef
+ *          | stringUtil
+ *          | ...
+ */

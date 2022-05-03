@@ -1,35 +1,3 @@
-/** @typedef {() => DragStartConfig} DragStartDataCreator */
-/**
- * @typedef {Object} FunctionRefData
- * @property {string} name
- * @property {string} returns
- * @property {string|number} value
- * @property {string} [fnRefType]
- */
-
-/**
- * @callback MoveExpressionDragStartDataCreator Creates the drag start data for moving an ExpressionStatement within a flow
- * @param {ExpressionNode} expressionNode The portion of the AST that represents the expression
- * and the subtree under it.
- * @param {number} [currentIndex] If the expression is within a list (most likely), it's current place within that list
- * @returns {DragStartConfig}
- */
-
-/**
- * @typedef {Object} DragStartConfig
- * @property {string} dragType
- * @property {ExpressionNode} [node]
- * @property {number} [currentIndex]
- * @property {FunctionRefData} [data]
- */
-
-/**
- * @callback VariableDragStartDataCreator Creates the drag start data for dragging a variable from a function info tab
- * @param {FunctionRefData} fnRefData
- * @returns {DragStartConfig}
- */
-
-
 /**
  * @callback DragHandler
  * @param {DragEvent} event
@@ -59,12 +27,7 @@
  * @property {string} fnRefType
  */
 
-/**
- * @typedef {Object} ExpressionNode
- * @property {string} type
- * @property {string} id uuid
- * @property {Object} [expression]
- */
+
 
 /**
  * @typedef {Object} AssignmentExpression

@@ -1,13 +1,50 @@
+/** @typedef {() => DragStartConfig} DragStartDataCreator */
+
+/**
+ * @typedef {Object} DragStartConfig
+ * @property {string} dragType
+ * @property {ExpressionNode} [node]
+ * @property {number} [currentIndex]
+ * @property {FunctionRefData} [data]
+ */
+
+/**
+ * @typedef {Object} ExpressionNode
+ * @property {string} type
+ * @property {string} id uuid
+ * @property {Object} [expression]
+ */
+
 /** @type {DragStartDataCreator} */
 const doActionDataDrag = () => ({ dragType: "expression" });
 /** @type {DragStartDataCreator} */
-const stringUtilDataDrag = () => ({ dragType: "StringUtil" });
+const stringUtilDataDrag = () => ({ dragType: "stringUtil" });
+
+/**
+ * @callback MoveExpressionDragStartDataCreator Creates the drag start data for moving an ExpressionStatement within a flow
+ * @param {ExpressionNode} expressionNode The portion of the AST that represents the expression
+ * and the subtree under it.
+ * @param {number} [currentIndex] If the expression is within a list (most likely), it's current place within that list
+ * @returns {DragStartConfig}
+ */
 
 /** @type {MoveExpressionDragStartDataCreator} */
 const moveExpressionDrag = (expressionNode, currentIndex) => ({ dragType: "moveExpression", node: expressionNode, currentIndex });
 
+/**
+ * @typedef {Object} FunctionRefData
+ * @property {string} name
+ * @property {string} returns
+ * @property {string|number} value
+ * @property {string} [fnRefType]
+ */
+/**
+ * @callback VariableDragStartDataCreator Creates the drag start data for dragging a variable from a function info tab
+ * @param {FunctionRefData} fnRefData
+ * @returns {DragStartConfig}
+ */
 /** @type {VariableDragStartDataCreator} */
-const functionRefObjectDrag = (variableData) => ({ dragType: "functionRef", data: variableData });
+const functionRefObjectDrag = (fnRefData) => ({ dragType: "functionRef", data: fnRefData });
 
 
 export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, functionRefObjectDrag };
