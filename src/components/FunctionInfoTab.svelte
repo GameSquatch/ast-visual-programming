@@ -58,7 +58,7 @@
             [uuidv4()]: {
                 name: "newParam",
                 returns: "String",
-                defaultValue: "",
+                value: "",
             },
         };
     }
@@ -77,9 +77,9 @@
         };
     }
 
-    function varTypeChange(event, id) {
-        info.variables[id] = {
-            ...info.variables[id],
+    function changeRefType(event, id, infoKey) {
+        info[infoKey][id] = {
+            ...info[infoKey][id],
             returns: event.target.value,
         };
     }
@@ -128,7 +128,7 @@
                         <div class="col-2">
                             <select
                                 on:change={(event) =>
-                                    varTypeChange(event, varId)}
+                                    changeRefType(event, varId, "variables")}
                                 value={varObj.returns}
                                 ><option value="String">String</option><option
                                     value="Integer">Integer</option
@@ -159,7 +159,6 @@
                 {#each Object.keys(info.parameters) as paramId (paramId)}
                     {@const paramObj = info.parameters[paramId]}
                     <div
-                        draggable="true"
                         on:dragstart={dragStart({
                             ...paramObj,
                             refId: paramId,
@@ -167,7 +166,7 @@
                         })}
                         class="flex w100 var-container"
                     >
-                        <div>
+                        <div class="flex col-1">
                             <div class="drag-var" draggable="true" />
                             <input
                                 value={paramObj.name}
@@ -181,17 +180,17 @@
                                 class="var-name"
                             />
                         </div>
-                        <div>
+                        <div class="col-2">
                             <select
                                 on:change={(event) =>
-                                    varTypeChange(event, paramId)}
+                                    changeRefType(event, paramId, "parameters")}
                                 value={paramObj.returns}
                                 ><option value="String">String</option><option
                                     value="Integer">Integer</option
                                 ></select
                             >
                         </div>
-                        <div>
+                        <div class="col-3">
                             <input
                                 type={paramObj.returns === "Integer"
                                     ? "number"
