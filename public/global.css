@@ -41,6 +41,10 @@ body {
     flex-direction: column;
 }
 
+.grid {
+    display: grid;
+}
+
 .flex {
     display: flex;
 }

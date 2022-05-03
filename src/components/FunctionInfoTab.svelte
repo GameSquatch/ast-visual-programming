@@ -91,13 +91,14 @@
             transition:slide={{ duration: 300, easing: quintOut }}
             class="tab-content"
         >
+
             <!-- ***** VARIABLE SECTION ***** -->
             <div class="section">
                 <h4>Variables</h4>
-                <div class="flex w100 space-between var-container">
-                    <div class="flex-1">Name</div>
-                    <div class="flex-1">Type</div>
-                    <div class="flex-1">Default Value</div>
+                <div class="flex var-container">
+                    <div class="col-1">Name</div>
+                    <div class="col-2">Type</div>
+                    <div class="col-3">Default Value</div>
                 </div>
 
                 {#each Object.keys(info.variables) as varId (varId)}
@@ -108,9 +109,9 @@
                             refId: varId,
                             fnRefType: "variables",
                         })}
-                        class="flex w100 space-between var-container"
+                        class="flex w100 var-container"
                     >
-                        <div class="flex-1">
+                        <div class="flex col-1">
                             <div class="drag-var" draggable="true" />
                             <input
                                 value={varObj.name}
@@ -124,7 +125,7 @@
                                 class="var-name"
                             />
                         </div>
-                        <div class="flex-1">
+                        <div class="col-2">
                             <select
                                 on:change={(event) =>
                                     varTypeChange(event, varId)}
@@ -134,7 +135,7 @@
                                 ></select
                             >
                         </div>
-                        <div class="flex-1">
+                        <div class="col-3">
                             <input
                                 type={varObj.returns === "Integer"
                                     ? "number"
@@ -164,9 +165,9 @@
                             refId: paramId,
                             fnRefType: "parameters",
                         })}
-                        class="flex w100 space-between var-container"
+                        class="flex w100 var-container"
                     >
-                        <div class="flex-1">
+                        <div>
                             <div class="drag-var" draggable="true" />
                             <input
                                 value={paramObj.name}
@@ -180,7 +181,7 @@
                                 class="var-name"
                             />
                         </div>
-                        <div class="flex-1">
+                        <div>
                             <select
                                 on:change={(event) =>
                                     varTypeChange(event, paramId)}
@@ -190,7 +191,7 @@
                                 ></select
                             >
                         </div>
-                        <div class="flex-1">
+                        <div>
                             <input
                                 type={paramObj.returns === "Integer"
                                     ? "number"
@@ -257,8 +258,19 @@
         background: #ccc;
         cursor: move;
         width: 20px;
-        height: 15px;
+        height: 100%;
+        margin-right: 4px;
         display: inline-block;
+    }
+
+    .col-1 {
+        min-width: 250px;
+    }
+    .col-2 {
+        min-width: 125px;
+    }
+    .col-3 {
+        min-width: 250px;
     }
 
     /* input {
@@ -269,5 +281,9 @@
         height: 2px;
         background-color: #aaa;
         padding: 0 10px;
+    }
+
+    .var-container {
+        margin-bottom: 5px;
     }
 </style>
