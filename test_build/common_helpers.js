@@ -9,7 +9,7 @@ function testVariableWithMismatchContext({
     draggedRefId
 }) {
     assert.ownInclude(nodeCreated, {
-        type: "VarCallExpression",
+        type: "FunctionRefCallExpression",
         returns: contextType
     }, "Created node has unexpected properties");
     assert.notDeepEqual(nodeCreated.method, undefined, "Created node has undefined method prop");
@@ -27,12 +27,12 @@ function testVariableWithMismatchContext({
         }, "Created node argument doesn't have correct properties");
         assert.property(nodeArg, "value", "Created node argument doesn't have value prop");
     }
-    assert.notEqual(nodeCreated.variable, undefined, "Created node has undefined variable prop");
-    assert.ownInclude(nodeCreated.variable, {
-        type: "VarIdentifier",
+    assert.notEqual(nodeCreated.refData, undefined, "Created node has undefined variable prop");
+    assert.ownInclude(nodeCreated.refData, {
+        type: "FunctionRefIdentifier",
         returns: varType
     }, "Created node variable has unexpected properties");
-    assert.equal(nodeCreated.variable.refId, draggedRefId, "Created node variable refId doesn't match dragged variable's");
+    assert.equal(nodeCreated.refData.refId, draggedRefId, "Created node variable refId doesn't match dragged variable's");
 }
 
 

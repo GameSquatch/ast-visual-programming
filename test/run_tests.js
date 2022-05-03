@@ -123,16 +123,17 @@ const nodeTemplates = {
             returns: methodDefinition.returns
         };
     },
-    varCallExpression: function({ method, returns, variable }) {
-        const methodDefinition = typeDefs[variable.returns][method];
+    functionRefCallExpression: function({ method, returns, refData, fnRefType }) {
+        const methodDefinition = typeDefs[refData.returns][method];
         const definitionArgs = methodDefinition.args;
 
         return {
-            type: "VarCallExpression",
-            variable: {...variable},
+            type: "FunctionRefCallExpression",
+            refData: {...refData},
             method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
-            returns
+            returns,
+            fnRefType
         };
     },
     expression: () => {
@@ -143,19 +144,21 @@ const nodeTemplates = {
             expression: null
         };
     },
-    variableAssignment: ({ refId, returns }) => ({
+    functionRefAssignment: ({ refId, returns, fnRefType }) => ({
         type: "AssignmentExpression",
         left: {
-            type: "VarIdentifier",
+            type: "FunctionRefIdentifier",
             refId,
-            returns
+            returns,
+            fnRefType
         },
         right: null
     }),
-    variableIdentifier: ({ refId, returns }) => ({
-        type: "VarIdentifier",
+    functionRefIdentifer: ({ refId, returns, fnRefType }) => ({
+        type: "FunctionRefIdentifier",
         refId,
-        returns
+        returns,
+        fnRefType
     }),
     // Capitalizing because it matches the 'type' field in the AST
     StringLiteral: ({ value = "" }) => ({
@@ -219,7 +222,8 @@ const stringUtilFromTypedContext = (dragData, contextType) => {
 
 /**
  * Creates an AST node for dropping a variable into a typed context
- * @param {{ name: string, refId: string, returns: string, value: string }} dragData 
+ * @param {Object} dragData
+ * @param {{ name: string, refId: string, returns: string, value: string, fnRefType?: string }} dragData.data
  * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
  * @returns {Object}
  */
@@ -227,17 +231,18 @@ const variableFromTypedContext = (dragData, contextType) => {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
     
     if (variableTypeMatchesContext) {
-        return nodeTemplates.variableIdentifier(dragData.data);
+        return nodeTemplates.functionRefIdentifer(dragData.data);
     }
 
     const method = findReturnTypeMatch(dragData.data.returns)(contextType);
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? nodeTemplates.varCallExpression({
+        ? nodeTemplates.functionRefCallExpression({
             method: method,
             returns: contextType,
-            variable: nodeTemplates.variableIdentifier({ refId: dragData.data.refId, returns: dragData.data.returns })
+            refData: nodeTemplates.functionRefIdentifer(dragData.data),
+            fnRefType: dragData.data.fnRefType
         })
         : null;
 };
@@ -247,14 +252,14 @@ const noNode = (dragData, contextType) => null;
 
 const dropContextMap = {
     // dragType
-    variable: {
+    functionRef: {
         // context name
-        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.variableAssignment(dragData.data)),
-        expression: (dragData, contextType) => nodeTemplates.variableAssignment(dragData.data),
+        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.functionRefAssignment(dragData.data)),
+        expression: (dragData, contextType) => nodeTemplates.functionRefAssignment(dragData.data),
         assignment: variableFromTypedContext,
         argument: variableFromTypedContext
     },
-    StringUtil: {
+    stringUtil: {
         flow: noNode,
         expression: noNode,
         assignment: stringUtilFromTypedContext,
@@ -301,16 +306,37 @@ const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (
     stateChangeCallback(node);
 };
 
+/**
+ * dragStart data looks like this:
+ * {
+ *   "dragType": "expression" | "StringUtil" | "moveExpression" | etc,
+ *   "node": undefined | {
+ *     AST Node
+ *   },
+ *   "data": undefined | {
+ *     stuff
+ *   }
+ * }
+ * 
+ * This goes through the dropContextMap like so
+ * 
+ * dragData | dragType
+ *             | filters -> (dragData, dropEvent) => Node?
+ *          | functionRef
+ *          | stringUtil
+ *          | ...
+ */
+
 /** @type {DragStartDataCreator} */
 const doActionDataDrag = () => ({ dragType: "expression" });
 /** @type {DragStartDataCreator} */
-const stringUtilDataDrag = () => ({ dragType: "StringUtil" });
+const stringUtilDataDrag = () => ({ dragType: "stringUtil" });
 
 /** @type {MoveExpressionDragStartDataCreator} */
 const moveExpressionDrag = (expressionNode, currentIndex) => ({ dragType: "moveExpression", node: expressionNode, currentIndex });
 
 /** @type {VariableDragStartDataCreator} */
-const variableDrag = (variableData) => ({ dragType: "variable", data: variableData });
+const functionRefObjectDrag = (variableData) => ({ dragType: "functionRef", data: variableData });
 
 function testVariableWithMismatchContext({
     nodeCreated,
@@ -320,7 +346,7 @@ function testVariableWithMismatchContext({
     draggedRefId
 }) {
     chai.assert.ownInclude(nodeCreated, {
-        type: "VarCallExpression",
+        type: "FunctionRefCallExpression",
         returns: contextType
     }, "Created node has unexpected properties");
     chai.assert.notDeepEqual(nodeCreated.method, undefined, "Created node has undefined method prop");
@@ -338,12 +364,12 @@ function testVariableWithMismatchContext({
         }, "Created node argument doesn't have correct properties");
         chai.assert.property(nodeArg, "value", "Created node argument doesn't have value prop");
     }
-    chai.assert.notEqual(nodeCreated.variable, undefined, "Created node has undefined variable prop");
-    chai.assert.ownInclude(nodeCreated.variable, {
-        type: "VarIdentifier",
+    chai.assert.notEqual(nodeCreated.refData, undefined, "Created node has undefined variable prop");
+    chai.assert.ownInclude(nodeCreated.refData, {
+        type: "FunctionRefIdentifier",
         returns: varType
     }, "Created node variable has unexpected properties");
-    chai.assert.equal(nodeCreated.variable.refId, draggedRefId, "Created node variable refId doesn't match dragged variable's");
+    chai.assert.equal(nodeCreated.refData.refId, draggedRefId, "Created node variable refId doesn't match dragged variable's");
 }
 
 
@@ -385,7 +411,7 @@ suite('Variable drop handling', function() {
             contextType: varType,
             stateChangeCallback: function(nodeCreated) {
                 chai.assert.ownInclude(nodeCreated, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Created node has unexpected properties");
                 chai.assert.equal(nodeCreated.refId, draggedRefId, "Created node has no ref id");
@@ -395,7 +421,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
@@ -432,11 +458,12 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
-                        refId: draggedRefId
+                        refId: draggedRefId,
+                        fnRefType: "variables"
                     }));
                 }
             }
@@ -466,7 +493,7 @@ suite('Variable drop handling', function() {
                 chai.assert.notDeepEqual(expression.left, undefined, "Left of assign is undefined");
                 const assignmentLeft = expression.left;
                 chai.assert.ownInclude(assignmentLeft, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Left of assign does not have var identifier properties");
                 chai.assert.equal(assignmentLeft.refId, draggedRefId, "Left of assignment identifier does not have matching ref id to dragged");
@@ -476,7 +503,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aNum",
                         value: 0,
                         returns: varType,
@@ -504,7 +531,7 @@ suite('Variable drop handling', function() {
                 chai.assert.notDeepEqual(nodeCreated.left, undefined, "Left of assign is undefined");
                 const assignmentLeft = nodeCreated.left;
                 chai.assert.ownInclude(assignmentLeft, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Left of assign does not have var identifier properties");
                 chai.assert.equal(assignmentLeft.refId, draggedRefId, "Left of assignment identifier does not have matching ref id to dragged");
@@ -514,7 +541,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aNum",
                         value: 0,
                         returns: varType,
@@ -537,7 +564,7 @@ suite('Variable drop handling', function() {
             contextType: varType,
             stateChangeCallback: function(nodeCreated) {
                 chai.assert.ownInclude(nodeCreated, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Created node has unexpected properties");
                 chai.assert.equal(nodeCreated.refId, draggedRefId, "Created node variable refId doesn't match dragged variable's");
@@ -547,7 +574,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
@@ -584,7 +611,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
@@ -830,8 +857,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved to another place in a flow', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode, 0));
 
         const handlerFn = flowDropHandler({
@@ -857,8 +884,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto another expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -885,8 +912,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto assignment', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -911,8 +938,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto argument', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({

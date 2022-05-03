@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { flowDropHandler } from '../src/drag_and_drop_handlers.js';
-import { variableDrag, stringUtilDataDrag, doActionDataDrag, moveExpressionDrag } from '../src/drag_start_data_creators.js';
+import { functionRefObjectDrag, stringUtilDataDrag, doActionDataDrag, moveExpressionDrag } from '../src/drag_start_data_creators.js';
 import typeDefs from '../src/type_definitions.js';
 import nodeTemplates from '../src/node_templates.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,7 +18,7 @@ suite('Variable drop handling', function() {
             contextType: varType,
             stateChangeCallback: function(nodeCreated) {
                 assert.ownInclude(nodeCreated, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Created node has unexpected properties");
                 assert.equal(nodeCreated.refId, draggedRefId, "Created node has no ref id");
@@ -28,7 +28,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
@@ -65,11 +65,12 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
-                        refId: draggedRefId
+                        refId: draggedRefId,
+                        fnRefType: "variables"
                     }));
                 }
             }
@@ -99,7 +100,7 @@ suite('Variable drop handling', function() {
                 assert.notDeepEqual(expression.left, undefined, "Left of assign is undefined");
                 const assignmentLeft = expression.left;
                 assert.ownInclude(assignmentLeft, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Left of assign does not have var identifier properties");
                 assert.equal(assignmentLeft.refId, draggedRefId, "Left of assignment identifier does not have matching ref id to dragged");
@@ -109,7 +110,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aNum",
                         value: 0,
                         returns: varType,
@@ -137,7 +138,7 @@ suite('Variable drop handling', function() {
                 assert.notDeepEqual(nodeCreated.left, undefined, "Left of assign is undefined");
                 const assignmentLeft = nodeCreated.left;
                 assert.ownInclude(assignmentLeft, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Left of assign does not have var identifier properties");
                 assert.equal(assignmentLeft.refId, draggedRefId, "Left of assignment identifier does not have matching ref id to dragged");
@@ -147,7 +148,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aNum",
                         value: 0,
                         returns: varType,
@@ -170,7 +171,7 @@ suite('Variable drop handling', function() {
             contextType: varType,
             stateChangeCallback: function(nodeCreated) {
                 assert.ownInclude(nodeCreated, {
-                    type: "VarIdentifier",
+                    type: "FunctionRefIdentifier",
                     returns: varType
                 }, "Created node has unexpected properties");
                 assert.equal(nodeCreated.refId, draggedRefId, "Created node variable refId doesn't match dragged variable's");
@@ -180,7 +181,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
@@ -217,7 +218,7 @@ suite('Variable drop handling', function() {
         const mockVariableDragEvent = {
             dataTransfer: {
                 getData(_) {
-                    return JSON.stringify(variableDrag({
+                    return JSON.stringify(functionRefObjectDrag({
                         name: "aStr",
                         value: "hello there",
                         returns: varType,
@@ -463,8 +464,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved to another place in a flow', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode, 0));
 
         const handlerFn = flowDropHandler({
@@ -490,8 +491,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto another expression', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ refId: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ refId: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ refId: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ refId: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -518,8 +519,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto assignment', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
@@ -544,8 +545,8 @@ suite('Moving and dropping an existing expression', function() {
 
     test('Expression is moved and dropped onto argument', function() {
         const mockExpressionNode = nodeTemplates.expression();
-        mockExpressionNode.expression = nodeTemplates.variableAssignment({ name: "myVar", returns: "String "});
-        mockExpressionNode.expression.right = nodeTemplates.variableAssignment({ name: "otherVar", returns: "String" });
+        mockExpressionNode.expression = nodeTemplates.functionRefAssignment({ name: "myVar", returns: "String "});
+        mockExpressionNode.expression.right = nodeTemplates.functionRefAssignment({ name: "otherVar", returns: "String" });
         const dragData = JSON.stringify(moveExpressionDrag(mockExpressionNode));
 
         const handlerFn = flowDropHandler({
