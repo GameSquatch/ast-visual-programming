@@ -9,12 +9,12 @@ const mockData = {
             "variables": {
                 [var1]: {
                     "name": "aStr",
-                    "value": "",
+                    "defaultValue": "",
                     "returns": "String"
                 },
                 [var2]: {
                     "name": "aNum",
-                    "value": 0,
+                    "defaultValue": 0,
                     "returns": "Integer"
                 }
             },

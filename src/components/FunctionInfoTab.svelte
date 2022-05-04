@@ -47,7 +47,7 @@
             [uuidv4()]: {
                 name: "newVar",
                 returns: "String",
-                value: "",
+                defaultValue: "",
             },
         };
     }
@@ -58,7 +58,7 @@
             [uuidv4()]: {
                 name: "newParam",
                 returns: "String",
-                value: "",
+                defaultValue: "",
             },
         };
     }
@@ -140,7 +140,7 @@
                                 type={varObj.returns === "Integer"
                                     ? "number"
                                     : "text"}
-                                value={varObj.value}
+                                value={varObj.defaultValue}
                             />
                         </div>
                     </div>
@@ -195,7 +195,7 @@
                                 type={paramObj.returns === "Integer"
                                     ? "number"
                                     : "text"}
-                                value={paramObj.value}
+                                value={paramObj.defaultValue}
                             />
                         </div>
                     </div>
