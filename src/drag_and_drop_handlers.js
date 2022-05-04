@@ -68,7 +68,7 @@ const stringUtilFromTypedContext = (dragData, contextType) => {
  * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
  * @returns {Object}
  */
-const variableFromTypedContext = (dragData, contextType) => {
+const functionRefFromTypedContext = (dragData, contextType) => {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
     
     if (variableTypeMatchesContext) {
@@ -97,8 +97,8 @@ const dropContextMap = {
         // context name
         flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.functionRefAssignment(dragData.data)),
         expression: (dragData, contextType) => nodeTemplates.functionRefAssignment(dragData.data),
-        assignment: variableFromTypedContext,
-        argument: variableFromTypedContext
+        assignment: functionRefFromTypedContext,
+        argument: functionRefFromTypedContext
     },
     stringUtil: {
         flow: noNode,
