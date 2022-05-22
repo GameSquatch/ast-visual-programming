@@ -19,8 +19,8 @@ const dragStartHandler = (dragData) => (event) => {
 
 
 const dragDataTypeMatchesContext = (dragObject, contextType) => {
-    if ((dragObject.data?.returns ?? false) && contextType !== undefined) {
-        if (dragObject.data.returns !== contextType) {
+    if ((dragObject.dragData?.returns ?? false) && contextType !== undefined) {
+        if (dragObject.dragData.returns !== contextType) {
             return false;
         }
         return true;
