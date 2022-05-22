@@ -34,15 +34,17 @@
     function dropModify(node) {
         if (node === null) return;
         
-        if (node.currentIndex !== undefined) {
-            dispatch('delete', node.currentIndex);
-            node = node.moveData;
+        if (node.dragType === "moveExpression") {// node is a dragObject at this point
+            dispatch('replace', { oldIndex: node.dragData.currentIndex, newNode: node.nodeData });
+            return;
         }
 
-        if (node.type === 'ExpressionStatement')
+        if (node.type === 'ExpressionStatement') {// node is a node at this point
             nodeData.expression = node.expression;
-        else
+
+        } else {
             nodeData.expression = node;
+        }
 
     }
     
@@ -51,12 +53,12 @@
             return;
         }
 
-        if (node.currentIndex !== undefined) {
+        if (node.dragType === "moveExpression") {// node is a dragObject at this point
             dispatch('moveExpression', { ...node, newIndex: accessor + 1 });
             return;
         }
 
-        dispatch('insertAfter', node);
+        dispatch('insertAfter', node);// node is node at this point
     }
 
     /** @type {DragHandler} */

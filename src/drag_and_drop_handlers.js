@@ -18,9 +18,9 @@ const dragStartHandler = (dragData) => (event) => {
 };
 
 
-const dragDataTypeMatchesContext = (dragData, contextType) => {
-    if ((dragData.data?.returns ?? false) && contextType !== undefined) {
-        if (dragData.data.returns !== contextType) {
+const dragDataTypeMatchesContext = (dragObject, contextType) => {
+    if ((dragObject.data?.returns ?? false) && contextType !== undefined) {
+        if (dragObject.data.returns !== contextType) {
             return false;
         }
         return true;
@@ -50,11 +50,11 @@ const wrapWithExpression = (node) => {
 
 
 /**
- * @param {Object} dragData - The DragEvent data parsed into an object
+ * @param {Object} dragObject - The DragEvent data parsed into an object
  * @param {string} type - Data type
  * @returns {?Object.<string, *>} Returns either null or the ast node to be created from dropping this stringUtil
  */
-const stringUtilFromTypedContext = (dragData, contextType) => {
+const stringUtilFromTypedContext = (dragObject, contextType) => {
     const methodName = findStringUtilTypeMatch(contextType);
     if (methodName === null) return null;
     return nodeTemplates.StringUtil(methodName);
@@ -63,40 +63,40 @@ const stringUtilFromTypedContext = (dragData, contextType) => {
 
 /**
  * Creates an AST node for dropping a variable into a typed context
- * @param {Object} dragData
- * @param {{ name: string, refId: string, returns: string, value: string, fnRefType?: string }} dragData.data
+ * @param {Object} dragObject
+ * @param {{ name: string, refId: string, returns: string, defaultValue: string, fnRefType?: string }} dragObject.dragData
  * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
  * @returns {Object}
  */
-const functionRefFromTypedContext = (dragData, contextType) => {
-    const variableTypeMatchesContext = dragDataTypeMatchesContext(dragData, contextType);
+const functionRefFromTypedContext = (dragObject, contextType) => {
+    const variableTypeMatchesContext = dragDataTypeMatchesContext(dragObject, contextType);
     
     if (variableTypeMatchesContext) {
-        return nodeTemplates.functionRefIdentifer(dragData.data);
+        return nodeTemplates.functionRefIdentifer(dragObject.dragData);
     }
 
-    const method = findReturnTypeMatch(dragData.data.returns)(contextType);
+    const method = findReturnTypeMatch(dragObject.dragData.returns)(contextType);
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
         ? nodeTemplates.functionRefCallExpression({
             method: method,
             returns: contextType,
-            refData: nodeTemplates.functionRefIdentifer(dragData.data),
-            fnRefType: dragData.data.fnRefType
+            refData: nodeTemplates.functionRefIdentifer(dragObject.dragData),
+            fnRefType: dragObject.dragData.fnRefType
         })
         : null;
 };
 
-const noNode = (dragData, contextType) => null;
+const noNode = (dragObject, contextType) => null;
 
 
 const dropContextMap = {
     // dragType
     functionRef: {
         // context name
-        flow: (dragData, contextType) => wrapWithExpression(nodeTemplates.functionRefAssignment(dragData.data)),
-        expression: (dragData, contextType) => nodeTemplates.functionRefAssignment(dragData.data),
+        flow: (dragObject, contextType) => wrapWithExpression(nodeTemplates.functionRefAssignment(dragObject.dragData)),
+        expression: (dragObject, contextType) => nodeTemplates.functionRefAssignment(dragObject.dragData),
         assignment: functionRefFromTypedContext,
         argument: functionRefFromTypedContext
     },
@@ -107,14 +107,14 @@ const dropContextMap = {
         argument: stringUtilFromTypedContext
     },
     expression: {
-        flow: (dragData, contextType) => nodeTemplates.expression(),
+        flow: (dragObject, contextType) => nodeTemplates.expression(),
         expression: noNode,
         assignment: noNode,
         argument: noNode
     },
     moveExpression: {
-        flow: (dragData, contextType) => ({ moveData: dragData.node, currentIndex: dragData.currentIndex }),
-        expression: (dragData, contextType) => ({ moveData: dragData.node, currentIndex: dragData.currentIndex }),
+        flow: (dragObject, contextType) => dragObject,
+        expression: (dragObject, contextType) => dragObject,
         assignment: noNode,
         argument: noNode
     }
@@ -139,10 +139,10 @@ const dropContextMap = {
  * has occurred and an ast node has been created and passed to this callback
  * @returns {dragEventHandler}
  */
-const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => (dragEvent) => {
-    const dragData = getDragData(dragEvent);
+const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => async (dragEvent) => {
+    const dragObject = getDragData(dragEvent);
 
-    const node = dropContextMap[dragData.dragType][contextName](dragData, contextType);
+    const node = dropContextMap[dragObject.dragType][contextName](dragObject, contextType);
     
     stateChangeCallback(node);
 };
@@ -163,8 +163,8 @@ export { dragStartHandler, flowDropHandler };
  * 
  * This goes through the dropContextMap like so
  * 
- * dragData | dragType
- *             | filters -> (dragData, dropEvent) => Node?
+ * dragObject | dragType
+ *             | filters -> (dragObject, dropEvent) => Node?
  *          | functionRef
  *          | stringUtil
  *          | ...

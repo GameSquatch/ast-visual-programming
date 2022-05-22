@@ -26,33 +26,37 @@
     function prependDrop(node) {
         setHoverPrepend(false);
 
-        if (node.currentIndex !== undefined) {
-            $ast.main.body.splice(node.currentIndex, 1);
-            node = node.moveData;
+        if (node.dragData.currentIndex !== undefined) {
+            $ast.main.body.splice(node.dragData.currentIndex, 1);
+            node = node.nodeData;
+            $ast.main.body = [node, ...$ast.main.body];
         }
-
-        $ast.main.body = [node, ...$ast.main.body];
     }
 
     function appendDrop(node) {
         setHoverAppend(false);
 
-        if (node.currentIndex !== undefined) {
-            $ast.main.body.splice(node.currentIndex, 1);
-            node = node.moveData;
+        if (node.dragData.currentIndex !== undefined) {
+            $ast.main.body.splice(node.dragData.currentIndex, 1);
+            node = node.nodeData;
+            $ast.main.body = [...$ast.main.body, node];
         }
-
-        $ast.main.body = [...$ast.main.body, node];
     }
 
-    function handleMoveExpression({ moveData, currentIndex, newIndex }) {
-        if (newIndex === currentIndex + 1) return;
+    function handleMoveExpression({ dragData, nodeData, newIndex }) {
+        if (newIndex === dragData.currentIndex + 1) return;
 
-        $ast.main.body.splice(currentIndex, 1);
-        newIndex = currentIndex < newIndex ? newIndex - 1 : newIndex;
-        $ast.main.body.splice(newIndex, 0, moveData);
+        $ast.main.body.splice(dragData.currentIndex, 1);
+        newIndex = dragData.currentIndex < newIndex ? newIndex - 1 : newIndex;
+        $ast.main.body.splice(newIndex, 0, nodeData);
 
         $ast.main.body = $ast.main.body;
+    }
+
+    function replaceFlowStepContents(index, { oldIndex, newNode }) {
+        $ast.main.body.splice(oldIndex, 1);
+        if (index > oldIndex) index--;
+        $ast.main.body[index] = newNode;
     }
 
     function deleteFlowStep(index) {
@@ -85,6 +89,7 @@ class="app-window-wrapper">
             <div animate:flip="{{duration: 400}}" transition:squish|local="{{duration: 300, opacity: 0.4, start: 0.2}}">
                 <svelte:component
                     on:delete={(event) => deleteFlowStep(event.detail)}
+                    on:replace={(event) => replaceFlowStepContents(i, { ...event.detail })}
                     on:insertAfter={(event) => insertAfterStep(i, event.detail)}
                     this={constructors[flowObject.type]}
                     bind:nodeData={flowObject}

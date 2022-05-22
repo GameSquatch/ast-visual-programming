@@ -15,10 +15,27 @@
  * @property {Object} [expression]
  */
 
+function createDragObject({ dragType, dragDataType = "none", nodeData, dragData }) {
+    const dragObj = {
+        dragType,
+        dragDataType
+    };
+
+    if (nodeData) {
+        dragObj.nodeData = nodeData;
+    }
+
+    if (dragData) {
+        dragObj.dragData = dragData
+    }
+
+    return dragObj;
+}
+
 /** @type {DragStartDataCreator} */
-const doActionDataDrag = () => ({ dragType: "expression" });
+const doActionDataDrag = () => createDragObject({ dragType: "expression" });
 /** @type {DragStartDataCreator} */
-const stringUtilDataDrag = () => ({ dragType: "stringUtil" });
+const stringUtilDataDrag = () => createDragObject({ dragType: "stringUtil" });
 
 /**
  * @callback MoveExpressionDragStartDataCreator Creates the drag start data for moving an ExpressionStatement within a flow
@@ -29,13 +46,14 @@ const stringUtilDataDrag = () => ({ dragType: "stringUtil" });
  */
 
 /** @type {MoveExpressionDragStartDataCreator} */
-const moveExpressionDrag = (expressionNode, currentIndex) => ({ dragType: "moveExpression", node: expressionNode, currentIndex });
+const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ dragType: "moveExpression", nodeData: { ...expressionNode }, dragData: { currentIndex } });
 
 /**
  * @typedef {Object} FunctionRefData
  * @property {string} name
  * @property {string} returns
- * @property {string|number} value
+ * @property {string|number} defaultValue
+ * @property {string} refId
  * @property {string} [fnRefType]
  */
 /**
@@ -44,7 +62,7 @@ const moveExpressionDrag = (expressionNode, currentIndex) => ({ dragType: "moveE
  * @returns {DragStartConfig}
  */
 /** @type {VariableDragStartDataCreator} */
-const functionRefObjectDrag = (fnRefData) => ({ dragType: "functionRef", data: fnRefData });
+const functionRefObjectDrag = (fnRefData) => createDragObject({ dragType: "functionRef", dragDataType: fnRefData.returns, dragData: { ...fnRefData } });
 
 
 export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, functionRefObjectDrag };
