@@ -106,8 +106,6 @@ const noNode = (dragObject, contextType) => null;
 /**
  * @type {Object.<string, ContextMapper>}
  */
-
-
 const dropContextMap = {
     // dragType
     functionRef: {
