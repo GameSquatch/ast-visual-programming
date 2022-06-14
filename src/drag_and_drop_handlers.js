@@ -1,5 +1,6 @@
 import nodeTemplates from './node_templates.js';
 import typeDefs from './type_definitions.js';
+import DropObject from './drop_object.js';
 
 
 const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
@@ -90,33 +91,70 @@ const functionRefFromTypedContext = (dragObject, contextType) => {
 
 const noNode = (dragObject, contextType) => null;
 
+/**
+ * @callback DropObjectCreator
+ * @param {Object} dragObject
+ * @param {string} contextType - the type that the surrounding context has, if any (e.g. String, Integer)
+ */
+
+/**
+ * @typedef {Object} ContextMapper
+ * @property {DropObjectCreator} contextName
+ * @returns {Object}
+ */
+
+/**
+ * @type {Object.<string, ContextMapper>}
+ */
+
 
 const dropContextMap = {
     // dragType
     functionRef: {
         // context name
-        flow: (dragObject, contextType) => wrapWithExpression(nodeTemplates.functionRefAssignment(dragObject.dragData)),
-        expression: (dragObject, contextType) => nodeTemplates.functionRefAssignment(dragObject.dragData),
-        assignment: functionRefFromTypedContext,
-        argument: functionRefFromTypedContext
+        flow: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: wrapWithExpression(nodeTemplates.functionRefAssignment(dragObject.dragData))
+        }),
+        expression: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: nodeTemplates.functionRefAssignment(dragObject.dragData)
+        }),
+        assignment: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: functionRefFromTypedContext(dragObject, contextType),
+        }),
+        argument: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: functionRefFromTypedContext(dragObject, contextType)
+        })
     },
     stringUtil: {
-        flow: noNode,
-        expression: noNode,
-        assignment: stringUtilFromTypedContext,
-        argument: stringUtilFromTypedContext
+        flow: (dragObject, contextType) => new DropObject({ dragObject }),
+        expression: (dragObject, contextType) => new DropObject({ dragObject }),
+        assignment: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: stringUtilFromTypedContext(dragObject, contextType),
+        }),
+        argument: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: stringUtilFromTypedContext(dragObject, contextType),
+        }),
     },
     expression: {
-        flow: (dragObject, contextType) => nodeTemplates.expression(),
-        expression: noNode,
-        assignment: noNode,
-        argument: noNode
+        flow: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: nodeTemplates.expression()
+        }),
+        expression: (dragObject, _) => new DropObject({ dragObject }),
+        assignment: (dragObject, _) => new DropObject({ dragObject }),
+        argument: (dragObject, _) => new DropObject({ dragObject })
     },
     moveExpression: {
-        flow: (dragObject, contextType) => dragObject,
-        expression: (dragObject, contextType) => dragObject,
-        assignment: noNode,
-        argument: noNode
+        flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: dragObject }),
+        expression: (dragObject, contextType) => new DropObject({ dragObject, newNode: dragObject }),
+        assignment: (dragObject, _) => new DropObject({ dragObject }),
+        argument: (dragObject, _) => new DropObject({ dragObject })
     }
 }
 
@@ -142,9 +180,9 @@ const dropContextMap = {
 const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => async (dragEvent) => {
     const dragObject = getDragData(dragEvent);
 
-    const node = dropContextMap[dragObject.dragType][contextName](dragObject, contextType);
+    const dropObj = dropContextMap[dragObject.dragType][contextName](dragObject, contextType);
     
-    stateChangeCallback(node);
+    stateChangeCallback(dropObj.newNode);
 };
 
 export { dragStartHandler, flowDropHandler };
