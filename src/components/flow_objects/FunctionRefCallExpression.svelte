@@ -20,7 +20,7 @@
         const method = event.target.value;
         if (method === '') {
             nodeData = {
-                ...nodeData.refData
+                ...(nodeData.refData)
             };
             return;
         }
@@ -54,6 +54,7 @@
     }
 </script>
 
+{#if nodeData.refData}
 <div class="component-wrapper">
     <p><strong><FunctionRefIdentifier bind:nodeData={nodeData.refData} isArgument={false} nodePath={nodePath + ".variable"} /></strong></p>
     <div class="method-container">
@@ -88,6 +89,7 @@
         {/each}
     </div>
 </div>
+{/if}
 
 <style>
 </style>
