@@ -186,24 +186,3 @@ const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => a
 };
 
 export { dragStartHandler, flowDropHandler };
-
-/**
- * dragStart data looks like this:
- * {
- *   "dragType": "expression" | "StringUtil" | "moveExpression" | etc,
- *   "node": undefined | {
- *     AST Node
- *   },
- *   "data": undefined | {
- *     stuff
- *   }
- * }
- * 
- * This goes through the dropContextMap like so
- * 
- * dragObject | dragType
- *             | filters -> (dragObject, dropEvent) => Node?
- *          | functionRef
- *          | stringUtil
- *          | ...
- */
