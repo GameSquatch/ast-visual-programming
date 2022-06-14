@@ -31,7 +31,7 @@
     const matchParentTypeFilter = (methodName) => !contextType || utilities[methodName].returns === contextType;
 
 
-    const addArgument = (argIndex) => (node) => {
+    const populateArgument = (argIndex) => (node) => {
         if (node === null) return;
 
         nodeData.arguments.splice(argIndex, 1, node);
@@ -58,7 +58,7 @@
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
             <Argument {argLevel} 
-                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: addArgument(i) })(event.detail)}
+                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: populateArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}
                 returnType={argument.returns}>
 
