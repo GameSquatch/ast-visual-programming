@@ -1,7 +1,7 @@
 <script>
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
     import { flowDropHandler } from '../../drag_and_drop_handlers.js';
-    import ast from '../../store/stores.js';
+    import { ast } from '../../store/stores.js';
     import constructors from '../../constructors.js';
     import { squish } from '../../custom_animations.js';
     import { flip } from 'svelte/animate';
@@ -26,20 +26,26 @@
     function prependDrop(node) {
         setHoverPrepend(false);
 
-        if (node.dragData.currentIndex !== undefined) {
+        if (node.dragData?.currentIndex ?? false) {
             $ast.main.body.splice(node.dragData.currentIndex, 1);
             node = node.nodeData;
             $ast.main.body = [node, ...$ast.main.body];
+
+        } else {
+            $ast.main.body = [ node, ...$ast.main.body ];
         }
     }
 
     function appendDrop(node) {
         setHoverAppend(false);
 
-        if (node.dragData.currentIndex !== undefined) {
+        if (node.dragData?.currentIndex ?? false) {
             $ast.main.body.splice(node.dragData.currentIndex, 1);
             node = node.nodeData;
             $ast.main.body = [...$ast.main.body, node];
+
+        } else {
+            $ast.main.body = [ ...$ast.main.body, node ];
         }
     }
 

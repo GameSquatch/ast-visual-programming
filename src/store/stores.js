@@ -1,9 +1,19 @@
-import { writable } from 'svelte/store';
+import { writable, readable } from 'svelte/store';
 import mockData from '../data_json.js';
+import { fileTree as tree } from '../components/container_components/side_nav/file_tree.js';
 
-const ast = writable(
-    mockData
-);
+const openFunction = writable("abc");
+
+let ast;
+openFunction.subscribe((functionId) => {
+    if (!ast) {
+        ast = writable(mockData[functionId])
+    }
+    
+    ast.set(mockData[functionId]);
+});
+
+const fileTree = readable(tree.items);
 
 /*
 // Messing with async ideas
@@ -26,4 +36,4 @@ const ast = {
 }
 */
 
-export default ast;
+export { ast, openFunction, fileTree };

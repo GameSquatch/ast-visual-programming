@@ -1,7 +1,7 @@
 <script>
     import typeDefs from '../../type_definitions.js';
     import nodeTemplates from '../../node_templates.js';
-    import ast from '../../store/stores.js';
+    import { ast } from '../../store/stores.js';
 
     export let nodeData;
     export let contextType = null;
@@ -34,7 +34,7 @@
 
 
 {#if nodeData.refId}
-    <span class="self">{$ast.main.info[nodeData.fnRefType][nodeData.refId].name}</span>
+    <span class="self">{$ast.main.info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
 {/if}
 {#if availableMethods.length > 0}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>
