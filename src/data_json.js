@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const var1 = uuidv4();
 const var2 = uuidv4();
+const var3 = uuidv4();
 
 const mockData = {
     "abc": {
@@ -137,10 +138,31 @@ const mockData = {
     "123": {
         "main": {
             "info": {
-                "variables": {},
+                "variables": {
+                    [var3]: {
+                        "name": "Fn2Str",
+                        "defaultValue": "hello",
+                        "returns": "String"
+                    }
+                },
                 "parameters": {}
             },
-            "body": []
+            "body": [
+                {
+                    "type": "ExpressionStatement",
+                    "id": uuidv4(),
+                    "expression": {
+                        "type": "AssignmentExpression",
+                        "left": {
+                            "type": "FunctionRefIdentifier",
+                            "refId": var3,
+                            "returns": "String",
+                            "fnRefType": "variables"
+                        },
+                        "right": null
+                    }
+                },
+            ]
         }
     }
 };
