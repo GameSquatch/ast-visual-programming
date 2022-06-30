@@ -1,7 +1,7 @@
 <script>
     import { slide } from "svelte/transition";
     import { quintOut } from "svelte/easing";
-    import { functionRefObjectDrag } from "../drag_start_data_creators.js";
+    import { functionRefObjectDrag } from "../lib/js/drag_and_drop/drag_start_data_creators.js";
     import { v4 as uuidv4 } from "uuid";
 
     export let info;

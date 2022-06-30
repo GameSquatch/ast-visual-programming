@@ -1,6 +1,6 @@
 <script>
     import FlowObjectSource from './FlowObjectSource.svelte';
-    import { stringUtilDataDrag } from '../../../drag_start_data_creators.js';
+    import { stringUtilDataDrag } from '../../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import { fileTree, openFunction } from '../../../store/stores.js';
 
     function openNewFunction(functionId) {

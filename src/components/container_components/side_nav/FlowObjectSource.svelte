@@ -1,5 +1,5 @@
 <script>
-    import { dragStartHandler } from '../../../drag_and_drop_handlers.js';
+    import { dragStartHandler } from '../../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     
     export let dragData;
     

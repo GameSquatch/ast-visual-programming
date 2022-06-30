@@ -1,7 +1,7 @@
 <script>
-    import constructors from '../../constructors.js';
+    import constructors from '../../lib/js/constructors.js';
     import FunctionRefIdentifier from '../flow_objects/FunctionRefIdentifier.svelte';
-    import { flowDropHandler } from '../../drag_and_drop_handlers.js';
+    import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import ClearNodeProp from '../ClearNodeProp.svelte';
 
     export let nodeData;

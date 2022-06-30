@@ -1,5 +1,5 @@
 import { writable, readable } from 'svelte/store';
-import mockData from '../data_json.js';
+import mockData from '../lib/js/data_json.js';
 import { fileTree as tree } from '../components/container_components/side_nav/file_tree.js';
 
 const openFunction = writable("abc");

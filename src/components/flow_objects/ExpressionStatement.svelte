@@ -1,10 +1,10 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import { flowDropHandler } from "../../drag_and_drop_handlers.js";
-    import constructors from "../../constructors.js";
+    import { flowDropHandler } from "../../lib/js/drag_and_drop/drag_and_drop_handlers.js";
+    import constructors from "../../lib/js/constructors.js";
     import ClearNodeProp from '../ClearNodeProp.svelte';
     import DragHandle from '../DragHandle.svelte';
-    import { moveExpressionDrag } from '../../drag_start_data_creators.js';
+    import { moveExpressionDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
     export let accessor;
     export let nodeData;

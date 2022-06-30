@@ -1,9 +1,9 @@
 <script>
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
-    import { flowDropHandler } from '../../drag_and_drop_handlers.js';
+    import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import { ast } from '../../store/stores.js';
-    import constructors from '../../constructors.js';
-    import { squish } from '../../custom_animations.js';
+    import constructors from '../../lib/js/constructors.js';
+    import { squish } from '../../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
 
     let hoverPrepend = false;

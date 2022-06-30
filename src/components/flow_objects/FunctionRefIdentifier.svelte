@@ -1,6 +1,6 @@
 <script>
-    import typeDefs from '../../type_definitions.js';
-    import nodeTemplates from '../../node_templates.js';
+    import typeDefs from '../../lib/js/type_definitions.js';
+    import nodeTemplates from '../../lib/js/node_templates.js';
     import { ast } from '../../store/stores.js';
 
     export let nodeData;

@@ -1,11 +1,11 @@
 <script>
     import FunctionRefIdentifier from '../flow_objects/FunctionRefIdentifier.svelte';
     import Argument from '../Argument.svelte';
-    import { flowDropHandler } from '../../drag_and_drop_handlers.js'
-    import typeDefs from '../../type_definitions.js';
+    import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
+    import typeDefs from '../../lib/js/type_definitions.js';
     import ClearNodeProp from '../ClearNodeProp.svelte';
-    import constructors from '../../constructors.js';
-    import nodeTemplates from '../../node_templates.js';
+    import constructors from '../../lib/js/constructors.js';
+    import nodeTemplates from '../../lib/js/node_templates.js';
 
     export let nodeData;
     export let contextType;

@@ -1,5 +1,5 @@
-import nodeTemplates from './node_templates.js';
-import typeDefs from './type_definitions.js';
+import nodeTemplates from '../node_templates.js';
+import typeDefs from '../type_definitions.js';
 import DropObject from './drop_object.js';
 
 
