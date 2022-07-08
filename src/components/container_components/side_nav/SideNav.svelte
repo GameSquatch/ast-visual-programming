@@ -1,17 +1,18 @@
 <script>
     import FlowObjectSource from './FlowObjectSource.svelte';
     import { stringUtilDataDrag } from '../../../lib/js/drag_and_drop/drag_start_data_creators.js';
-    import { fileTree, openFunction } from '../../../store/stores.js';
+    import { fileTree } from '../../../store/stores.js';
+    import { editorStore } from '../../tabbed_editor/editor_store.js';
 
-    function openNewFunction(functionId) {
-        $openFunction = functionId;
+    function openNewFunction(functionId, functionTitle) {
+        editorStore.openTab(functionId, functionTitle);
     }
 </script>
 
 <div class="side-nav-wrapper">
     <div class="project-structure-pane">
         {#each $fileTree as item (item.id)}
-            <div class:selected={item.id === $openFunction} on:click={(event) => openNewFunction(item.id)} class="tree-item">{item.title}</div>
+            <div on:click={(_) => openNewFunction(item.id, item.title)} class="tree-item">{item.title}</div>
         {/each}
     </div>
 
@@ -46,10 +47,5 @@
     }
     .tree-item:hover {
         background: rgba(255,255,255,0.3);
-    }
-    .tree-item.selected {
-        background: #737373;
-        color: #ddd;
-        font-weight: 800;
     }
 </style>

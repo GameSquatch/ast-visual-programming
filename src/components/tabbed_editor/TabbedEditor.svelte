@@ -2,6 +2,7 @@
 	import { editorStore } from './editor_store.js';
 	import TabBar from './TabBar.svelte';
 	import TabView from './TabView.svelte';
+	import mockData from '../../lib/js/data_json.js';
 	
 	$: dataPromise = $editorStore.tabs.filter((tab) => tab.id === $editorStore.activeTab)[0]?.dataPromise;
 </script>
@@ -29,6 +30,7 @@
 
 <style>
 	.editor-wrapper {
+		flex: 1;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
@@ -39,5 +41,8 @@
 	.tab-view-wrapper {
 		flex: 1;
 		padding: 12px;
+		overflow: hidden;
+		z-index: 0;
+		position: relative;
 	}
 </style>

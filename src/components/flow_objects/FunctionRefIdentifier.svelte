@@ -1,7 +1,7 @@
 <script>
     import typeDefs from '../../lib/js/type_definitions.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
-    import { ast } from '../../store/stores.js';
+    import { currentFlowData } from '../tabbed_editor/editor_store.js';
 
     export let nodeData;
     export let contextType = null;
@@ -34,7 +34,7 @@
 
 
 {#if nodeData.refId}
-    <span class="self">{$ast.main.info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
+    <span class="self">{$currentFlowData.info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
 {/if}
 {#if availableMethods.length > 0}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>

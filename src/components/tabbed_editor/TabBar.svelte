@@ -20,7 +20,8 @@
 	<div class="tabs-flex">
 		{#each tabData as tab (tab.id)}
 		<div on:click={(_) => openTab(tab.id)} class="tab" class:active={$editorStore.activeTab === tab.id}>
-			{tab.title}
+			<span>{tab.title}</span>
+			<div style="width: 18px"></div>
 			<span class="close-x" on:click={(_) => closeTab(tab.id)}>X</span>
 		</div>
 		{/each}
@@ -44,6 +45,10 @@
 	.tab {
 		padding: 6px;
 		margin: 2px;
+		min-width: 90px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 		background: #f8f8f8;
 		color: #9e9e9e;
 		cursor: pointer;
