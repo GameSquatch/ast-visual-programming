@@ -3,12 +3,12 @@ const fileTree = {
     items: [
         {
             title: "Main",
-            type: "Function",
+            type: "file",
             id: "abc"
         },
         {
             title: "Fn2",
-            type: "Function",
+            type: "file",
             id: "123"
         }
     ]

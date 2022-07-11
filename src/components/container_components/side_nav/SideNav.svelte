@@ -1,30 +1,31 @@
 <script>
-    import FlowObjectSource from './FlowObjectSource.svelte';
-    import { stringUtilDataDrag } from '../../../lib/js/drag_and_drop/drag_start_data_creators.js';
+    // import FlowObjectSource from './FlowObjectSource.svelte';
+    // import { stringUtilDataDrag } from '../../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import { fileTree } from '../../../store/stores.js';
-    import { editorStore } from '../../tabbed_editor/editor_store.js';
-
-    function openNewFunction(functionId, functionTitle) {
-        editorStore.openTab(functionId, functionTitle);
-    }
+    import File from './File.svelte';
+    import Folder from './Folder.svelte';
 </script>
 
 <div class="side-nav-wrapper">
     <div class="project-structure-pane">
         {#each $fileTree as item (item.id)}
-            <div on:click={(_) => openNewFunction(item.id, item.title)} class="tree-item">{item.title}</div>
+            {#if item.type === 'file'}
+            <File fileData={item} />
+            {:else if item.type === 'folder'}
+            <Folder fileData={item} />
+            {/if}
         {/each}
     </div>
 
-    <div class="utility-pane">
+    <!-- <div class="utility-pane">
         <FlowObjectSource dragData={stringUtilDataDrag()}>String Util</FlowObjectSource>
-    </div>
+    </div> -->
 </div>
     
 <style>
     .side-nav-wrapper {
-        width: 25%;
-        max-width: 500px;
+        width: 24%;
+        max-width: 425px;
         height: 100%;
         background: #ddd;
         display: flex;
@@ -35,17 +36,9 @@
         flex: 1;
     }
     
-    .utility-pane {
+    /* .utility-pane {
         min-height: 200px;
         overflow: auto;
         border-top: 2px solid #888;
-    }
-
-    .tree-item {
-        padding: 8px;
-        cursor: pointer;
-    }
-    .tree-item:hover {
-        background: rgba(255,255,255,0.3);
-    }
+    } */
 </style>
