@@ -4,16 +4,24 @@
     import { fileTree } from '../../../store/stores.js';
     import File from './File.svelte';
     import Folder from './Folder.svelte';
+
+    $: files = $fileTree.filter((item) => item.type === 'file');
+    $: folders = $fileTree.filter((item) => item.type === 'folder');
 </script>
 
 <div class="side-nav-wrapper">
+    <div class="flex w100 nav-action-bar">
+        <div class="nav-action-btn"></div>
+        <div class="nav-action-btn"></div>
+    </div>
+
     <div class="project-structure-pane">
-        {#each $fileTree as item (item.id)}
-            {#if item.type === 'file'}
-            <File fileData={item} />
-            {:else if item.type === 'folder'}
-            <Folder fileData={item} />
-            {/if}
+        {#each folders as folder (folder.id)}
+            <Folder fileData={folder} />
+        {/each}
+
+        {#each files as file (file.id)}
+            <File fileData={file} />
         {/each}
     </div>
 
@@ -34,6 +42,17 @@
     
     .project-structure-pane {
         flex: 1;
+    }
+
+    .nav-action-bar {
+        padding: 8px 4px;
+    }
+    .nav-action-btn {
+        width: 35px;
+        height: 35px;
+        margin-right: 8px;
+        background: red;
+        border-radius: 10px;
     }
     
     /* .utility-pane {

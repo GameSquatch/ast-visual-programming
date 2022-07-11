@@ -15,6 +15,9 @@
         }
     }
 
+    let files = fileData.items.filter((item) => item.type === 'file');
+    let folders = fileData.items.filter((item) => item.type === 'folder');
+
     function toggleExpanded(_) {
         expanded = !expanded;
     }
@@ -34,15 +37,15 @@
 </div>
 
 <div class="nested-items" class:collapsed={!expanded}>
-    {#each fileData.items as file (file.id)}
-        <div class="extra-pad">
-            {#if file.type === 'file'}
+    <div class="extra-pad">
+        {#each folders as folder (folder.id)}
+            <svelte:self fileData={folder} collapser={childCollapser} />
+        {/each}
+
+        {#each files as file (file.id)}
             <File fileData={file} />
-            {:else if file.type === 'folder'}
-            <svelte:self fileData={file} collapser={childCollapser} />
-            {/if}
-        </div>
-    {/each}
+        {/each}
+    </div>
 </div>
 
 <style>
@@ -60,7 +63,7 @@
     }
 
     .extra-pad {
-        padding-left: 6px;
+        padding-left: 10px;
     }
 
     .nested-items {
