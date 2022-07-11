@@ -20,23 +20,14 @@ function createEditorStore(initialValue) {
 				return editor;
 			});
 		},
-		closeTab(id) {
+		closeTab(id, index) {
 			update((editor) => {
-				let indexOfClosedTab = -1;
-				for (let i = 0; i < editor.tabs.length; ++i) {
-					if (editor.tabs[i].id === id) {
-						indexOfClosedTab = i;
-						break;
-					}
-				}
-				
-				const idOfClosedTab = editor.tabs[indexOfClosedTab].id;
-				editor.tabs.splice(indexOfClosedTab, 1);
+				editor.tabs.splice(index, 1);
 				delete editor.openedTabIds[id];
 				
 				if (editor.tabs.length === 0) {
 					editor.activeTab = '';
-				} else if (idOfClosedTab === editor.activeTab) {
+				} else if (id === editor.activeTab) {
 					editor.activeTab = editor.tabs[0].id;
 				}
 				

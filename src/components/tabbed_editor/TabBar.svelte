@@ -2,30 +2,18 @@
 	import { editorStore } from './editor_store.js';
 	
 	export let tabData;
-	
-	function addTab() {
-		editorStore.addTab('I am a new tab');
-	}
-	
-	function openTab(id) {
-		editorStore.openTab(id);
-	}
-	
-	function closeTab(id) {
-		editorStore.closeTab(id);
-	}
 </script>
 
 <div class="tabs-wrapper">
 	<div class="tabs-flex">
-		{#each tabData as tab (tab.id)}
-		<div on:click={(_) => openTab(tab.id)} class="tab" class:active={$editorStore.activeTab === tab.id}>
+		{#each tabData as tab, i (tab.id)}
+		<div on:click={(_) => editorStore.openTab(tab.id)} class="tab" class:active={$editorStore.activeTab === tab.id}>
 			<span>{tab.title}</span>
 			<div style="width: 18px"></div>
-			<span class="close-x" on:click={(_) => closeTab(tab.id)}>X</span>
+			<span class="close-x" on:click={(_) => editorStore.closeTab(tab.id, i)}>X</span>
 		</div>
 		{/each}
-		<div class="tab add-tab" on:click={addTab}>
+		<div class="tab add-tab">
 			+
 		</div>
 	</div>
