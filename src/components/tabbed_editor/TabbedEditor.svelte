@@ -2,7 +2,6 @@
 	import { editorStore } from './editor_store.js';
 	import TabBar from './TabBar.svelte';
 	import TabView from './TabView.svelte';
-	import mockData from '../../lib/js/data_json.js';
 	
 	$: dataPromise = $editorStore.tabs.filter((tab) => tab.id === $editorStore.activeTab)[0]?.dataPromise;
 </script>
