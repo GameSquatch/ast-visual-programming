@@ -13,6 +13,7 @@
     <div class="flex w100 nav-action-bar">
         <div class="nav-action-btn"><i class="mi-folder-add" /></div>
         <div class="nav-action-btn"><i class="mi-document-add" /></div>
+        <div class="nav-action-btn"><i class="mi-search" /></div>
     </div>
 
     <div class="project-structure-pane">
@@ -46,6 +47,7 @@
 
     .nav-action-bar {
         padding: 8px 4px;
+        background: #ccc;
     }
     .nav-action-btn {
         margin-right: 8px;
