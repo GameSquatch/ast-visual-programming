@@ -11,8 +11,8 @@
 
 <div class="side-nav-wrapper">
     <div class="flex w100 nav-action-bar">
-        <div class="nav-action-btn"></div>
-        <div class="nav-action-btn"></div>
+        <div class="nav-action-btn"><i class="mi-folder-add" /></div>
+        <div class="nav-action-btn"><i class="mi-document-add" /></div>
     </div>
 
     <div class="project-structure-pane">
@@ -48,11 +48,20 @@
         padding: 8px 4px;
     }
     .nav-action-btn {
-        width: 35px;
-        height: 35px;
         margin-right: 8px;
-        background: red;
+        background: #737373;
         border-radius: 10px;
+        color: white;
+        font-size: 18pt;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px 8px;
+        cursor: pointer;
+    }
+    .nav-action-btn:hover {
+        box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.34);
     }
     
     /* .utility-pane {

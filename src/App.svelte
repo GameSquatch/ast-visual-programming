@@ -1,3 +1,7 @@
+<svelte:head>
+    <link rel="stylesheet" href="https://unpkg.com/mono-icons@latest/iconfont/icons.css" />
+</svelte:head>
+
 <script>
     import SideNav from './components/container_components/side_nav/SideNav.svelte';
     import Header from './components/Header.svelte';
