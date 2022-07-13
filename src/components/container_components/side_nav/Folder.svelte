@@ -71,7 +71,7 @@
     on:click={toggleExpanded}
     on:contextmenu|preventDefault={toggleChildren}
 >
-    <span>{expanded ? '+' : '>'}</span>
+    <span>{@html (expanded ? '<i class="mi-circle" />' : '<i class="mi-caret-down" />')}</span>
     <div class="flex-1 file-title">{fileData.title}</div>
     <button on:click|stopPropagation={addFile} class="folder-action-btn"><i class="mi-document-add" /></button>
     <button on:click|stopPropagation={addFolder} class="folder-action-btn"><i class="mi-folder-add" /></button>
@@ -111,7 +111,7 @@
     }
 
     .extra-pad {
-        padding-left: 10px;
+        padding-left: 18px;
     }
 
     .nested-items {
