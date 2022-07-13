@@ -98,6 +98,10 @@ body {
     padding: 4px 0;
 }
 
+.t-align-right {
+    text-align: right;
+}
+
 /* .arguments-wrapper {
     background: #eee;
 } */
