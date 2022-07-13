@@ -1,7 +1,7 @@
 <script>
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import { fileTree } from '../../../components/container_components/side_nav/file_tree.js';
+    import { fileTree, createFile, createFolder } from '../../../components/container_components/side_nav/file_tree.js';
     import File from './File.svelte';
     import Folder from './Folder.svelte';
     import NewFolderContext from './action_contexts/NewFolderContext.svelte';
@@ -17,11 +17,7 @@
         const id = uuidv4();
         $fileTree.items = [
             ...$fileTree.items,
-            {
-                id,
-                title,
-                type: 'file'
-            }
+            createFile({ id, title })
         ];
 
         mockData[id] = {
@@ -38,12 +34,7 @@
     function addFolder(title) {
         $fileTree.items = [
             ...$fileTree.items,
-            {
-                id: uuidv4(),
-                title,
-                type: 'folder',
-                items: []
-           }
+            createFolder({ title })
         ];
     }
 </script>

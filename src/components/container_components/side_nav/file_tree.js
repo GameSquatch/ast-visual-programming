@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { v4 as uuidv4 } from 'uuid';
 
 const fileTree = writable({
     items: [
@@ -15,4 +16,21 @@ const fileTree = writable({
     ]
 });
 
-export { fileTree };
+function createFile({ title, id = uuidv4() }) {
+    return {
+        title,
+        id,
+        type: 'file'
+    };
+}
+
+function createFolder({ title, id = uuidv4() }) {
+    return {
+        title,
+        id,
+        type: 'folder',
+        items: []
+    };
+}
+
+export { fileTree, createFile, createFolder };

@@ -2,6 +2,7 @@
     import NewFileContext from './action_contexts/NewFileContext.svelte';
     import NewFolderContext from './action_contexts/NewFolderContext.svelte';
     import File from './File.svelte';
+    import { createFolder, createFile } from './file_tree.js';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../../lib/js/data_json.js';
@@ -39,22 +40,18 @@
             expanded = true;
             fileData.items = [
                 ...fileData.items,
-                {
-                    id,
-                    title,
-                    type: 'file'
-                }
+                createFile({ id, title })
             ];
 
             mockData[id] = {
-            main: {
-                info: {
-                    variables: {},
-                    parameters: {}
-                },
-                body: []
-            }
-        };
+                main: {
+                    info: {
+                        variables: {},
+                        parameters: {}
+                    },
+                    body: []
+                }
+            };
         });
     }
 
@@ -63,12 +60,7 @@
             expanded = true;
             fileData.items = [
                 ...fileData.items,
-                {
-                    id: uuidv4(),
-                    title,
-                    type: 'folder',
-                    items: []
-                }
+                createFolder({ title })
             ];
         });
     }
