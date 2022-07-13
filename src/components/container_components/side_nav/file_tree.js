@@ -1,5 +1,6 @@
+import { writable } from 'svelte/store';
 
-const fileTree = {
+const fileTree = writable({
     items: [
         {
             title: "Main",
@@ -12,6 +13,6 @@ const fileTree = {
             id: "123"
         }
     ]
-};
+});
 
 export { fileTree };
