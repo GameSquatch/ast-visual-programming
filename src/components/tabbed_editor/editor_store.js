@@ -9,11 +9,11 @@ function createEditorStore(initialValue) {
 		subscribe,
 		set,
 		update,
-		openTab(id, title) {
+		openTab(id, title, objectType) {
 			update((editor) => {
 				editor.activeTab = id;
 				if (!editor.openedTabIds[id]) {
-					editor.tabs.push({ title, id, dataPromise: Promise.resolve(mockData[id].main) });
+					editor.tabs.push({ title, id, objectType, dataPromise: Promise.resolve(mockData[id].main) });
 					editor.openedTabIds[id] = true;
 				}
 

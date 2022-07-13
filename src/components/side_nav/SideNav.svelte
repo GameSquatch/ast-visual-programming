@@ -17,7 +17,7 @@
         const id = uuidv4();
         $fileTree.items = [
             ...$fileTree.items,
-            createFile({ id, title })
+            createFile({ id, title, objectType: 'function' })
         ];
 
         mockData[id] = {

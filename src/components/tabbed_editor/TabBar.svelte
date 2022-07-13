@@ -7,7 +7,7 @@
 <div class="tabs-wrapper">
 	<div class="tabs-flex">
 		{#each tabData as tab, i (tab.id)}
-		<div on:click={(_) => editorStore.openTab(tab.id)} class="tab" class:active={$editorStore.activeTab === tab.id}>
+		<div on:click={(_) => editorStore.openTab(tab.id)} class="tab {tab.objectType}" class:active={$editorStore.activeTab === tab.id}>
 			<span>{tab.title}</span>
 			<div style="width: 18px"></div>
 			<span class="close-x" on:click={(_) => editorStore.closeTab(tab.id, i)}>X</span>
@@ -40,6 +40,10 @@
 		background: #f8f8f8;
 		color: #9e9e9e;
 		cursor: pointer;
+		border-bottom: 4px solid black;
+	}
+	.tab.function {
+		border-color: orange;
 	}
 	
 	.tab.active {

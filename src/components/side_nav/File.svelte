@@ -4,7 +4,7 @@
     export let fileData;
 
     function openNewFunction(functionId, functionTitle) {
-        editorStore.openTab(functionId, functionTitle);
+        editorStore.openTab(functionId, functionTitle, 'function');
     }
 </script>
 
