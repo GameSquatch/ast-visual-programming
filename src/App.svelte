@@ -3,7 +3,7 @@
 </svelte:head>
 
 <script>
-    import SideNav from './components/container_components/side_nav/SideNav.svelte';
+    import SideNav from './components/side_nav/SideNav.svelte';
     import Header from './components/Header.svelte';
     import TabbedEditor from './components/tabbed_editor/TabbedEditor.svelte';
 </script>

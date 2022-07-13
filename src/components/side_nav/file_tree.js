@@ -6,21 +6,24 @@ const fileTree = writable({
         {
             title: "Main",
             type: "file",
+            objectType: "function",
             id: "abc"
         },
         {
             title: "Fn2",
             type: "file",
+            objectType: "function",
             id: "123"
         }
     ]
 });
 
-function createFile({ title, id = uuidv4() }) {
+function createFile({ title, id = uuidv4(), objectType }) {
     return {
         title,
         id,
-        type: 'file'
+        type: 'file',
+        objectType
     };
 }
 

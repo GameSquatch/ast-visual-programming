@@ -5,7 +5,7 @@
     import { createFolder, createFile } from './file_tree.js';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
-    import mockData from '../../../lib/js/data_json.js';
+    import mockData from '../../lib/js/data_json.js';
 
     export let fileData;
     export let collapser = "";
@@ -40,7 +40,7 @@
             expanded = true;
             fileData.items = [
                 ...fileData.items,
-                createFile({ id, title })
+                createFile({ id, title, objectType: 'function' })
             ];
 
             mockData[id] = {

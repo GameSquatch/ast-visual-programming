@@ -1,5 +1,5 @@
 <script>
-	import Flow from '../container_components/Flow.svelte';
+	import Flow from '../Flow.svelte';
 	import FunctionInfoTab from '../FunctionInfoTab.svelte';
 
 	export let tabViewData;

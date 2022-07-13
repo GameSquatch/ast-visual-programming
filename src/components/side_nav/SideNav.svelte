@@ -1,14 +1,14 @@
 <script>
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import { fileTree, createFile, createFolder } from '../../../components/container_components/side_nav/file_tree.js';
+    import { fileTree, createFile, createFolder } from './file_tree.js';
     import File from './File.svelte';
     import Folder from './Folder.svelte';
     import NewFolderContext from './action_contexts/NewFolderContext.svelte';
     import NewFileContext from './action_contexts/NewFileContext.svelte';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
-    import mockData from '../../../lib/js/data_json.js';
+    import mockData from '../../lib/js/data_json.js';
 
     $: files = $fileTree.items.filter((item) => item.type === 'file');
     $: folders = $fileTree.items.filter((item) => item.type === 'folder');

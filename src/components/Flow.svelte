@@ -1,9 +1,9 @@
 <script>
-    import { flowDropHandler } from "../../lib/js/drag_and_drop/drag_and_drop_handlers.js";
-    import constructors from "../../lib/js/constructors.js";
-    import { squish } from "../../lib/js/custom_animations.js";
+    import { flowDropHandler } from "../lib/js/drag_and_drop/drag_and_drop_handlers.js";
+    import constructors from "../lib/js/constructors.js";
+    import { squish } from "../lib/js/custom_animations.js";
     import { flip } from "svelte/animate";
-    import { currentFlowData } from '../tabbed_editor/editor_store.js';
+    import { currentFlowData } from './tabbed_editor/editor_store.js';
 
     export let flowData;
     currentFlowData.set(flowData);

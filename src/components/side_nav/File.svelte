@@ -1,5 +1,5 @@
 <script>
-    import { editorStore } from '../../tabbed_editor/editor_store.js';
+    import { editorStore } from '../tabbed_editor/editor_store.js';
 
     export let fileData;
 
@@ -8,7 +8,7 @@
     }
 </script>
 
-<div class="file-title" on:click={(_) => openNewFunction(fileData.id, fileData.title)}>
+<div class="file-title {fileData.objectType}" on:click={(_) => openNewFunction(fileData.id, fileData.title)}>
     <span>{fileData.title}</span>
 </div>
 
@@ -16,8 +16,13 @@
     .file-title {
         padding: 4px 6px;
         cursor: pointer;
+        border-left: 5px solid black;
     }
     .file-title:hover {
         background-color: #eee;
+    }
+
+    .function {
+        border-color: orange;
     }
 </style>
