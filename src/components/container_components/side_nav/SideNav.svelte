@@ -8,19 +8,31 @@
     import NewFileContext from './action_contexts/NewFileContext.svelte';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
+    import mockData from '../../../lib/js/data_json.js';
 
     $: files = $fileTree.items.filter((item) => item.type === 'file');
     $: folders = $fileTree.items.filter((item) => item.type === 'folder');
 
     function addFile(title) {
+        const id = uuidv4();
         $fileTree.items = [
             ...$fileTree.items,
             {
-                id: uuidv4(),
+                id,
                 title,
                 type: 'file'
             }
         ];
+
+        mockData[id] = {
+            main: {
+                info: {
+                    variables: {},
+                    parameters: {}
+                },
+                body: []
+            }
+        };
     }
 
     function addFolder(title) {

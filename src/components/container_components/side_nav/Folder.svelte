@@ -4,6 +4,7 @@
     import File from './File.svelte';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
+    import mockData from '../../../lib/js/data_json.js';
 
     export let fileData;
     export let collapser = "";
@@ -34,15 +35,26 @@
 
     function addFile() {
         navStore.toggleContext(NewFileContext, (title) => {
+            const id = uuidv4();
             expanded = true;
             fileData.items = [
                 ...fileData.items,
                 {
-                    id: uuidv4(),
+                    id,
                     title,
                     type: 'file'
                 }
-            ]
+            ];
+
+            mockData[id] = {
+            main: {
+                info: {
+                    variables: {},
+                    parameters: {}
+                },
+                body: []
+            }
+        };
         });
     }
 
