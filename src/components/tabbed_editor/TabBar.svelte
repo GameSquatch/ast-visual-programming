@@ -43,7 +43,7 @@
 		border-bottom: 4px solid black;
 	}
 	.tab.function {
-		border-color: orange;
+		border-color: var(--function-color);
 	}
 	
 	.tab.active {

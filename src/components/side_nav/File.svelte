@@ -23,6 +23,6 @@
     }
 
     .function {
-        border-color: orange;
+        border-color: var(--function-color);
     }
 </style>
