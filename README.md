@@ -1,5 +1,7 @@
 # Visual Programming
 
+The currently deployed version (which may or may not be the most recent commit) can be found here: https://z-flow.herokuapp.com/
+
 The idea behind this project is to see if web-based tools, JSON, and Abstract Syntax Trees (AST) could be used to generate backend logic code from a frontend UI tool.
 
 This involves some heavy recursion, but by using this pattern, the implementation almost builds itself in a way. As an example, the code in `code_generator/code_generator.js` only calls the code generator for the root node; the generators then build themselves by calling the code generators for their constituent code generators. This continues until a terminal node within the syntax tree is reached. At which point, the string for the generated code is returned to the generator that called it. In other words, higher level code generators build their code by putting together the strings that lower level generators return.
