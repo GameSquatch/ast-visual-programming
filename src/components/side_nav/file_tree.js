@@ -1,29 +1,50 @@
 import { writable } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 
+const fileMetadata = writable({
+    "abc": {
+        title: "Main",
+        objectType: "function",
+        objectFlowData: {
+            parameters: {}
+        }
+    },
+    "123": {
+        title: "Fn2",
+        objectType: "function",
+        objectFlowData: {
+            parameters: {}
+        }
+    }
+});
+
 const fileTree = writable({
     items: [
         {
-            title: "Main",
             type: "file",
-            objectType: "function",
             id: "abc"
         },
         {
-            title: "Fn2",
             type: "file",
-            objectType: "function",
             id: "123"
         }
     ]
 });
 
-function createFile({ title, id = uuidv4(), objectType }) {
+function createFileMetadata({ title, id = uuidv4(), objectType, objectFlowData = {} }) {
     return {
         title,
         id,
-        type: 'file',
-        objectType
+        objectType,
+        objectFlowData
+    };
+}
+
+function createFileTreeReference(id) {
+    id = id || uuidv4();
+    return {
+        id,
+        type: 'file'
     };
 }
 
@@ -36,4 +57,4 @@ function createFolder({ title, id = uuidv4() }) {
     };
 }
 
-export { fileTree, createFile, createFolder };
+export { fileTree, fileMetadata, createFileTreeReference, createFileMetadata, createFolder };

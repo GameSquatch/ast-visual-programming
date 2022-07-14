@@ -1,15 +1,18 @@
 <script>
     import { editorStore } from '../tabbed_editor/editor_store.js';
+    import { fileMetadata } from './file_tree.js';
 
     export let fileData;
 
     function openNewFunction(functionId, functionTitle) {
         editorStore.openTab(functionId, functionTitle, 'function');
     }
+
+    $: metadata = $fileMetadata[fileData.id];
 </script>
 
-<div class="file-title {fileData.objectType}" on:click={(_) => openNewFunction(fileData.id, fileData.title)}>
-    <span>{fileData.title}</span>
+<div class="file-title {metadata.objectType}" on:click={(_) => openNewFunction(fileData.id, metadata.title)}>
+    <span>{metadata.title}</span>
 </div>
 
 <style>

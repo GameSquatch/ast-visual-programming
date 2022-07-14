@@ -1,8 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const var1 = uuidv4();
-const var2 = uuidv4();
-const var3 = uuidv4();
+const var1 = "4d6b745f-a0e2-4b09-8657-479edfcd79b0";//uuidv4();
+const var2 = "e7abc1fa-8630-46ef-8a31-5c4667c1be65";//uuidv4();
+const var3 = "88d2fc6d-3c58-4cef-8eda-d84617bb135f";//uuidv4();
+
+console.log(var1, var2, var3);
 
 const mockData = {
     "abc": {

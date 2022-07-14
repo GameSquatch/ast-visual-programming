@@ -2,7 +2,7 @@
     import NewFileContext from './action_contexts/NewFileContext.svelte';
     import NewFolderContext from './action_contexts/NewFolderContext.svelte';
     import File from './File.svelte';
-    import { createFolder, createFile } from './file_tree.js';
+    import { fileMetadata, createFolder, createFileTreeReference, createFileMetadata } from './file_tree.js';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../lib/js/data_json.js';
@@ -38,9 +38,11 @@
         navStore.toggleContext(NewFileContext, (title) => {
             const id = uuidv4();
             expanded = true;
+            $fileMetadata[id] = createFileMetadata({ id, title, objectType: 'function'});
+            
             fileData.items = [
                 ...fileData.items,
-                createFile({ id, title, objectType: 'function' })
+                createFileTreeReference(id)
             ];
 
             mockData[id] = {
