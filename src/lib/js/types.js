@@ -11,7 +11,7 @@
  * @property {string} returns
  */
 
-/** @typedef {Identifier|FunctionRefIdentifier|ExpressionNode|AssignmentExpression|FunctionRefCallExpression|UtilityCallExpression|Literal} ASTNode */
+/** @typedef {Identifier|VariableRefIdentifier|ExpressionNode|AssignmentExpression|VariableRefCallExpression|UtilityCallExpression|Literal} ASTNode */
 
 /**
  * @typedef {Object} Identifier
@@ -20,7 +20,7 @@
  */
 
 /**
- * @typedef {Object} FunctionRefIdentifier
+ * @typedef {Object} VariableRefIdentifier
  * @property {string} type
  * @property {string} refId
  * @property {string} returns
@@ -32,12 +32,12 @@
 /**
  * @typedef {Object} AssignmentExpression
  * @property {string} type
- * @property {FunctionRefIdentifier} left
- * @property {FunctionRefIdentifier|FunctionRefCallExpression|UtilityCallExpression} right
+ * @property {VariableRefIdentifier} left
+ * @property {VariableRefIdentifier|VariableRefCallExpression|UtilityCallExpression} right
  */
 
 /**
- * @typedef {Object} FunctionRefCallExpression
+ * @typedef {Object} VariableRefCallExpression
  * @property {string} type
  * @property {Literal} variable
  * @property {string} method
@@ -57,10 +57,10 @@
 /**
  * @typedef NodeTemplates
  * @property {(method: string) => UtilityCallExpression} StringUtil
- * @property {(options: {method: string, returns: string, refData: FunctionRefData, fnRefType: string }) => FunctionRefCallExpression} functionRefCallExpression
+ * @property {(options: {method: string, returns: string, refData: FunctionRefData, fnRefType: string }) => VariableRefCallExpression} variableRefCallExpression
  * @property {() => ExpressionNode} expression
- * @property {(options: {refId: string, returns: string}) => AssignmentExpression} functionRefAssignment
- * @property {(options: {refId: string, returns: string}) => VariableIdentifier} functionRefIdentifer
+ * @property {(options: {refId: string, returns: string}) => AssignmentExpression} variableRefAssignment
+ * @property {(options: {refId: string, returns: string}) => VariableIdentifier} variableRefIdentifer
  * @property {(options: {value: string}) => Literal} StringLiteral
  * @property {(options: {value: number}) => Literal} IntegerLiteral
  */

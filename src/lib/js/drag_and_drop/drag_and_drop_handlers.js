@@ -69,21 +69,21 @@ const stringUtilFromTypedContext = (dragObject, contextType) => {
  * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
  * @returns {Object}
  */
-const functionRefFromTypedContext = (dragObject, contextType) => {
+const variableRefFromTypedContext = (dragObject, contextType) => {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragObject, contextType);
     
     if (variableTypeMatchesContext) {
-        return nodeTemplates.functionRefIdentifer(dragObject.dragData);
+        return nodeTemplates.variableRefIdentifer(dragObject.dragData);
     }
 
     const method = findReturnTypeMatch(dragObject.dragData.returns)(contextType);
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? nodeTemplates.functionRefCallExpression({
+        ? nodeTemplates.variableRefCallExpression({
             method: method,
             returns: contextType,
-            refData: nodeTemplates.functionRefIdentifer(dragObject.dragData),
+            refData: nodeTemplates.variableRefIdentifer(dragObject.dragData),
             fnRefType: dragObject.dragData.fnRefType
         })
         : null;
@@ -108,23 +108,23 @@ const noNode = (dragObject, contextType) => null;
  */
 const dropContextMap = {
     // dragType
-    functionRef: {
+    variableRef: {
         // context name
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithExpression(nodeTemplates.functionRefAssignment(dragObject.dragData))
+            newNode: wrapWithExpression(nodeTemplates.variableRefAssignment(dragObject.dragData))
         }),
         expression: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: nodeTemplates.functionRefAssignment(dragObject.dragData)
+            newNode: nodeTemplates.variableRefAssignment(dragObject.dragData)
         }),
         assignment: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: functionRefFromTypedContext(dragObject, contextType),
+            newNode: variableRefFromTypedContext(dragObject, contextType),
         }),
         argument: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: functionRefFromTypedContext(dragObject, contextType)
+            newNode: variableRefFromTypedContext(dragObject, contextType)
         })
     },
     stringUtil: {

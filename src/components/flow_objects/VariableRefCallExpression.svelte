@@ -1,5 +1,5 @@
 <script>
-    import FunctionRefIdentifier from '../flow_objects/FunctionRefIdentifier.svelte';
+    import VariableRefIdentifier from './VariableRefIdentifier.svelte';
     import Argument from '../Argument.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import typeDefs from '../../lib/js/type_definitions.js';
@@ -56,7 +56,7 @@
 
 {#if nodeData.refData}
 <div class="component-wrapper">
-    <p><strong><FunctionRefIdentifier bind:nodeData={nodeData.refData} isArgument={false} nodePath={nodePath + ".variable"} /></strong></p>
+    <p><strong><VariableRefIdentifier bind:nodeData={nodeData.refData} isArgument={false} nodePath={nodePath + ".refData"} /></strong></p>
     <div class="method-container">
         <select on:change={onPropertyChange}>
             {#if !contextType || nodeData.refData.returns === contextType}<option value=""></option>{/if}

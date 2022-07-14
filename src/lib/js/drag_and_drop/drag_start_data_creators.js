@@ -62,7 +62,7 @@ const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ 
  * @returns {DragStartConfig}
  */
 /** @type {VariableDragStartDataCreator} */
-const functionRefObjectDrag = (fnRefData) => createDragObject({ dragType: "functionRef", dragDataType: fnRefData.returns, dragData: { ...fnRefData } });
+const variableRefObjectDrag = (fnRefData) => createDragObject({ dragType: "variableRef", dragDataType: fnRefData.returns, dragData: { ...fnRefData } });
 
 
-export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, functionRefObjectDrag };
+export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, variableRefObjectDrag };

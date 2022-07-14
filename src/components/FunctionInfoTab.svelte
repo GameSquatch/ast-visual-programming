@@ -1,7 +1,7 @@
 <script>
     import { slide } from "svelte/transition";
     import { quintOut } from "svelte/easing";
-    import { functionRefObjectDrag } from "../lib/js/drag_and_drop/drag_start_data_creators.js";
+    import { variableRefObjectDrag } from "../lib/js/drag_and_drop/drag_start_data_creators.js";
     import { v4 as uuidv4 } from "uuid";
 
     export let info;
@@ -28,7 +28,7 @@
      * @returns {(event: DragEvent) => undefined}
      */
     const dragStart = (fnRefDragged) => (event) => {
-        const dragData = functionRefObjectDrag(fnRefDragged);
+        const dragData = variableRefObjectDrag(fnRefDragged);
         event.dataTransfer.setData("text/json", JSON.stringify(dragData));
         isDisplaying = false;
         // Will auto-drop the menu after you've dropped a variable or parameter

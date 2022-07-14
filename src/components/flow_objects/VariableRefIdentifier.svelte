@@ -21,7 +21,7 @@
             return;
         }
 
-        nodeData = nodeTemplates.functionRefCallExpression({
+        nodeData = nodeTemplates.variableRefCallExpression({
             method: event.target.value,
             returns: nodeData.returns,
             refData: nodeData,

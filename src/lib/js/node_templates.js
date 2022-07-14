@@ -16,12 +16,12 @@ const nodeTemplates = {
             returns: methodDefinition.returns
         };
     },
-    functionRefCallExpression: function({ method, returns, refData, fnRefType }) {
+    variableRefCallExpression: function({ method, returns, refData, fnRefType }) {
         const methodDefinition = typeDefs[refData.returns][method];
         const definitionArgs = methodDefinition.args;
 
         return {
-            type: "FunctionRefCallExpression",
+            type: "VariableRefCallExpression",
             refData: {...refData},
             method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
@@ -37,18 +37,18 @@ const nodeTemplates = {
             expression: null
         };
     },
-    functionRefAssignment: ({ refId, returns, fnRefType }) => ({
+    variableRefAssignment: ({ refId, returns, fnRefType }) => ({
         type: "AssignmentExpression",
         left: {
-            type: "FunctionRefIdentifier",
+            type: "VariableRefIdentifier",
             refId,
             returns,
             fnRefType
         },
         right: null
     }),
-    functionRefIdentifer: ({ refId, returns, fnRefType }) => ({
-        type: "FunctionRefIdentifier",
+    variableRefIdentifer: ({ refId, returns, fnRefType }) => ({
+        type: "VariableRefIdentifier",
         refId,
         returns,
         fnRefType
