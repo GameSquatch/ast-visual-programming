@@ -15,6 +15,15 @@
  * @property {Object} [expression]
  */
 
+/**
+ * 
+ * @param {Object} config
+ * @param {string} config.dragType
+ * @param {string} [config.dragDataType="none"]
+ * @param {Object} [config.nodeData]
+ * @param {Object} [config.dragData]
+ * @returns {Object}
+ */
 function createDragObject({ dragType, dragDataType = "none", nodeData, dragData }) {
     const dragObj = {
         dragType,
@@ -58,11 +67,14 @@ const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ 
  */
 /**
  * @callback VariableDragStartDataCreator Creates the drag start data for dragging a variable from a function info tab
- * @param {FunctionRefData} fnRefData
+ * @param {FunctionRefData} varRefData
  * @returns {DragStartConfig}
  */
 /** @type {VariableDragStartDataCreator} */
-const variableRefObjectDrag = (fnRefData) => createDragObject({ dragType: "variableRef", dragDataType: fnRefData.returns, dragData: { ...fnRefData } });
+const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "variableRef", dragDataType: varRefData.returns, dragData: { ...varRefData } });
 
 
-export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, variableRefObjectDrag };
+const navFunctionDrag = (functionData) => createDragObject({ dragType: "function", dragData: { ...functionData } });
+
+
+export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, variableRefObjectDrag, navFunctionDrag };

@@ -89,7 +89,7 @@ const variableRefFromTypedContext = (dragObject, contextType) => {
         : null;
 };
 
-const noNode = (dragObject, contextType) => null;
+const noNode = (dragObject, _) => new DropObject({ dragObject });
 
 /**
  * @callback DropObjectCreator
@@ -128,8 +128,8 @@ const dropContextMap = {
         })
     },
     stringUtil: {
-        flow: (dragObject, contextType) => new DropObject({ dragObject }),
-        expression: (dragObject, contextType) => new DropObject({ dragObject }),
+        flow: noNode,
+        expression: noNode,
         assignment: (dragObject, contextType) => new DropObject({
             dragObject,
             newNode: stringUtilFromTypedContext(dragObject, contextType),
@@ -144,15 +144,21 @@ const dropContextMap = {
             dragObject,
             newNode: nodeTemplates.expression()
         }),
-        expression: (dragObject, _) => new DropObject({ dragObject }),
-        assignment: (dragObject, _) => new DropObject({ dragObject }),
-        argument: (dragObject, _) => new DropObject({ dragObject })
+        expression: noNode,
+        assignment: noNode,
+        argument: noNode
     },
     moveExpression: {
         flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: dragObject }),
         expression: (dragObject, contextType) => new DropObject({ dragObject, newNode: dragObject }),
-        assignment: (dragObject, _) => new DropObject({ dragObject }),
-        argument: (dragObject, _) => new DropObject({ dragObject })
+        assignment: noNode,
+        argument: noNode
+    },
+    "function": {
+        flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithExpression(nodeTemplates['function'](dragObject.dragData)) }),
+        expression: noNode,
+        assignment: noNode,
+        argument: noNode,
     }
 }
 
@@ -177,7 +183,7 @@ const dropContextMap = {
  */
 const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => async (dragEvent) => {
     const dragObject = getDragData(dragEvent);
-
+    
     const dropObj = dropContextMap[dragObject.dragType][contextName](dragObject, contextType);
     
     stateChangeCallback(dropObj.newNode);

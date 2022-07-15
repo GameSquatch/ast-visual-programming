@@ -64,6 +64,10 @@ const nodeTemplates = {
         type: "IntegerLiteral",
         value,
         returns: "Integer"
+    }),
+    "function": ({ metadataId }) => ({
+        type: "FunctionCallExpression",
+        metadataId
     })
 };
 

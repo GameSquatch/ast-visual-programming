@@ -35,7 +35,7 @@
         if (node === null) return;
 
         nodeData.arguments.splice(argIndex, 1, node);
-        nodeData.aruments = [
+        nodeData.arguments = [
             ...nodeData.arguments
         ];
     };
