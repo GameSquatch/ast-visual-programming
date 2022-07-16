@@ -9,6 +9,7 @@ const mockData = {
     "abc": {
         "main": {
             "info": {
+                "id": "abc",
                 "variables": {
                     [var1]: {
                         "name": "aStr",
@@ -119,6 +120,7 @@ const mockData = {
     "123": {
         "main": {
             "info": {
+                "id": "123",
                 "variables": {
                     [var3]: {
                         "name": "Fn2Str",

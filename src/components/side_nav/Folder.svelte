@@ -2,7 +2,7 @@
     import NewFileContext from './action_contexts/NewFileContext.svelte';
     import NewFolderContext from './action_contexts/NewFolderContext.svelte';
     import File from './File.svelte';
-    import { fileMetadata, createFolder, createFileTreeReference, createFileMetadata } from './file_tree.js';
+    import { fileMetadata, createFolder, createFileTreeReference, createFileMetadata, createNodeTreeEntry } from './file_tree.js';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../lib/js/data_json.js';
@@ -45,15 +45,7 @@
                 createFileTreeReference(id)
             ];
 
-            mockData[id] = {
-                main: {
-                    info: {
-                        variables: {},
-                        parameters: {}
-                    },
-                    body: []
-                }
-            };
+            mockData[id] = createNodeTreeEntry(id);
         });
     }
 

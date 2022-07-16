@@ -57,4 +57,17 @@ function createFolder({ title, id = uuidv4() }) {
     };
 }
 
-export { fileTree, fileMetadata, createFileTreeReference, createFileMetadata, createFolder };
+function createNodeTreeEntry(id) {
+    return {
+        main: {
+            id,
+            info: {
+                variables: {},
+                parameters: {}
+            },
+            body: []
+        }
+    };
+}
+
+export { fileTree, fileMetadata, createFileTreeReference, createFileMetadata, createFolder, createNodeTreeEntry };
