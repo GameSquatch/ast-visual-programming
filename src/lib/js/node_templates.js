@@ -65,10 +65,18 @@ const nodeTemplates = {
         value,
         returns: "Integer"
     }),
-    "function": ({ metadataId }) => ({
-        type: "FunctionCallExpression",
-        metadataId
-    })
+    /**
+     * @param {Object} config
+     * @param {string} config.metadataId - The id that refers back to the file metadata writable store
+     * @returns {{ type: string, metadataId: string }}
+     */
+    "function": function({ metadataId, objectFlowData }) {
+        return {
+            type: "FunctionCallExpression",
+            metadataId,
+            arguments: objectFlowData.parameters.map((param) => this[param.returns + 'Literal']({}))
+        };
+    }
 };
 
 export default nodeTemplates;

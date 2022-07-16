@@ -3,9 +3,9 @@
 /**
  * @typedef {Object} DragStartConfig
  * @property {string} dragType
- * @property {ExpressionNode} [node]
- * @property {number} [currentIndex]
- * @property {FunctionRefData} [data]
+ * @property {Object} [nodeData]
+ * @property {string} [dragDataType="none"]
+ * @property {Object} [dragData]
  */
 
 /**
@@ -74,6 +74,10 @@ const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ 
 const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "variableRef", dragDataType: varRefData.returns, dragData: { ...varRefData } });
 
 
+/**
+ * @param {{ metadataId: string }} functionData
+ * @returns {DragStartConfig}
+ */
 const navFunctionDrag = (functionData) => createDragObject({ dragType: "function", dragData: { ...functionData } });
 
 

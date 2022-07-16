@@ -6,14 +6,14 @@ const fileMetadata = writable({
         title: "Main",
         objectType: "function",
         objectFlowData: {
-            parameters: {}
+            parameters: []
         }
     },
     "123": {
         title: "Fn2",
         objectType: "function",
         objectFlowData: {
-            parameters: {}
+            parameters: []
         }
     }
 });

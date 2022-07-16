@@ -156,9 +156,9 @@ const dropContextMap = {
     },
     "function": {
         flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithExpression(nodeTemplates['function'](dragObject.dragData)) }),
-        expression: noNode,
-        assignment: noNode,
-        argument: noNode,
+        expression: (dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
+        assignment: noNode,//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
+        argument: noNode//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
     }
 }
 

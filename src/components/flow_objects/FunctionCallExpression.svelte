@@ -32,6 +32,7 @@
     <!-- <div class="arguments-wrapper">
         {#each Object.keys($fileMetadata.objectFlowData.parameters) as paramKey, i (paramKey)}
             {@const parameter = $fileMetadata.objectFlowData.parameters[paramKey]}
+            {@const currentArgument = nodeData.arguments[i]}
             <Argument {argLevel} 
                 on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: parameter.returns, stateChangeCallback: populateArgument(i) })(event.detail)}
                 onClear={() => onClear(i, parameter)}
