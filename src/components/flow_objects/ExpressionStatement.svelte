@@ -83,12 +83,11 @@
         on:dragstart|stopPropagation={handleDragStart}
         on:dragend|stopPropagation={checkDropCancel} >
 
-        <DragHandle  />
-        <div class="flex w100">
-            {#if nodeData?.expression ?? false}
-                <ClearNodeProp onClick={(_) => nodeData.expression = null} />
-            {/if}
-            <button class="delete-btn" on:click={() => dispatch('delete', accessor)}>Delete</button>
+        <div class="flex w100 flow-step-action-bar">
+            <div class="flex-1 flex">
+                <button class="delete-btn" on:click={() => dispatch('delete', accessor)}><i class="mi-delete" /></button>
+            </div>
+            <DragHandle  />
         </div>
     
         {#if nodeData && nodeData.expression !== null}
@@ -114,7 +113,7 @@
 
 <style>
     .expression-container {
-        padding: 10px 32px 32px;
+        padding: 32px;
         border: 1px dashed black;
         position: relative;
         z-index: 1;
@@ -139,5 +138,11 @@
 
     .beingDragged {
         opacity: 0.4;
+    }
+
+    .flow-step-action-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 </style>

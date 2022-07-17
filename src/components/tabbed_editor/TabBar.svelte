@@ -10,7 +10,7 @@
 		<div on:click={(_) => editorStore.openTab(tab.id)} class="tab {tab.objectType}" class:active={$editorStore.activeTab === tab.id}>
 			<span>{tab.title}</span>
 			<div style="width: 18px"></div>
-			<span class="close-x" on:click={(_) => editorStore.closeTab(tab.id, i)}>X</span>
+			<span class="close-x" on:click={(_) => editorStore.closeTab(tab.id, i)}><i class="mi-close" /></span>
 		</div>
 		{/each}
 		<div class="tab add-tab">
@@ -63,13 +63,12 @@
 	}
 	
 	.close-x {
-		font-size: 8pt;
+		font-size: 10pt;
 		padding: 2px 4px;
 		border-radius: 4px;
 		display: inline-block;
 	}
 	.close-x:hover {
-		background: red;
-		color: white;
+		color: red;
 	}
 </style>
