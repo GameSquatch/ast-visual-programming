@@ -17,12 +17,8 @@
 
 /**
  * 
- * @param {Object} config
- * @param {string} config.dragType
- * @param {string} [config.dragDataType="none"]
- * @param {Object} [config.nodeData]
- * @param {Object} [config.dragData]
- * @returns {Object}
+ * @param {DragStartConfig} dragStartConfig
+ * @returns {DragStartConfig}
  */
 function createDragObject({ dragType, dragDataType = "none", nodeData, dragData }) {
     const dragObj = {

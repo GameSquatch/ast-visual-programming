@@ -68,6 +68,8 @@ const nodeTemplates = {
     /**
      * @param {Object} config
      * @param {string} config.metadataId - The id that refers back to the file metadata writable store
+     * @param {Object} config.objectFlowData
+     * @param {Object} config.objectFlowData.metadataId
      * @returns {{ type: string, metadataId: string }}
      */
     "function": function({ metadataId, objectFlowData }) {

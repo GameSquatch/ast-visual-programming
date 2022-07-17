@@ -6,14 +6,16 @@ const fileMetadata = writable({
         title: "Main",
         objectType: "function",
         objectFlowData: {
-            parameters: []
+            parameters: [],
+            returns: "String"
         }
     },
     "123": {
         title: "Fn2",
         objectType: "function",
         objectFlowData: {
-            parameters: []
+            parameters: [],
+            returns: "String"
         }
     }
 });
@@ -63,7 +65,8 @@ function createNodeTreeEntry(id) {
             id,
             info: {
                 variables: {},
-                parameters: {}
+                parameters: [],
+                returns: "String"
             },
             body: []
         }

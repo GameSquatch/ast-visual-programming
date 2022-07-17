@@ -12,4 +12,4 @@
 </script>
 
 
-<input type="text" value={nodeData.value} on:change={updateValue} on:dragStart|stopPropagation={() => {}} />
+<input type="text" value={nodeData.value} on:change={updateValue} />

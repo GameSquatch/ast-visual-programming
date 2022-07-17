@@ -92,6 +92,17 @@
             class="tab-content"
         >
 
+            <div class="section">
+                <div class="return-type-statement">
+                    <h4>Return Type: </h4>
+                    <select>
+                        <option value="Void" selected>Void</option>
+                        <option value="String">String</option>
+                        <option value="Integer">Integer</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- ***** VARIABLE SECTION ***** -->
             <div class="section">
                 <h4>Variables</h4>
@@ -284,5 +295,9 @@
 
     .var-container {
         margin-bottom: 5px;
+    }
+
+    .return-type-statement > h4 {
+        display: inline;
     }
 </style>
