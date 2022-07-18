@@ -31,25 +31,23 @@
     function prependDrop(node) {
         setHoverPrepend(false);
 
-        if (node.dragData?.currentIndex ?? false) {
+        if ((node.dragData?.currentIndex ?? false) !== false) {
             flowData.body.splice(node.dragData.currentIndex, 1);
             node = node.nodeData;
-            flowData.body = [node, ...flowData.body];
-        } else {
-            flowData.body = [node, ...flowData.body];
         }
+        
+        flowData.body = [node, ...flowData.body];
     }
 
     function appendDrop(node) {
         setHoverAppend(false);
 
-        if (node.dragData?.currentIndex ?? false) {
+        if ((node.dragData?.currentIndex ?? false) !== false) {
             flowData.body.splice(node.dragData.currentIndex, 1);
             node = node.nodeData;
-            flowData.body = [...flowData.body, node];
-        } else {
-            flowData.body = [...flowData.body, node];
         }
+
+        flowData.body = [...flowData.body, node];
     }
 
     function handleMoveExpression({ dragData, nodeData, newIndex }) {
