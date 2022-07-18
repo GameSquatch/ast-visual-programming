@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
+import { TreePath } from '../../lib/js/tree_path.js';
 
 const fileMetadata = writable({
     "abc": {
@@ -20,8 +21,8 @@ const fileMetadata = writable({
     }
 });
 
-const fileTree = writable({
-    items: [
+const { subscribe, set, update } = writable({
+    files: [
         {
             type: "file",
             id: "abc"
@@ -30,8 +31,41 @@ const fileTree = writable({
             type: "file",
             id: "123"
         }
+    ],
+    folders: [
+        createFolder({ title: 'folder', id: 'xxx', files: [], folders: [], type: 'folder' })
     ]
 });
+const fileTree = {
+    subscribe,
+    set,
+    update,
+    moveFile({ from, to }) {
+        this.update((tree) => {
+            const fromPath = new TreePath({ stringPath: from });
+            const toPath = new TreePath({ stringPath: to });
+
+            let fromObj = tree;
+            fromPath.tokens.forEach((token, i, tokens) => {
+                if (i === tokens.length - 1) return;
+                fromObj = fromObj[token];
+            });
+            fromObj = fromObj.splice(parseInt(fromPath.getTokenAt(-1)), 1)[0];
+
+            let filesArr = tree;
+            toPath.tokens.forEach((token) => {
+                filesArr = filesArr[token];
+            });
+            
+            filesArr.files = [
+                ...filesArr.files,
+                fromObj
+            ];
+
+            return tree;
+        });
+    }
+}
 
 function createFileMetadata({ title, id = uuidv4(), objectType, objectFlowData = {} }) {
     return {
@@ -55,7 +89,8 @@ function createFolder({ title, id = uuidv4() }) {
         title,
         id,
         type: 'folder',
-        items: []
+        files: [],
+        folders: []
     };
 }
 

@@ -10,15 +10,12 @@
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../lib/js/data_json.js';
 
-    $: files = $fileTree.items.filter((item) => item.type === 'file');
-    $: folders = $fileTree.items.filter((item) => item.type === 'folder');
-
     function addFile(title) {
         const id = uuidv4();
         $fileMetadata[id] = createFileMetadata({ id, title, objectType: 'function' });
         
-        $fileTree.items = [
-            ...$fileTree.items,
+        $fileTree.files = [
+            ...$fileTree.files,
             createFileTreeReference(id)
         ];
 
@@ -26,8 +23,8 @@
     }
 
     function addFolder(title) {
-        $fileTree.items = [
-            ...$fileTree.items,
+        $fileTree.folders = [
+            ...$fileTree.folders,
             createFolder({ title })
         ];
     }
@@ -47,12 +44,12 @@
     </div>
 
     <div class="project-structure-pane">
-        {#each folders as folder (folder.id)}
-            <Folder bind:fileData={folder} />
+        {#each $fileTree.folders as folder, i (folder.id)}
+            <Folder treePath={`folders.${i}`} bind:fileData={folder} />
         {/each}
 
-        {#each files as file (file.id)}
-            <File fileData={file} />
+        {#each $fileTree.files as file, i (file.id)}
+            <File treePath={`files.${i}`} fileData={file} />
         {/each}
     </div>
 </div>

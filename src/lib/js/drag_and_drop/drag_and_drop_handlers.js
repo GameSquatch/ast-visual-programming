@@ -2,7 +2,10 @@ import nodeTemplates from '../node_templates.js';
 import typeDefs from '../type_definitions.js';
 import DropObject from './drop_object.js';
 
-
+/**
+ * @param {DragEvent} event 
+ * @returns {Object}
+ */
 const getDragData = (event) => JSON.parse(event.dataTransfer.getData('text/json'));
 /**
  * @callback DragCallback
@@ -189,4 +192,4 @@ const flowDropHandler = ({ contextName, contextType, stateChangeCallback }) => a
     stateChangeCallback(dropObj.newNode);
 };
 
-export { dragStartHandler, flowDropHandler };
+export { dragStartHandler, flowDropHandler, getDragData };

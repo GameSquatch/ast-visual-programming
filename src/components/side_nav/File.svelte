@@ -4,6 +4,7 @@
     import { navFunctionDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
     export let fileData;
+    export let treePath;
 
     function openNewFunction(functionId, functionTitle) {
         editorStore.openTab(functionId, functionTitle, 'function');
@@ -16,14 +17,14 @@
      * @param {DragEvent} event
      * @param draggedMetadata
      */
-    function handleDragStart(event, metadataId, metadataObj) {
-        event.dataTransfer.setData('text/json', JSON.stringify(navFunctionDrag({ metadataId, ...metadataObj })))
+    function handleDragStart(event) {
+        event.dataTransfer.setData('text/json', JSON.stringify(navFunctionDrag({ metadataId: fileData.id, treePath, ...metadata })))
     }
 </script>
 
 <div class="file-title {metadata.objectType}"
     draggable="true"
-    on:dragstart={(event) => handleDragStart(event, fileData.id, metadata)}
+    on:dragstart={handleDragStart}
     on:click={(_) => openNewFunction(fileData.id, metadata.title)}
     >
     <span>{metadata.title}</span>
