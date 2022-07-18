@@ -18,7 +18,12 @@
      * @param draggedMetadata
      */
     function handleDragStart(event) {
-        event.dataTransfer.setData('text/json', JSON.stringify(navFunctionDrag({ metadataId: fileData.id, treePath, ...metadata })))
+        event.dataTransfer.setData(
+            'text/json',
+            JSON.stringify(
+                navFunctionDrag({ metadataId: fileData.id, treePath, ...metadata })
+            )
+        );
     }
 </script>
 
