@@ -106,3 +106,11 @@ body {
 /* .arguments-wrapper {
     background: #eee;
 } */
+
+.closed-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: black;
+    margin-left: 1px;
+}

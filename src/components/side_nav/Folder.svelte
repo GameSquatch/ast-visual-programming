@@ -116,7 +116,7 @@
     <span
         >{@html expanded
             ? '<i class="mi-circle" />'
-            : '<i class="mi-caret-down" />'}</span
+            : '<div class="closed-circle"></div>'}</span
     >
     <div
         class="flex-1 file-title"
@@ -161,6 +161,7 @@
         padding: 4px 6px;
         cursor: pointer;
         position: relative;
+        align-items: center;
     }
     .file-title-bar:hover {
         background-color: #eee;
