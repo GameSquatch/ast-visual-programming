@@ -107,6 +107,9 @@ body {
     background: #eee;
 } */
 
+/*
+Placing a component class here since it's used with the @html injection
+*/
 .closed-circle {
     width: 12px;
     height: 12px;
