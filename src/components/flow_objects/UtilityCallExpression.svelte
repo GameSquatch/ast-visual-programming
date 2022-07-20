@@ -62,7 +62,7 @@
                 onClear={() => onClear(i, argument)}
                 returnType={argument.returns}>
 
-                <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} />
+                <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} /> -->
                 {#if argument.type === "UtilityCallExpression"}
                     <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} nodePath={nodePath + ".arguments." + i} />
                 {:else}

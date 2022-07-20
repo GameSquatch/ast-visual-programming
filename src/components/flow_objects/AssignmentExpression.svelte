@@ -30,7 +30,7 @@
         {#if nodeData.right === null}
             Drag an expression here
         {:else}
-            <ClearNodeProp onClick={(_) => nodeData.right = null} />
+            <!-- <ClearNodeProp onClick={(_) => nodeData.right = null} /> -->
             <svelte:component this={constructors[nodeData.right.type]} bind:nodeData={nodeData.right} contextType={nodeData.left.returns} nodePath={nodePath + ".right"} />
         {/if}
     </div>
