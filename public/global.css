@@ -106,3 +106,16 @@ body {
 /* .arguments-wrapper {
     background: #eee;
 } */
+
+.file-title {
+    height: 26px;
+    padding: 0 8px;
+    cursor: pointer;
+}
+.file-title:hover {
+    background-color: #eee;
+}
+
+.project-structure-pane:hover .nest-pad {
+    border-left: 1px solid rgba(0, 0, 0, 0.4);
+}

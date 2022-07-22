@@ -2,6 +2,16 @@ import { writable } from 'svelte/store';
 import { apiCall } from '../../services/mock_api.js';
 import mockData from '../../lib/js/data_json.js';
 
+/**
+ * @typedef {object} EditorState
+ * @property {string} activeTab
+ * @property {Object.<string, boolean>} openedTabIds
+ * @property {Object[]} tabs
+ */
+
+/**
+ * @param {EditorState} initialValue
+ */
 function createEditorStore(initialValue) {
 	const { subscribe, set, update } = writable(initialValue);
 	
@@ -9,6 +19,11 @@ function createEditorStore(initialValue) {
 		subscribe,
 		set,
 		update,
+		/**
+		 * @param {string} id 
+		 * @param {string} title 
+		 * @param {string} objectType 
+		 */
 		openTab(id, title, objectType) {
 			update((editor) => {
 				editor.activeTab = id;
@@ -20,6 +35,10 @@ function createEditorStore(initialValue) {
 				return editor;
 			});
 		},
+		/**
+		 * @param {string} id 
+		 * @param {number} index 
+		 */
 		closeTab(id, index) {
 			update((editor) => {
 				editor.tabs.splice(index, 1);

@@ -2,6 +2,7 @@
     import NewFileContext from "./action_contexts/NewFileContext.svelte";
     import NewFolderContext from "./action_contexts/NewFolderContext.svelte";
     import File from "./File.svelte";
+    import NestPadding from "./NestPadding.svelte";
     import {
         fileMetadata,
         createFolder,
@@ -17,18 +18,16 @@
 
     export let fileData;
     export let treePath;
+    export let treeLevel = 0;
 
     let beingDraggedOver = false;
 
 
     function toggleExpanded(_) {
-        if (fileData.files.length === 0 && fileData.folders.length === 0)
-            return;
-
         fileData.expanded = !fileData.expanded;
     }
 
-    function toggleChildren(_) {
+    function collapseChildren(_) {
         fileData.folders.forEach(function collapse(folder) {
             folder.expanded = false;
             folder.folders.forEach(collapse);
@@ -107,19 +106,18 @@
 </script>
 
 <div
-    class="file-title-bar"
+    class="file-title folder-row"
     class:dragover={beingDraggedOver}
     on:click={toggleExpanded}
-    on:contextmenu|preventDefault={toggleChildren}
+    on:contextmenu|preventDefault={collapseChildren}
     on:dragover|preventDefault={() => {}}
     on:drop|preventDefault|stopPropagation={(event) => handleDrop(event)}
 >
-    {#if fileData.files.length || fileData.folders.length}
-        <span>{#if fileData.expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>
-    {/if}
+    <NestPadding {treeLevel} />
+    <span>{#if fileData.expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>
     <i class="mi-folder" />
     <div
-        class="flex-1 file-title"
+        class="flex-1"
         on:dragenter|preventDefault={handleDragenter}
         on:dragleave|preventDefault={handleDragleave}
     >
@@ -136,18 +134,17 @@
 </div>
 
 <div class="nested-items" class:collapsed={!fileData.expanded}>
-    <div class="extra-pad">
         {#each fileData.folders as folder, i (folder.id)}
             <svelte:self
                 bind:fileData={folder}
+                treeLevel={treeLevel + 1}
                 treePath={`${treePath}.folders.${i}`}
             />
         {/each}
 
         {#each fileData.files as file, i (file.id)}
-            <File fileData={file} treePath={`${treePath}.files.${i}`} />
+            <File fileData={file} treeLevel={treeLevel + 1} treePath={`${treePath}.files.${i}`} />
         {/each}
-    </div>
 </div>
 
 <style>
@@ -155,29 +152,21 @@
         display: none;
     }
 
-    .file-title-bar {
+    .folder-row {
         display: flex;
-        padding: 4px 6px;
         cursor: pointer;
         position: relative;
         align-items: center;
     }
-    .file-title-bar:hover {
+    .folder-row.dragover {
         background-color: #eee;
-    }
-    .file-title-bar.dragover {
-        background-color: #eee;
-    }
-
-    .file-title {
-        margin-left: 6px;
-    }
-
-    .extra-pad {
-        padding-left: 18px;
     }
 
     .nested-items {
         overflow-y: hidden;
+    }
+
+    .mi-folder {
+        margin-right: 6px;
     }
 </style>

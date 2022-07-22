@@ -45,6 +45,7 @@ const fileTree = {
             const fromPath = new TreePath({ stringPath: from });
             const toPath = new TreePath({ stringPath: to });
 
+            /** @type {object} */
             let fromObj = tree;
             fromPath.tokens.forEach((token, i, tokens) => {
                 if (i === tokens.length - 1) return;
@@ -52,6 +53,7 @@ const fileTree = {
             });
             fromObj = fromObj.splice(parseInt(fromPath.getTokenAt(-1)), 1)[0];
 
+            /** @type {object} */
             let filesArr = tree;
             toPath.tokens.forEach((token) => {
                 filesArr = filesArr[token];
@@ -84,14 +86,14 @@ function createFileTreeReference(id) {
     };
 }
 
-function createFolder({ title, id = uuidv4() }) {
+function createFolder({ title, id = uuidv4(), files = [], folders = [] }) {
     return {
         title,
         id,
         type: 'folder',
         expanded: false,
-        files: [],
-        folders: []
+        files,
+        folders
     };
 }
 

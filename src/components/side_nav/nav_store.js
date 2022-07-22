@@ -1,5 +1,12 @@
 import { writable } from 'svelte/store';
 
+/**
+ * @typedef {Object} NavState
+ * @property {boolean} isShowingContext
+ * @property {string|null} contextType
+ * @property {() => void} onDoneCallback
+ */
+
 const { subscribe, set, update } = writable({
     isShowingContext: false,
     contextType: null,
