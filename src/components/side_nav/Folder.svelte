@@ -62,18 +62,24 @@
     let dragenterExpandTimer = null;
 
     function handleDragenter(_) {
+        beingDraggedOver = true;
+
+        if (fileData.folders.length === 0 && fileData.files.length === 0) return;
+
         if (dragenterExpandTimer === null) {
-            dragenterExpandTimer = setTimeout(() => (expanded = true), 1800);
+            dragenterExpandTimer = setTimeout(() => (fileData.expanded = true), 1400);
         } else {
             clearTimeout(dragenterExpandTimer);
             dragenterExpandTimer = null;
         }
 
-        beingDraggedOver = true;
     }
 
     function handleDragleave(_) {
         beingDraggedOver = false;
+
+        if (fileData.folders.length === 0 && fileData.files.length === 0) return;
+
         if (dragenterExpandTimer !== null) {
             clearTimeout(dragenterExpandTimer);
             dragenterExpandTimer = null;
@@ -86,6 +92,7 @@
     function handleDrop(event) {
         beingDraggedOver = false;
         fileData.expanded = true;
+
         if (dragenterExpandTimer !== null) {
             clearTimeout(dragenterExpandTimer);
             dragenterExpandTimer = null;
