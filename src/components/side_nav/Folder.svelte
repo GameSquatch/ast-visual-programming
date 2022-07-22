@@ -69,7 +69,7 @@
 
     function handleDragenter(_) {
         if (dragenterExpandTimer === null) {
-            dragenterExpandTimer = setTimeout(() => expanded = true, 1800);
+            dragenterExpandTimer = setTimeout(() => (expanded = true), 1800);
         } else {
             clearTimeout(dragenterExpandTimer);
             dragenterExpandTimer = null;
@@ -96,7 +96,7 @@
             clearTimeout(dragenterExpandTimer);
             dragenterExpandTimer = null;
         }
-        
+
         const dragData = getDragData(event);
         if (dragData.dragType !== "function") return;
 
@@ -113,11 +113,9 @@
     on:dragover|preventDefault={() => {}}
     on:drop|preventDefault|stopPropagation={(event) => handleDrop(event)}
 >
-    <span
-        >{@html expanded
-            ? '<i class="mi-circle" />'
-            : '<div class="closed-circle"></div>'}</span
-    >
+    {#if fileData.files.length || fileData.folders.length}
+        <span>{#if expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>
+    {/if}
     <div
         class="flex-1 file-title"
         on:dragenter|preventDefault={handleDragenter}
