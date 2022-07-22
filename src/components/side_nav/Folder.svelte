@@ -21,6 +21,7 @@
     export let treeLevel = 0;
 
     let beingDraggedOver = false;
+    let isEmpty = fileData.folders.length + fileData.files.length === 0;
 
 
     function toggleExpanded(_) {
@@ -63,7 +64,7 @@
     function handleDragenter(_) {
         beingDraggedOver = true;
 
-        if (fileData.folders.length === 0 && fileData.files.length === 0) return;
+        if (isEmpty) return;
 
         if (dragenterExpandTimer === null) {
             dragenterExpandTimer = setTimeout(() => (fileData.expanded = true), 1400);
@@ -77,7 +78,7 @@
     function handleDragleave(_) {
         beingDraggedOver = false;
 
-        if (fileData.folders.length === 0 && fileData.files.length === 0) return;
+        if (isEmpty) return;
 
         if (dragenterExpandTimer !== null) {
             clearTimeout(dragenterExpandTimer);
@@ -129,8 +130,6 @@
     <button on:click|stopPropagation={addFolder} class="folder-action-btn"
         ><i class="mi-folder-add" /></button
     >
-
-    <!-- <div class="file-context-menu" /> -->
 </div>
 
 <div class="nested-items" class:collapsed={!fileData.expanded}>
@@ -168,5 +167,9 @@
 
     .mi-folder {
         margin-right: 6px;
+    }
+
+    .mi-remove, .mi-add {
+        font-size: 10pt;
     }
 </style>
