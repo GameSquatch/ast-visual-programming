@@ -16,36 +16,30 @@
     import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
 
     export let fileData;
-    export let collapser = "";
     export let treePath;
 
-    let childCollapser = "";
-    let expanded = false;
     let beingDraggedOver = false;
 
-    $: {
-        if (collapser === "collapse") {
-            expanded = false;
-            childCollapser = "collapse";
-            collapser = "";
-        }
-    }
 
     function toggleExpanded(_) {
         if (fileData.files.length === 0 && fileData.folders.length === 0)
             return;
 
-        expanded = !expanded;
+        fileData.expanded = !fileData.expanded;
     }
 
     function toggleChildren(_) {
-        childCollapser = "collapse";
+        fileData.folders.forEach(function collapse(folder) {
+            folder.expanded = false;
+            folder.folders.forEach(collapse);
+        });
+        fileData.folders = fileData.folders;
     }
 
     function addFile() {
         navStore.toggleContext(NewFileContext, (title) => {
             const id = uuidv4();
-            expanded = true;
+            fileData.expanded = true;
             $fileMetadata[id] = createFileMetadata({
                 id,
                 title,
@@ -60,7 +54,7 @@
 
     function addFolder() {
         navStore.toggleContext(NewFolderContext, (title) => {
-            expanded = true;
+            fileData.expanded = true;
             fileData.folders = [...fileData.folders, createFolder({ title })];
         });
     }
@@ -91,7 +85,7 @@
      */
     function handleDrop(event) {
         beingDraggedOver = false;
-        expanded = true;
+        fileData.expanded = true;
         if (dragenterExpandTimer !== null) {
             clearTimeout(dragenterExpandTimer);
             dragenterExpandTimer = null;
@@ -114,8 +108,9 @@
     on:drop|preventDefault|stopPropagation={(event) => handleDrop(event)}
 >
     {#if fileData.files.length || fileData.folders.length}
-        <span>{#if expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>
+        <span>{#if fileData.expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>
     {/if}
+    <i class="mi-folder" />
     <div
         class="flex-1 file-title"
         on:dragenter|preventDefault={handleDragenter}
@@ -133,12 +128,11 @@
     <!-- <div class="file-context-menu" /> -->
 </div>
 
-<div class="nested-items" class:collapsed={!expanded}>
+<div class="nested-items" class:collapsed={!fileData.expanded}>
     <div class="extra-pad">
         {#each fileData.folders as folder, i (folder.id)}
             <svelte:self
                 bind:fileData={folder}
-                collapser={childCollapser}
                 treePath={`${treePath}.folders.${i}`}
             />
         {/each}

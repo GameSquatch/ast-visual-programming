@@ -13,9 +13,6 @@
 			<span class="close-x" on:click={(_) => editorStore.closeTab(tab.id, i)}><i class="mi-close" /></span>
 		</div>
 		{/each}
-		<div class="tab add-tab">
-			+
-		</div>
 	</div>
 </div>
 
@@ -49,14 +46,6 @@
 	.tab.active {
 		color: black;
 		background: #f0f0f0
-	}
-	
-	.add-tab {
-		width: 25px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: black;
 	}
 	.tab:hover {
 		background: #dfdfdf;

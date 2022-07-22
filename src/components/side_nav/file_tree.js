@@ -33,7 +33,7 @@ const { subscribe, set, update } = writable({
         }
     ],
     folders: [
-        createFolder({ title: 'folder', id: 'xxx', files: [], folders: [], type: 'folder' })
+        createFolder({ title: 'folder', id: 'xxx' })
     ]
 });
 const fileTree = {
@@ -89,6 +89,7 @@ function createFolder({ title, id = uuidv4() }) {
         title,
         id,
         type: 'folder',
+        expanded: false,
         files: [],
         folders: []
     };
