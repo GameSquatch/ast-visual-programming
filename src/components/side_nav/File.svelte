@@ -15,21 +15,19 @@
     $: metadata = $fileMetadata[fileData.id];
 
     /**
-     * 
      * @param {DragEvent} event
-     * @param draggedMetadata
      */
     function handleDragStart(event) {
         event.dataTransfer.setData(
             'text/json',
             JSON.stringify(
-                navFunctionDrag({ metadataId: fileData.id, treePath, ...metadata })
+                navFunctionDrag({ fileId: fileData.id, treePath, ...metadata })
             )
         );
     }
 </script>
 
-<div class="flex align-center file-title {metadata.objectType}"
+<div class="flex align-center file-title {metadata.fileType}"
     draggable="true"
     on:dragstart={handleDragStart}
     on:click={(_) => openNewFunction(fileData.id, metadata.title)}

@@ -12,7 +12,7 @@
 
     function addFile(title) {
         const id = uuidv4();
-        $fileMetadata[id] = createFileMetadata({ id, title, objectType: 'function' });
+        $fileMetadata[id] = createFileMetadata({ title, fileType: 'function' });
         
         $fileTree.files = [
             ...$fileTree.files,

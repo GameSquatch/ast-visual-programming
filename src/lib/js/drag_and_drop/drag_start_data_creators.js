@@ -71,10 +71,19 @@ const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "vari
 
 
 /**
- * @param {{ metadataId: string }} functionData
+ * @typedef {Object} FileDragData
+ * @property {string} fileId
+ * @property {string} treePath
+ * @property {string} title
+ * @property {string} fileType
+ * @property {{ parameters: import("../../../components/side_nav/file_tree").FunctionParameterConfig, returns: string }} objectFlowData
+ */
+
+/**
+ * @param {FileDragData} fileData
  * @returns {DragStartConfig}
  */
-const navFunctionDrag = (functionData) => createDragObject({ dragType: "function", dragData: { ...functionData } });
+const navFunctionDrag = (fileData) => createDragObject({ dragType: fileData.fileType, dragData: { ...fileData } });
 
 
 export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, variableRefObjectDrag, navFunctionDrag };

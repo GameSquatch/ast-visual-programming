@@ -22,13 +22,13 @@ function createEditorStore(initialValue) {
 		/**
 		 * @param {string} id 
 		 * @param {string} title 
-		 * @param {string} objectType 
+		 * @param {string} fileType 
 		 */
-		openTab(id, title, objectType) {
+		openTab(id, title, fileType) {
 			update((editor) => {
 				editor.activeTab = id;
 				if (!editor.openedTabIds[id]) {
-					editor.tabs.push({ title, id, objectType, dataPromise: Promise.resolve(mockData[id].main) });
+					editor.tabs.push({ title, id, fileType, dataPromise: Promise.resolve(mockData[id].main) });
 					editor.openedTabIds[id] = true;
 				}
 

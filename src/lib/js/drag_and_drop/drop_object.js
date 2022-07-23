@@ -1,5 +1,12 @@
 
 class DropObject {
+    /**
+     * @param {Object} spec
+     * @param {Object} spec.dragObject
+     * @param {Object|null} [spec.newNode=null]
+     * @param {() => void} [spec.preNodeInsertCallback]
+     * @param {() => void} [spec.postNodeInsertCallback]
+     */
     constructor({
         dragObject,
         newNode = null,

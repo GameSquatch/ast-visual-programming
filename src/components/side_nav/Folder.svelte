@@ -41,9 +41,8 @@
             const id = uuidv4();
             fileData.expanded = true;
             $fileMetadata[id] = createFileMetadata({
-                id,
                 title,
-                objectType: "function",
+                fileType: "function"
             });
 
             fileData.files = [...fileData.files, createFileTreeReference(id)];

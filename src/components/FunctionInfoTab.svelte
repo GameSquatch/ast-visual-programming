@@ -3,6 +3,7 @@
     import { quintOut } from "svelte/easing";
     import { variableRefObjectDrag } from "../lib/js/drag_and_drop/drag_start_data_creators.js";
     import { v4 as uuidv4 } from "uuid";
+    import { fileMetadata } from "../components/side_nav/file_tree.js";
 
     export let info;
 
@@ -53,14 +54,12 @@
     }
 
     function addParameter(_) {
-        info.parameters = {
-            ...info.parameters,
-            [uuidv4()]: {
-                name: "newParam",
-                returns: "String",
-                defaultValue: "",
-            },
-        };
+        fileMetadata.addParameter({
+            fnId: info.id,
+            parameter: {
+                id: uuidv4()
+            }
+        });
     }
 
     function stopTimer(_) {
@@ -167,8 +166,8 @@
             <!-- ***** PARAMETER SECTION ***** -->
             <div class="section">
                 <h4>Parameters</h4>
-                {#each Object.keys(info.parameters) as paramId (paramId)}
-                    {@const paramObj = info.parameters[paramId]}
+                {#each Object.keys($fileMetadata[info.id].objectFlowData.parameters) as paramId (paramId)}
+                    {@const paramObj = $fileMetadata[info.id].objectFlowData.parameters[paramId]}
                     <div
                         on:dragstart={dragStart({
                             ...paramObj,

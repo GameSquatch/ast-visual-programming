@@ -2,24 +2,74 @@ import { writable } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 import { TreePath } from '../../lib/js/tree_path.js';
 
-const fileMetadata = writable({
+/**
+ * @typedef {Object} FileMetadataFlowData
+ * @property {Object.<string, FunctionParameterConfig>} parameters
+ * @property {string} returns
+ */
+/**
+ * @typedef {Object} FileMetadataEntry
+ * @property {string} title
+ * @property {string} fileType
+ * @property {FileMetadataFlowData} objectFlowData
+ */
+
+/**
+ * @type {Object.<string, FileMetadataEntry>} FileMetadata
+ */
+const fm = {
     "abc": {
         title: "Main",
-        objectType: "function",
+        fileType: "function",
         objectFlowData: {
-            parameters: [],
+            parameters: {},
             returns: "String"
         }
     },
     "123": {
         title: "Fn2",
-        objectType: "function",
+        fileType: "function",
         objectFlowData: {
-            parameters: [],
+            parameters: {},
             returns: "String"
         }
     }
-});
+};
+
+/**
+ * @typedef {Object} FunctionParameterConfig
+ * @property {string} name
+ * @property {string} returns
+ * @property {string|number|boolean} defaultValue
+ */
+/**
+ * 
+ * @param {FunctionParameterConfig} startingValues
+ * @returns {FunctionParameterConfig}
+ */
+function createParameter({ name = "newParam", returns = "String", defaultValue = "" }) {
+    return {
+        name,
+        returns,
+        defaultValue
+    };
+}
+const fileMetadata = (() => {
+    const { subscribe, set, update } = writable(fm);
+
+    return {
+        subscribe,
+        set,
+        update,
+        addParameter({ fnId, parameter }) {
+            update((state) => {
+                state[fnId].objectFlowData.parameters[parameter.id] = createParameter(parameter);
+                return state;
+            });
+        }
+    };
+})();
+
 
 const { subscribe, set, update } = writable({
     files: [
@@ -69,12 +119,11 @@ const fileTree = {
     }
 }
 
-function createFileMetadata({ title, id = uuidv4(), objectType, objectFlowData = {} }) {
+function createFileMetadata({ title, fileType, objectFlowData = { parameters: {}, returns: "String" } }) {
     return {
         title,
-        id,
-        objectType,
-        objectFlowData
+        fileType,
+        objectFlowData: { ...objectFlowData }
     };
 }
 
@@ -103,7 +152,7 @@ function createNodeTreeEntry(id) {
             id,
             info: {
                 variables: {},
-                parameters: [],
+                parameters: {},
                 returns: "String"
             },
             body: []

@@ -2,7 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 import typeDefs from './type_definitions.js';
 
 
-/** @type {NodeTemplates} */
+/**
+ * 
+ */
+
+
 const nodeTemplates = {
     StringUtil: function(method = "concat") {
         const methodDefinition = typeDefs['StringUtil'][method];
@@ -67,16 +71,16 @@ const nodeTemplates = {
     }),
     /**
      * @param {Object} config
-     * @param {string} config.metadataId - The id that refers back to the file metadata writable store
+     * @param {string} config.fileId - The id that refers back to the file metadata writable store
      * @param {Object} config.objectFlowData
-     * @param {Object} config.objectFlowData.metadataId
-     * @returns {{ type: string, metadataId: string }}
+     * @param {import('../../components/side_nav/file_tree.js').FunctionParameterConfig} config.objectFlowData.parameters
+     * @returns {{ type: string, fileId: string, arguments: Array }}
      */
-    "function": function({ metadataId, objectFlowData }) {
+    "function": function({ fileId, objectFlowData }) {
         return {
             type: "FunctionCallExpression",
-            metadataId,
-            arguments: objectFlowData.parameters.map((param) => this[param.returns + 'Literal']({}))
+            fileId,
+            arguments: Object.keys(objectFlowData.parameters).map((param) => this[objectFlowData.parameters[param].returns + 'Literal']({}))
         };
     }
 };

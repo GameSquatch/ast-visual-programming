@@ -28,7 +28,7 @@
 </script>
 
 <div class="component-wrapper">
-    <p><strong>{$fileMetadata[nodeData.metadataId].title}</strong>.call()</p>
+    <p><strong>{$fileMetadata[nodeData.fileId].title}</strong>.call()</p>
     <!-- <div class="arguments-wrapper">
         {#each Object.keys($fileMetadata.objectFlowData.parameters) as paramKey, i (paramKey)}
             {@const parameter = $fileMetadata.objectFlowData.parameters[paramKey]}
