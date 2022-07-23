@@ -80,7 +80,7 @@ const nodeTemplates = {
         return {
             type: "FunctionCallExpression",
             fileId,
-            arguments: Object.keys(objectFlowData.parameters).map((param) => this[objectFlowData.parameters[param].returns + 'Literal']({}))
+            arguments: []
         };
     }
 };
