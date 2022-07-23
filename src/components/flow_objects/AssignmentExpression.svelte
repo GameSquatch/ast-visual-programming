@@ -39,10 +39,7 @@
 
 <style>
     .set-block {
-        width: 15%;
         min-width: 100px;
-        max-width: 200px;
-        overflow-x: auto;
         align-self: center;
     }
 
