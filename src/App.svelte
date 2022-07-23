@@ -3,24 +3,17 @@
 </svelte:head>
 
 <script>
-    import SideNav from './components/side_nav/SideNav.svelte';
-    import Header from './components/Header.svelte';
-    import TabbedEditor from './components/tabbed_editor/TabbedEditor.svelte';
+    import RootPage from './pages/RootPage.svelte';
+    import RunPage from './pages/RunPage.svelte';
+    import { routes } from './store/routes.js';
 </script>
 
-<Header />
-<div class="w100 content-wrapper">
-    <SideNav />
-    
-    <div class="flex-1">
-        <TabbedEditor />
-    </div>
-</div>
-    
-<style>
-    .content-wrapper {
-        flex: 1;
-        display: flex;
-        overflow: hidden;
-    }
-</style>
+
+{#if $routes === '/'}
+    <RootPage />
+{:else if $routes == '/run'}
+    <RunPage />
+{:else}
+    <RootPage />
+{/if}
+
