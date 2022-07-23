@@ -83,7 +83,7 @@ const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "vari
  * @param {FileDragData} fileData
  * @returns {DragStartConfig}
  */
-const navFileDrag = (fileData) => createDragObject({ dragType: fileData.fileType, dragData: { ...fileData } });
+const navFileDrag = (fileData) => createDragObject({ dragType: 'file', dragData: { ...fileData } });
 
 
 const navFolderDrag = (folderData) => createDragObject({ dragType: 'folder', dragData: { ...folderData } });

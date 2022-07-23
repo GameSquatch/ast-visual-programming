@@ -36,7 +36,7 @@
     function handleDrop(event) {
         const dragObject = getDragData(event);
 
-        if (event.dataTransfer === null || !['function', 'folder'].includes(dragObject.dragType)) {
+        if (event.dataTransfer === null || !['file', 'folder'].includes(dragObject.dragType)) {
             return;
         }
 

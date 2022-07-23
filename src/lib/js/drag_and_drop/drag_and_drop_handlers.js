@@ -169,7 +169,7 @@ const dropContextMap = {
         argument: noNode
     },
     /** @type {Object.<string, FunctionContextCallback>} */
-    "function": {
+    "file": {
         flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithExpression(nodeTemplates[dragObject.dragData.fileType](dragObject.dragData)) }),
         expression: (dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates[dragObject.dragData.fileType](dragObject.dragData) }),
         assignment: noNode,//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),

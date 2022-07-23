@@ -99,7 +99,7 @@
         }
 
         const dragData = getDragData(event);
-        if (dragData.dragType !== "function" && dragData.dragType !== "folder") return;
+        if (dragData.dragType !== "file" && dragData.dragType !== "folder") return;
 
         fileTree.moveItem({ from: dragData.dragData.treePath, to: treePath, navType: dragData.dragType === 'folder' ? 'folders' : 'files' });
     }
