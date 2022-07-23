@@ -77,10 +77,11 @@
     }
 
     function changeRefType(event, id, infoKey) {
-        info[infoKey][id] = {
-            ...info[infoKey][id],
-            returns: event.target.value,
-        };
+        fileMetadata.changeParameterType({ fnId: info.id, paramId: id, dataType: event.target.value })
+        // info[infoKey][id] = {
+        //     ...info[infoKey][id],
+        //     returns: event.target.value,
+        // };
     }
 </script>
 

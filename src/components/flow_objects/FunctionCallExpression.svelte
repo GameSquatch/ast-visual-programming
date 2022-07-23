@@ -17,14 +17,21 @@
         const parameters = metadata[nodeData.fileId].objectFlowData.parameters;
         const parameterKeys = Object.keys(parameters);
 
-        if (parameterKeys.length === nodeData.arguments.length) {
-            return;
+        for (let i = 0; i < parameterKeys.length; ++i) {
+            const parameter = parameters[parameterKeys[i]];
+            const arg = nodeData.arguments[i];
+
+            if (!arg) {
+                nodeData.arguments.push(nodeTemplates[parameter.returns + 'Literal']({}) );
+                continue;
+            }
+
+            if (parameter.returns !== arg.returns) {
+                nodeData.arguments[i] = nodeTemplates[parameter.returns + 'Literal']({});
+            }
         }
         
-        nodeData.arguments = [
-            ...nodeData.arguments,
-            nodeTemplates[parameters[parameterKeys[parameterKeys.length - 1]].returns + 'Literal']({})
-        ];
+        nodeData.arguments = nodeData.arguments;
     });
 
 
