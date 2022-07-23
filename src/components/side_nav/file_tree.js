@@ -111,9 +111,11 @@ const fileTree = {
 
             /** @type {object} */
             let filesArr = tree;
-            toPath.tokens.forEach((token) => {
-                filesArr = filesArr[token];
-            });
+            if (toPath.tokens.length > 1) {
+                toPath.tokens.forEach((token) => {
+                    filesArr = filesArr[token];
+                });
+            }
             
             filesArr.files = [
                 ...filesArr.files,

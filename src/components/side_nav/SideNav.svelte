@@ -9,7 +9,9 @@
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../lib/js/data_json.js';
+    import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
 
+    /** @type {(title: string, fileType: string) => void} */
     function addFile(title, fileType) {
         const id = uuidv4();
         $fileMetadata[id] = createFileMetadata({ title, fileType });
@@ -22,11 +24,23 @@
         mockData[id] = createNodeTreeEntry(id);
     }
 
+    /** @type {(title: string) => void} */
     function addFolder(title) {
         $fileTree.folders = [
             ...$fileTree.folders,
             createFolder({ title })
         ];
+    }
+
+    /** @type {(event: DragEvent) => void} */
+    function handleDrop(event) {
+        const dragObject = getDragData(event);
+
+        if (event.dataTransfer === null || dragObject.dragType !== 'function') {
+            return;
+        }
+
+        fileTree.moveFile({ from: dragObject.dragData.treePath, to: 'files' })
     }
 </script>
 
@@ -43,7 +57,7 @@
         {/if}
     </div>
 
-    <div class="project-structure-pane">
+    <div on:drop|stopPropagation={handleDrop} on:dragover|preventDefault={() => {}} class="project-structure-pane">
         {#each $fileTree.folders as folder, i (folder.id)}
             <Folder treePath={`folders.${i}`} bind:fileData={folder} />
         {/each}
