@@ -96,7 +96,7 @@ const fileTree = {
     subscribe,
     set,
     update,
-    moveFile({ from, to }) {
+    moveItem({ from, to, navType = 'files'}) {
         this.update((tree) => {
             const fromPath = new TreePath({ stringPath: from });
             const toPath = new TreePath({ stringPath: to });
@@ -109,16 +109,47 @@ const fileTree = {
             });
             fromObj = fromObj.splice(parseInt(fromPath.getTokenAt(-1)), 1)[0];
 
+            console.log(from, to);
             /** @type {object} */
-            let filesArr = tree;
+            let locationArr = tree;
             if (toPath.tokens.length > 1) {
                 toPath.tokens.forEach((token) => {
-                    filesArr = filesArr[token];
+                    locationArr = locationArr[token];
                 });
             }
             
-            filesArr.files = [
-                ...filesArr.files,
+            locationArr[navType] = [
+                ...locationArr[navType],
+                fromObj
+            ];
+
+            return tree;
+        });
+    },
+    moveFolder({ from, to }) {
+        update((tree) => {
+            const fromPath = new TreePath({ stringPath: from });
+            const toPath = new TreePath({ stringPath: to });
+
+            /** @type {object} */
+            let fromObj = tree;
+            fromPath.tokens.forEach((token, i, tokens) => {
+                if (i === tokens.length - 1) return;
+                fromObj = fromObj[token];
+            });
+            fromObj = fromObj.splice(parseInt(fromPath.getTokenAt(-1)), 1)[0];
+
+            console.log(from, to);
+            /** @type {object} */
+            let foldersArr = tree;
+            if (toPath.tokens.length > 1) {
+                toPath.tokens.forEach((token) => {
+                    foldersArr = foldersArr[token];
+                });
+            }
+            
+            foldersArr.folders = [
+                ...foldersArr.folders,
                 fromObj
             ];
 

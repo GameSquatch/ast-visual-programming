@@ -1,7 +1,7 @@
 <script>
     import { editorStore } from '../tabbed_editor/editor_store.js';
     import { fileMetadata } from './file_tree.js';
-    import { navFunctionDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
+    import { navFileDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import NestPadding from './NestPadding.svelte';
 
     export let fileData;
@@ -21,7 +21,7 @@
         event.dataTransfer.setData(
             'text/json',
             JSON.stringify(
-                navFunctionDrag({ fileId: fileData.id, treePath, ...metadata })
+                navFileDrag({ fileId: fileData.id, treePath, ...metadata })
             )
         );
     }

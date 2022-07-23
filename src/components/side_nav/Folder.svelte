@@ -15,6 +15,7 @@
     import { v4 as uuidv4 } from "uuid";
     import mockData from "../../lib/js/data_json.js";
     import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
+    import { navFolderDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
     export let fileData;
     export let treePath;
@@ -98,10 +99,18 @@
         }
 
         const dragData = getDragData(event);
-        if (dragData.dragType !== "function") return;
+        if (dragData.dragType !== "function" && dragData.dragType !== "folder") return;
 
-        //console.log(dragData);
-        fileTree.moveFile({ from: dragData.dragData.treePath, to: treePath });
+        fileTree.moveItem({ from: dragData.dragData.treePath, to: treePath, navType: dragData.dragType === 'folder' ? 'folders' : 'files' });
+    }
+
+    function handleDragstart(event) {
+        event.dataTransfer.setData(
+            'text/json',
+            JSON.stringify(
+                navFolderDrag({ id: fileData.id, treePath })
+            )
+        );
     }
 </script>
 
@@ -111,7 +120,9 @@
     on:click={toggleExpanded}
     on:contextmenu|preventDefault={collapseChildren}
     on:dragover|preventDefault={() => {}}
-    on:drop|preventDefault|stopPropagation={(event) => handleDrop(event)}
+    on:drop|stopPropagation={(event) => handleDrop(event)}
+    on:dragstart={handleDragstart}
+    draggable="true"
 >
     <NestPadding {treeLevel} />
     <span>{#if fileData.expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>

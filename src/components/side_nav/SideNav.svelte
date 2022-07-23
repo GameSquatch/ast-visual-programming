@@ -36,11 +36,11 @@
     function handleDrop(event) {
         const dragObject = getDragData(event);
 
-        if (event.dataTransfer === null || dragObject.dragType !== 'function') {
+        if (event.dataTransfer === null || !['function', 'folder'].includes(dragObject.dragType)) {
             return;
         }
 
-        fileTree.moveFile({ from: dragObject.dragData.treePath, to: 'files' })
+        fileTree.moveItem({ from: dragObject.dragData.treePath, to: 'files', navType: dragObject.dragType === 'folder' ? 'folders' : 'files' })
     }
 </script>
 
