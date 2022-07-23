@@ -37,12 +37,12 @@
     }
 
     function addFile() {
-        navStore.toggleContext(NewFileContext, (title) => {
+        navStore.toggleContext(NewFileContext, (title, fileType) => {
             const id = uuidv4();
             fileData.expanded = true;
             $fileMetadata[id] = createFileMetadata({
                 title,
-                fileType: "function"
+                fileType
             });
 
             fileData.files = [...fileData.files, createFileTreeReference(id)];

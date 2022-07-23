@@ -10,9 +10,9 @@
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../lib/js/data_json.js';
 
-    function addFile(title) {
+    function addFile(title, fileType) {
         const id = uuidv4();
-        $fileMetadata[id] = createFileMetadata({ title, fileType: 'function' });
+        $fileMetadata[id] = createFileMetadata({ title, fileType });
         
         $fileTree.files = [
             ...$fileTree.files,

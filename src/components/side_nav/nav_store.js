@@ -4,19 +4,23 @@ import { writable } from 'svelte/store';
  * @typedef {Object} NavState
  * @property {boolean} isShowingContext
  * @property {string|null} contextType
- * @property {() => void} onDoneCallback
+ * @property {(a: string, b: string) => void} onDoneCallback
  */
 
-const { subscribe, set, update } = writable({
+/** @type {NavState} */
+const initialVal = {
     isShowingContext: false,
     contextType: null,
-    onDoneCallback: null
-});
+    onDoneCallback: () => {}
+};
+
+const { subscribe, set, update } = writable(initialVal);
 
 const navStore = {
     subscribe,
     set,
     update,
+    /** @type {([type]: Object, [onDoneCallback]: (fileName: string, fileType: string) => void) => void} */
     toggleContext(type, onDoneCallback) {
         type = type || null;
         onDoneCallback = onDoneCallback || null;

@@ -2,25 +2,34 @@
     import { navStore } from '../nav_store.js';
     import SingleInputWithSubmit from './SingleInputWithSubmit.svelte';
 
+    /** @type {(fileName: string, fileType: string) => void}*/
     export let onDoneCallback;
 
     let newFileName = '';
+    let selectElem;
 
     function submit(_) {
-        onDoneCallback(newFileName);
+        onDoneCallback(newFileName, selectElem.value);
         navStore.toggleContext();
     }
 </script>
 
-<div class="wh100">
-    <div class="t-align-right exit-btn">
+<div class="wh100 nav-context-wrapper">
+    <div class="nav-context-exit-btn">
         <button on:click={(_) => navStore.toggleContext()}>X</button>
     </div>
-    <SingleInputWithSubmit buttonText={'Add File'} bind:inputValue={newFileName} submitCallback={submit} />
+    <label for="file-type-select">
+        File Type:
+        <select id="file-type-select" bind:this={selectElem}>
+            <option value="function" selected>Function</option>
+        </select>
+    </label>
+    <SingleInputWithSubmit buttonText={'Add File'} bind:inputValue={newFileName} placeholder={'File Name'} submitCallback={submit} />
 </div>
 
 <style>
-    .exit-btn {
+    [for="file-type-select"] {
+        display: block;
         margin-bottom: 8px;
     }
 </style>

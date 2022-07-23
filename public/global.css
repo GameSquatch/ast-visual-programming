@@ -119,3 +119,13 @@ body {
 .project-structure-pane:hover .nest-pad {
     border-left: 1px solid rgba(0, 0, 0, 0.4);
 }
+
+.nav-context-wrapper {
+    position: relative;
+}
+
+.nav-context-exit-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
