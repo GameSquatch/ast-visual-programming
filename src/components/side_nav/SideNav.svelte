@@ -83,7 +83,7 @@
         border: none;
         border-radius: 10px;
         color: white;
-        font-size: 18pt;
+        font-size: 15pt;
         text-align: center;
         display: flex;
         justify-content: center;
