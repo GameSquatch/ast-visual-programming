@@ -3,10 +3,18 @@ import { apiCall } from '../../services/mock_api.js';
 import mockData from '../../lib/js/data_json.js';
 
 /**
+ * @typedef {Object} EditorTab
+ * @property {string} title
+ * @property {string} id
+ * @property {string} fileType
+ * @property {Promise} dataPromise
+ */
+
+/**
  * @typedef {object} EditorState
  * @property {string} activeTab
  * @property {Object.<string, boolean>} openedTabIds
- * @property {Object[]} tabs
+ * @property {EditorTab[]} tabs
  */
 
 /**
