@@ -1,6 +1,6 @@
 <script>
     import { editorStore } from '../tabbed_editor/editor_store.js';
-    import { fileMetadata } from './file_tree.js';
+    import { fileMetadata } from './file_metadata.js';
     import { navFileDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import NestPadding from './NestPadding.svelte';
 
@@ -9,7 +9,7 @@
     export let treeLevel = 0;
 
     function openNewFunction(functionId, functionTitle) {
-        editorStore.openTab(functionId, functionTitle, 'function');
+        editorStore.openTab({ id: functionId, title: functionTitle, fileType: 'function' });
     }
 
     $: metadata = $fileMetadata[fileData.id];

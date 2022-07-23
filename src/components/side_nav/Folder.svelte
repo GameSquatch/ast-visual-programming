@@ -7,10 +7,10 @@
         fileMetadata,
         createFolder,
         createFileTreeReference,
-        createFileMetadata,
         createNodeTreeEntry,
         fileTree,
     } from "./file_tree.js";
+    import { createFileMetadata } from './file_metadata.js';
     import { navStore } from "./nav_store.js";
     import { v4 as uuidv4 } from "uuid";
     import mockData from "../../lib/js/data_json.js";

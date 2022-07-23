@@ -1,6 +1,6 @@
 <script>
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
-    import { fileMetadata } from '../side_nav/file_tree.js';
+    import { fileMetadata } from '../side_nav/file_metadata.js';
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';

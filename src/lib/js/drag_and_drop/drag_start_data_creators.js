@@ -76,7 +76,7 @@ const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "vari
  * @property {string} treePath
  * @property {string} title
  * @property {string} fileType
- * @property {{ parameters: import("../../../components/side_nav/file_tree").FunctionParameterConfig, dataType: string }} objectFlowData
+ * @property {{ parameters: import("../../../components/side_nav/file_metadata").FunctionParameterConfig, dataType: string }} objectFlowData
  */
 
 /**

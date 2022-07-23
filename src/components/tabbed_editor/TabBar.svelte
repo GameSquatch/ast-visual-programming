@@ -7,7 +7,7 @@
 <div class="tabs-wrapper">
 	<div class="tabs-flex">
 		{#each tabData as tab, i (tab.id)}
-		<div on:click={(_) => editorStore.openTab(tab.id)} class="tab {tab.fileType}" class:active={$editorStore.activeTab === tab.id}>
+		<div on:click={(_) => editorStore.openTab({ id: tab.id })} class="tab {tab.fileType}" class:active={$editorStore.activeTab === tab.id}>
 			<span>{tab.title}</span>
 			<div style="width: 18px"></div>
 			<span class="close-x" on:click={(_) => editorStore.closeTab(tab.id, i)}><i class="mi-close" /></span>

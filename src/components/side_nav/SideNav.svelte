@@ -1,7 +1,8 @@
 <script>
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import { fileTree, fileMetadata, createFileTreeReference, createFileMetadata, createFolder, createNodeTreeEntry } from './file_tree.js';
+    import { fileTree, createFileTreeReference, createFolder, createNodeTreeEntry } from './file_tree.js';
+    import { fileMetadata, createFileMetadata } from './file_metadata.js';
     import File from './File.svelte';
     import Folder from './Folder.svelte';
     import NewFolderContext from './action_contexts/NewFolderContext.svelte';
