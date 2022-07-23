@@ -5,7 +5,7 @@ import DropObject from './drop_object.js';
 
 /**
  * @typedef {Object} DragObject
- * @property {{ name: string, refId: string, returns: string, defaultValue: string, fnRefType: string }} dragData
+ * @property {{ name: string, refId: string, dataType: string, defaultValue: string, fnRefType: string }} dragData
  */
 
 /**
@@ -31,11 +31,11 @@ const dragStartHandler = (dragData) => (event) => {
 
 
 const dragDataTypeMatchesContext = (dragObject, contextType) => {
-    if ((dragObject.dragData?.returns ?? true) || contextType === undefined) {
+    if ((dragObject.dragData?.dataType ?? true) || contextType === undefined) {
         return false;
     }
 
-    if (dragObject.dragData.returns === contextType) {
+    if (dragObject.dragData.dataType === contextType) {
         return true;
     }
 
@@ -48,7 +48,7 @@ const dragDataTypeMatchesContext = (dragObject, contextType) => {
 const findReturnTypeMatch = (utilType) => (contextType) => {
     for (let methodName of Object.keys(typeDefs[utilType])) {
         const method = typeDefs[utilType][methodName];
-        if (method.returns === contextType) {
+        if (method.returnType === contextType) {
             return methodName;
         }
     }
@@ -89,13 +89,13 @@ const variableRefFromTypedContext = (dragObject, contextType) => {
         return nodeTemplates.variableRefIdentifer(dragObject.dragData);
     }
 
-    const method = findReturnTypeMatch(dragObject.dragData.returns)(contextType);
+    const method = findReturnTypeMatch(dragObject.dragData.dataType)(contextType);
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
         ? nodeTemplates.variableRefCallExpression({
             method: method,
-            returns: contextType,
+            dataType: contextType,
             refData: nodeTemplates.variableRefIdentifer(dragObject.dragData),
             fnRefType: dragObject.dragData.fnRefType
         })

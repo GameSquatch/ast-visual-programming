@@ -14,12 +14,12 @@ const mockData = {
                     [var1]: {
                         "name": "aStr",
                         "defaultValue": "",
-                        "returns": "String"
+                        "dataType": "String"
                     },
                     [var2]: {
                         "name": "aNum",
                         "defaultValue": 0,
-                        "returns": "Integer"
+                        "dataType": "Integer"
                     }
                 },
                 "parameters": {},
@@ -33,7 +33,7 @@ const mockData = {
                         "left": {
                             "type": "VariableRefIdentifier",
                             "refId": var1,
-                            "returns": "String",
+                            "dataType": "String",
                             "fnRefType": "variables"
                         },
                         "right": {
@@ -44,16 +44,16 @@ const mockData = {
                                 {
                                     "type": "StringLiteral",
                                     "value": "A long string teehee",
-                                    "returns": "String"
+                                    "dataType": "String"
                                 },
                                 {
                                     "type": "VariableRefIdentifier",
                                     "refId": var1,
-                                    "returns": "String",
+                                    "dataType": "String",
                                     "fnRefType": "variables"
                                 }
                             ],
-                            "returns": "String"
+                            "dataType": "String"
                         }
                     }
                 },
@@ -65,7 +65,7 @@ const mockData = {
                         "left": {
                             "type": "VariableRefIdentifier",
                             "refId": var1,
-                            "returns": "String",
+                            "dataType": "String",
                             "fnRefType": "variables"
                         },
                         "right": {
@@ -73,7 +73,7 @@ const mockData = {
                             "refData": {
                                 "type": "VariableRefIdentifier",
                                 "refId": var1,
-                                "returns": "String",
+                                "dataType": "String",
                                 "fnRefType": "variables"
                             },
                             "method": "concat",
@@ -81,10 +81,10 @@ const mockData = {
                                 {
                                     "type": "StringLiteral",
                                     "value": "A long string teehee",
-                                    "returns": "String"
+                                    "dataType": "String"
                                 }
                             ],
-                            "returns": "String"
+                            "dataType": "String"
                         }
                     }
                 },
@@ -96,7 +96,7 @@ const mockData = {
                         "left": {
                             "type": "VariableRefIdentifier",
                             "refId": var2,
-                            "returns": "Integer",
+                            "dataType": "Integer",
                             "fnRefType": "variables"
                         },
                         "right": {
@@ -107,10 +107,10 @@ const mockData = {
                                 {
                                     "type": "StringLiteral",
                                     "value": "Counting the length of the string",
-                                    "returns": "String"
+                                    "dataType": "String"
                                 }
                             ],
-                            "returns": "Integer"
+                            "dataType": "Integer"
                         }
                     }
                 }
@@ -125,7 +125,7 @@ const mockData = {
                     [var3]: {
                         "name": "Fn2Str",
                         "defaultValue": "hello",
-                        "returns": "String"
+                        "dataType": "String"
                     }
                 },
                 "parameters": {}
@@ -139,7 +139,7 @@ const mockData = {
                         "left": {
                             "type": "VariableRefIdentifier",
                             "refId": var3,
-                            "returns": "String",
+                            "dataType": "String",
                             "fnRefType": "variables"
                         },
                         "right": null

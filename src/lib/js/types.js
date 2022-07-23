@@ -8,7 +8,7 @@
  * @typedef {Object} Literal
  * @property {string} type
  * @property {*} value
- * @property {string} returns
+ * @property {string} dataType
  */
 
 /** @typedef {Identifier|VariableRefIdentifier|ExpressionNode|AssignmentExpression|VariableRefCallExpression|UtilityCallExpression|Literal} ASTNode */
@@ -23,7 +23,7 @@
  * @typedef {Object} VariableRefIdentifier
  * @property {string} type
  * @property {string} refId
- * @property {string} returns
+ * @property {string} dataType
  * @property {string} fnRefType
  */
 
@@ -42,7 +42,7 @@
  * @property {Literal} variable
  * @property {string} method
  * @property {Literal[]} arguments
- * @property {string} returns
+ * @property {string} dataType
  */
 
 /**
@@ -51,16 +51,16 @@
  * @property {string} utilityName
  * @property {string} utilityMethod
  * @property {Literal[]} arguments
- * @property {string} returns
+ * @property {string} dataType
  */
 
 /**
  * @typedef NodeTemplates
  * @property {(method: string) => UtilityCallExpression} StringUtil
- * @property {(options: {method: string, returns: string, refData: FunctionRefData, fnRefType: string }) => VariableRefCallExpression} variableRefCallExpression
+ * @property {(options: {method: string, dataType: string, refData: FunctionRefData, fnRefType: string }) => VariableRefCallExpression} variableRefCallExpression
  * @property {() => ExpressionNode} expression
- * @property {(options: {refId: string, returns: string}) => AssignmentExpression} variableRefAssignment
- * @property {(options: {refId: string, returns: string}) => VariableIdentifier} variableRefIdentifer
+ * @property {(options: {refId: string, dataType: string}) => AssignmentExpression} variableRefAssignment
+ * @property {(options: {refId: string, dataType: string}) => VariableIdentifier} variableRefIdentifer
  * @property {(options: {value: string}) => Literal} StringLiteral
  * @property {(options: {value: number}) => Literal} IntegerLiteral
  */
@@ -70,7 +70,7 @@
  * @typedef {Object} TypeMethod
  * @property {string[]} args
  * @property {boolean} infiniteArgs
- * @property {string} returns
+ * @property {string} dataType
  */
 /**
  * @typedef {{method: TypeMethod}} TypeDefinition

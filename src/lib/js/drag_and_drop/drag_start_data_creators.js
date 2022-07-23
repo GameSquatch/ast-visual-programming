@@ -56,7 +56,7 @@ const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ 
 /**
  * @typedef {Object} FunctionRefData
  * @property {string} name
- * @property {string} returns
+ * @property {string} dataType
  * @property {string|number} defaultValue
  * @property {string} refId
  * @property {string} [fnRefType]
@@ -67,7 +67,7 @@ const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ 
  * @returns {DragStartConfig}
  */
 /** @type {VariableDragStartDataCreator} */
-const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "variableRef", dragDataType: varRefData.returns, dragData: { ...varRefData } });
+const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "variableRef", dragDataType: varRefData.dataType, dragData: { ...varRefData } });
 
 
 /**
@@ -76,7 +76,7 @@ const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "vari
  * @property {string} treePath
  * @property {string} title
  * @property {string} fileType
- * @property {{ parameters: import("../../../components/side_nav/file_tree").FunctionParameterConfig, returns: string }} objectFlowData
+ * @property {{ parameters: import("../../../components/side_nav/file_tree").FunctionParameterConfig, dataType: string }} objectFlowData
  */
 
 /**

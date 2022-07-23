@@ -22,12 +22,12 @@
             const arg = nodeData.arguments[i];
 
             if (!arg) {
-                nodeData.arguments.push(nodeTemplates[parameter.returns + 'Literal']({}) );
+                nodeData.arguments.push(nodeTemplates[parameter.dataType + 'Literal']({}) );
                 continue;
             }
 
-            if (parameter.returns !== arg.returns) {
-                nodeData.arguments[i] = nodeTemplates[parameter.returns + 'Literal']({});
+            if (parameter.dataType !== arg.dataType) {
+                nodeData.arguments[i] = nodeTemplates[parameter.dataType + 'Literal']({});
             }
         }
         
@@ -43,7 +43,7 @@
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})
+        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})
     }
 </script>
 
@@ -52,19 +52,19 @@
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
             <Argument {argLevel} 
-                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: populateArgument(i) })(event.detail)}
+                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.dataType, stateChangeCallback: populateArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}
-                returnType={argument.returns}>
+                returnType={argument.dataType}>
 
                 {#if argument.type === "FunctionCallExpression"}
-                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} nodePath={nodePath + ".arguments." + i} />
+                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}
                     <svelte:component
                         this={constructors[argument.type]}
                         bind:nodeData={argument}
                         argLevel={argLevel + 1}
                         isArgument={true}
-                        contextType={argument.returns}
+                        contextType={argument.dataType}
                         nodePath={nodePath + ".arguments." + i} />
                 {/if}
             </Argument>

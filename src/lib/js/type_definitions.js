@@ -1,4 +1,15 @@
-/** @type {TypeDefinitionWrapper} */
+/**
+ * @typedef {Object} FunctionDefinition
+ * @property {string[]} args
+ * @property {boolean} infiniteArgs
+ * @property {string} returnType
+ */
+/**
+ * @typedef {Object.<string, FunctionDefinition>} FunctionCollection
+ */
+/**
+ * @type {Object.<string, FunctionCollection>}
+ */
 const typeDefs =  {
     "StringUtil": {
         "concat": {
@@ -7,28 +18,28 @@ const typeDefs =  {
                 "String"
             ],
             "infiniteArgs": true,
-            "returns": "String"
+            "returnType": "String"
         },
         "trim": {
             "args": [
                 "String"
             ],
-            "inifiniteArgs": false,
-            "returns": "String"
+            "infiniteArgs": false,
+            "returnType": "String"
         },
         "length": {
             "args": [
                 "String"
             ],
             "infiniteArgs": false,
-            "returns": "Integer"
+            "returnType": "Integer"
         },
         "fromInt": {
             "args": [
                 "Integer"
             ],
             "infiniteArgs": false,
-            "returns": "String"
+            "returnType": "String"
         },
         "substring": {
             "args": [
@@ -36,7 +47,7 @@ const typeDefs =  {
                 "String"
             ],
             "infiniteArgs": false,
-            "returns": "String"
+            "returnType": "String"
         }
     },
     "String": {
@@ -45,24 +56,24 @@ const typeDefs =  {
                 "String"
             ],
             "infiniteArgs": true,
-            "returns": "String"
+            "returnType": "String"
         },
         "trim": {
             "args": [],
-            "inifiniteArgs": false,
-            "returns": "String"
+            "infiniteArgs": false,
+            "returnType": "String"
         },
         "prepend": {
             "args": [
                 "String"
             ],
             "infiniteArgs": false,
-            "returns": "String"
+            "returnType": "String"
         },
         "length": {
             "args": [],
             "infiniteArgs": false,
-            "returns": "Integer"
+            "returnType": "Integer"
         }
     },
     "Integer": {
@@ -71,26 +82,26 @@ const typeDefs =  {
                 "String"
             ],
             "infiniteArgs": false,
-            "returns": "Integer"
+            "returnType": "Integer"
         },
         "add": {
             "args": [
                 "Integer"
             ],
             "infiniteArgs": true,
-            "returns": "Integer"
+            "returnType": "Integer"
         },
         "subtract": {
             "args": [
                 "Integer"
             ],
             "infiniteArgs": true,
-            "returns": "Integer"
+            "returnType": "Integer"
         },
         "toString": {
             "args": [],
             "infiniteArgs": false,
-            "returns": "String"
+            "returnType": "String"
         }
     },
     "List": {
@@ -99,7 +110,7 @@ const typeDefs =  {
                 "String"
             ],
             "infiniteArgs": false,
-            "returns": "String"
+            "returnType": "String"
         }
     }
 };

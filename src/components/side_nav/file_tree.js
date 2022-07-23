@@ -5,7 +5,7 @@ import { TreePath } from '../../lib/js/tree_path.js';
 /**
  * @typedef {Object} FileMetadataFlowData
  * @property {Object.<string, FunctionParameterConfig>} parameters
- * @property {string} returns
+ * @property {string} dataType
  */
 /**
  * @typedef {Object} FileMetadataEntry
@@ -23,7 +23,7 @@ const fm = {
         fileType: "function",
         objectFlowData: {
             parameters: {},
-            returns: "String"
+            dataType: "String"
         }
     },
     "123": {
@@ -31,7 +31,7 @@ const fm = {
         fileType: "function",
         objectFlowData: {
             parameters: {},
-            returns: "String"
+            dataType: "String"
         }
     }
 };
@@ -39,7 +39,7 @@ const fm = {
 /**
  * @typedef {Object} FunctionParameterConfig
  * @property {string} name
- * @property {string} returns
+ * @property {string} dataType
  * @property {string|number|boolean} defaultValue
  */
 /**
@@ -47,10 +47,10 @@ const fm = {
  * @param {FunctionParameterConfig} startingValues
  * @returns {FunctionParameterConfig}
  */
-function createParameter({ name = "newParam", returns = "String", defaultValue = "" }) {
+function createParameter({ name = "newParam", dataType = "String", defaultValue = "" }) {
     return {
         name,
-        returns,
+        dataType,
         defaultValue
     };
 }
@@ -69,7 +69,7 @@ const fileMetadata = (() => {
         },
         changeParameterType({ fnId, paramId, dataType }) {
             update((state) => {
-                state[fnId].objectFlowData.parameters[paramId].returns = dataType;
+                state[fnId].objectFlowData.parameters[paramId].dataType = dataType;
                 return state;
             });
         }
@@ -125,7 +125,7 @@ const fileTree = {
     }
 }
 
-function createFileMetadata({ title, fileType, objectFlowData = { parameters: {}, returns: "String" } }) {
+function createFileMetadata({ title, fileType, objectFlowData = { parameters: {}, dataType: "String" } }) {
     return {
         title,
         fileType,
@@ -159,7 +159,7 @@ function createNodeTreeEntry(id) {
             info: {
                 variables: {},
                 parameters: {},
-                returns: "String"
+                dataType: "String"
             },
             body: []
         }

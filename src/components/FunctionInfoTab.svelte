@@ -11,7 +11,7 @@
     /**
      * @typedef {Object} FunctionRefData
      * @property {string} name
-     * @property {string} returns
+     * @property {string} dataType
      * @property {string|number} value
      * @property {string} [fnRefType]
      */
@@ -47,7 +47,7 @@
             ...info.variables,
             [uuidv4()]: {
                 name: "newVar",
-                returns: "String",
+                dataType: "String",
                 defaultValue: "",
             },
         };
@@ -80,7 +80,7 @@
         fileMetadata.changeParameterType({ fnId: info.id, paramId: id, dataType: event.target.value })
         // info[infoKey][id] = {
         //     ...info[infoKey][id],
-        //     returns: event.target.value,
+        //     dataType: event.target.value,
         // };
     }
 </script>
@@ -140,7 +140,7 @@
                             <select
                                 on:change={(event) =>
                                     changeRefType(event, varId, "variables")}
-                                value={varObj.returns}
+                                value={varObj.dataType}
                                 ><option value="String">String</option><option
                                     value="Integer">Integer</option
                                 ></select
@@ -148,7 +148,7 @@
                         </div>
                         <div class="col-3">
                             <input
-                                type={varObj.returns === "Integer"
+                                type={varObj.dataType === "Integer"
                                     ? "number"
                                     : "text"}
                                 value={varObj.defaultValue}
@@ -195,7 +195,7 @@
                             <select
                                 on:change={(event) =>
                                     changeRefType(event, paramId, "parameters")}
-                                value={paramObj.returns}
+                                value={paramObj.dataType}
                                 ><option value="String">String</option><option
                                     value="Integer">Integer</option
                                 ></select
@@ -203,7 +203,7 @@
                         </div>
                         <div class="col-3">
                             <input
-                                type={paramObj.returns === "Integer"
+                                type={paramObj.dataType === "Integer"
                                     ? "number"
                                     : "text"}
                                 value={paramObj.defaultValue}

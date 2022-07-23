@@ -3,11 +3,19 @@ import typeDefs from './type_definitions.js';
 
 
 /**
- * 
+ * @typedef {Object} UtilityCallExpressionData
+ * @property {string} type
+ * @property {string} utilityName
+ * @property {string} utilityMethod
+ * @property {string[]} arguments
+ * @property {string} dataType
  */
 
 
 const nodeTemplates = {
+    /**
+     * @type {(method: string) => UtilityCallExpressionData}
+     */
     StringUtil: function(method = "concat") {
         const methodDefinition = typeDefs['StringUtil'][method];
         const definitionArgs = methodDefinition.args;
@@ -17,11 +25,11 @@ const nodeTemplates = {
             utilityName: "StringUtil",
             utilityMethod: method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
-            returns: methodDefinition.returns
+            dataType: methodDefinition.returnType
         };
     },
-    variableRefCallExpression: function({ method, returns, refData, fnRefType }) {
-        const methodDefinition = typeDefs[refData.returns][method];
+    variableRefCallExpression: function({ method, dataType, refData, fnRefType }) {
+        const methodDefinition = typeDefs[refData.dataType][method];
         const definitionArgs = methodDefinition.args;
 
         return {
@@ -29,7 +37,7 @@ const nodeTemplates = {
             refData: {...refData},
             method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
-            returns,
+            dataType,
             fnRefType
         };
     },
@@ -41,33 +49,33 @@ const nodeTemplates = {
             expression: null
         };
     },
-    variableRefAssignment: ({ refId, returns, fnRefType }) => ({
+    variableRefAssignment: ({ refId, dataType, fnRefType }) => ({
         type: "AssignmentExpression",
         left: {
             type: "VariableRefIdentifier",
             refId,
-            returns,
+            dataType,
             fnRefType
         },
         right: null
     }),
-    variableRefIdentifer: ({ refId, returns, fnRefType }) => ({
+    variableRefIdentifer: ({ refId, dataType, fnRefType }) => ({
         type: "VariableRefIdentifier",
         refId,
-        returns,
+        dataType,
         fnRefType
     }),
     // Capitalizing because it matches the 'type' field in the AST
     StringLiteral: ({ value = "" }) => ({
         type: "StringLiteral",
         value: value,
-        returns: "String"
+        dataType: "String"
     }),
     // Capitalizing because it matches the 'type' field in the AST
     IntegerLiteral: ({ value = 0 }) => ({
         type: "IntegerLiteral",
         value,
-        returns: "Integer"
+        dataType: "Integer"
     }),
     /**
      * @param {Object} config

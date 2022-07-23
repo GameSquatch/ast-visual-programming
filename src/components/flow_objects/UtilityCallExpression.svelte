@@ -1,34 +1,37 @@
 <script>
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import typeDefs from '../../lib/js/type_definitions.js';
-    import ClearNodeProp from '../ClearNodeProp.svelte';
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
 
+    /** @type {import('../../lib/js/node_templates.js').UtilityCallExpressionData} */
     export let nodeData;
+    /** @type {string} */
     export let contextType;
     export let isArgument = false;
     export let argLevel = 1;
+    /** @type {string} */
     export let nodePath;
 
     const utilities = typeDefs[nodeData.utilityName];
 
     function onPropertyChange(event) {
         const utilityMethod = event.target.value;
-        const typeDef = typeDefs[nodeData.utilityName][utilityMethod];
-        const args = typeDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
+        const fnDef = typeDefs[nodeData.utilityName][utilityMethod];
+        const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
 
         nodeData = {
             ...nodeData,
             utilityMethod,
             arguments: args,
-            returns: typeDef.returns
+            dataType: fnDef.returnType
         };
     };
 
     // !contextType is when things don't have a type in their parent context
-    const matchParentTypeFilter = (methodName) => !contextType || utilities[methodName].returns === contextType;
+    /** @type {(methodName: string) => boolean} */
+    const matchParentTypeFilter = (methodName) => !contextType || utilities[methodName].returnType === contextType;
 
 
     const populateArgument = (argIndex) => (node) => {
@@ -41,7 +44,7 @@
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})
+        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})
     }
 </script>
 
@@ -53,25 +56,25 @@
                 <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
             {/each}
         </select>
-        <span class="small-text">=&gt; {nodeData.returns}</span>
+        <span class="small-text">=&gt; {nodeData.dataType}</span>
     </div>
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
             <Argument {argLevel} 
-                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: populateArgument(i) })(event.detail)}
+                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.dataType, stateChangeCallback: populateArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}
-                returnType={argument.returns}>
+                returnType={argument.dataType}>
 
-                <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} /> -->
+                <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})} /> -->
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} nodePath={nodePath + ".arguments." + i} />
+                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}
                     <svelte:component
                         this={constructors[argument.type]}
                         bind:nodeData={argument}
                         argLevel={argLevel + 1}
                         isArgument={true}
-                        contextType={argument.returns}
+                        contextType={argument.dataType}
                         nodePath={nodePath + ".arguments." + i} />
                 {/if}
             </Argument>

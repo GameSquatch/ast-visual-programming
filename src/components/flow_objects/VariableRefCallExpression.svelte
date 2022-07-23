@@ -14,7 +14,7 @@
     export let nodePath;
 
 
-    let varTypeMethods = typeDefs[nodeData.refData.returns];
+    let varTypeMethods = typeDefs[nodeData.refData.dataType];
 
     function onPropertyChange(event) {
         const method = event.target.value;
@@ -25,19 +25,19 @@
             return;
         }
 
-        const typeDef = varTypeMethods[method];
-        const args = typeDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
+        const fnDef = varTypeMethods[method];
+        const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
 
         nodeData = {
             ...nodeData,
             method,
             arguments: args,
-            returns: typeDef.returns
+            dataType: fnDef.returnType
         };
     }
 
     // !contextType is when things don't have a type in their parent context
-    const matchParentTypeFilter = (methodName) => !contextType || varTypeMethods[methodName].returns === contextType;
+    const matchParentTypeFilter = (methodName) => !contextType || varTypeMethods[methodName].returnType === contextType;
 
 
     const dropArgument = (argIndex) => (node) => {
@@ -50,7 +50,7 @@
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})
+        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})
     }
 </script>
 
@@ -59,30 +59,30 @@
     <p><strong><VariableRefIdentifier bind:nodeData={nodeData.refData} isArgument={false} nodePath={nodePath + ".refData"} /></strong></p>
     <div class="method-container">
         <select on:change={onPropertyChange}>
-            {#if !contextType || nodeData.refData.returns === contextType}<option value=""></option>{/if}
+            {#if !contextType || nodeData.refData.dataType === contextType}<option value=""></option>{/if}
             {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
                 <option value={method} selected={method === nodeData.method}>{method}</option>
             {/each}
         </select>
-        <span class="small-text">=&gt; {nodeData.returns}</span>
+        <span class="small-text">=&gt; {nodeData.dataType}</span>
     </div>
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
             <Argument {argLevel} 
-                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.returns, stateChangeCallback: dropArgument(i) })(event.detail)}
+                on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.dataType, stateChangeCallback: dropArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}
-                returnType={argument.returns}>
+                returnType={argument.dataType}>
 
-                <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.returns + "Literal"]({})} /> -->
+                <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})} /> -->
                 {#if argument.type === "VarCallExpression"}
-                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.returns} nodePath={nodePath + ".arguments." + i} />
+                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}
                     <svelte:component
                         this={constructors[argument.type]}
                         bind:nodeData={argument}
                         argLevel={argLevel + 1}
                         isArgument={true}
-                        contextType={argument.returns}
+                        contextType={argument.dataType}
                         nodePath={nodePath + ".arguments." + i} />
                 {/if}
             </Argument>

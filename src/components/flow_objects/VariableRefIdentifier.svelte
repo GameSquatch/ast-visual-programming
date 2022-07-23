@@ -10,9 +10,9 @@
 
     let usesTypeMethod = false;
 
-    const typeMethods = typeDefs[contextType ?? nodeData.returns];
+    const typeMethods = typeDefs[contextType ?? nodeData.dataType];
 
-    const typeMatches = (utilityKey) => typeMethods[utilityKey].returns === nodeData.returns;
+    const typeMatches = (utilityKey) => typeMethods[utilityKey].returnType === nodeData.dataType;
     const availableMethods = (contextType ?? false) ? Object.keys(typeMethods).filter(typeMatches) : [];
 
     function methodSelected(event) {
@@ -23,7 +23,7 @@
 
         nodeData = nodeTemplates.variableRefCallExpression({
             method: event.target.value,
-            returns: nodeData.returns,
+            dataType: nodeData.dataType,
             refData: nodeData,
             fnRefType: nodeData.fnRefType
         });
