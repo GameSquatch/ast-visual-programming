@@ -2,6 +2,7 @@
     import typeDefs from '../../lib/js/type_definitions.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
     import { currentFlowData } from '../tabbed_editor/editor_store.js';
+    import { fileMetadata } from '../side_nav/file_metadata.js';
 
     export let nodeData;
     export let contextType = null;
@@ -33,8 +34,11 @@
 </script>
 
 
-{#if nodeData.refId}
+{#if nodeData.refId && nodeData.fnRefType === 'variables'}
     <span class="self">{$currentFlowData.info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
+{/if}
+{#if nodeData.refId && nodeData.fnRefType === 'parameters'}
+    <span class="self">{$fileMetadata[$currentFlowData.info.id].objectFlowData.parameters[nodeData.refId]?.name ?? ""}</span>
 {/if}
 {#if availableMethods.length > 0}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>

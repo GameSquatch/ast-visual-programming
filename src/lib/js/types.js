@@ -11,7 +11,7 @@
  * @property {string} dataType
  */
 
-/** @typedef {Identifier|VariableRefIdentifier|ExpressionNode|AssignmentExpression|VariableRefCallExpression|UtilityCallExpression|Literal} ASTNode */
+/** @typedef {Identifier|RefIdentifier|ExpressionNode|AssignmentExpression|IdentifierRefCallExpression|UtilityCallExpression|Literal} ASTNode */
 
 /**
  * @typedef {Object} Identifier
@@ -20,7 +20,7 @@
  */
 
 /**
- * @typedef {Object} VariableRefIdentifier
+ * @typedef {Object} RefIdentifier
  * @property {string} type
  * @property {string} refId
  * @property {string} dataType
@@ -32,12 +32,12 @@
 /**
  * @typedef {Object} AssignmentExpression
  * @property {string} type
- * @property {VariableRefIdentifier} left
- * @property {VariableRefIdentifier|VariableRefCallExpression|UtilityCallExpression} right
+ * @property {RefIdentifier} left
+ * @property {RefIdentifier|IdentifierRefCallExpression|UtilityCallExpression} right
  */
 
 /**
- * @typedef {Object} VariableRefCallExpression
+ * @typedef {Object} IdentifierRefCallExpression
  * @property {string} type
  * @property {Literal} variable
  * @property {string} method
@@ -57,7 +57,7 @@
 /**
  * @typedef NodeTemplates
  * @property {(method: string) => UtilityCallExpression} StringUtil
- * @property {(options: {method: string, dataType: string, refData: FunctionRefData, fnRefType: string }) => VariableRefCallExpression} variableRefCallExpression
+ * @property {(options: {method: string, dataType: string, refData: FunctionRefData, fnRefType: string }) => IdentifierRefCallExpression} variableRefCallExpression
  * @property {() => ExpressionNode} expression
  * @property {(options: {refId: string, dataType: string}) => AssignmentExpression} variableRefAssignment
  * @property {(options: {refId: string, dataType: string}) => VariableIdentifier} variableRefIdentifer

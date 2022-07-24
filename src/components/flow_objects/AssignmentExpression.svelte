@@ -1,6 +1,5 @@
 <script>
     import constructors from '../../lib/js/constructors.js';
-    import VariableRefIdentifier from './VariableRefIdentifier.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
 
     export let nodeData;
@@ -17,7 +16,7 @@
     <div class="set-block">
         <p>Set {nodeData.left.dataType},</p>
         <p>
-            <strong><VariableRefIdentifier bind:nodeData={nodeData.left} isArgument={false} nodePath={nodePath + ".left"} /></strong>
+            <strong><svelte:component this={constructors[nodeData.left.type]} bind:nodeData={nodeData.left} isArgument={false} nodePath={nodePath + ".left"} /></strong>
         </p>
         <p>to</p>
     </div>

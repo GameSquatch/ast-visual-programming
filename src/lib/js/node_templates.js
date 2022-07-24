@@ -33,7 +33,7 @@ const nodeTemplates = {
         const definitionArgs = methodDefinition.args;
 
         return {
-            type: "VariableRefCallExpression",
+            type: "IdentifierRefCallExpression",
             refData: {...refData},
             method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
@@ -52,7 +52,7 @@ const nodeTemplates = {
     variableRefAssignment: ({ refId, dataType, fnRefType }) => ({
         type: "AssignmentExpression",
         left: {
-            type: "VariableRefIdentifier",
+            type: "RefIdentifier",
             refId,
             dataType,
             fnRefType
@@ -60,7 +60,7 @@ const nodeTemplates = {
         right: null
     }),
     variableRefIdentifer: ({ refId, dataType, fnRefType }) => ({
-        type: "VariableRefIdentifier",
+        type: "RefIdentifier",
         refId,
         dataType,
         fnRefType

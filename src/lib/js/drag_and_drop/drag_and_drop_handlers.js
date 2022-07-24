@@ -31,7 +31,7 @@ const dragStartHandler = (dragData) => (event) => {
 
 
 const dragDataTypeMatchesContext = (dragObject, contextType) => {
-    if ((dragObject.dragData?.dataType ?? true) || contextType === undefined) {
+    if (dragObject.dragData === undefined || contextType === undefined) {
         return false;
     }
 
@@ -102,6 +102,32 @@ const variableRefFromTypedContext = (dragObject, contextType) => {
         : null;
 };
 
+/**
+ * Creates an AST node for dropping a variable into a typed context
+ * @param {DragObject} dragObject
+ * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
+ * @returns {Object}
+ */
+ const parameterRefFromTypedContext = (dragObject, contextType) => {
+    const parameterTypeMatchesContext = dragDataTypeMatchesContext(dragObject, contextType);
+    
+    if (parameterTypeMatchesContext) {
+        return nodeTemplates.parameterRefIdentifier(dragObject.dragData);
+    }
+
+    const method = findReturnTypeMatch(dragObject.dragData.dataType)(contextType);
+    if (method === null) alert("Types don't match and no methods exist to match the type");
+    
+    return method !== null
+        ? nodeTemplates.variableRefCallExpression({
+            method: method,
+            dataType: contextType,
+            refData: nodeTemplates.parameterRefIdentifier(dragObject.dragData),
+            fnRefType: "parameters"
+        })
+        : null;
+};
+
 const noNode = (dragObject, _) => new DropObject({ dragObject });
 
 /**
@@ -139,6 +165,24 @@ const dropContextMap = {
         argument: (dragObject, contextType) => new DropObject({
             dragObject,
             newNode: variableRefFromTypedContext(dragObject, contextType)
+        })
+    },
+    parameterRef: {
+        flow: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: wrapWithExpression(nodeTemplates.parameterRefAssignment(dragObject.dragData))
+        }),
+        expression: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: nodeTemplates.parameterRefAssignment(dragObject.dragData)
+        }),
+        assignment: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: parameterRefFromTypedContext(dragObject, contextType),
+        }),
+        argument: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: parameterRefFromTypedContext(dragObject, contextType)
         })
     },
     stringUtil: {

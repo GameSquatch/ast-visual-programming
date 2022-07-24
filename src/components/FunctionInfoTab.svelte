@@ -1,7 +1,7 @@
 <script>
     import { slide } from "svelte/transition";
     import { quintOut } from "svelte/easing";
-    import { variableRefObjectDrag } from "../lib/js/drag_and_drop/drag_start_data_creators.js";
+    import { fnInfoRefObjectDrag } from "../lib/js/drag_and_drop/drag_start_data_creators.js";
     import { v4 as uuidv4 } from "uuid";
     import { fileMetadata } from "../components/side_nav/file_metadata.js";
 
@@ -25,11 +25,10 @@
     }
 
     /**
-     * @param {FunctionRefData} fnRefDragged
-     * @returns {(event: DragEvent) => undefined}
+     * @type {(event: DragEvent, fnRefDragged: FunctionRefData) => void}
      */
-    const dragStart = (fnRefDragged) => (event) => {
-        const dragData = variableRefObjectDrag(fnRefDragged);
+    const dragStart = (event, fnRefDragged) => {
+        const dragData = fnInfoRefObjectDrag(fnRefDragged);
         event.dataTransfer.setData("text/json", JSON.stringify(dragData));
         isDisplaying = false;
         // Will auto-drop the menu after you've dropped a variable or parameter
@@ -75,13 +74,18 @@
             name: newName,
         };
     }
+    function changeParamRefName(paramId, newName) {
+        fileMetadata.changeParameterName({ fnId: info.id, paramId, newName });
+    }
 
     function changeRefType(event, id, infoKey) {
-        fileMetadata.changeParameterType({ fnId: info.id, paramId: id, dataType: event.target.value })
-        // info[infoKey][id] = {
-        //     ...info[infoKey][id],
-        //     dataType: event.target.value,
-        // };
+        info[infoKey][id] = {
+            ...info[infoKey][id],
+            dataType: event.target.value,
+        };
+    }
+    function changeParamRefType(event, id) {
+        fileMetadata.changeParameterType({ fnId: info.id, paramId: id, dataType: event.target.value });
     }
 </script>
 
@@ -115,9 +119,10 @@
                 {#each Object.keys(info.variables) as varId (varId)}
                     {@const varObj = info.variables[varId]}
                     <div
-                        on:dragstart={dragStart({
+                        on:dragstart={(event) => dragStart(event, {
                             ...varObj,
                             refId: varId,
+                            dragType: "variableRef",
                             fnRefType: "variables",
                         })}
                         class="flex w100 var-container"
@@ -170,9 +175,10 @@
                 {#each Object.keys($fileMetadata[info.id].objectFlowData.parameters) as paramId (paramId)}
                     {@const paramObj = $fileMetadata[info.id].objectFlowData.parameters[paramId]}
                     <div
-                        on:dragstart={dragStart({
+                        on:dragstart={(event) => dragStart(event, {
                             ...paramObj,
                             refId: paramId,
+                            dragType: "variableRef",
                             fnRefType: "parameters",
                         })}
                         class="flex w100 var-container"
@@ -183,10 +189,9 @@
                                 value={paramObj.name}
                                 type="text"
                                 on:change={(e) =>
-                                    changeRefName(
+                                    changeParamRefName(
                                         paramId,
-                                        e.target.value,
-                                        "parameters"
+                                        e.target.value
                                     )}
                                 class="var-name"
                             />
@@ -194,7 +199,7 @@
                         <div class="col-2">
                             <select
                                 on:change={(event) =>
-                                    changeRefType(event, paramId, "parameters")}
+                                    changeParamRefType(event, paramId)}
                                 value={paramObj.dataType}
                                 ><option value="String">String</option><option
                                     value="Integer">Integer</option

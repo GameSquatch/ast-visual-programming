@@ -31,7 +31,7 @@ const mockData = {
                     "expression": {
                         "type": "AssignmentExpression",
                         "left": {
-                            "type": "VariableRefIdentifier",
+                            "type": "RefIdentifier",
                             "refId": var1,
                             "dataType": "String",
                             "fnRefType": "variables"
@@ -47,7 +47,7 @@ const mockData = {
                                     "dataType": "String"
                                 },
                                 {
-                                    "type": "VariableRefIdentifier",
+                                    "type": "RefIdentifier",
                                     "refId": var1,
                                     "dataType": "String",
                                     "fnRefType": "variables"
@@ -63,15 +63,15 @@ const mockData = {
                     "expression": {
                         "type": "AssignmentExpression",
                         "left": {
-                            "type": "VariableRefIdentifier",
+                            "type": "RefIdentifier",
                             "refId": var1,
                             "dataType": "String",
                             "fnRefType": "variables"
                         },
                         "right": {
-                            "type": "VariableRefCallExpression",
+                            "type": "IdentifierRefCallExpression",
                             "refData": {
-                                "type": "VariableRefIdentifier",
+                                "type": "RefIdentifier",
                                 "refId": var1,
                                 "dataType": "String",
                                 "fnRefType": "variables"
@@ -94,7 +94,7 @@ const mockData = {
                     "expression": {
                         "type": "AssignmentExpression",
                         "left": {
-                            "type": "VariableRefIdentifier",
+                            "type": "RefIdentifier",
                             "refId": var2,
                             "dataType": "Integer",
                             "fnRefType": "variables"
@@ -137,7 +137,7 @@ const mockData = {
                     "expression": {
                         "type": "AssignmentExpression",
                         "left": {
-                            "type": "VariableRefIdentifier",
+                            "type": "RefIdentifier",
                             "refId": var3,
                             "dataType": "String",
                             "fnRefType": "variables"

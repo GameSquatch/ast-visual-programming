@@ -59,15 +59,16 @@ const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ 
  * @property {string} dataType
  * @property {string|number} defaultValue
  * @property {string} refId
+ * @property {string} dragType
  * @property {string} [fnRefType]
  */
 /**
  * @callback VariableDragStartDataCreator Creates the drag start data for dragging a variable from a function info tab
- * @param {FunctionRefData} varRefData
+ * @param {FunctionRefData} refData
  * @returns {DragStartConfig}
  */
 /** @type {VariableDragStartDataCreator} */
-const variableRefObjectDrag = (varRefData) => createDragObject({ dragType: "variableRef", dragDataType: varRefData.dataType, dragData: { ...varRefData } });
+const fnInfoRefObjectDrag = (refData) => createDragObject({ dragType: refData.dragType, dragDataType: refData.dataType, dragData: { ...refData } });
 
 
 /**
@@ -89,4 +90,4 @@ const navFileDrag = (fileData) => createDragObject({ dragType: 'file', dragData:
 const navFolderDrag = (folderData) => createDragObject({ dragType: 'folder', dragData: { ...folderData } });
 
 
-export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, variableRefObjectDrag, navFileDrag, navFolderDrag };
+export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, fnInfoRefObjectDrag, navFileDrag, navFolderDrag };

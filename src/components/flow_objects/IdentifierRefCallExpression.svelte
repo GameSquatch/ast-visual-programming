@@ -1,9 +1,7 @@
 <script>
-    import VariableRefIdentifier from './VariableRefIdentifier.svelte';
     import Argument from '../Argument.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import typeDefs from '../../lib/js/type_definitions.js';
-    import ClearNodeProp from '../ClearNodeProp.svelte';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
 
@@ -12,7 +10,6 @@
     export let isArgument = false;
     export let argLevel = 1;
     export let nodePath;
-
 
     let varTypeMethods = typeDefs[nodeData.refData.dataType];
 
@@ -56,7 +53,7 @@
 
 {#if nodeData.refData}
 <div class="component-wrapper">
-    <p><strong><VariableRefIdentifier bind:nodeData={nodeData.refData} isArgument={false} nodePath={nodePath + ".refData"} /></strong></p>
+    <p><strong><svelte:component this={constructors[nodeData.refData.type]} bind:nodeData={nodeData.refData} isArgument={false} nodePath={nodePath + ".refData"} /></strong></p>
     <div class="method-container">
         <select on:change={onPropertyChange}>
             {#if !contextType || nodeData.refData.dataType === contextType}<option value=""></option>{/if}
@@ -74,7 +71,7 @@
                 returnType={argument.dataType}>
 
                 <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})} /> -->
-                {#if argument.type === "VarCallExpression"}
+                {#if argument.type === "IdentifierRefCallExpression"}
                     <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}
                     <svelte:component
