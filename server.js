@@ -18,41 +18,11 @@ const app = express();
 app.use(express.static('public'));
 
 app.get('/function/:id', async (req, res) => {
-    const docRef = db.collection('function').doc(req.params.id);
+    const docRef = db.collection('function').doc('func-x');
     try {
-        const data = await docRef.set({
-            "main": {
-                "info": {
-                    "id": "123",
-                    "variables": {
-                        "var-x": {
-                            "name": "Fn2Str",
-                            "defaultValue": "hello",
-                            "dataType": "String"
-                        }
-                    },
-                    "parameters": {}
-                },
-                "body": [
-                    {
-                        "type": "ExpressionStatement",
-                        "id": "expr-1",
-                        "expression": {
-                            "type": "AssignmentExpression",
-                            "left": {
-                                "type": "VariableRefIdentifier",
-                                "refId": "var-x",
-                                "dataType": "String",
-                                "fnRefType": "variables"
-                            },
-                            "right": null
-                        }
-                    },
-                ]
-            }
-        });
+        const result = await docRef.get();
 
-        res.status(200).json({ msg: "Data uploaded", result: `${data.writeTime}` });
+        res.status(200).json(result.data());
     } catch (e) {
         res.status(403).send(e.message);
     }
