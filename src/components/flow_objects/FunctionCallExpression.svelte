@@ -1,4 +1,5 @@
 <script>
+    import { onDestroy } from 'svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import Argument from '../Argument.svelte';
@@ -11,15 +12,20 @@
     export let argLevel = 1;
     export let nodePath;
 
+    let fm;
+    let paramNames = [];
+
     // Populate empty arguments when the file metadata has params added to it
     // TODO: what happens when the param data type changes?
-    fileMetadata.subscribe((metadata) => {
+    const fmUnsub = fileMetadata.subscribe((metadata) => {
+        fm = metadata;
         const parameters = metadata[nodeData.fileId].objectFlowData.parameters;
         const parameterKeys = Object.keys(parameters);
 
         for (let i = 0; i < parameterKeys.length; ++i) {
             const parameter = parameters[parameterKeys[i]];
             const arg = nodeData.arguments[i];
+            paramNames[i] = parameter.name;
 
             if (!arg) {
                 nodeData.arguments.push(nodeTemplates[parameter.dataType + 'Literal']({}) );
@@ -34,6 +40,7 @@
         nodeData.arguments = nodeData.arguments;
     });
 
+    onDestroy(fmUnsub);
 
     const populateArgument = (argIndex) => (node) => {
         if (node === null) return;
@@ -48,10 +55,11 @@
 </script>
 
 <div class="component-wrapper">
-    <p><strong>{$fileMetadata[nodeData.fileId].title}</strong>.call()</p>
+    <p><strong>{fm[nodeData.fileId].title}</strong>.call()</p>
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
-            <Argument {argLevel} 
+            <Argument {argLevel}
+                argName={paramNames[i]}
                 on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.dataType, stateChangeCallback: populateArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}
                 returnType={argument.dataType}>
