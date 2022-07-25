@@ -49,16 +49,18 @@ const nodeTemplates = {
             expression: null
         };
     },
-    variableRefAssignment: ({ refId, dataType, fnRefType }) => ({
-        type: "AssignmentExpression",
-        left: {
-            type: "RefIdentifier",
-            refId,
-            dataType,
-            fnRefType
-        },
-        right: null
-    }),
+    variableRefAssignment: function({ refId, dataType, fnRefType }) {
+        return {
+            type: "AssignmentExpression",
+            left: {
+                type: "RefIdentifier",
+                refId,
+                dataType,
+                fnRefType
+            },
+            right: this[dataType + 'Literal']({})
+        };
+    },
     variableRefIdentifer: ({ refId, dataType, fnRefType }) => ({
         type: "RefIdentifier",
         refId,

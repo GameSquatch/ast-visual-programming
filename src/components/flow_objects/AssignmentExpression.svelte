@@ -1,14 +1,19 @@
 <script>
     import constructors from '../../lib/js/constructors.js';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
+import nodeTemplates from '../../lib/js/node_templates.js';
 
     export let nodeData;
     export let nodePath;
 
-    const stateChangeOnDrop = (node) => {
+    function stateChangeOnDrop(node) {
         if (node === null) return;
 
         nodeData.right = node;
+    }
+
+    function clearAssignment(_) {
+        nodeData.right = nodeTemplates[nodeData.left.dataType + 'Literal']({});
     }
 </script>
 
@@ -20,7 +25,7 @@
         </p>
         <p>to</p>
     </div>
-    <p class="equality-symbol"> = </p>
+    <p on:click={clearAssignment} class="equality-symbol"> = </p>
     <div class="assign-right-block flex-1" 
         on:dragover={()=>{}}
         on:drop|stopPropagation={flowDropHandler({ contextName: 'assignment', contextType: nodeData.left.dataType, stateChangeCallback: stateChangeOnDrop })}>
@@ -44,6 +49,7 @@
     .equality-symbol {
         align-self: center;
         padding: 0 8px;
+        cursor: pointer;
     }
 
     .assign-right-block {
