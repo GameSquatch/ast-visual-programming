@@ -76,8 +76,8 @@ function createFolder({ title, id = uuidv4(), files = [], folders = [] }) {
 function createNodeTreeEntry(id) {
     return {
         main: {
-            id,
             info: {
+                id,
                 variables: {},
                 parameters: {},
                 dataType: "String"
