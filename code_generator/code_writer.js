@@ -142,7 +142,11 @@ const mockData = {
                             "dataType": "String",
                             "fnRefType": "variables"
                         },
-                        "right": null
+                        "right": {
+                            "type": "StringLiteral",
+                            "value": "",
+                            "dataType": "String"
+                        }
                     }
                 },
             ]
@@ -151,12 +155,17 @@ const mockData = {
 };
 exports.mockData = mockData;
 
+/** @type {Object.<string, {title: string, fileType: string, objectFlowData: {parameters: Object.<string, {name: string}>, dataType: string}}>} */
 const fm = {
     "abc": {
         title: "Main",
         fileType: "function",
         objectFlowData: {
-            parameters: {},
+            parameters: {
+                id1: {
+                    name: "param1"
+                }
+            },
             dataType: "String"
         }
     },
@@ -169,6 +178,7 @@ const fm = {
         }
     }
 };
+exports.fileMetadata = fm;
 
 /**
  * @typedef {(ASTNode) => string} CodeGenerator
@@ -179,7 +189,7 @@ const fm = {
  */
 exports.codeWriter = {
     ExpressionStatement: function(node, fileId) {
-        return node.expression === null ? "" : this[node.expression.type](node.expression, fileId) + ";\n";
+        return node.expression === null ? "" : `    ${this[node.expression.type](node.expression, fileId)};\n`;
     },
     UtilityCallExpression: function(node, fileId) {
         const utility = `${node.utilityName}.${node.utilityMethod}`;

@@ -142,7 +142,11 @@ const mockData = {
                             "dataType": "String",
                             "fnRefType": "variables"
                         },
-                        "right": null
+                        "right": {
+                            "type": "StringLiteral",
+                            "value": "",
+                            "dataType": "String"
+                        }
                     }
                 },
             ]
