@@ -41,10 +41,10 @@ const nodeTemplates = {
             fnRefType
         };
     },
-    expression: () => {
+    flowStep: () => {
         const newUuid = uuidv4();
         return {
-            type: "ExpressionStatement",
+            type: "FlowStep",
             id: newUuid,
             expression: null
         };

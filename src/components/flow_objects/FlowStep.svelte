@@ -3,7 +3,7 @@
     import { flowDropHandler } from "../../lib/js/drag_and_drop/drag_and_drop_handlers.js";
     import constructors from "../../lib/js/constructors.js";
     import DragHandle from '../DragHandle.svelte';
-    import { moveExpressionDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
+    import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
     export let accessor;
     export let nodeData;
@@ -33,12 +33,12 @@
     function dropModify(node) {
         if (node === null) return;
         
-        if (node.dragType === "moveExpression") {// node is a dragObject at this point
+        if (node.dragType === "moveFlowStep") {// node is a dragObject at this point
             dispatch('replace', { oldIndex: node.dragData.currentIndex, newNode: node.nodeData });
             return;
         }
 
-        if (node.type === 'ExpressionStatement') {// node is a node at this point
+        if (node.type === 'FlowStep') {// node is a node at this point
             nodeData.expression = node.expression;
 
         } else {
@@ -52,8 +52,8 @@
             return;
         }
 
-        if (node.dragType === "moveExpression") {// node is a dragObject at this point
-            dispatch('moveExpression', { ...node, newIndex: accessor + 1 });
+        if (node.dragType === "moveFlowStep") {// node is a dragObject at this point
+            dispatch('moveFlowStep', { ...node, newIndex: accessor + 1 });
             return;
         }
 
@@ -62,7 +62,7 @@
 
     /** @type {DragHandler} */
      function handleDragStart(event) {
-        const dragData = moveExpressionDrag(nodeData, accessor);
+        const dragData = moveFlowStepDrag(nodeData, accessor);
         
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
         beingDragged = true;
@@ -77,7 +77,7 @@
 <div class:beingDragged>
     <div tabindex=0
         on:dragover|preventDefault={dragOverHandler}
-        on:drop|stopPropagation={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
+        on:drop|stopPropagation={flowDropHandler({ contextName: 'flowStep', stateChangeCallback: dropModify })}
         class="expression-container"
         on:dragstart|stopPropagation={handleDragStart}
         on:dragend|stopPropagation={checkDropCancel} >

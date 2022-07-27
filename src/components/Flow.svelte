@@ -1,6 +1,6 @@
 <script>
     import { flowDropHandler } from "../lib/js/drag_and_drop/drag_and_drop_handlers.js";
-    import constructors from "../lib/js/constructors.js";
+    import FlowStep from "../components/flow_objects/FlowStep.svelte";
     import { squish } from "../lib/js/custom_animations.js";
     import { flip } from "svelte/animate";
     import { currentFlowData } from './tabbed_editor/editor_store.js';
@@ -50,7 +50,7 @@
         flowData.body = [...flowData.body, node];
     }
 
-    function handleMoveExpression({ dragData, nodeData, newIndex }) {
+    function handleMoveFlowStep({ dragData, nodeData, newIndex }) {
         if (newIndex === dragData.currentIndex + 1) return;
 
         flowData.body.splice(dragData.currentIndex, 1);
@@ -106,16 +106,15 @@
                 start: 0.2,
             }}
         >
-            <svelte:component
-                this={constructors[flowStep.type]}
+            <FlowStep
                 on:delete={(event) => deleteFlowStep(event.detail)}
                 on:replace={(event) =>
                     replaceFlowStepContents(i, { ...event.detail })}
                 on:insertAfter={(event) => insertAfterStep(i, event.detail)}
                 bind:nodeData={flowStep}
                 accessor={i}
-                on:moveExpression={(event) =>
-                    handleMoveExpression(event.detail)}
+                on:moveFlowStep={(event) =>
+                    handleMoveFlowStep(event.detail)}
                 nodePath={`ast.main.body.${i}`}
             />
         </div>

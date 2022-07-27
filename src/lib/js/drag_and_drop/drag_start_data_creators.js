@@ -9,7 +9,7 @@
  */
 
 /**
- * @typedef {Object} ExpressionNode
+ * @typedef {Object} FlowStepNode
  * @property {string} type
  * @property {string} id uuid
  * @property {Object} [expression]
@@ -38,20 +38,20 @@ function createDragObject({ dragType, dragDataType = "none", nodeData, dragData 
 }
 
 /** @type {DragStartDataCreator} */
-const doActionDataDrag = () => createDragObject({ dragType: "expression" });
+const doActionDataDrag = () => createDragObject({ dragType: "flowStep" });
 /** @type {DragStartDataCreator} */
 const stringUtilDataDrag = () => createDragObject({ dragType: "stringUtil" });
 
 /**
- * @callback MoveExpressionDragStartDataCreator Creates the drag start data for moving an ExpressionStatement within a flow
- * @param {ExpressionNode} expressionNode The portion of the AST that represents the expression
+ * @callback MoveFlowStepDragStartDataCreator Creates the drag start data for moving an FlowStep within a flow
+ * @param {FlowStepNode} flowStepNode The portion of the AST that represents the expression
  * and the subtree under it.
  * @param {number} [currentIndex] If the expression is within a list (most likely), it's current place within that list
  * @returns {DragStartConfig}
  */
 
-/** @type {MoveExpressionDragStartDataCreator} */
-const moveExpressionDrag = (expressionNode, currentIndex) => createDragObject({ dragType: "moveExpression", nodeData: { ...expressionNode }, dragData: { currentIndex } });
+/** @type {MoveFlowStepDragStartDataCreator} */
+const moveFlowStepDrag = (flowStepNode, currentIndex) => createDragObject({ dragType: "moveFlowStep", nodeData: { ...flowStepNode }, dragData: { currentIndex } });
 
 /**
  * @typedef {Object} FunctionRefData
@@ -90,4 +90,4 @@ const navFileDrag = (fileData) => createDragObject({ dragType: 'file', dragData:
 const navFolderDrag = (folderData) => createDragObject({ dragType: 'folder', dragData: { ...folderData } });
 
 
-export { doActionDataDrag, stringUtilDataDrag, moveExpressionDrag, fnInfoRefObjectDrag, navFileDrag, navFolderDrag };
+export { doActionDataDrag, stringUtilDataDrag, moveFlowStepDrag, fnInfoRefObjectDrag, navFileDrag, navFolderDrag };

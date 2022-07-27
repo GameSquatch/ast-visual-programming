@@ -57,8 +57,8 @@ const findReturnTypeMatch = (utilType) => (contextType) => {
 const findStringUtilTypeMatch = findReturnTypeMatch("StringUtil");
 
 
-const wrapWithExpression = (node) => {
-    const expr = nodeTemplates.expression();
+const wrapWithFlowStep = (node) => {
+    const expr = nodeTemplates.flowStep();
     expr.expression = node;
     return expr;
 }
@@ -152,9 +152,9 @@ const dropContextMap = {
         // context name
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithExpression(nodeTemplates.variableRefAssignment(dragObject.dragData))
+            newNode: wrapWithFlowStep(nodeTemplates.variableRefAssignment(dragObject.dragData))
         }),
-        expression: (dragObject, contextType) => new DropObject({
+        flowStep: (dragObject, contextType) => new DropObject({
             dragObject,
             newNode: nodeTemplates.variableRefAssignment(dragObject.dragData)
         }),
@@ -170,9 +170,9 @@ const dropContextMap = {
     parameterRef: {
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithExpression(nodeTemplates.parameterRefAssignment(dragObject.dragData))
+            newNode: wrapWithFlowStep(nodeTemplates.parameterRefAssignment(dragObject.dragData))
         }),
-        expression: (dragObject, contextType) => new DropObject({
+        flowStep: (dragObject, contextType) => new DropObject({
             dragObject,
             newNode: nodeTemplates.parameterRefAssignment(dragObject.dragData)
         }),
@@ -187,7 +187,7 @@ const dropContextMap = {
     },
     stringUtil: {
         flow: noNode,
-        expression: noNode,
+        flowStep: noNode,
         assignment: (dragObject, contextType) => new DropObject({
             dragObject,
             newNode: stringUtilFromTypedContext(dragObject, contextType),
@@ -197,25 +197,25 @@ const dropContextMap = {
             newNode: stringUtilFromTypedContext(dragObject, contextType),
         }),
     },
-    expression: {
+    flowStep: {
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: nodeTemplates.expression()
+            newNode: nodeTemplates.flowStep()
         }),
-        expression: noNode,
+        flowStep: noNode,
         assignment: noNode,
         argument: noNode
     },
-    moveExpression: {
+    moveFlowStep: {
         flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: dragObject }),
-        expression: (dragObject, contextType) => new DropObject({ dragObject, newNode: dragObject }),
+        flowStep: (dragObject, contextType) => new DropObject({ dragObject, newNode: dragObject }),
         assignment: noNode,
         argument: noNode
     },
     /** @type {Object.<string, FunctionContextCallback>} */
     "file": {
-        flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithExpression(nodeTemplates[dragObject.dragData.fileType](dragObject.dragData)) }),
-        expression: (dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates[dragObject.dragData.fileType](dragObject.dragData) }),
+        flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithFlowStep(nodeTemplates[dragObject.dragData.fileType](dragObject.dragData)) }),
+        flowStep: (dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates[dragObject.dragData.fileType](dragObject.dragData) }),
         assignment: noNode,//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
         argument: noNode//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
     }

@@ -26,7 +26,7 @@ const mockData = {
             },
             "body": [
                 {
-                    "type": "ExpressionStatement",
+                    "type": "FlowStep",
                     "id": uuidv4(),
                     "expression": {
                         "type": "AssignmentExpression",
@@ -58,7 +58,7 @@ const mockData = {
                     }
                 },
                 {
-                    "type": "ExpressionStatement",
+                    "type": "FlowStep",
                     "id": uuidv4(),
                     "expression": {
                         "type": "AssignmentExpression",
@@ -89,7 +89,7 @@ const mockData = {
                     }
                 },
                 {
-                    "type": "ExpressionStatement",
+                    "type": "FlowStep",
                     "id": uuidv4(),
                     "expression": {
                         "type": "AssignmentExpression",
@@ -132,7 +132,7 @@ const mockData = {
             },
             "body": [
                 {
-                    "type": "ExpressionStatement",
+                    "type": "FlowStep",
                     "id": uuidv4(),
                     "expression": {
                         "type": "AssignmentExpression",
