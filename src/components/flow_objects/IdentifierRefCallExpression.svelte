@@ -1,17 +1,16 @@
 <script>
     import Argument from '../Argument.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
-    import typeDefs from '../../lib/js/type_definitions.js';
+    import { methodNamesThatMatchContextDataType } from './flow_utilities.js';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
+    import typeDefs from '../../lib/js/type_definitions.js'
 
     export let nodeData;
     export let contextType;
     export let isArgument = false;
     export let argLevel = 1;
     export let nodePath;
-
-    let varTypeMethods = typeDefs[nodeData.refData.dataType];
 
     function onPropertyChange(event) {
         const method = event.target.value;
@@ -22,7 +21,7 @@
             return;
         }
 
-        const fnDef = varTypeMethods[method];
+        const fnDef = typeDefs[nodeData.refData.dataType][method];
         const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
 
         nodeData = {
@@ -32,10 +31,6 @@
             dataType: fnDef.returnType
         };
     }
-
-    // !contextType is when things don't have a type in their parent context
-    const matchParentTypeFilter = (methodName) => !contextType || varTypeMethods[methodName].returnType === contextType;
-
 
     const dropArgument = (argIndex) => (node) => {
         if (node === null) return;
@@ -57,7 +52,7 @@
     <div class="method-container">
         <select on:change={onPropertyChange}>
             {#if !contextType || nodeData.refData.dataType === contextType}<option value=""></option>{/if}
-            {#each Object.keys(varTypeMethods).filter(matchParentTypeFilter) as method}
+            {#each methodNamesThatMatchContextDataType({ typeDefinitionName: nodeData.refData.dataType, contextDataType: contextType }) as method}
                 <option value={method} selected={method === nodeData.method}>{method}</option>
             {/each}
         </select>

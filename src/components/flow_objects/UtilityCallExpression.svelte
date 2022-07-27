@@ -1,6 +1,6 @@
 <script>
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
-    import typeDefs from '../../lib/js/type_definitions.js';
+    import { methodNamesThatMatchContextDataType } from './flow_utilities.js';
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
@@ -14,8 +14,6 @@
     /** @type {string} */
     export let nodePath;
 
-    const utilities = typeDefs[nodeData.utilityName];
-
     function onPropertyChange(event) {
         const utilityMethod = event.target.value;
         const fnDef = typeDefs[nodeData.utilityName][utilityMethod];
@@ -28,10 +26,6 @@
             dataType: fnDef.returnType
         };
     };
-
-    // !contextType is when things don't have a type in their parent context
-    /** @type {(methodName: string) => boolean} */
-    const matchParentTypeFilter = (methodName) => !contextType || utilities[methodName].returnType === contextType;
 
 
     const populateArgument = (argIndex) => (node) => {
@@ -52,7 +46,7 @@
     <p><strong>{nodeData.utilityName}</strong></p>
     <div class="method-container">
         <select on:change={onPropertyChange}>
-            {#each Object.keys(utilities).filter(matchParentTypeFilter) as method}
+            {#each methodNamesThatMatchContextDataType({ typeDefinitionName: nodeData.utilityName, contextDataType: contextType }) as method}
                 <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
             {/each}
         </select>

@@ -9,28 +9,34 @@ import DropObject from './drop_object.js';
  */
 
 /**
+ * @function
  * @param {DragEvent} event 
  * @returns {Object}
  */
-const getDragData = (event) => JSON.parse(event.dataTransfer?.getData('text/json') ?? '{}');
+function getDragData(event) {
+    return JSON.parse(event.dataTransfer?.getData('text/json') ?? '{}');
+}
 /**
  * @callback DragCallback
  * @param {DragEvent} event
  */
 
 /**
+ * @function
  * @param {Object} dragData 
  * @returns {DragCallback}
  */
-const dragStartHandler = (dragData) => (event) => {
-    if (event.dataTransfer !== null) {
-        event.dataTransfer.setData('text/json', JSON.stringify(dragData));
-        event.dataTransfer.dropEffect = 'copy';
-    }
-};
+function dragStartHandler(dragData) {
+    return (event) => {
+        if (event.dataTransfer !== null) {
+            event.dataTransfer.setData('text/json', JSON.stringify(dragData));
+            event.dataTransfer.dropEffect = 'copy';
+        }
+    };
+}
 
 
-const dragDataTypeMatchesContext = (dragObject, contextType) => {
+function dragDataTypeMatchesContext(dragObject, contextType) {
     if (dragObject.dragData === undefined || contextType === undefined) {
         return false;
     }
@@ -40,7 +46,7 @@ const dragDataTypeMatchesContext = (dragObject, contextType) => {
     }
 
     return false;
-};
+}
 
 
 // This finds a method for the string util that matches the context's type, if any,
@@ -57,7 +63,7 @@ const findReturnTypeMatch = (utilType) => (contextType) => {
 const findStringUtilTypeMatch = findReturnTypeMatch("StringUtil");
 
 
-const wrapWithFlowStep = (node) => {
+function wrapWithFlowStep(node) {
     const expr = nodeTemplates.flowStep();
     expr.expression = node;
     return expr;
@@ -65,24 +71,26 @@ const wrapWithFlowStep = (node) => {
 
 
 /**
+ * @function
  * @param {Object} dragObject - The DragEvent data parsed into an object
  * @param {string} contextType - Data type
  * @returns {?Object.<string, *>} Returns either null or the ast node to be created from dropping this stringUtil
  */
-const stringUtilFromTypedContext = (dragObject, contextType) => {
+function stringUtilFromTypedContext(dragObject, contextType) {
     const methodName = findStringUtilTypeMatch(contextType);
     if (methodName === null) return null;
     return nodeTemplates.StringUtil(methodName);
-};
+}
 
 
 /**
  * Creates an AST node for dropping a variable into a typed context
+ * @function
  * @param {DragObject} dragObject
  * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
  * @returns {Object}
  */
-const variableRefFromTypedContext = (dragObject, contextType) => {
+function variableRefFromTypedContext(dragObject, contextType) {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragObject, contextType);
     
     if (variableTypeMatchesContext) {
@@ -93,22 +101,22 @@ const variableRefFromTypedContext = (dragObject, contextType) => {
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? nodeTemplates.variableRefCallExpression({
+        ? nodeTemplates.identifierRefCallExpression({
             method: method,
             dataType: contextType,
-            refData: nodeTemplates.variableRefIdentifer(dragObject.dragData),
-            fnRefType: dragObject.dragData.fnRefType
+            refData: nodeTemplates.variableRefIdentifer(dragObject.dragData)
         })
         : null;
-};
+}
 
 /**
  * Creates an AST node for dropping a variable into a typed context
+ * @function
  * @param {DragObject} dragObject
  * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
  * @returns {Object}
  */
- const parameterRefFromTypedContext = (dragObject, contextType) => {
+ function parameterRefFromTypedContext(dragObject, contextType) {
     const parameterTypeMatchesContext = dragDataTypeMatchesContext(dragObject, contextType);
     
     if (parameterTypeMatchesContext) {
@@ -119,16 +127,18 @@ const variableRefFromTypedContext = (dragObject, contextType) => {
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? nodeTemplates.variableRefCallExpression({
+        ? nodeTemplates.identifierRefCallExpression({
             method: method,
             dataType: contextType,
-            refData: nodeTemplates.parameterRefIdentifier(dragObject.dragData),
-            fnRefType: "parameters"
+            refData: nodeTemplates.parameterRefIdentifier(dragObject.dragData)
         })
         : null;
-};
+}
 
-const noNode = (dragObject, _) => new DropObject({ dragObject });
+
+function noNode(dragObject, _) {
+    return new DropObject({ dragObject });
+}
 
 /**
  * @callback FunctionContextCallback

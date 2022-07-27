@@ -57,7 +57,7 @@
 /**
  * @typedef NodeTemplates
  * @property {(method: string) => UtilityCallExpression} StringUtil
- * @property {(options: {method: string, dataType: string, refData: FunctionRefData, fnRefType: string }) => IdentifierRefCallExpression} variableRefCallExpression
+ * @property {(options: {method: string, dataType: string, refData: FunctionRefData, fnRefType: string }) => IdentifierRefCallExpression} identifierRefCallExpression
  * @property {() => ExpressionNode} expression
  * @property {(options: {refId: string, dataType: string}) => AssignmentExpression} variableRefAssignment
  * @property {(options: {refId: string, dataType: string}) => VariableIdentifier} variableRefIdentifer

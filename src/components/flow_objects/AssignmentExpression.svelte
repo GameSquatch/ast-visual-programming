@@ -1,7 +1,7 @@
 <script>
     import constructors from '../../lib/js/constructors.js';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-import nodeTemplates from '../../lib/js/node_templates.js';
+    import nodeTemplates from '../../lib/js/node_templates.js';
 
     export let nodeData;
     export let nodePath;

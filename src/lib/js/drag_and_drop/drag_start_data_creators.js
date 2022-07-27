@@ -38,9 +38,13 @@ function createDragObject({ dragType, dragDataType = "none", nodeData, dragData 
 }
 
 /** @type {DragStartDataCreator} */
-const doActionDataDrag = () => createDragObject({ dragType: "flowStep" });
+function doActionDataDrag() {
+    return createDragObject({ dragType: "flowStep" });
+}
 /** @type {DragStartDataCreator} */
-const stringUtilDataDrag = () => createDragObject({ dragType: "stringUtil" });
+function stringUtilDataDrag() {
+    return createDragObject({ dragType: "stringUtil" });
+}
 
 /**
  * @callback MoveFlowStepDragStartDataCreator Creates the drag start data for moving an FlowStep within a flow
@@ -51,7 +55,9 @@ const stringUtilDataDrag = () => createDragObject({ dragType: "stringUtil" });
  */
 
 /** @type {MoveFlowStepDragStartDataCreator} */
-const moveFlowStepDrag = (flowStepNode, currentIndex) => createDragObject({ dragType: "moveFlowStep", nodeData: { ...flowStepNode }, dragData: { currentIndex } });
+function moveFlowStepDrag(flowStepNode, currentIndex) {
+    return createDragObject({ dragType: "moveFlowStep", nodeData: { ...flowStepNode }, dragData: { currentIndex } });
+}
 
 /**
  * @typedef {Object} FunctionRefData
@@ -68,7 +74,9 @@ const moveFlowStepDrag = (flowStepNode, currentIndex) => createDragObject({ drag
  * @returns {DragStartConfig}
  */
 /** @type {VariableDragStartDataCreator} */
-const fnInfoRefObjectDrag = (refData) => createDragObject({ dragType: refData.dragType, dragDataType: refData.dataType, dragData: { ...refData } });
+function fnInfoRefObjectDrag(refData) {
+    return createDragObject({ dragType: refData.dragType, dragDataType: refData.dataType, dragData: { ...refData } });
+}
 
 
 /**
@@ -84,10 +92,14 @@ const fnInfoRefObjectDrag = (refData) => createDragObject({ dragType: refData.dr
  * @param {FileDragData} fileData
  * @returns {DragStartConfig}
  */
-const navFileDrag = (fileData) => createDragObject({ dragType: 'file', dragData: { ...fileData } });
+function navFileDrag(fileData) {
+    return createDragObject({ dragType: 'file', dragData: { ...fileData } });
+}
 
 
-const navFolderDrag = (folderData) => createDragObject({ dragType: 'folder', dragData: { ...folderData } });
+function navFolderDrag(folderData) {
+    return createDragObject({ dragType: 'folder', dragData: { ...folderData } });
+}
 
 
 export { doActionDataDrag, stringUtilDataDrag, moveFlowStepDrag, fnInfoRefObjectDrag, navFileDrag, navFolderDrag };

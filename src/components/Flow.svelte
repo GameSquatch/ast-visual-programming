@@ -4,12 +4,9 @@
     import { squish } from "../lib/js/custom_animations.js";
     import { flip } from "svelte/animate";
     import { currentFlowData } from './tabbed_editor/editor_store.js';
-    import { fileMetadata } from './side_nav/file_metadata.js';
 
     export let flowData;
     currentFlowData.set(flowData);
-
-    $: currentFileMetadata = $fileMetadata[flowData.info.id];
 
     let hoverPrepend = false;
     function setHoverPrepend(newValue) {

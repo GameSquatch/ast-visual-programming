@@ -7,8 +7,53 @@ import typeDefs from './type_definitions.js';
  * @property {string} type
  * @property {string} utilityName
  * @property {string} utilityMethod
- * @property {string[]} arguments
+ * @property {LiteralNode[]} arguments
  * @property {string} dataType
+ */
+
+/**
+ * @typedef {Object} LiteralNode
+ * @property {string} type
+ * @property {string|number|boolean} value
+ * @property {string} dataType
+ */
+
+/**
+ * @typedef {Object} VariableRefCallExpression
+ * @property {string} type
+ * @property {Object} refData
+ * @property {string} method
+ * @property {Array.<LiteralNode|UtilityCallExpressionData|RefIdentifier|FunctionCallExpression>} arguments
+ * @property {string} dataType
+ */
+
+/**
+ * @typedef {Object} FlowStep
+ * @property {string} type
+ * @property {string} id
+ * @property {null} expression
+ */
+
+/**
+ * @typedef {Object} RefIdentifier
+ * @property {string} type
+ * @property {string} refId
+ * @property {string} dataType
+ * @property {string} fnRefType
+ */
+
+/**
+ * @typedef {Object} RefAssignment
+ * @property {string} type
+ * @property {RefIdentifier} left
+ * @property {UtilityCallExpressionData|VariableRefCallExpression|LiteralNode} right
+ */
+
+/**
+ * @typedef {Object} FunctionCallExpression
+ * @property {string} type
+ * @property {string} fileId
+ * @property {Array.<LiteralNode|UtilityCallExpressionData|RefIdentifier|FunctionCallExpression>} arguments
  */
 
 
@@ -28,7 +73,15 @@ const nodeTemplates = {
             dataType: methodDefinition.returnType
         };
     },
-    variableRefCallExpression: function({ method, dataType, refData, fnRefType }) {
+    /**
+     * @function
+     * @param {Object} spec
+     * @param {string} spec.method
+     * @param {string} spec.dataType
+     * @param {Object} spec.refData
+     * @returns {VariableRefCallExpression}
+     */
+    identifierRefCallExpression: function({ method, dataType, refData }) {
         const methodDefinition = typeDefs[refData.dataType][method];
         const definitionArgs = methodDefinition.args;
 
@@ -37,10 +90,10 @@ const nodeTemplates = {
             refData: {...refData},
             method,
             arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
-            dataType,
-            fnRefType
+            dataType
         };
     },
+    /** @type {() => FlowStep} */
     flowStep: () => {
         const newUuid = uuidv4();
         return {
@@ -49,6 +102,14 @@ const nodeTemplates = {
             expression: null
         };
     },
+    /**
+     * @function
+     * @param {Object} spec
+     * @param {string} spec.refId
+     * @param {string} spec.dataType
+     * @param {string} spec.fnRefType
+     * @returns {RefAssignment}
+     */
     variableRefAssignment: function({ refId, dataType, fnRefType }) {
         return {
             type: "AssignmentExpression",
@@ -61,6 +122,14 @@ const nodeTemplates = {
             right: this[dataType + 'Literal']({})
         };
     },
+    /**
+     * @function
+     * @param {Object} spec
+     * @param {string} spec.refId
+     * @param {string} spec.dataType
+     * @param {string} spec.fnRefType
+     * @returns {RefIdentifier}
+     */
     variableRefIdentifer: ({ refId, dataType, fnRefType }) => ({
         type: "RefIdentifier",
         refId,
@@ -68,25 +137,26 @@ const nodeTemplates = {
         fnRefType
     }),
     // Capitalizing because it matches the 'type' field in the AST
+    /** @type {({ value: string }) => LiteralNode} */
     StringLiteral: ({ value = "" }) => ({
         type: "StringLiteral",
         value: value,
         dataType: "String"
     }),
     // Capitalizing because it matches the 'type' field in the AST
+    /** @type {({ value: number }) => LiteralNode} */
     IntegerLiteral: ({ value = 0 }) => ({
         type: "IntegerLiteral",
         value,
         dataType: "Integer"
     }),
     /**
-     * @param {Object} config
-     * @param {string} config.fileId - The id that refers back to the file metadata writable store
-     * @param {Object} config.objectFlowData
-     * @param {import('../../components/side_nav/file_tree.js').FunctionParameterConfig} config.objectFlowData.parameters
-     * @returns {{ type: string, fileId: string, arguments: Array }}
+     * @function
+     * @param {Object} spec
+     * @param {string} spec.fileId - The id that refers back to the file metadata writable store
+     * @returns {FunctionCallExpression}
      */
-    "function": function({ fileId, objectFlowData }) {
+    "function": function({ fileId }) {
         return {
             type: "FunctionCallExpression",
             fileId,

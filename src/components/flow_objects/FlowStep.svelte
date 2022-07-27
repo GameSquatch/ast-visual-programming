@@ -78,7 +78,7 @@
     <div tabindex=0
         on:dragover|preventDefault={dragOverHandler}
         on:drop|stopPropagation={flowDropHandler({ contextName: 'flowStep', stateChangeCallback: dropModify })}
-        class="expression-container"
+        class="flow-step-container"
         on:dragstart|stopPropagation={handleDragStart}
         on:dragend|stopPropagation={checkDropCancel} >
 
@@ -111,7 +111,7 @@
 </div>
 
 <style>
-    .expression-container {
+    .flow-step-container {
         padding: 32px;
         border: 1px dashed black;
         position: relative;
@@ -119,7 +119,7 @@
         overflow-x: auto;
         display: inline-block;
     }
-    .expression-container:focus {
+    .flow-step-container:focus {
         border: 2px dashed blue;
     }
 
