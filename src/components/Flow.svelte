@@ -80,7 +80,7 @@
 <div
     class="flow-wrapper"
     on:dragover|preventDefault={dragOverHandler}
-    on:drop|stopPropagation|preventDefault={flowDropHandler({
+    on:drop|stopPropagation={flowDropHandler({
         contextName: "flow",
         stateChangeCallback: appendDrop,
     })}
@@ -88,7 +88,7 @@
     <div
         class="bumper-zone"
         class:hoverDrag={hoverPrepend}
-        on:drop|stopPropagation|preventDefault={flowDropHandler({
+        on:drop|stopPropagation={flowDropHandler({
             contextName: "flow",
             stateChangeCallback: prependDrop,
         })}

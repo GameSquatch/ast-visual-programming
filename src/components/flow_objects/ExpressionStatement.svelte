@@ -2,7 +2,6 @@
     import { createEventDispatcher } from 'svelte';
     import { flowDropHandler } from "../../lib/js/drag_and_drop/drag_and_drop_handlers.js";
     import constructors from "../../lib/js/constructors.js";
-    import ClearNodeProp from '../ClearNodeProp.svelte';
     import DragHandle from '../DragHandle.svelte';
     import { moveExpressionDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
@@ -78,7 +77,7 @@
 <div class:beingDragged>
     <div tabindex=0
         on:dragover|preventDefault={dragOverHandler}
-        on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
+        on:drop|stopPropagation={flowDropHandler({ contextName: 'expression', stateChangeCallback: dropModify })}
         class="expression-container"
         on:dragstart|stopPropagation={handleDragStart}
         on:dragend|stopPropagation={checkDropCancel} >
@@ -104,8 +103,8 @@
         on:dragover|preventDefault={insertDragOverHandler}
         on:dragenter|preventDefault={insertDragEnter}
         on:dragleave|preventDefault={insertDragLeave}
-        on:drop|stopPropagation|preventDefault={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
-        on:drop|stopPropagation|preventDefault={removeInsertHover}
+        on:drop|stopPropagation={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
+        on:drop|stopPropagation={removeInsertHover}
         class="line-down-box"
         class:insert-drag-over={isOverInsertSpot}
     ></div>
