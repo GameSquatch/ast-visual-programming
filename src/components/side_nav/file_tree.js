@@ -29,13 +29,13 @@ const fileTree = {
             const toPath = new TreePath({ stringPath: to });
 
             /** @type {object} */
-            let fromObj = tree;
+            let fromArr = tree;
             fromPath.tokens.forEach((token, i, tokens) => {
                 if (i === tokens.length - 1) return;
-                fromObj = fromObj[token];
+                fromArr = fromArr[token];
             });
-            fromObj = fromObj.splice(parseInt(fromPath.getTokenAt(-1)), 1)[0];
-
+            const fromObj = fromArr[parseInt(fromPath.getTokenAt(-1))];
+            
             /** @type {object} */
             let locationArr = tree;
             if (toPath.tokens.length > 1) {
@@ -44,6 +44,9 @@ const fileTree = {
                 });
             }
             
+            // Need to splice after we use location, because moving things at the same level
+            // will change the indices at which those things exist in the arrays
+            fromArr.splice(parseInt(fromPath.getTokenAt(-1)), 1)[0];
             locationArr[navType] = [
                 ...locationArr[navType],
                 fromObj
