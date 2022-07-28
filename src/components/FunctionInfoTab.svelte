@@ -1,9 +1,9 @@
 <script>
-    import { slide } from "svelte/transition";
-    import { quintOut } from "svelte/easing";
-    import { fnInfoRefObjectDrag } from "../lib/js/drag_and_drop/drag_start_data_creators.js";
-    import { v4 as uuidv4 } from "uuid";
-    import { fileMetadata } from "../components/side_nav/file_metadata.js";
+    import { slide } from 'svelte/transition';
+    import { quintOut } from 'svelte/easing';
+    import { fnInfoRefObjectDrag } from '../lib/js/drag_and_drop/drag_start_data_creators.js';
+    import { v4 as uuidv4 } from 'uuid';
+    import { fileMetadata } from '../components/side_nav/file_metadata.js';
 
     export let info;
 
@@ -29,7 +29,7 @@
      */
     const dragStart = (event, fnRefDragged) => {
         const dragData = fnInfoRefObjectDrag(fnRefDragged);
-        event.dataTransfer.setData("text/json", JSON.stringify(dragData));
+        event.dataTransfer.setData('text/json', JSON.stringify(dragData));
         isDisplaying = false;
         // Will auto-drop the menu after you've dropped a variable or parameter
         // document.addEventListener('drop', functionInfoDrop, true);
@@ -37,7 +37,7 @@
 
     function functionInfoDrop(event) {
         isDisplaying = true;
-        document.removeEventListener("drop", functionInfoDrop, true);
+        document.removeEventListener('drop', functionInfoDrop, true);
         reShowTimer = setTimeout(tabToggle, 1200);
     }
 
@@ -45,10 +45,10 @@
         info.variables = {
             ...info.variables,
             [uuidv4()]: {
-                name: "newVar",
-                dataType: "String",
-                defaultValue: "",
-            },
+                name: 'newVar',
+                dataType: 'String',
+                defaultValue: ''
+            }
         };
     }
 
@@ -71,7 +71,7 @@
     function changeRefName(refId, newName, infoKey) {
         info[infoKey][refId] = {
             ...info[infoKey][refId],
-            name: newName,
+            name: newName
         };
     }
     function changeParamRefName(paramId, newName) {
@@ -81,7 +81,7 @@
     function changeRefType(event, id, infoKey) {
         info[infoKey][id] = {
             ...info[infoKey][id],
-            dataType: event.target.value,
+            dataType: event.target.value
         };
     }
     function changeParamRefType(event, id) {
@@ -91,14 +91,10 @@
 
 <div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
     {#if isDisplaying}
-        <div
-            transition:slide={{ duration: 300, easing: quintOut }}
-            class="tab-content"
-        >
-
+        <div transition:slide={{ duration: 300, easing: quintOut }} class="tab-content">
             <div class="section">
                 <div class="return-type-statement">
-                    <h4>Return Type: </h4>
+                    <h4>Return Type:</h4>
                     <select>
                         <option value="Void" selected>Void</option>
                         <option value="String">String</option>
@@ -119,45 +115,32 @@
                 {#each Object.keys(info.variables) as varId (varId)}
                     {@const varObj = info.variables[varId]}
                     <div
-                        on:dragstart={(event) => dragStart(event, {
-                            ...varObj,
-                            refId: varId,
-                            dragType: "variableRef",
-                            fnRefType: "variables",
-                        })}
-                        class="flex w100 var-container"
-                    >
+                        on:dragstart={(event) =>
+                            dragStart(event, {
+                                ...varObj,
+                                refId: varId,
+                                dragType: 'variableRef',
+                                fnRefType: 'variables'
+                            })}
+                        class="flex w100 var-container">
                         <div class="flex col-1">
                             <div class="drag-var" draggable="true" />
                             <input
                                 value={varObj.name}
                                 type="text"
-                                on:change={(e) =>
-                                    changeRefName(
-                                        varId,
-                                        e.target.value,
-                                        "variables"
-                                    )}
-                                class="var-name"
-                            />
+                                on:change={(e) => changeRefName(varId, e.target.value, 'variables')}
+                                class="var-name" />
                         </div>
                         <div class="col-2">
                             <select
-                                on:change={(event) =>
-                                    changeRefType(event, varId, "variables")}
+                                on:change={(event) => changeRefType(event, varId, 'variables')}
                                 value={varObj.dataType}
-                                ><option value="String">String</option><option
-                                    value="Integer">Integer</option
-                                ></select
-                            >
+                                ><option value="String">String</option><option value="Integer">Integer</option></select>
                         </div>
                         <div class="col-3">
                             <input
-                                type={varObj.dataType === "Integer"
-                                    ? "number"
-                                    : "text"}
-                                value={varObj.defaultValue}
-                            />
+                                type={varObj.dataType === 'Integer' ? 'number' : 'text'}
+                                value={varObj.defaultValue} />
                         </div>
                     </div>
                 {/each}
@@ -175,44 +158,30 @@
                 {#each Object.keys($fileMetadata[info.id].objectFlowData.parameters) as paramId (paramId)}
                     {@const paramObj = $fileMetadata[info.id].objectFlowData.parameters[paramId]}
                     <div
-                        on:dragstart={(event) => dragStart(event, {
-                            ...paramObj,
-                            refId: paramId,
-                            dragType: "variableRef",
-                            fnRefType: "parameters",
-                        })}
-                        class="flex w100 var-container"
-                    >
+                        on:dragstart={(event) =>
+                            dragStart(event, {
+                                ...paramObj,
+                                refId: paramId,
+                                dragType: 'variableRef',
+                                fnRefType: 'parameters'
+                            })}
+                        class="flex w100 var-container">
                         <div class="flex col-1">
                             <div class="drag-var" draggable="true" />
                             <input
                                 value={paramObj.name}
                                 type="text"
-                                on:change={(e) =>
-                                    changeParamRefName(
-                                        paramId,
-                                        e.target.value
-                                    )}
-                                class="var-name"
-                            />
+                                on:change={(e) => changeParamRefName(paramId, e.target.value)}
+                                class="var-name" />
                         </div>
                         <div class="col-2">
-                            <select
-                                on:change={(event) =>
-                                    changeParamRefType(event, paramId)}
-                                value={paramObj.dataType}
-                                ><option value="String">String</option><option
-                                    value="Integer">Integer</option
-                                ></select
-                            >
+                            <select on:change={(event) => changeParamRefType(event, paramId)} value={paramObj.dataType}
+                                ><option value="String">String</option><option value="Integer">Integer</option></select>
                         </div>
                         <div class="col-3">
                             <input
-                                type={paramObj.dataType === "Integer"
-                                    ? "number"
-                                    : "text"}
-                                value={paramObj.defaultValue}
-                            />
+                                type={paramObj.dataType === 'Integer' ? 'number' : 'text'}
+                                value={paramObj.defaultValue} />
                         </div>
                     </div>
                 {/each}
@@ -225,9 +194,7 @@
     {/if}
 
     <div class="flex justify-center">
-        <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>
-            Function Info
-        </div>
+        <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>Function Info</div>
     </div>
 </div>
 

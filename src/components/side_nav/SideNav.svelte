@@ -41,7 +41,8 @@
             return;
         }
 
-        fileTree.moveItem({ from: dragObject.dragData.treePath, to: 'files', navType: dragObject.dragType === 'folder' ? 'folders' : 'files' })
+        const itemLocation = dragObject.dragType === 'folder' ? 'folders' : 'files';
+        fileTree.moveItem({ from: dragObject.dragData.treePath, to: itemLocation, navType: itemLocation })
     }
 </script>
 
