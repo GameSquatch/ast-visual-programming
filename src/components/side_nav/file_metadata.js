@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { typeDefaults } from '../../lib/js/type_defaults';
 
 /**
  * @typedef {Object} FileMetadataFlowData
@@ -71,7 +72,7 @@ const fileMetadata = (() => {
             update((state) => {
                 const param = state[fnId].objectFlowData.parameters[paramId];
                 param.dataType = dataType;
-                param.defaultValue = dataType === "String" ? "" : 0;
+                param.defaultValue = typeDefaults[dataType];
                 return state;
             });
         },

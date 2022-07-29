@@ -9,7 +9,7 @@ const { codeWriter } = require('./code_writer');
  */
 function generateCode(codeInfo) {
     const { entryFunction, codeData, fileMetadata } = codeInfo;
-    let codeStr = '';
+    let codeStr = [];
 
     for (let fileId of Object.keys(codeData)) {
         let parameterSet = "";
@@ -19,6 +19,7 @@ function generateCode(codeInfo) {
             const { name, defaultValue, dataType } = fileMetadata[fileId].objectFlowData.parameters[paramId];
             const defaultStr = dataType === "String" ? `"${defaultValue}"` : `${defaultValue}`;
             parameterInits += `    ${name} = ${name} ?? ${defaultStr};\n`;
+
             if (i > 0) parameterSet += ', ';
             parameterSet += name;
             i += 1;
@@ -35,11 +36,11 @@ function generateCode(codeInfo) {
         for (const statement of currentFn.main.body) {
             codeResult += codeWriter(statement, fileId, codeInfo);
         }
-        codeStr += `function ${fileMetadata[fileId].title}(${parameterSet}) {\n${parameterInits}${variableInitBlock}${codeResult}}\n`;
+        codeStr.push(`function ${fileMetadata[fileId].title}(${parameterSet}) {\n${parameterInits}${variableInitBlock}${codeResult}}\n`);
     }
 
-    codeStr += `${fileMetadata[entryFunction].title}();`;
-    return codeStr;
+    codeStr.push(`${fileMetadata[entryFunction].title}();`);
+    return codeStr.join('');
 }
 
 exports.generateCode = generateCode;

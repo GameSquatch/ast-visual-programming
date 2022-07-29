@@ -4,6 +4,7 @@
     import { fnInfoRefObjectDrag } from '../lib/js/drag_and_drop/drag_start_data_creators.js';
     import { v4 as uuidv4 } from 'uuid';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
+    import { typeDefaults } from '../lib/js/type_defaults.js';
 
     export let info;
 
@@ -82,7 +83,7 @@
         info[infoKey][id] = {
             ...info[infoKey][id],
             dataType: event.target.value,
-            defaultValue: event.target.value === "String" ? "" : 0
+            defaultValue: typeDefaults[event.target.value]
         };
     }
     function changeParamRefType(event, id) {
