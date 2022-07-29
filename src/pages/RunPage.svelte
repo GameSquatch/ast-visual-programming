@@ -15,6 +15,8 @@
     }
 
     function handleGenerateButtonClick(_) {
+        generatingPromise = null;
+        
         if (entryFunction === '') {
             validationMessage = 'You need to choose an entry function first';
             return;
