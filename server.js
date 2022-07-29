@@ -31,22 +31,24 @@ app.use('/', express.static('public'));
 //     }
 // });
 
-app.use('/generate-code', express.json());
+app.post('/generate-code', express.json(), (req, res) => {
+    res.set({
+      'Content-Type': 'text/plain',
+      'Cache-Control': 'no-store'
+    });
 
-app.post('/generate-code', (req, res) => {
-    res.setHeader('Content-Type', 'text/plain');
     if (req.body.entryFunction === undefined) {
       res.status(400).send('Bad message; need entryFunction');
       return;
     }
 
-    try {
-      const generatedCode = generateCode(req.body);
-      res.status(200).send(generatedCode);
-      return;
-    } catch (e) {
-      res.status(500).send('Something broke');
-    }
+    generateCode(req.body)
+      .then((generatedCode) => {
+        res.status(200).send(generatedCode);
+      })
+      .catch((e) => {
+        res.status(500).send('Something broke');
+      });
 });
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
