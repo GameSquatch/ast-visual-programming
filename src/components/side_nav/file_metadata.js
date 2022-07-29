@@ -69,13 +69,21 @@ const fileMetadata = (() => {
         },
         changeParameterType({ fnId, paramId, dataType }) {
             update((state) => {
-                state[fnId].objectFlowData.parameters[paramId].dataType = dataType;
+                const param = state[fnId].objectFlowData.parameters[paramId];
+                param.dataType = dataType;
+                param.defaultValue = dataType === "String" ? "" : 0;
                 return state;
             });
         },
         changeParameterName({ fnId, paramId, newName }) {
             update((state) => {
                 state[fnId].objectFlowData.parameters[paramId].name = newName;
+                return state;
+            });
+        },
+        changeParameterDefaultValue({ fnId, paramId, newValue }) {
+            update((state) => {
+                state[fnId].objectFlowData.parameters[paramId].defaultValue = newValue;
                 return state;
             });
         }

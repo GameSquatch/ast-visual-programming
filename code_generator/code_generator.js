@@ -1,30 +1,45 @@
-const { codeWriter, mockData, fileMetadata } = require('./code_writer');
+const { codeWriter } = require('./code_writer');
 
-for (let fileId of Object.keys(mockData)) {
-    const currentFn = mockData[fileId];
-    let variableInitBlock = "";
-    for (const variable of Object.values(currentFn.main.info.variables)) {
-        variableInitBlock += `    let ${variable.name} = ${variable.dataType === "String" ? '"' + variable.defaultValue + '"' : variable.defaultValue};\n`;
-    }
-    variableInitBlock += "\n";
+/**
+ * @param {Object} codeInfo
+ * @param {string} codeInfo.entryFunction
+ * @param {Object} codeInfo.codeData
+ * @param {Object} codeInfo.fileMetadata
+ * @returns {string}
+ */
+function generateCode(codeInfo) {
+    const { entryFunction, codeData, fileMetadata } = codeInfo;
+    let codeStr = '';
 
-    let parameterSet = "";
-    let i = 0;
-    for (const paramId in fileMetadata[fileId].objectFlowData.parameters) {
-        const { name } = fileMetadata[fileId].objectFlowData.parameters[paramId];
-        if (i > 0) parameterSet += ', ';
-        parameterSet += name;
-        i += 1;
+    for (let fileId of Object.keys(codeData)) {
+        let parameterSet = "";
+        let parameterInits = "";
+        let i = 0;
+        for (const paramId in fileMetadata[fileId].objectFlowData.parameters) {
+            const { name, defaultValue, dataType } = fileMetadata[fileId].objectFlowData.parameters[paramId];
+            const defaultStr = dataType === "String" ? `"${defaultValue}"` : `${defaultValue}`;
+            parameterInits += `    ${name} = ${name} ?? ${defaultStr};\n`;
+            if (i > 0) parameterSet += ', ';
+            parameterSet += name;
+            i += 1;
+        }
+
+        const currentFn = codeData[fileId];
+        let variableInitBlock = "";
+        for (const variable of Object.values(currentFn.main.info.variables)) {
+            variableInitBlock += `    let ${variable.name} = ${variable.dataType === "String" ? '"' + variable.defaultValue + '"' : variable.defaultValue};\n`;
+        }
+        variableInitBlock += "\n";
+
+        let codeResult = "";
+        for (const statement of currentFn.main.body) {
+            codeResult += codeWriter(statement, fileId, codeInfo);
+        }
+        codeStr += `function ${fileMetadata[fileId].title}(${parameterSet}) {\n${parameterInits}${variableInitBlock}${codeResult}}\n`;
     }
 
-    let codeResult = "";
-    for (const statement of currentFn.main.body) {
-        codeResult += codeOutput(statement, fileId);
-    }
-    console.log(`function ${fileMetadata[fileId].title}(${parameterSet}) {\n${variableInitBlock}${codeResult}}\n`);
+    codeStr += `${fileMetadata[entryFunction].title}();`;
+    return codeStr;
 }
 
-function codeOutput(node, fileId) {
-    // write code for node.type to a file, but for now just log it
-    return codeWriter[node.type](node, fileId);
-}
+exports.generateCode = generateCode;

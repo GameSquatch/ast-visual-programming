@@ -34,6 +34,7 @@ const fileTree = {
                 if (i === tokens.length - 1) return;
                 fromArr = fromArr[token];
             });
+            // Take a copy instead of splicing out
             const fromObj = fromArr[parseInt(fromPath.getTokenAt(-1))];
             
             /** @type {object} */

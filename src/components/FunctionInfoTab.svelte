@@ -81,11 +81,29 @@
     function changeRefType(event, id, infoKey) {
         info[infoKey][id] = {
             ...info[infoKey][id],
-            dataType: event.target.value
+            dataType: event.target.value,
+            defaultValue: event.target.value === "String" ? "" : 0
         };
     }
     function changeParamRefType(event, id) {
         fileMetadata.changeParameterType({ fnId: info.id, paramId: id, dataType: event.target.value });
+    }
+
+    function handleParamDefaultValueChange(event, id, dataType) {
+        /** @type {HTMLInputElement} */
+        const target = event.target;
+        const newValue = dataType === "String" ? event.target.value : target.valueAsNumber;
+        fileMetadata.changeParameterDefaultValue({ fnId: info.id, paramId: id, newValue });
+    }
+
+    function handleRefDefaultValueChange(event, id, infoKey, dataType) {
+        /** @type {HTMLInputElement} */
+        const target = event.target;
+        const newValue = dataType === "String" ? event.target.value : target.valueAsNumber;
+        info[infoKey][id] = {
+            ...info[infoKey][id],
+            defaultValue: newValue
+        };
     }
 </script>
 
@@ -139,6 +157,7 @@
                         </div>
                         <div class="col-3">
                             <input
+                                on:change={(event) => handleRefDefaultValueChange(event, varId, 'variables', varObj.dataType)}
                                 type={varObj.dataType === 'Integer' ? 'number' : 'text'}
                                 value={varObj.defaultValue} />
                         </div>
@@ -180,6 +199,7 @@
                         </div>
                         <div class="col-3">
                             <input
+                                on:change={(event) => handleParamDefaultValueChange(event, paramId, paramObj.dataType)}
                                 type={paramObj.dataType === 'Integer' ? 'number' : 'text'}
                                 value={paramObj.defaultValue} />
                         </div>
