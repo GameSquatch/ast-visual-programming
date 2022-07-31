@@ -3,4 +3,5 @@ node_modules
 dist
 dist-ssr
 *.local
-public/build
+public/app/build
+.env
