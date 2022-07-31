@@ -1,5 +1,4 @@
 const express = require('express');
-require('dotenv').config();
 const PORT = process.env.PORT || 4200;
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
@@ -9,6 +8,9 @@ const { createHmac } = require('crypto');
 
 
 const isProd = process.env.NODE_ENV === 'production';
+if (!isProd) {
+    require('dotenv').config();
+}
 // @ts-ignore
 const serviceAccount = isProd && JSON.parse(process.env.FIREBASE_ADMIN_CERT);
 
