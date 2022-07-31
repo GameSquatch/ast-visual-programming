@@ -11,7 +11,7 @@
 
 {#if $routes === '/'}
     <RootPage />
-{:else if $routes == '/run'}
+{:else if $routes === '/run'}
     <RunPage />
 {:else}
     <RootPage />

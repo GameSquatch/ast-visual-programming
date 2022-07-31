@@ -1,0 +1,27 @@
+.restrict-width {
+    width: 100%;
+    max-width: 650px;
+}
+
+.form-container {
+    margin-top: 50px;
+    padding: 25px 15px;
+    border-radius: 10px;
+    background: #eee;
+}
+
+.form-container > h2 {
+    margin-bottom: 8px;
+}
+
+.login-field {
+    display: block;
+}
+
+.login-label {
+    margin-bottom: 14px;
+}
+
+.login-btn {
+    padding: 8px;
+}

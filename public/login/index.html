@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZFlow Login</title>
+
+    <link rel="stylesheet" href="/global.css" />
+    <link rel="stylesheet" href="/login/login-style.css" />
+</head>
+<body>
+    <main class="flex ovflw-auto wh100 justify-center">
+        <div class="restrict-width">
+            <div class="flex-col align-center form-container">
+                <h2>Log In</h2>
+                <form class="flex-col align-center" action="/login" method="post">
+                    <label class="login-label">
+                        Username
+                        <input class="login-field" name="username" type="text" bind:this={usernameField} />
+                    </label>
+                    <label class="login-label">
+                        Password
+                        <input class="login-field" name="password" type="password" bind:this={passwordField} />
+                    </label>
+
+                    <button class="login-btn" type="submit" on:click={login}>Log In</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
