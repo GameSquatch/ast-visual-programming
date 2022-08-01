@@ -13,7 +13,7 @@
     }
 
     function clearAssignment(_) {
-        nodeData.right = nodeTemplates[nodeData.left.dataType + 'Literal']({});
+        nodeData.right = nodeTemplates[nodeData.left.dataType + 'Literal']();
     }
 </script>
 

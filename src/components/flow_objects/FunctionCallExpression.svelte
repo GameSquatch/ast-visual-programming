@@ -28,12 +28,12 @@
             paramNames[i] = parameter.name;
 
             if (!arg) {
-                nodeData.arguments.push(nodeTemplates[parameter.dataType + 'Literal']({}) );
+                nodeData.arguments.push(nodeTemplates[parameter.dataType + 'Literal']() );
                 continue;
             }
 
             if (parameter.dataType !== arg.dataType) {
-                nodeData.arguments[i] = nodeTemplates[parameter.dataType + 'Literal']({});
+                nodeData.arguments[i] = nodeTemplates[parameter.dataType + 'Literal']();
             }
         }
         
@@ -50,7 +50,7 @@
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})
+        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()
     }
 </script>
 

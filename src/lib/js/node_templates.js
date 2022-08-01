@@ -69,7 +69,7 @@ const nodeTemplates = {
             type: "UtilityCallExpression",
             utilityName: "StringUtil",
             utilityMethod: method,
-            arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
+            arguments: definitionArgs.map((argType) => this[argType + "Literal"]()),
             dataType: methodDefinition.returnType
         };
     },
@@ -89,7 +89,7 @@ const nodeTemplates = {
             type: "IdentifierRefCallExpression",
             refData: {...refData},
             method,
-            arguments: definitionArgs.map((argType) => this[argType + "Literal"]({})),
+            arguments: definitionArgs.map((argType) => this[argType + "Literal"]()),
             dataType
         };
     },
@@ -138,14 +138,14 @@ const nodeTemplates = {
     }),
     // Capitalizing because it matches the 'type' field in the AST
     /** @type {({ value: string }) => LiteralNode} */
-    StringLiteral: ({ value = "" }) => ({
+    StringLiteral: ({ value } = { value: "" }) => ({
         type: "StringLiteral",
         value: value,
         dataType: "String"
     }),
     // Capitalizing because it matches the 'type' field in the AST
     /** @type {({ value: number }) => LiteralNode} */
-    IntegerLiteral: ({ value = 0 }) => ({
+    IntegerLiteral: ({ value } = { value: 0 }) => ({
         type: "IntegerLiteral",
         value,
         dataType: "Integer"

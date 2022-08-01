@@ -17,7 +17,7 @@
     function onPropertyChange(event) {
         const utilityMethod = event.target.value;
         const fnDef = typeDefs[nodeData.utilityName][utilityMethod];
-        const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]({}));
+        const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]());
 
         nodeData = {
             ...nodeData,
@@ -38,7 +38,7 @@
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})
+        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()
     }
 </script>
 
@@ -59,7 +59,7 @@
                 onClear={() => onClear(i, argument)}
                 returnType={argument.dataType}>
 
-                <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]({})} /> -->
+                <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()} /> -->
                 {#if argument.type === "UtilityCallExpression"}
                     <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}

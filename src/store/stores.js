@@ -33,4 +33,4 @@ const ast = {
 }
 */
 
-export { ast, openFunction, fileTree };
+export { ast, openFunction };
