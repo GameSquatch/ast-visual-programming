@@ -5,7 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
 
-const production = !process.env.ROLLUP_WATCH;
+const production = process.env.NODE_ENV === "production";
 
 function serve() {
 	let server;
@@ -64,7 +64,7 @@ export default {
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
+		!production && livereload('public/app'),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
