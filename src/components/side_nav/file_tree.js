@@ -15,14 +15,21 @@ const { subscribe, set, update } = writable({
         }
     ],
     folders: [
-        createFolder({ title: 'folder', id: 'xxx' })
+        createFolder({ title: 'folder' })
     ]
 });
 
-const fileTree = {
+const fileTreeStore = {
     subscribe,
     set,
     update,
+    /**
+     * @function
+     * @param {Object} spec
+     * @param {string} spec.from
+     * @param {string} spec.to
+     * @param {string} spec.navType
+     */
     moveItem({ from, to, navType = 'files'}) {
         this.update((tree) => {
             const fromPath = new TreePath({ stringPath: from });
@@ -34,8 +41,9 @@ const fileTree = {
                 if (i === tokens.length - 1) return;
                 fromArr = fromArr[token];
             });
+            const index = parseInt(fromPath.getTokenAt(-1))
             // Take a copy instead of splicing out
-            const fromObj = fromArr[parseInt(fromPath.getTokenAt(-1))];
+            const fromObj = fromArr[index];
             
             /** @type {object} */
             let locationArr = tree;
@@ -47,12 +55,50 @@ const fileTree = {
             
             // Need to splice after we use location, because moving things at the same level
             // will change the indices at which those things exist in the arrays
-            fromArr.splice(parseInt(fromPath.getTokenAt(-1)), 1)[0];
+            fromArr.splice(index, 1)[0];
             locationArr[navType] = [
                 ...locationArr[navType],
                 fromObj
             ];
 
+            return tree;
+        });
+    },
+    /**
+     * @function
+     * @param {Object} spec
+     * @param {string} spec.treePath
+     * @param {Object.<string, any>} spec.itemData
+     * @param {string} spec.navType
+     */
+    addItemAt({ treePath, itemData, navType = 'files' }) {
+        const path = new TreePath({ stringPath: treePath });
+
+        this.update((tree) => {
+            let location = tree;
+            if (path.tokens.length > 1) {
+                path.tokens.forEach((token, i, tokens) => {
+                    location = location[token];
+                });
+            }
+
+            location[navType] = [
+                ...location[navType],
+                itemData
+            ];
+
+            return tree;
+        });
+    },
+    createRootFile({ id }) {
+        this.update((tree) => {
+            tree.files.push(createFileTreeReference(id));
+            return tree;
+        });
+    },
+    createRootFolder({ title }) {
+        this.update((tree) => {
+            tree.folders.push(createFolder({ title }));
             return tree;
         });
     }
@@ -91,4 +137,4 @@ function createNodeTreeEntry(id) {
     };
 }
 
-export { fileTree, createFileTreeReference, createFolder, createNodeTreeEntry };
+export { fileTreeStore, createFileTreeReference, createFolder, createNodeTreeEntry };

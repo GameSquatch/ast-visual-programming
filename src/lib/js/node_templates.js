@@ -119,7 +119,7 @@ const nodeTemplates = {
                 dataType,
                 fnRefType
             },
-            right: this[dataType + 'Literal']({})
+            right: this[dataType + 'Literal']()
         };
     },
     /**

@@ -7,7 +7,7 @@
         createFolder,
         createFileTreeReference,
         createNodeTreeEntry,
-        fileTree,
+        fileTreeStore,
     } from "./file_tree.js";
     import { fileMetadata, createFileMetadata } from './file_metadata.js';
     import { navStore } from "./nav_store.js";
@@ -45,7 +45,7 @@
                 fileType
             });
 
-            fileData.files = [...fileData.files, createFileTreeReference(id)];
+            fileTreeStore.addItemAt({ treePath, itemData: createFileTreeReference(id), navType: 'files'});
 
             mockData[id] = createNodeTreeEntry(id);
         });
@@ -54,7 +54,7 @@
     function addFolder() {
         navStore.toggleContext(NewFolderContext, (title) => {
             fileData.expanded = true;
-            fileData.folders = [...fileData.folders, createFolder({ title })];
+            fileTreeStore.addItemAt({ treePath, itemData: createFolder({ title }), navType: 'folders'});
         });
     }
 
@@ -100,7 +100,7 @@
         const dragData = getDragData(event);
         if (dragData.dragType !== "file" && dragData.dragType !== "folder") return;
 
-        fileTree.moveItem({ from: dragData.dragData.treePath, to: treePath, navType: dragData.dragType === 'folder' ? 'folders' : 'files' });
+        fileTreeStore.moveItem({ from: dragData.dragData.treePath, to: treePath, navType: dragData.dragType === 'folder' ? 'folders' : 'files' });
     }
 
     function handleDragstart(event) {

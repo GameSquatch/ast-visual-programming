@@ -1,7 +1,7 @@
 <script>
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import { fileTree, createFileTreeReference, createFolder, createNodeTreeEntry } from './file_tree.js';
+    import { fileTreeStore, createFileTreeReference, createFolder, createNodeTreeEntry } from './file_tree.js';
     import { fileMetadata, createFileMetadata } from './file_metadata.js';
     import File from './File.svelte';
     import Folder from './Folder.svelte';
@@ -16,21 +16,15 @@
     function addFile(title, fileType) {
         const id = uuidv4();
         $fileMetadata[id] = createFileMetadata({ title, fileType });
-        
-        $fileTree.files = [
-            ...$fileTree.files,
-            createFileTreeReference(id)
-        ];
+
+        fileTreeStore.createRootFile({ id });
 
         mockData[id] = createNodeTreeEntry(id);
     }
 
     /** @type {(title: string) => void} */
     function addFolder(title) {
-        $fileTree.folders = [
-            ...$fileTree.folders,
-            createFolder({ title })
-        ];
+        fileTreeStore.createRootFolder({ title });
     }
 
     /** @type {(event: DragEvent) => void} */
@@ -42,7 +36,7 @@
         }
 
         const itemLocation = dragObject.dragType === 'folder' ? 'folders' : 'files';
-        fileTree.moveItem({ from: dragObject.dragData.treePath, to: itemLocation, navType: itemLocation })
+        fileTreeStore.moveItem({ from: dragObject.dragData.treePath, to: itemLocation, navType: itemLocation })
     }
 </script>
 
@@ -60,11 +54,11 @@
     </div>
 
     <div on:drop|stopPropagation={handleDrop} on:dragover|preventDefault={() => {}} class="project-structure-pane">
-        {#each $fileTree.folders as folder, i (folder.id)}
+        {#each $fileTreeStore.folders as folder, i (folder.id)}
             <Folder treePath={`folders.${i}`} bind:fileData={folder} />
         {/each}
 
-        {#each $fileTree.files as file, i (file.id)}
+        {#each $fileTreeStore.files as file, i (file.id)}
             <File treePath={`files.${i}`} fileData={file} />
         {/each}
     </div>

@@ -35,7 +35,7 @@
 
         await new Promise((resolve, _) => setTimeout(() => resolve(), 1200));
 
-        const response = await fetch('/generate-code', {
+        const response = await fetch('/api/generate-code', {
             body: strBody,
             method: 'POST',
             headers: {
