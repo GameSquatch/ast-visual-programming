@@ -129,7 +129,6 @@ function createNodeTreeEntry(id) {
             info: {
                 id,
                 variables: {},
-                parameters: {},
                 dataType: "String"
             },
             body: []
