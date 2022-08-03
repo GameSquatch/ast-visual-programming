@@ -3,7 +3,27 @@ import { v4 as uuidv4 } from 'uuid';
 import { TreePath } from '../../lib/js/tree_path.js';
 
 
-const { subscribe, set, update } = writable({
+/**
+ * @typedef {Object} FileItem
+ * @property {string} type
+ * @property {string} id
+ */
+/**
+ * @typedef {Object} FolderItem
+ * @property {FileItem[]} files
+ * @property {FolderItem[]} folders
+ * @property {string} id
+ * @property {string} title
+ * @property {string} type
+ */
+/**
+ * @typedef {Object} FileTreeRoot
+ * @property {FileItem[]} files
+ * @property {FolderItem[]} folders
+ */
+
+/** @type {FileTreeRoot} */
+const startValue = {
     files: [
         {
             type: "file",
@@ -17,7 +37,9 @@ const { subscribe, set, update } = writable({
     folders: [
         createFolder({ title: 'folder' })
     ]
-});
+};
+
+const { subscribe, set, update } = writable(startValue);
 
 const fileTreeStore = {
     subscribe,
@@ -90,12 +112,14 @@ const fileTreeStore = {
             return tree;
         });
     },
+    /** @type {({ id: string }) => void} */
     createRootFile({ id }) {
         this.update((tree) => {
             tree.files.push(createFileTreeReference(id));
             return tree;
         });
     },
+    /** @type {({ title: string }) => void} */
     createRootFolder({ title }) {
         this.update((tree) => {
             tree.folders.push(createFolder({ title }));
@@ -104,6 +128,12 @@ const fileTreeStore = {
     }
 }
 
+
+/**
+ * @function
+ * @param {string} id
+ * @returns {FileItem}
+ */
 function createFileTreeReference(id) {
     id = id || uuidv4();
     return {
@@ -112,12 +142,20 @@ function createFileTreeReference(id) {
     };
 }
 
+/**
+ * @function
+ * @param {Object} spec
+ * @param {string} spec.title
+ * @param {string} [spec.id]
+ * @param {FileItem[]} [spec.files]
+ * @param {FolderItem[]} [spec.folders]
+ * @returns {FolderItem}
+ */
 function createFolder({ title, id = uuidv4(), files = [], folders = [] }) {
     return {
         title,
         id,
         type: 'folder',
-        expanded: false,
         files,
         folders
     };
