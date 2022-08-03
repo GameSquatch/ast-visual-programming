@@ -1,7 +1,7 @@
 <script>
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import { fileTreeStore, createFileTreeReference, createFolder, createNodeTreeEntry } from './file_tree.js';
+    import { fileTreeStore, createNodeTreeEntry } from './file_tree.js';
     import { fileMetadata, createFileMetadata } from './file_metadata.js';
     import File from './File.svelte';
     import Folder from './Folder.svelte';
@@ -11,6 +11,8 @@
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../lib/js/data_json.js';
     import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
+
+    // $: console.log(fileTreeStore);
 
     /** @type {(title: string, fileType: string) => void} */
     function addFile(title, fileType) {

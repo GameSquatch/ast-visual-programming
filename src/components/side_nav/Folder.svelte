@@ -22,10 +22,11 @@
 
     let beingDraggedOver = false;
     let isEmpty = fileData.folders.length + fileData.files.length === 0;
+    let expanded = false;
 
 
     function toggleExpanded(_) {
-        fileData.expanded = !fileData.expanded;
+        expanded = !expanded;
     }
 
     function collapseChildren(_) {
@@ -39,7 +40,7 @@
     function addFile() {
         navStore.toggleContext(NewFileContext, (title, fileType) => {
             const id = uuidv4();
-            fileData.expanded = true;
+            expanded = true;
             $fileMetadata[id] = createFileMetadata({
                 title,
                 fileType
@@ -53,7 +54,7 @@
 
     function addFolder() {
         navStore.toggleContext(NewFolderContext, (title) => {
-            fileData.expanded = true;
+            expanded = true;
             fileTreeStore.addItemAt({ treePath, itemData: createFolder({ title }), navType: 'folders'});
         });
     }
@@ -66,7 +67,7 @@
         if (isEmpty) return;
 
         if (dragenterExpandTimer === null) {
-            dragenterExpandTimer = setTimeout(() => (fileData.expanded = true), 1400);
+            dragenterExpandTimer = setTimeout(() => (expanded = true), 1400);
         } else {
             clearTimeout(dragenterExpandTimer);
             dragenterExpandTimer = null;
@@ -90,7 +91,7 @@
      */
     function handleDrop(event) {
         beingDraggedOver = false;
-        fileData.expanded = true;
+        expanded = true;
 
         if (dragenterExpandTimer !== null) {
             clearTimeout(dragenterExpandTimer);
@@ -124,7 +125,7 @@
     draggable="true"
 >
     <NestPadding {treeLevel} />
-    <span>{#if fileData.expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>
+    <span>{#if expanded}<i class="mi-remove" />{:else}<i class="mi-add" />{/if}</span>
     <i class="mi-folder" />
     <div
         class="flex-1"
@@ -141,7 +142,7 @@
     >
 </div>
 
-<div class="nested-items" class:collapsed={!fileData.expanded}>
+<div class="nested-items" class:collapsed={!expanded}>
         {#each fileData.folders as folder, i (folder.id)}
             <svelte:self
                 bind:fileData={folder}
