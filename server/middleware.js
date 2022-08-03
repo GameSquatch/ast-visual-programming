@@ -46,6 +46,16 @@ async function checkCookieToken(req, res, next) {
 }
 
 
+async function parseToken(req, res, next) {
+    const [ b64header, b64Body, signature ] = req.zflowAuthCookie.split('.');
+    const tokenBodyStr = Buffer.from(b64Body, 'base64').toString();
+
+    const tokenBody = JSON.parse(tokenBodyStr);
+    req.tokenBody = tokenBody;
+    next();
+}
+
+
 /** @type {express.ErrorRequestHandler} */
 async function errHandler(err, req, res, next) {
     // TODO
@@ -56,5 +66,6 @@ module.exports = {
     authCookieParser,
     checkIfAlreadyAuthed,
     checkCookieToken,
+    parseToken,
     errHandler
 };

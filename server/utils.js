@@ -23,7 +23,7 @@ const { createHmac } = require('crypto');
     hmac.update(`${b64Header}.${b64Body}`);
     const sigResult = hmac.digest();
 
-    const signaturesMatch = sigResult.toString('base64') === signature
+    const signaturesMatch = sigResult.toString('base64') === signature;
 
     return signaturesMatch;
 }
@@ -53,7 +53,7 @@ function createSetCookieHeader({ isProd, cookieValue = "nothing", maxAge = 0 }) 
     };
 
     const body = {
-        "sub": "zman-7211",
+        "sub": "ewilliams",
         "iat": Date.now(),
         "aud": "z-flow",
         "nonce": Math.floor(Math.random() * 200000),
@@ -77,8 +77,19 @@ function createSetCookieHeader({ isProd, cookieValue = "nothing", maxAge = 0 }) 
     }
 }
 
+
+/**
+ * @function
+ * @param {string} msg 
+ * @returns {string}
+ */
+function createMessage(msg) {
+    return JSON.stringify({ message: msg });
+}
+
 module.exports = {
     validateToken,
     createSetCookieHeader,
-    createJWT
+    createJWT,
+    createMessage
 };

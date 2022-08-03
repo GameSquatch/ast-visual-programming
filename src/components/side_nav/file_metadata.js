@@ -56,7 +56,7 @@ function createParameter({ name = "newParam", dataType = "String", defaultValue 
 
 
 const fileMetadata = (() => {
-    const { subscribe, set, update } = writable(fm);
+    const { subscribe, set, update } = writable({});
 
     return {
         subscribe,

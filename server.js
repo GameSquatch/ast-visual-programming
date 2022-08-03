@@ -12,13 +12,13 @@ if (!isProd) {
     require('dotenv').config();
 }
 // @ts-ignore
-const serviceAccount = isProd && JSON.parse(process.env.FIREBASE_ADMIN_CERT);
+const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_CERT);
 
-(isProd && initializeApp({
+initializeApp({
     credential: cert(serviceAccount)
-}));
+});
 
-const db = isProd && getFirestore();
+const db = getFirestore();
 
 
 const app = express();

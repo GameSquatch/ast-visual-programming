@@ -2,8 +2,28 @@ import { writable } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 import { TreePath } from '../../lib/js/tree_path.js';
 
+/**
+ * @typedef {Object} FileItem
+ * @property {string} type
+ * @property {string} id
+ */
+/**
+ * @typedef {Object} FolderItem
+ * @property {FileItem[]} files
+ * @property {FolderItem[]} folders
+ * @property {string} id
+ * @property {string} title
+ * @property {string} type
+ */
+/**
+ * @typedef {Object} FileTreeRoot
+ * @property {FileItem[]} files
+ * @property {FolderItem[]} folders
+ */
 
-const { subscribe, set, update } = writable({
+
+/** @type {FileTreeRoot} */
+const mockStart = {
     files: [
         {
             type: "file",
@@ -17,7 +37,15 @@ const { subscribe, set, update } = writable({
     folders: [
         createFolder({ title: 'folder' })
     ]
-});
+};
+
+/** @type {FileTreeRoot} */
+const emptyStart = {
+    files: [],
+    folders: []
+};
+
+const { subscribe, set, update } = writable(emptyStart);
 
 const fileTreeStore = {
     subscribe,
@@ -61,6 +89,9 @@ const fileTreeStore = {
                 fromObj
             ];
 
+            saveFileTree(tree)
+                .then(console.log);
+
             return tree;
         });
     },
@@ -87,18 +118,33 @@ const fileTreeStore = {
                 itemData
             ];
 
+            if (navType === 'files') {
+                saveFileTree(tree, itemData, 'create')
+                    .then(console.log);
+            } else {
+                saveFileTree(tree)
+                    .then(console.log);
+            }
+            
+
             return tree;
         });
     },
     createRootFile({ id }) {
         this.update((tree) => {
-            tree.files.push(createFileTreeReference(id));
+            const fileItem = createFileTreeReference(id);
+            tree.files.push(fileItem);
+            saveFileTree(tree, fileItem, 'create')
+                .then(console.log);
             return tree;
         });
     },
     createRootFolder({ title }) {
         this.update((tree) => {
-            tree.folders.push(createFolder({ title }));
+            const fileItem = createFolder({ title });
+            tree.folders.push(fileItem);
+            saveFileTree(tree)
+                .then(console.log);
             return tree;
         });
     }
@@ -117,7 +163,6 @@ function createFolder({ title, id = uuidv4(), files = [], folders = [] }) {
         title,
         id,
         type: 'folder',
-        expanded: false,
         files,
         folders
     };
@@ -134,6 +179,43 @@ function createNodeTreeEntry(id) {
             body: []
         }
     };
+}
+
+
+/**
+ * @function
+ * @param {Object.<string, any>} tree
+ * @param {Object.<string, any>} [fileItemData]
+ * @param {string} action
+ * @returns {Promise<string>}
+ */
+async function saveFileTree(tree, fileItemData = {}, action = '') {
+    try {
+        const response = await fetch(`/api/file-tree/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fileTree: tree, fileItemData })
+        });
+        /** @type {{ message: string }} */
+        const { message } = await response.json();
+        return message;
+    } catch (e) {
+        return 'Bad stuff, uh oh';
+    }
+}
+
+
+async function getFileTree() {
+    try {
+        const response = await fetch('/api/file-tree');
+
+        const { fileTree } = await response.json();
+        return fileTree;
+    } catch (e) {
+        throw new Error('Yikes!');
+    }
 }
 
 export { fileTreeStore, createFileTreeReference, createFolder, createNodeTreeEntry };
