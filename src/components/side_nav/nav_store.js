@@ -1,35 +1,49 @@
 import { writable } from 'svelte/store';
 
 /**
+ * @callback ContextDoneCallback
+ * @param {string} fileName
+ * @param {string} fileType
+ */
+/**
  * @typedef {Object} NavState
  * @property {boolean} isShowingContext
  * @property {string|null} contextType
- * @property {((fileName: string, fileType: string) => void)|null} onDoneCallback
+ * @property {ContextDoneCallback} onDoneCallback
  */
+
+
 
 /** @type {NavState} */
 const initialVal = {
     isShowingContext: false,
     contextType: null,
-    onDoneCallback: () => {}
+    onDoneCallback: (_, __) => {}
 };
 
-const { subscribe, set, update } = writable(initialVal);
+const { subscribe, set, update } = writable({ ...initialVal });
 
 const navStore = {
     subscribe,
     set,
     update,
-    /** @type {(type?: Object, onDoneCallback?: (fileName: string, fileType: string) => void) => void} */
-    toggleContext(type, onDoneCallback) {
-        type = type || null;
-        const defaultOnDoneCallback = onDoneCallback ?? null;
-        update((state) => {
-            state.contextType = type;
-            state.isShowingContext = !state.isShowingContext;
-            state.onDoneCallback = defaultOnDoneCallback;
+    /**
+     * @function
+     * @param {Object} contextType
+     * @param {ContextDoneCallback} onDoneCallback
+     */
+    showContext(contextType, onDoneCallback) {
+        this.update((state) => {
+            if (!state.isShowingContext) {
+                state.isShowingContext = true;
+            }
+            state.contextType = contextType;
+            state.onDoneCallback = onDoneCallback;
             return state;
         });
+    },
+    closeContext() {
+        this.set({ ...initialVal });
     }
 };
 

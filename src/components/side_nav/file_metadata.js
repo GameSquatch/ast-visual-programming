@@ -87,6 +87,12 @@ const fileMetadata = (() => {
                 state[fnId].objectFlowData.parameters[paramId].defaultValue = newValue;
                 return state;
             });
+        },
+        addFile({ id, title, fileType }) {
+            this.update((state) => {
+                state[id] = createFileMetadata({ title, fileType });
+                return state;
+            });
         }
     };
 })();
@@ -99,6 +105,13 @@ const fileTypeObjectFlowTemplates = {
     })
 };
 
+/**
+ * @function
+ * @param {Object} spec
+ * @param {string} spec.title
+ * @param {string} spec.fileType
+ * @returns {FileMetadataEntry}
+ */
 function createFileMetadata({ title, fileType }) {
     const fileOjbectFlowData = fileTypeObjectFlowTemplates[fileType]?.() ?? {};
 

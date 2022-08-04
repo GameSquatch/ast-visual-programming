@@ -12,9 +12,7 @@
     import mockData from '../../lib/js/data_json.js';
     import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
 
-    // $: console.log(fileTreeStore);
-
-    /** @type {(title: string, fileType: string) => void} */
+    /** @type {ContextDoneCallback} */
     function addFile(title, fileType) {
         const id = uuidv4();
         $fileMetadata[id] = createFileMetadata({ title, fileType });
@@ -24,7 +22,7 @@
         mockData[id] = createNodeTreeEntry(id);
     }
 
-    /** @type {(title: string) => void} */
+    /** @type {ContextDoneCallback} */
     function addFolder(title) {
         fileTreeStore.createRootFolder({ title });
     }
@@ -44,8 +42,8 @@
 
 <div class="side-nav-wrapper">
     <div class="flex w100 nav-action-bar">
-        <button on:click={() => navStore.toggleContext(NewFolderContext, addFolder)} class="nav-action-btn"><i class="mi-folder-add" /></button>
-        <button on:click={() => navStore.toggleContext(NewFileContext, addFile)} class="nav-action-btn"><i class="mi-document-add" /></button>
+        <button on:click={() => navStore.showContext(NewFolderContext, addFolder)} class="nav-action-btn"><i class="mi-folder-add" /></button>
+        <button on:click={() => navStore.showContext(NewFileContext, addFile)} class="nav-action-btn"><i class="mi-document-add" /></button>
         <button class="nav-action-btn"><i class="mi-search" /></button>
 
         {#if $navStore.isShowingContext}

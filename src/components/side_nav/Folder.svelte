@@ -3,16 +3,12 @@
     import NewFolderContext from "./action_contexts/NewFolderContext.svelte";
     import File from "./File.svelte";
     import NestPadding from "./NestPadding.svelte";
+    import { fileController } from "../../controllers/file_controller.js";
     import {
         createFolder,
-        createFileTreeReference,
-        createNodeTreeEntry,
         fileTreeStore,
     } from "./file_tree.js";
-    import { fileMetadata, createFileMetadata } from './file_metadata.js';
     import { navStore } from "./nav_store.js";
-    import { v4 as uuidv4 } from "uuid";
-    import mockData from "../../lib/js/data_json.js";
     import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
     import { navFolderDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
@@ -38,22 +34,14 @@
     }
 
     function addFile() {
-        navStore.toggleContext(NewFileContext, (title, fileType) => {
-            const id = uuidv4();
+        navStore.showContext(NewFileContext, (title, fileType) => {
             expanded = true;
-            $fileMetadata[id] = createFileMetadata({
-                title,
-                fileType
-            });
-
-            fileTreeStore.addItemAt({ treePath, itemData: createFileTreeReference(id), navType: 'files'});
-
-            mockData[id] = createNodeTreeEntry(id);
+            fileController.createFile({ treePath, title, fileType });
         });
     }
 
     function addFolder() {
-        navStore.toggleContext(NewFolderContext, (title) => {
+        navStore.showContext(NewFolderContext, (title) => {
             expanded = true;
             fileTreeStore.addItemAt({ treePath, itemData: createFolder({ title }), navType: 'folders'});
         });

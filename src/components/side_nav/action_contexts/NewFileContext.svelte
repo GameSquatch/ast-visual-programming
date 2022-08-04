@@ -2,7 +2,7 @@
     import { navStore } from '../nav_store.js';
     import SingleInputWithSubmit from './SingleInputWithSubmit.svelte';
 
-    /** @type {(fileName: string, fileType: string) => void}*/
+    /** @type {ContextDoneCallback} */
     export let onDoneCallback;
 
     let newFileName = '';
@@ -10,13 +10,13 @@
 
     function submit(_) {
         onDoneCallback(newFileName, selectElem.value);
-        navStore.toggleContext();
+        navStore.closeContext();
     }
 </script>
 
 <div class="wh100 nav-context-wrapper">
     <div class="nav-context-exit-btn">
-        <button on:click={(_) => navStore.toggleContext()}>X</button>
+        <button on:click={(_) => navStore.closeContext()}>X</button>
     </div>
     <label for="file-type-select">
         File Type:

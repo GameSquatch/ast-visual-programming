@@ -7,13 +7,13 @@
 
     function submit(_) {
         onDoneCallback(newFolderName);
-        navStore.toggleContext();
+        navStore.closeContext();
     }
 </script>
 
 <div class="wh100 nav-context-wrapper">
     <div class="nav-context-exit-btn">
-        <button on:click={(_) => navStore.toggleContext()}>X</button>
+        <button on:click={(_) => navStore.closeContext()}>X</button>
     </div>
     <p class="input-label">Folder Name</p>
     <SingleInputWithSubmit buttonText={'Add Folder'} bind:inputValue={newFolderName} submitCallback={submit} />
