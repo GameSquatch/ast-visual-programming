@@ -122,10 +122,10 @@
     >
         {fileData.title}
     </div>
-    <button on:click|stopPropagation={addFile} class="folder-action-btn"
+    <button on:click|stopPropagation={addFile} class="light-bg-btn folder-action-btn btn-hover-transition"
         ><i class="mi-document-add" /></button
     >
-    <button on:click|stopPropagation={addFolder} class="folder-action-btn"
+    <button on:click|stopPropagation={addFolder} class="light-bg-btn folder-action-btn btn-hover-transition"
         ><i class="mi-folder-add" /></button
     >
 </div>
@@ -169,5 +169,10 @@
 
     .mi-remove, .mi-add {
         font-size: 10pt;
+    }
+
+    .folder-action-btn {
+        border: 1px solid #737373;
+        border-radius: 5px;
     }
 </style>

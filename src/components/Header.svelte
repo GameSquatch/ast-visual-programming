@@ -15,9 +15,9 @@
 
 <div class="header">
     <h1>{headerText}</h1>
-    <div class="flex">
-        <button on:click={(_) => $routes = '/run'}>Run</button>
-        <button on:click={(_) => logout()}>Log Out</button>
+    <div class="flex header-actions">
+        <button class="light-bg-btn btn-hover-transition" on:click={(_) => $routes = '/run'}>Run</button>
+        <button class="light-bg-btn btn-hover-transition" on:click={(_) => logout()}>Log Out</button>
     </div>
 </div>
 
@@ -26,5 +26,16 @@
         display: flex;
         justify-content: space-between;
         padding: 0.75rem;
+    }
+
+    .header-actions {
+        align-items: center;
+    }
+
+    .header-actions button {
+        margin-right: 8px;
+        padding: 8px;
+        font-weight: bold;
+        font-size: 12pt;
     }
 </style>

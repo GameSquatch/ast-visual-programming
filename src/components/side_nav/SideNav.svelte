@@ -42,9 +42,9 @@
 
 <div class="side-nav-wrapper">
     <div class="flex w100 nav-action-bar">
-        <button on:click={() => navStore.showContext(NewFolderContext, addFolder)} class="nav-action-btn"><i class="mi-folder-add" /></button>
-        <button on:click={() => navStore.showContext(NewFileContext, addFile)} class="nav-action-btn"><i class="mi-document-add" /></button>
-        <button class="nav-action-btn"><i class="mi-search" /></button>
+        <button on:click={() => navStore.showContext(NewFolderContext, addFolder)} class="nav-action-btn btn-hover-transition dark-bg-btn"><i class="mi-folder-add" /></button>
+        <button on:click={() => navStore.showContext(NewFileContext, addFile)} class="nav-action-btn btn-hover-transition dark-bg-btn"><i class="mi-document-add" /></button>
+        <button class="nav-action-btn btn-hover-transition dark-bg-btn"><i class="mi-search" /></button>
 
         {#if $navStore.isShowingContext}
             <div transition:fly={{ duration: 345, x: -600, opacity: 1, easing: quintOut }} class="absolute nav-context-pane">
@@ -83,27 +83,20 @@
 
     .nav-action-bar {
         z-index: 2;
-        padding: 8px 4px;
+        padding: 8px;
         background: #ccc;
         position: relative;
     }
     .nav-action-btn {
         margin-right: 8px;
-        background: #737373;
-        border: none;
-        border-radius: 10px;
-        color: white;
         font-size: 15pt;
         text-align: center;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 2px 8px;
-        cursor: pointer;
     }
-    .nav-action-btn:hover {
-        box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.34);
-    }
+    
     .nav-context-pane {
         z-index: 3;
         top: 100%;

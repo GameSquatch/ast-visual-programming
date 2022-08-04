@@ -127,3 +127,35 @@ body {
     top: 0;
     right: 0;
 }
+
+
+
+.btn-hover-transition {
+    transition-property: background-color, color;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+.light-bg-btn, .dark-bg-btn {
+    border-radius: 7px;
+    cursor: pointer;
+}
+.light-bg-btn {
+    background-color: white;
+    border: 2px solid #737373;
+    color: black;
+}
+.light-bg-btn:hover {
+    background-color: #737373;
+    color: white;
+}
+
+.dark-bg-btn {
+    background-color: #737373;
+    border: 2px solid white;
+    color: white;
+}
+.dark-bg-btn:hover {
+    background-color: white;
+    color: black;
+}
