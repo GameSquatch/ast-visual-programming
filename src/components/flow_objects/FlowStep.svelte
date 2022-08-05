@@ -113,14 +113,17 @@
 <style>
     .flow-step-container {
         padding: 32px;
-        border: 1px dashed black;
+        border: 2px solid #787878;
+        border-radius: 8px;
+        background: #efefef;
         position: relative;
         z-index: 1;
         overflow-x: auto;
         display: inline-block;
     }
     .flow-step-container:focus {
-        border: 2px dashed blue;
+        outline: #0072ff dashed 1px;
+        outline-offset: 5px;
     }
 
     .line-down-box {
