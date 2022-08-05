@@ -84,7 +84,7 @@
 
         <div class="flex w100 flow-step-action-bar">
             <div class="flex-1 flex">
-                <button class="delete-btn" on:click={() => dispatch('delete', accessor)}><i class="mi-delete" /></button>
+                <button class="light-bg-btn delete-btn" on:click={() => dispatch('delete', accessor)}><i class="mi-delete" /></button>
             </div>
             <DragHandle  />
         </div>
@@ -143,5 +143,12 @@
         position: absolute;
         top: 0;
         left: 0;
+        padding: 4px;
+    }
+
+    .delete-btn {
+        border-width: 1px;
+        padding: 0 5px;
+        border-radius: 5px;
     }
 </style>

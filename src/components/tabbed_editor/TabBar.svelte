@@ -28,13 +28,13 @@
 	}
 	
 	.tab {
-		padding: 6px;
+		padding: 4px 6px;
 		min-width: 90px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		background: #ccc;
-		color: black;
+		color: #666;
 		cursor: pointer;
 		border: 2px solid #c8c8c8;
 	}
