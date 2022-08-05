@@ -12,7 +12,7 @@
         socket = connectToChat();
 
         socket.on('chat msg', (msg) => {
-            msgs.push({ msg: msg.msg, isMe: (msg.userId === socket.id) });
+            msgs.push({ ...msg, isMe: (msg.userId === socket.id) });
             msgs = msgs;
         });
 
@@ -23,13 +23,20 @@
         socket.on('disconnected', () => {
             isConnected = false;
             socket = undefined;
+            msgs = [];
+        });
+
+        socket.on('historical msgs', (history) => {
+            msgs = [ ...msgs, ...history.msgs.map((msgData) => ({ ...msgData, isMe: (msgData.userId === socket.id) })) ];
         });
     });
 
 
     function sendMessage() {
-        if (msgInput.value) {
-            socket.emit('chat msg', msgInput.value);
+        const now = Date.now();
+
+        if (msgInput.value && isConnected) {
+            socket.emit('chat msg', { msgText: msgInput.value, msgTime: now, userId: socket.id });
             msgInput.value = "";
         }
     }
@@ -42,11 +49,11 @@
             <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
         </div>
         <div class="msg-container flex-1">
-            {#each msgs as msg}
-                <ChatMessage isMe={msg.isMe} msgText={msg.msg} />
+            {#each msgs as msgData (msgData.msgTime)}
+                <ChatMessage {msgData} />
             {/each}
         </div>
-        <form on:submit|preventDefault={sendMessage} class="flex">
+        <form on:submit|preventDefault={sendMessage} class="flex send-form">
             <input bind:this={msgInput} class="flex-1" type="text" />
             <button type="submit">Send</button>
         </form>
@@ -65,5 +72,9 @@
         width: 25px;
         border-radius: 50%;
         margin-right: 20px;
+    }
+
+    .send-form {
+        padding: 12px;
     }
 </style>
