@@ -5,6 +5,7 @@
 <script>
     import RootPage from './pages/RootPage.svelte';
     import RunPage from './pages/RunPage.svelte';
+    import ChatPage from './pages/ChatPage.svelte';
     import { routes } from './store/routes.js';
 </script>
 
@@ -13,6 +14,8 @@
     <RootPage />
 {:else if $routes === '/run'}
     <RunPage />
+{:else if $routes === '/chat'}
+    <ChatPage />
 {:else}
     <RootPage />
 {/if}

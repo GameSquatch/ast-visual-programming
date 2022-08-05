@@ -3,6 +3,8 @@ const { initializeApp, applicationDefault, cert } = require('firebase-admin/app'
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 const { authCookieParser, checkIfAlreadyAuthed, checkCookieToken, attachFirestore } = require('./server/middleware.js');
 const { createJWT, createSetCookieHeader } = require('./server/utils.js');
+const { startSocketServer } = require('./server/socket/socket_server.js');
+const http = require('http');
 const apiRouter = require('./server/api_router.js');
 
 const PORT = process.env.PORT || 4200;
@@ -22,6 +24,10 @@ const db = isProd && getFirestore();
 
 
 const app = express();
+
+
+const server = http.createServer(app);
+startSocketServer(server);
 
 app.use(attachFirestore(db), authCookieParser);
 
@@ -67,5 +73,6 @@ app.post('/logout', (req, res) => {
     res.sendStatus(200);
 });
 
-app.listen(PORT, () => console.log(`Listening on ${PORT}\n${isProd ? 'https://z-flow.herokuapp.com' : 'http://localhost:' + PORT}`));
+
+server.listen(PORT, () => console.log(`Listening on ${PORT}\n${isProd ? 'https://z-flow.herokuapp.com' : 'http://localhost:' + PORT}`));
 
