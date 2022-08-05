@@ -42,6 +42,6 @@
 		overflow: hidden;
 		z-index: 0;
 		position: relative;
-		background: #eee;
+		background: #ddd;
 	}
 </style>

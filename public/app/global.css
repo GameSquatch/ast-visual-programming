@@ -111,7 +111,7 @@ body {
     cursor: pointer;
 }
 .file-title:hover {
-    background-color: #eee;
+    background-color: #ddd;
 }
 
 .project-structure-pane:hover .nest-pad {
@@ -128,13 +128,6 @@ body {
     right: 0;
 }
 
-
-
-.btn-hover-transition {
-    transition-property: background-color, color;
-    transition-duration: 0.25s;
-    transition-timing-function: ease-out;
-}
 
 .light-bg-btn, .dark-bg-btn {
     border-radius: 7px;

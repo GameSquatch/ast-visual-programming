@@ -215,7 +215,7 @@
     {/if}
 
     <div class="flex justify-center">
-        <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>Function Info</div>
+        <div class:isDisplaying class="tab-toggle" on:click={tabToggle}>{isDisplaying ? '-' : '+'}</div>
     </div>
 </div>
 

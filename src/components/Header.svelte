@@ -16,8 +16,8 @@
 <div class="header">
     <h1>{headerText}</h1>
     <div class="flex header-actions">
-        <button class="light-bg-btn btn-hover-transition" on:click={(_) => $routes = '/run'}>Run</button>
-        <button class="light-bg-btn btn-hover-transition" on:click={(_) => logout()}>Log Out</button>
+        <button class="light-bg-btn" on:click={(_) => $routes = '/run'}>Run</button>
+        <button class="light-bg-btn" on:click={(_) => logout()}>Log Out</button>
     </div>
 </div>
 

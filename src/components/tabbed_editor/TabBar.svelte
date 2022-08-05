@@ -18,7 +18,7 @@
 
 <style>
 	.tabs-wrapper {
-		background: #fdfdfd;
+		background: #ccc;
 	}
 	
 	.tabs-flex {
@@ -29,35 +29,35 @@
 	
 	.tab {
 		padding: 6px;
-		margin: 2px;
 		min-width: 90px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		background: #f8f8f8;
-		color: #9e9e9e;
+		background: #ccc;
+		color: black;
 		cursor: pointer;
-		border-bottom: 4px solid black;
+		border: 2px solid #c8c8c8;
 	}
 	.tab.function {
-		border-color: var(--function-color);
+		border-bottom: 4px solid var(--function-color);
 	}
 	
 	.tab.active {
 		color: black;
-		background: #f0f0f0
+		background: #b8b8b8;
 	}
-	.tab:hover {
-		background: #dfdfdf;
+	.tab:hover .close-x {
+		visibility: visible;
 	}
 	
 	.close-x {
 		font-size: 10pt;
-		padding: 2px 4px;
+		padding: 0 2px;
 		border-radius: 4px;
 		display: inline-block;
+		visibility: hidden;
 	}
 	.close-x:hover {
-		color: red;
+		background: rgba(255, 255, 255, 0.2);
 	}
 </style>

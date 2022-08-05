@@ -55,7 +55,7 @@
 
 <div class="run-header">
     <h1>Run Page</h1>
-    <button class="btn-hover-transition light-bg-btn" on:click={(_) => ($routes = '/')}>Flow</button>
+    <button class=" light-bg-btn" on:click={(_) => ($routes = '/')}>Flow</button>
 </div>
 
 <main>

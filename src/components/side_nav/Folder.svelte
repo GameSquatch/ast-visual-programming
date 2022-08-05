@@ -122,10 +122,10 @@
     >
         {fileData.title}
     </div>
-    <button on:click|stopPropagation={addFile} class="light-bg-btn folder-action-btn btn-hover-transition"
+    <button on:click|stopPropagation={addFile} class="light-bg-btn folder-action-btn"
         ><i class="mi-document-add" /></button
     >
-    <button on:click|stopPropagation={addFolder} class="light-bg-btn folder-action-btn btn-hover-transition"
+    <button on:click|stopPropagation={addFolder} class="light-bg-btn folder-action-btn"
         ><i class="mi-folder-add" /></button
     >
 </div>
