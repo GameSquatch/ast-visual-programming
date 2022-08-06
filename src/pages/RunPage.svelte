@@ -33,8 +33,6 @@
             fileMetadata: $fileMetadata
         });
 
-        await new Promise((resolve, _) => setTimeout(() => resolve(), 1200));
-
         const response = await fetch('/api/generate-code', {
             body: strBody,
             method: 'POST',
@@ -51,11 +49,16 @@
 
         return textResult;
     }
+
+    function flowButtonClick(_) {
+        history.pushState({}, '', '/app');
+        $routes = '/app';
+    }
 </script>
 
 <div class="run-header">
     <h1>Run Page</h1>
-    <button class=" light-bg-btn" on:click={(_) => ($routes = '/')}>Flow</button>
+    <button class=" light-bg-btn" on:click={flowButtonClick}>Flow</button>
 </div>
 
 <main>

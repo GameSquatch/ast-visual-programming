@@ -1,6 +1,6 @@
 # Visual Programming
 
-The currently deployed version (which may or may not be the most recent commit) can be found here: https://z-flow.herokuapp.com/
+The currently deployed version (which may or may not be the most recent commit) can be found here: https://z-flow.herokuapp.com/app
 
 <h3 style="color:red">PLEASE NOTE</h3>
 

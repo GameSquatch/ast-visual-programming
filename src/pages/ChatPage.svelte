@@ -7,6 +7,8 @@
     let isConnected = false;
     let socket;
     let msgInput;
+    let userIsTyping = false;
+    let userCount = 0;
     
     onMount(() => {
         socket = connectToChat();
@@ -16,18 +18,39 @@
             msgs = msgs;
         });
 
-        socket.on('connected', () => {
+        
+        socket.on('historical msgs', (history) => {
+            msgs = [ ...msgs, ...history.msgs.map((msgData) => ({ ...msgData, isMe: (msgData.userId === socket.id) })) ];
+        });
+        
+        let typingTimer = null;
+        socket.on('user typing', (userId) => {
+            if (userId !== socket.id) {
+                userIsTyping = true;
+                if (typingTimer !== null) {
+                    clearTimeout(typingTimer);
+                    typingTimer = null;
+                }
+
+                typingTimer = setTimeout(() => {
+                    typingTimer = null;
+                    userIsTyping = false;
+                }, 2000);
+            }
+        });
+
+        socket.on('connect', () => {
             isConnected = true;
         });
 
-        socket.on('disconnected', () => {
+        socket.on('disconnect', () => {
             isConnected = false;
-            socket = undefined;
             msgs = [];
         });
 
-        socket.on('historical msgs', (history) => {
-            msgs = [ ...msgs, ...history.msgs.map((msgData) => ({ ...msgData, isMe: (msgData.userId === socket.id) })) ];
+        socket.on('user count', (count) => {
+            // subtract one for yourself
+            userCount = count - 1;
         });
     });
 
@@ -40,21 +63,35 @@
             msgInput.value = "";
         }
     }
+
+    function userTyping() {
+        let timer = null;
+
+        return (_) => {
+            if (timer !== null) return;
+
+            timer = setTimeout(() => {
+                socket.emit('user typing', socket.id);
+                timer = null;
+            }, 40);
+        };
+    }
 </script>
 
 <div class="page-wrapper h100">
     <div class="flex-col h100">
         <div class="flex">
             <div class="connected-indicator" style="background-color:{isConnected ? 'green' : 'red'}"></div>
-            <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
+            <p>{isConnected ? `Connected with ${userCount} other user(s)` : 'Not Connected'}</p>
         </div>
         <div class="msg-container flex-1">
             {#each msgs as msgData (msgData.msgTime)}
                 <ChatMessage {msgData} />
             {/each}
         </div>
+        <p class="user-typing">{userIsTyping ? 'Someone is typing...' : ''}</p>
         <form on:submit|preventDefault={sendMessage} class="flex send-form">
-            <input bind:this={msgInput} class="flex-1" type="text" />
+            <input on:input={userTyping()} bind:this={msgInput} class="flex-1" type="text" />
             <button type="submit">Send</button>
         </form>
     </div>

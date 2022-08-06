@@ -11,13 +11,20 @@
                 window.location.reload();
             });
     }
+
+    function handleRouteClick(route) {
+        return (_) => {
+            history.pushState({}, '', route);
+            $routes = route;
+        };
+    }
 </script>
 
 <div class="header">
     <h1>{headerText}</h1>
     <div class="flex header-actions">
-        <button class="light-bg-btn" on:click={(_) => $routes = '/run'}>Run</button>
-        <button class="light-bg-btn" on:click={(_) => $routes = '/chat'}>Chat</button>
+        <button class="light-bg-btn" on:click={handleRouteClick('/app/run')}>Run</button>
+        <button class="light-bg-btn" on:click={handleRouteClick('/app/chat')}>Chat</button>
         <button class="light-bg-btn" on:click={(_) => logout()}>Log Out</button>
     </div>
 </div>

@@ -1,14 +1,14 @@
-
 const { Server } = require('socket.io');
 
 
 function startSocketServer(server) {
     let msgs = [];
+    let connectedUserCount = 0;
     const io = new Server(server);
 
     io.on('connection', (socket) => {
-        socket.emit('connected');
         socket.emit('historical msgs', { msgs });
+        io.emit('user count', ++connectedUserCount);
     
         socket.on('chat msg', (msgData) => {
             io.emit('chat msg', msgData);
@@ -19,8 +19,12 @@ function startSocketServer(server) {
             msgs.push(msgData);
         });
 
-        socket.on('disconnect', () => {
-            io.emit('chat msg', { msgText: `User [${socket.id}] has disconnected`, msgTime: Date.now(), userId: 'socket-server' });
+        socket.on('user typing', (userId) => {
+            io.emit('user typing', userId);
+        });
+
+        socket.on('disconnect', (reason) => {
+            io.emit('user count', --connectedUserCount);
         });
     });
 }

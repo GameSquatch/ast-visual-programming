@@ -32,16 +32,21 @@ startSocketServer(server);
 app.use(attachFirestore(db), authCookieParser);
 
 app.use('/api', apiRouter);
+app.get('/', (req, res) => res.redirect('/app'));
 
-app.get('/', checkCookieToken);
-app.get('/login', checkIfAlreadyAuthed);
 
-app.use('/', express.static('public/app'));
-app.use('/login', express.static('public/login'));
+const appRouter = express.Router();
+appRouter.get(/\/(chat|run)?\/?/, checkCookieToken);
+appRouter.get('/login', checkIfAlreadyAuthed);
+
+appRouter.use(express.static('public/app'));
+appRouter.use(/\/(chat|run)\/?/, express.static('public/app'));
+
+appRouter.use('/login', express.static('public/login'));
 
 
 // The user's action of logging in with a form
-app.post('/login', express.urlencoded({ extended: true }), (req, res) => {
+appRouter.post('/login', express.urlencoded({ extended: true }), (req, res) => {
     res.type('application/json');
     res.set('Cache-Control', 'no-store');
 
@@ -68,10 +73,12 @@ app.post('/login', express.urlencoded({ extended: true }), (req, res) => {
         });
 });
 
-app.post('/logout', (req, res) => {
+appRouter.post('/logout', (req, res) => {
     res.set('Set-Cookie', createSetCookieHeader({ isProd }));
     res.sendStatus(200);
 });
+
+app.use('/app', appRouter);
 
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}\n${isProd ? 'https://z-flow.herokuapp.com' : 'http://localhost:' + PORT}`));
