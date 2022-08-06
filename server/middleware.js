@@ -26,7 +26,7 @@ async function authCookieParser(req, res, next) {
 async function checkIfAlreadyAuthed(req, res, next) {
     // for /login route, don't need to login if authed already
     if (validateToken(req.zflowAuthCookie)) {
-        res.redirect('/');
+        res.redirect('/app');
         return;
     }
 
@@ -42,7 +42,7 @@ async function checkCookieToken(req, res, next) {
         return;
     }
 
-    res.redirect('/login');
+    res.redirect('/app/login');
 }
 
 
