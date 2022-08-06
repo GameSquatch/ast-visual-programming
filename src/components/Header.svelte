@@ -4,7 +4,7 @@
     const headerText = "Z-Flow";
 
     function logout() {
-        fetch('/logout', {
+        fetch('/app/logout', {
             method: 'POST'
         })
             .finally(() => {
