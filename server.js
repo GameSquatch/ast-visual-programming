@@ -36,11 +36,11 @@ app.get('/', (req, res) => res.redirect('/app'));
 
 
 const appRouter = express.Router();
-appRouter.get(/\/(chat|run)?\/?/, checkCookieToken);
+appRouter.get(/^\/(chat|run)?\/?$/, checkCookieToken);
 appRouter.get('/login', checkIfAlreadyAuthed);
 
 appRouter.use(express.static('public/app'));
-appRouter.use(/\/(chat|run)\/?/, express.static('public/app'));
+appRouter.use(/^\/(chat|run)\/?$/, express.static('public/app'));
 
 appRouter.use('/login', express.static('public/login'));
 
