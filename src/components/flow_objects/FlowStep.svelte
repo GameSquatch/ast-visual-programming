@@ -11,6 +11,7 @@
 
     let isOverInsertSpot = false;
     let beingDragged = false;
+    let isFocused = false;
     const dispatch = createEventDispatcher();
 
     function dragOverHandler(event) {
@@ -72,6 +73,23 @@
     function checkDropCancel(event) {
         beingDragged = false;
     }
+
+    /**
+     * @param {KeyboardEvent} event
+     */
+    function checkKeyUp(event) {
+        // TODO
+        if (event.key === 'ArrowUp') {
+            dispatch('moveStep', 'up');
+        }
+        if (event.key === 'ArrowDown') {
+            dispatch('moveStep', 'down');
+        }
+
+        if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+            event.stopPropagation();
+        }
+    }
 </script>
 
 <div class:beingDragged>
@@ -80,7 +98,10 @@
         on:drop|stopPropagation={flowDropHandler({ contextName: 'flowStep', stateChangeCallback: dropModify })}
         class="flow-step-container"
         on:dragstart|stopPropagation={handleDragStart}
-        on:dragend|stopPropagation={checkDropCancel} >
+        on:dragend|stopPropagation={checkDropCancel}
+        on:focus={() => isFocused = true}
+        on:blur={() => isFocused = false}
+        on:keyup|preventDefault={checkKeyUp} >
 
         <div class="flex w100 flow-step-action-bar">
             <div class="flex-1 flex">

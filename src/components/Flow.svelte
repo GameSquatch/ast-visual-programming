@@ -72,6 +72,23 @@
         flowData.body.splice(index + 1, 0, dataToInsert);
         flowData.body = flowData.body;
     }
+
+    function moveStep(event, i) {
+        const direction = event.detail;
+        if (flowData.body.length < 2) return;
+        
+        if (direction === 'down' && i < flowData.body.length - 1) {
+            const [ element ] = flowData.body.splice(i, 1);
+            flowData.body.splice(i + 1, 0, element);
+        }
+
+        else if (direction === 'up' && i > 0) {
+            const [ element ] = flowData.body.splice(i, 1);
+            flowData.body.splice(i - 1, 0, element);
+        }
+
+        flowData.body = flowData.body;
+    }
 </script>
 
 <div
@@ -112,6 +129,7 @@
                 accessor={i}
                 on:moveFlowStep={(event) =>
                     handleMoveFlowStep(event.detail)}
+                on:moveStep={(event) => moveStep(event, i)}
                 nodePath={`ast.main.body.${i}`}
             />
         </div>
