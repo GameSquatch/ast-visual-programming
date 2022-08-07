@@ -11,6 +11,15 @@
  * @type {Object.<string, FunctionCollection>}
  */
 const typeDefs =  {
+    "console": {
+        "log": {
+            "args": [
+                "String"
+            ],
+            "infiniteArgs": true,
+            "returnType": "String"
+        }
+    },
     "StringUtil": {
         "concat": {
             "args": [
@@ -43,8 +52,8 @@ const typeDefs =  {
         },
         "substring": {
             "args": [
-                "Integer",
-                "String"
+                "String",
+                "Integer"
             ],
             "infiniteArgs": false,
             "returnType": "String"
@@ -77,13 +86,6 @@ const typeDefs =  {
         }
     },
     "Integer": {
-        "parse": {
-            "args": [
-                "String"
-            ],
-            "infiniteArgs": false,
-            "returnType": "Integer"
-        },
         "add": {
             "args": [
                 "Integer"

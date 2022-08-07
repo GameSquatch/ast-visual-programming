@@ -2,6 +2,7 @@
     import { routes } from '../store/routes.js';
     import mockData from '../lib/js/data_json.js';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
+    import { StringUtil } from '../lib/js/utility_library.js';
 
     $: fnKeys = Object.keys(mockData).filter((fileKey) => $fileMetadata[fileKey].fileType === 'function');
 
