@@ -17,14 +17,14 @@
                 <form class="flex-col align-center" action="/app/login" method="post">
                     <label class="login-label">
                         Username
-                        <input class="login-field" name="username" type="text" bind:this={usernameField} />
+                        <input class="login-field" name="username" type="text" />
                     </label>
                     <label class="login-label">
                         Password
-                        <input class="login-field" name="password" type="password" bind:this={passwordField} />
+                        <input class="login-field" name="password" type="password" />
                     </label>
 
-                    <button class="login-btn" type="submit" on:click={login}>Log In</button>
+                    <button class="login-btn" type="submit">Log In</button>
                 </form>
             </div>
         </div>
