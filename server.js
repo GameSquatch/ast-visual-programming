@@ -63,7 +63,7 @@ appRouter.post('/login', express.urlencoded({ extended: true }), (req, res) => {
     createJWT()
         .then((jwt) => {
             res.set({
-                'Location': '/',
+                'Location': `${req.baseUrl}/`,
                 'Set-Cookie': createSetCookieHeader({ isProd, cookieValue: jwt, maxAge: 86400 })
             });
             res.status(302).send();
