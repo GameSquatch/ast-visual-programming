@@ -38,4 +38,9 @@ Number.prototype.subtract = function(num) {
     return this.valueOf() - num;
 }
 
+// @ts-ignore
+console.logString = console.log;
+// @ts-ignore
+console.logNumber = console.log;
+
 export { StringUtil };

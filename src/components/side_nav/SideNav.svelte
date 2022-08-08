@@ -1,6 +1,7 @@
 <script>
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
+    import { slide } from 'svelte/transition';
     import { fileTreeStore, createNodeTreeEntry } from './file_tree.js';
     import { fileMetadata, createFileMetadata } from './file_metadata.js';
     import File from './File.svelte';
@@ -11,6 +12,10 @@
     import { v4 as uuidv4 } from 'uuid';
     import mockData from '../../lib/js/data_json.js';
     import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
+    import { utilDefs } from '../../lib/js/util_definitions.js';
+    import { utilDataDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
+
+    let utilityDrawerIsOpen = false;
 
     /** @type {ContextDoneCallback} */
     function addFile(title, fileType) {
@@ -38,6 +43,13 @@
         const itemLocation = dragObject.dragType === 'folder' ? 'folders' : 'files';
         fileTreeStore.moveItem({ from: dragObject.dragData.treePath, to: itemLocation, navType: itemLocation })
     }
+
+    /** @type {(utilDefName: string) => (event: DragEvent) => void} */
+    function handleUtilDragStart(utilDefName) {
+        return (event) => {
+            event.dataTransfer.setData('text/json', JSON.stringify(utilDataDrag({ utilDefName })));
+        };
+    }
 </script>
 
 <div class="side-nav-wrapper">
@@ -62,6 +74,17 @@
             <File treePath={`files.${i}`} fileData={file} />
         {/each}
     </div>
+
+    <div class="utility-drawer">
+        <div class="title" on:click={() => utilityDrawerIsOpen = !utilityDrawerIsOpen}><i class="mi-chevron-{utilityDrawerIsOpen ? 'down' : 'up'}"></i> Utilities</div>
+        {#if utilityDrawerIsOpen}
+            <div transition:slide={{ duration: 300, easing: quintOut }} class="utilities-container">
+                {#each Object.keys(utilDefs) as utilDefName (utilDefName)}
+                    <div on:dragstart={handleUtilDragStart(utilDefName)} class="utility-row" draggable="true">{utilDefName}</div>
+                {/each}
+            </div>
+        {/if}
+    </div>
 </div>
     
 <style>
@@ -80,6 +103,7 @@
         flex: 1;
         z-index: 1;
         padding: 8px 0;
+        overflow-y: auto;
     }
 
     .nav-action-bar {
@@ -105,5 +129,23 @@
         width: 100%;
         background: rgb(198, 198, 198);
         padding: 10px;
+    }
+
+    .utility-drawer .title {
+        padding: 6px;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+    }
+
+    .utilities-container {
+        padding: 4px;
+    }
+
+    .utility-row {
+        padding: 4px 6px;
+    }
+    .utility-row:hover {
+        background-color: #ddd;
+        cursor: move;
     }
 </style>

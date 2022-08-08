@@ -10,21 +10,33 @@
 /**
  * @type {Object.<string, FunctionCollection>}
  */
-const typeDefs =  {
-    "String": {
+const utilDefs = {
+    "console": {
+        "logString": {
+            "args": [
+                "String"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Void"
+        },
+        "logNumber": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Void"
+        }
+    },
+    "StringUtil": {
         "concat": {
             "args": [
+                "String",
                 "String"
             ],
             "infiniteArgs": true,
             "returnType": "String"
         },
         "trim": {
-            "args": [],
-            "infiniteArgs": false,
-            "returnType": "String"
-        },
-        "prepend": {
             "args": [
                 "String"
             ],
@@ -32,36 +44,24 @@ const typeDefs =  {
             "returnType": "String"
         },
         "length": {
-            "args": [],
-            "infiniteArgs": false,
-            "returnType": "Integer"
-        }
-    },
-    "Integer": {
-        "add": {
-            "args": [
-                "Integer"
-            ],
-            "infiniteArgs": true,
-            "returnType": "Integer"
-        },
-        "subtract": {
-            "args": [
-                "Integer"
-            ],
-            "infiniteArgs": true,
-            "returnType": "Integer"
-        },
-        "toString": {
-            "args": [],
-            "infiniteArgs": false,
-            "returnType": "String"
-        }
-    },
-    "List": {
-        "join": {
             "args": [
                 "String"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Integer"
+        },
+        "fromInt": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "String"
+        },
+        "substring": {
+            "args": [
+                "String",
+                "Integer",
+                "Integer"
             ],
             "infiniteArgs": false,
             "returnType": "String"
@@ -69,4 +69,4 @@ const typeDefs =  {
     }
 };
 
-export default typeDefs;
+export { utilDefs };

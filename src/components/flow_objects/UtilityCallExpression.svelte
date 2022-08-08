@@ -1,9 +1,10 @@
 <script>
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
-    import { methodNamesThatMatchContextDataType } from './flow_utilities.js';
+    import { utilNamesThatMatchContextDataType } from './flow_utilities.js';
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
+    import { utilDefs } from '../../lib/js/util_definitions.js';
 
     /** @type {import('../../lib/js/node_templates.js').UtilityCallExpressionData} */
     export let nodeData;
@@ -16,7 +17,7 @@
 
     function onPropertyChange(event) {
         const utilityMethod = event.target.value;
-        const fnDef = typeDefs[nodeData.utilityName][utilityMethod];
+        const fnDef = utilDefs[nodeData.utilityName][utilityMethod];
         const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]());
 
         nodeData = {
@@ -46,7 +47,7 @@
     <p><strong>{nodeData.utilityName}</strong></p>
     <div class="method-container">
         <select on:change={onPropertyChange}>
-            {#each methodNamesThatMatchContextDataType({ typeDefinitionName: nodeData.utilityName, contextDataType: contextType }) as method}
+            {#each utilNamesThatMatchContextDataType({ utilDefinitionName: nodeData.utilityName, contextDataType: contextType }) as method}
                 <option value={method} selected={method === nodeData.utilityMethod}>{method}</option>
             {/each}
         </select>

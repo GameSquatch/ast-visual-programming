@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import typeDefs from './type_definitions.js';
+import { utilDefs } from './util_definitions.js';
 
 
 /**
@@ -59,17 +60,23 @@ import typeDefs from './type_definitions.js';
 
 const nodeTemplates = {
     /**
-     * @type {(method: string) => UtilityCallExpressionData}
+     * @function
+     * @param {Object} spec
+     * @param {string} spec.utilDefName
+     * @param {string} spec.methodName
      */
-    StringUtil: function(method = "concat") {
-        const methodDefinition = typeDefs['StringUtil'][method];
+    util: function({ utilDefName, methodName }) {
+        const methodDefinition = utilDefs[utilDefName][methodName];
         const definitionArgs = methodDefinition.args;
 
         return {
             type: "UtilityCallExpression",
-            utilityName: "StringUtil",
-            utilityMethod: method,
-            arguments: definitionArgs.map((argType) => this[argType + "Literal"]()),
+            utilityName: utilDefName,
+            utilityMethod: methodName,
+            arguments: definitionArgs.map((argType) => {
+                const argTypeAdj = argType + 'Literal';
+                return this[argTypeAdj]();
+            }),
             dataType: methodDefinition.returnType
         };
     },

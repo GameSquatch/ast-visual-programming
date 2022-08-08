@@ -41,9 +41,9 @@ function createDragObject({ dragType, dragDataType = "none", nodeData, dragData 
 function doActionDataDrag() {
     return createDragObject({ dragType: "flowStep" });
 }
-/** @type {DragStartDataCreator} */
-function stringUtilDataDrag() {
-    return createDragObject({ dragType: "stringUtil" });
+
+function utilDataDrag({ utilDefName }) {
+    return createDragObject({ dragType: "util", dragData: { utilDefName }});
 }
 
 /**
@@ -102,4 +102,4 @@ function navFolderDrag(folderData) {
 }
 
 
-export { doActionDataDrag, stringUtilDataDrag, moveFlowStepDrag, fnInfoRefObjectDrag, navFileDrag, navFolderDrag };
+export { doActionDataDrag, moveFlowStepDrag, fnInfoRefObjectDrag, navFileDrag, navFolderDrag, utilDataDrag };

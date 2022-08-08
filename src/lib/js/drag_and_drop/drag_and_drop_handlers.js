@@ -1,6 +1,7 @@
 import nodeTemplates from '../node_templates.js';
 import typeDefs from '../type_definitions.js';
 import DropObject from './drop_object.js';
+import { utilDefs } from '../util_definitions.js'
 
 
 /**
@@ -60,7 +61,17 @@ const findReturnTypeMatch = (utilType) => (contextType) => {
     }
     return null;
 }
-const findStringUtilTypeMatch = findReturnTypeMatch("StringUtil");
+// This finds a method for the string util that matches the context's type, if any,
+// so the drop data template can be created with that method as the starting, selected method
+const findUtilReturnTypeMatch = (contextType, utilDefName) => {
+    for (let methodName of Object.keys(utilDefs[utilDefName])) {
+        const method = utilDefs[utilDefName][methodName];
+        if (method.returnType === contextType) {
+            return methodName;
+        }
+    }
+    return null;
+}
 
 
 function wrapWithFlowStep(node) {
@@ -76,10 +87,20 @@ function wrapWithFlowStep(node) {
  * @param {string} contextType - Data type
  * @returns {?Object.<string, *>} Returns either null or the ast node to be created from dropping this stringUtil
  */
-function stringUtilFromTypedContext(dragObject, contextType) {
-    const methodName = findStringUtilTypeMatch(contextType);
+ function utilFromTypedContext(dragObject, contextType) {
+    const methodName = findUtilReturnTypeMatch(contextType, dragObject.dragData.utilDefName);
     if (methodName === null) return null;
-    return nodeTemplates.StringUtil(methodName);
+    return nodeTemplates.util({ utilDefName: dragObject.dragData.utilDefName, methodName });
+}
+
+
+function voidUtil(dragObject) {
+    for (let methodName of Object.keys(utilDefs[dragObject.dragData.utilDefName])) {
+        if (utilDefs[dragObject.dragData.utilDefName][methodName].returnType === "Void") {
+            return nodeTemplates.util({ utilDefName: dragObject.dragData.utilDefName, methodName });
+        }
+    }
+    return null;
 }
 
 
@@ -105,32 +126,6 @@ function variableRefFromTypedContext(dragObject, contextType) {
             method: method,
             dataType: contextType,
             refData: nodeTemplates.variableRefIdentifer(dragObject.dragData)
-        })
-        : null;
-}
-
-/**
- * Creates an AST node for dropping a variable into a typed context
- * @function
- * @param {DragObject} dragObject
- * @param {string} contextType Data type that is required by the variable's parent, a.k.a the contextual data type
- * @returns {Object}
- */
- function parameterRefFromTypedContext(dragObject, contextType) {
-    const parameterTypeMatchesContext = dragDataTypeMatchesContext(dragObject, contextType);
-    
-    if (parameterTypeMatchesContext) {
-        return nodeTemplates.parameterRefIdentifier(dragObject.dragData);
-    }
-
-    const method = findReturnTypeMatch(dragObject.dragData.dataType)(contextType);
-    if (method === null) alert("Types don't match and no methods exist to match the type");
-    
-    return method !== null
-        ? nodeTemplates.identifierRefCallExpression({
-            method: method,
-            dataType: contextType,
-            refData: nodeTemplates.parameterRefIdentifier(dragObject.dragData)
         })
         : null;
 }
@@ -177,34 +172,19 @@ const dropContextMap = {
             newNode: variableRefFromTypedContext(dragObject, contextType)
         })
     },
-    parameterRef: {
+    util: {
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithFlowStep(nodeTemplates.parameterRefAssignment(dragObject.dragData))
+            newNode: wrapWithFlowStep(voidUtil(dragObject))
         }),
-        flowStep: (dragObject, contextType) => new DropObject({
-            dragObject,
-            newNode: nodeTemplates.parameterRefAssignment(dragObject.dragData)
-        }),
-        assignment: (dragObject, contextType) => new DropObject({
-            dragObject,
-            newNode: parameterRefFromTypedContext(dragObject, contextType),
-        }),
-        argument: (dragObject, contextType) => new DropObject({
-            dragObject,
-            newNode: parameterRefFromTypedContext(dragObject, contextType)
-        })
-    },
-    stringUtil: {
-        flow: noNode,
         flowStep: noNode,
         assignment: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: stringUtilFromTypedContext(dragObject, contextType),
+            newNode: utilFromTypedContext(dragObject, contextType),
         }),
         argument: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: stringUtilFromTypedContext(dragObject, contextType),
+            newNode: utilFromTypedContext(dragObject, contextType),
         }),
     },
     flowStep: {
