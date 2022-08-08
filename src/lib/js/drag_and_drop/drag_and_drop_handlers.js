@@ -97,7 +97,7 @@ function wrapWithFlowStep(node) {
 function voidUtil(dragObject) {
     for (let methodName of Object.keys(utilDefs[dragObject.dragData.utilDefName])) {
         if (utilDefs[dragObject.dragData.utilDefName][methodName].returnType === "Void") {
-            return nodeTemplates.util({ utilDefName: dragObject.dragData.utilDefName, methodName });
+            return wrapWithFlowStep( nodeTemplates.util({ utilDefName: dragObject.dragData.utilDefName, methodName }) );
         }
     }
     return null;
@@ -175,7 +175,7 @@ const dropContextMap = {
     util: {
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithFlowStep(voidUtil(dragObject))
+            newNode: voidUtil(dragObject)
         }),
         flowStep: noNode,
         assignment: (dragObject, contextType) => new DropObject({
