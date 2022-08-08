@@ -44,7 +44,7 @@
 </script>
 
 <div class="component-wrapper">
-    <p><strong>{nodeData.utilityName}</strong></p>
+    <p><strong class="utility-name">{nodeData.utilityName}</strong></p>
     <div class="method-container">
         <select on:change={onPropertyChange}>
             {#each utilNamesThatMatchContextDataType({ utilDefinitionName: nodeData.utilityName, contextDataType: contextType }) as method}
@@ -78,4 +78,7 @@
 </div>
 
 <style>
+    .utility-name {
+        color: rgb(0, 217, 217);
+    }
 </style>

@@ -36,10 +36,10 @@
 
 
 {#if nodeData.refId && nodeData.fnRefType === 'variables'}
-    <span class="self">{$currentFlowData.info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
+    <span class="variable-name self">{$currentFlowData.info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
 {/if}
 {#if nodeData.refId && nodeData.fnRefType === 'parameters'}
-    <span class="self">{$fileMetadata[$currentFlowData.info.id].objectFlowData.parameters[nodeData.refId]?.name ?? ""}</span>
+    <span class="parameter-name self">{$fileMetadata[$currentFlowData.info.id].objectFlowData.parameters[nodeData.refId]?.name ?? ""}</span>
 {/if}
 {#if availableMethods.length > 0}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>
@@ -63,5 +63,12 @@
     .type-method-select {
         opacity: 0;
         transition: opacity 0.3s ease-out;
+    }
+
+    .variable-name {
+        color: #00ca00;
+    }
+    .parameter-name {
+        color: rgb(198, 0, 198);
     }
 </style>

@@ -55,7 +55,7 @@
 </script>
 
 <div class="component-wrapper">
-    <p><strong>{fm[nodeData.fileId].title}</strong>.call()</p>
+    <p><strong class="function-title">{fm[nodeData.fileId].title}</strong>.call()</p>
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
             <Argument {argLevel}
@@ -81,4 +81,7 @@
 </div>
 
 <style>
+    .function-title {
+        color: orange;
+    }
 </style>
