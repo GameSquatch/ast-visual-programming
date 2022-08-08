@@ -66,6 +66,23 @@ const utilDefs = {
             "infiniteArgs": false,
             "returnType": "String"
         }
+    },
+    "IntegerUtil": {
+        "toString": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "String"
+        },
+        "add": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Integer"
+        }
     }
 };
 

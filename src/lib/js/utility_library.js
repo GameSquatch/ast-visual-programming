@@ -22,6 +22,18 @@ const StringUtil = {
 };
 
 
+const IntegerUtil = {
+    /** @type {(num: number) => string} */
+    toString(num) {
+        return num.toString();
+    },
+    /** @type {(num1: number, num2: number) => number} */
+    add(num1, num2) {
+        return num1 + num2;
+    }
+};
+
+
 // @ts-ignore
 String.prototype.prepend = function(str) {
     return str + this;
@@ -43,4 +55,4 @@ console.logString = console.log;
 // @ts-ignore
 console.logNumber = console.log;
 
-export { StringUtil };
+export { StringUtil, IntegerUtil };
