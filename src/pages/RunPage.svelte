@@ -44,9 +44,9 @@
 
         const textResult = response.text();
 
-        // textResult.then((codeText) => {
-        //     new Function(`const dynamicFunc = () => {'use strict'; console.log('running dynamic function'); ${codeText}}; return dynamicFunc`)()();
-        // });
+        textResult.then((codeText) => {
+            new Function(`const dynamicFunc = (StringUtil, console) => {'use strict'; console.log('running dynamic function'); ${codeText}}; return dynamicFunc`)()(StringUtil, console);
+        });
 
         return textResult;
     }
