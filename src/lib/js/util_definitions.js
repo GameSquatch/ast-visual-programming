@@ -11,7 +11,7 @@
  * @type {Object.<string, FunctionCollection>}
  */
 const utilDefs = {
-    "console": {
+    "LoggerUtil": {
         "logString": {
             "args": [
                 "String"

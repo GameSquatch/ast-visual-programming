@@ -2,7 +2,7 @@
     import { routes } from '../store/routes.js';
     import mockData from '../lib/js/data_json.js';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
-    import { StringUtil, IntegerUtil } from '../lib/js/utility_library.js';
+    import { StringUtil, IntegerUtil, LoggerUtil } from '../lib/js/utility_library.js';
 
     $: fnKeys = Object.keys(mockData).filter((fileKey) => $fileMetadata[fileKey].fileType === 'function');
 
@@ -45,7 +45,7 @@
         const textResult = response.text();
 
         textResult.then((codeText) => {
-            new Function(`const dynamicFunc = (StringUtil, IntegerUtil, console) => {'use strict'; console.log('running dynamic function'); ${codeText}}; return dynamicFunc`)()(StringUtil, IntegerUtil, console);
+            new Function(`const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil) => {'use strict'; console.log('running dynamic function'); ${codeText}}; return dynamicFunc`)()(StringUtil, IntegerUtil, LoggerUtil);
         });
 
         return textResult;

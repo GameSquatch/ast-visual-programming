@@ -34,6 +34,12 @@ const IntegerUtil = {
 };
 
 
+const LoggerUtil = {
+    logString: console.log,
+    logNumber: console.log
+};
+
+
 // @ts-ignore
 String.prototype.prepend = function(str) {
     return str + this;
@@ -50,9 +56,4 @@ Number.prototype.subtract = function(num) {
     return this.valueOf() - num;
 }
 
-// @ts-ignore
-console.logString = console.log;
-// @ts-ignore
-console.logNumber = console.log;
-
-export { StringUtil, IntegerUtil };
+export { StringUtil, IntegerUtil, LoggerUtil };
