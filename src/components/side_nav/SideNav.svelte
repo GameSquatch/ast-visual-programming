@@ -15,8 +15,6 @@
     import { utilDefs } from '../../lib/js/util_definitions.js';
     import { utilDataDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
-    let utilityDrawerIsOpen = false;
-
     /** @type {ContextDoneCallback} */
     function addFile(title, fileType) {
         const id = uuidv4();
@@ -59,7 +57,7 @@
         <button class="nav-action-btn light-bg-btn"><i class="mi-search" /></button>
 
         {#if $navStore.isShowingContext}
-            <div transition:fly={{ duration: 345, x: -600, opacity: 1, easing: quintOut }} class="absolute nav-context-pane">
+            <div transition:fly|local={{ duration: 345, x: -600, opacity: 1, easing: quintOut }} class="absolute nav-context-pane">
                 <svelte:component onDoneCallback={$navStore.onDoneCallback} this={$navStore.contextType} />
             </div>
         {/if}
@@ -76,9 +74,9 @@
     </div>
 
     <div class="utility-drawer">
-        <div class="title" on:click={() => utilityDrawerIsOpen = !utilityDrawerIsOpen}><i class="mi-chevron-{utilityDrawerIsOpen ? 'down' : 'up'}"></i> Utilities</div>
-        {#if utilityDrawerIsOpen}
-            <div transition:slide={{ duration: 300, easing: quintOut }} class="utilities-container">
+        <div class="title" on:click={() => navStore.toggleUtilDrawer()}><i class="mi-chevron-{$navStore.utilDrawerIsOpen ? 'down' : 'up'}"></i> Utilities</div>
+        {#if $navStore.utilDrawerIsOpen}
+            <div transition:slide|local={{ duration: 300, easing: quintOut }} class="utilities-container">
                 {#each Object.keys(utilDefs) as utilDefName (utilDefName)}
                     <div on:dragstart={handleUtilDragStart(utilDefName)} class="utility-row" draggable="true">{utilDefName}</div>
                 {/each}

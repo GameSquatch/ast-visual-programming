@@ -8,6 +8,7 @@ import { writable } from 'svelte/store';
 /**
  * @typedef {Object} NavState
  * @property {boolean} isShowingContext
+ * @property {boolean} utilDrawerIsOpen
  * @property {string|null} contextType
  * @property {ContextDoneCallback} onDoneCallback
  */
@@ -17,6 +18,7 @@ import { writable } from 'svelte/store';
 /** @type {NavState} */
 const initialVal = {
     isShowingContext: false,
+    utilDrawerIsOpen: false,
     contextType: null,
     onDoneCallback: (_, __) => {}
 };
@@ -43,7 +45,16 @@ const navStore = {
         });
     },
     closeContext() {
-        this.set({ ...initialVal });
+        this.update((state) => {
+            state.isShowingContext = false;
+            return state;
+        });
+    },
+    toggleUtilDrawer() {
+        this.update((state) => {
+            state.utilDrawerIsOpen = !state.utilDrawerIsOpen;
+            return state;
+        });
     }
 };
 
