@@ -18,7 +18,7 @@ const codeWritersMap = {
     },
     FunctionCallExpression: function(node, fileId, { codeData, fileMetadata }) {
         const title = fileMetadata[node.fileId].title;
-        let arguments = node.arguments.reduce((acc, arg, i) => argStringBuilder.call(this, acc, arg, i, fileId, fileId, { codeData, fileMetadata }), "");
+        let arguments = node.arguments.reduce((acc, arg, i) => argStringBuilder.call(this, acc, arg, i, fileId, { codeData, fileMetadata }), "");
 
         return `${title}(${arguments})`;
     },
@@ -59,5 +59,7 @@ exports.codeWriter = function(statement, fileId, codeInfo) {
 
 function argStringBuilder(acc, arg, index, fileId, { codeData, fileMetadata }) {
     //console.log(`inside reduce argtype: ${arg.type}`);
-    return acc += index > 0 ? `, ${this[arg.type](arg, fileId, { codeData, fileMetadata })}` : this[arg.type](arg, fileId, { codeData, fileMetadata });
+    return acc += index > 0
+        ? `, ${this[arg.type](arg, fileId, { codeData, fileMetadata })}`
+        : this[arg.type](arg, fileId, { codeData, fileMetadata });
 }

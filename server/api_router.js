@@ -21,7 +21,7 @@ router.post('/generate-code', (req, res) => {
             res.status(200).send(generatedCode);
         })
         .catch((e) => {
-            res.status(500).send('Something broke');
+            res.status(500).send('Something broke: ' + e.message);
         });
 });
 
