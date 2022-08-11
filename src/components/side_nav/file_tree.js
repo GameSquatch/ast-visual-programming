@@ -52,7 +52,7 @@ const fileTreeStore = {
      * @param {string} spec.to
      * @param {string} spec.navType
      */
-    moveItem({ from, to, navType = 'files'}) {
+    moveItem({ from, to, navType = 'files' }) {
         this.update((tree) => {
             const fromPath = new TreePath({ stringPath: from });
             const toPath = new TreePath({ stringPath: to });
@@ -66,7 +66,7 @@ const fileTreeStore = {
             const index = parseInt(fromPath.getTokenAt(-1))
             // Take a copy instead of splicing out
             const fromObj = fromArr[index];
-            
+
             /** @type {object} */
             let locationArr = tree;
             if (toPath.tokens.length > 1) {
@@ -74,7 +74,7 @@ const fileTreeStore = {
                     locationArr = locationArr[token];
                 });
             }
-            
+
             // Need to splice after we use location, because moving things at the same level
             // will change the indices at which those things exist in the arrays
             fromArr.splice(index, 1)[0];
@@ -163,14 +163,12 @@ function createFolder({ title, id = uuidv4(), files = [], folders = [] }) {
 
 function createNodeTreeEntry(id) {
     return {
-        main: {
-            info: {
-                id,
-                variables: {},
-                dataType: "String"
-            },
-            body: []
-        }
+        info: {
+            id,
+            variables: {},
+            dataType: "String"
+        },
+        body: []
     };
 }
 

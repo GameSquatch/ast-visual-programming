@@ -38,7 +38,7 @@ function createEditorStore(initialValue) {
 			update((editor) => {
 				editor.activeTab = id;
 				if (!editor.openedTabIds[id] && title && fileType) {
-					editor.tabs.push({ title, id, fileType, dataPromise: Promise.resolve(mockData[id].main) });
+					editor.tabs.push({ title, id, fileType, dataPromise: Promise.resolve(mockData[id]) });
 					editor.openedTabIds[id] = true;
 				}
 

@@ -29,13 +29,13 @@ function generateCode(codeInfo) {
 
                 const currentFn = codeData[fileId];
                 let variableInitBlock = "";
-                for (const variable of Object.values(currentFn.main.info.variables)) {
+                for (const variable of Object.values(currentFn.info.variables)) {
                     variableInitBlock += `    let ${variable.name} = ${variable.dataType === "String" ? '"' + variable.defaultValue + '"' : variable.defaultValue};\n`;
                 }
                 variableInitBlock += "\n";
 
                 let codeResult = "";
-                for (const statement of currentFn.main.body) {
+                for (const statement of currentFn.body) {
                     codeResult += codeWriter(statement, fileId, codeInfo);
                 }
                 codeStr.push(`function ${fileMetadata[fileId].title}(${parameterSet}) {\n${parameterInits}${variableInitBlock}${codeResult}}\n`);

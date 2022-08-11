@@ -130,7 +130,7 @@
                 on:moveFlowStep={(event) =>
                     handleMoveFlowStep(event.detail)}
                 on:moveStep={(event) => moveStep(event, i)}
-                nodePath={`ast.main.body.${i}`}
+                nodePath={`${flowData.info.id}.body.${i}`}
             />
         </div>
         {/each}

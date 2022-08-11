@@ -38,7 +38,7 @@ const codeWritersMap = {
     RefIdentifier: function(node, fileId, { codeData, fileMetadata }) {
         let variableRef;
         if (node.fnRefType === 'variables') {
-            variableRef = codeData[fileId].main.info.variables[node.refId];
+            variableRef = codeData[fileId].info.variables[node.refId];
         } else {
             variableRef = fileMetadata[fileId].objectFlowData.parameters[node.refId];
         }
