@@ -11,7 +11,7 @@ router.post('/generate-code', (req, res) => {
         'Cache-Control': 'no-store'
     });
 
-    if (req.body.entryFunction === undefined) {
+    if (req.body.entryFunctionId === undefined) {
         res.status(400).send('Bad message; need entryFunction');
         return;
     }

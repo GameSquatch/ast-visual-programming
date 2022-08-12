@@ -8,17 +8,17 @@
 
     /** @type {Promise<string>|null} */
     let generatingPromise = null;
-    let entryFunction = '';
+    let entryFunctionId = '';
     let validationMessage = '';
 
     function onChangeHandler(event) {
-        entryFunction = event.target.value;
+        entryFunctionId = event.target.value;
     }
 
     function handleGenerateButtonClick(_) {
         generatingPromise = null;
         
-        if (entryFunction === '') {
+        if (entryFunctionId === '') {
             validationMessage = 'You need to choose an entry function first';
             return;
         }
@@ -29,7 +29,7 @@
 
     async function sendToGenerator() {
         const strBody = JSON.stringify({
-            entryFunction,
+            entryFunctionId,
             codeData: mockData,
             fileMetadata: $fileMetadata
         });
