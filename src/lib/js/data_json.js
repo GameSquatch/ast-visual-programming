@@ -21,7 +21,7 @@ const mockData = {
                     "dataType": "Integer"
                 }
             },
-            "parameters": {},
+            "dataType": "String"
         },
         "body": [
             {
@@ -125,7 +125,7 @@ const mockData = {
                     "dataType": "String"
                 }
             },
-            "parameters": {}
+            "dataType": "String"
         },
         "body": [
             {
