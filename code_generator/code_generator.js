@@ -23,7 +23,10 @@ function generateCode(codeInfo) {
                 const funcId = info.id;
 
                 for (const statement of body) {
-                    findReferencedFunctions(statement, (fnId) => referencedFunctions[fnId] = false);
+                    findReferencedFunctions(statement, (fnId) => {
+                        if (fnId === funcId) return;
+                        referencedFunctions[fnId] = false
+                    });
                     codeResult += codeWriter(statement, funcId, codeInfo);
                 }
 
