@@ -4,9 +4,16 @@
     import { squish } from "../lib/js/custom_animations.js";
     import { flip } from "svelte/animate";
     import { currentFlowData } from './tabbed_editor/editor_store.js';
+    import { fileMetadata } from './side_nav/file_metadata.js';
+    import mockData from '../lib/js/data_json.js';
+    import { StringUtil, IntegerUtil, LoggerUtil } from '../lib/js/utility_library.js';
 
     export let flowData;
     currentFlowData.set(flowData);
+
+    let runOverlayIsVisible = false;
+    let runResultText = "";
+    let logText = "";
 
     let hoverPrepend = false;
     function setHoverPrepend(newValue) {
@@ -89,6 +96,34 @@
 
         flowData.body = flowData.body;
     }
+
+    async function sendToGenerator() {
+        runResultText = "";
+        logText = "";
+
+        const strBody = JSON.stringify({
+            entryFunctionId: flowData.info.id,
+            codeData: mockData,
+            fileMetadata: $fileMetadata
+        });
+
+        const response = await fetch('/api/generate-code', {
+            body: strBody,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const textResult = response.text();
+
+        let logLines = [];
+        textResult.then((codeText) => {
+            new Function(`const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, logLines) => {'use strict'; ${codeText}}; return dynamicFunc`)()(StringUtil, IntegerUtil, LoggerUtil, logLines);
+            runResultText = codeText;
+            logText = logLines.join('\n');
+        });
+    }
 </script>
 
 <div
@@ -99,6 +134,11 @@
         stateChangeCallback: appendDrop,
     })}
 >
+
+    <button on:click={() => runOverlayIsVisible = true} class="run-button">
+        <i class="mi-play" />
+    </button>
+
     <div
         class="bumper-zone"
         class:hoverDrag={hoverPrepend}
@@ -141,16 +181,40 @@
         on:dragenter={() => setHoverAppend(true)}
         on:dragleave={() => setHoverAppend(false)}
     />
+</div>
 
+
+<div class="wh100 run-overlay-floater" class:runOverlayIsVisible>
+    <div class="run-overlay">
+        <h3>Run your function!</h3>
+        <p>Parameters</p>
+        {#each Object.keys($fileMetadata[flowData.info.id].objectFlowData.parameters) as paramId (paramId)}
+            {@const paramData = $fileMetadata[flowData.info.id].objectFlowData.parameters[paramId]}
+            <div class="input-wrapper">
+                <label>{paramData.name}
+                    <input type="{paramData.dataType === 'String' ? 'text' : 'number'}" />
+                </label>
+            </div>
+        {:else}
+            <p>This function has no parameters yet</p>
+        {/each}
+        <div>
+            <button on:click={() => sendToGenerator()}>Run</button><button on:click={() => runOverlayIsVisible = false}>Cancel</button>
+        </div>
+
+<pre>{runResultText}</pre>
+
+<pre id="log-text">{logText}</pre>
+    </div>
 </div>
 
 <style>
     .flow-wrapper {
         height: 100%;
         overflow: auto;
-        padding-top: 75px;
         padding: 30px 10px 30px;
-        z-index: -1;
+        position: relative;
+        z-index: 1;
     }
 
     .bumper-zone {
@@ -158,5 +222,34 @@
     }
     .bumper-zone.hoverDrag {
         background: rgba(255, 255, 255, 0.35);
+    }
+
+    .run-button {
+        position: absolute;
+        padding: 5px;
+        top: 20px;
+        left: 0;
+        font-size: 14pt;
+    }
+
+    .run-overlay-floater {
+        position: absolute;
+        top: 0;
+        left: 0;
+        backdrop-filter: blur(2px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 5;
+    }
+    .run-overlay-floater.runOverlayIsVisible {
+        display: flex;
+    }
+
+    .run-overlay {
+        width: 60%;
+        height: 80%;
+        background: white;
+        border-radius: 12px;
     }
 </style>

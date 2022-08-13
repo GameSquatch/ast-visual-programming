@@ -35,8 +35,15 @@ const IntegerUtil = {
 
 
 const LoggerUtil = {
-    logString: console.log,
-    logNumber: console.log
+    logLines: [],
+    logString: function (data) {
+        // @ts-ignore
+        this.logLines.push(data);
+        // @ts-ignore
+        document.querySelector('#log-text').textContent = this.logLines.join('\n');
+        console.log(data);
+    },
+    logNumber:  console.log
 };
 
 
