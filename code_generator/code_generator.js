@@ -1,4 +1,4 @@
-const { codeWriter } = require('./code_writer');
+const { codeWriter, outputLiteralValue } = require('./code_writer');
 
 /**
  * @param {Object} codeInfo
@@ -35,7 +35,7 @@ function generateCode(codeInfo) {
                 let i = 0;
                 for (const paramId in fileMetadata[funcId].objectFlowData.parameters) {
                     const { name, defaultValue, dataType } = fileMetadata[funcId].objectFlowData.parameters[paramId];
-                    const defaultStr = dataType === "String" ? `"${defaultValue}"` : `${defaultValue}`;
+                    const defaultStr = outputLiteralValue(defaultValue, dataType);
                     parameterInits += `    ${name} = ${name} ?? ${defaultStr};\n`;
 
                     if (i > 0) parameterSet += ', ';
@@ -45,7 +45,7 @@ function generateCode(codeInfo) {
 
                 let variableInitBlock = "";
                 for (const variable of Object.values(info.variables)) {
-                    variableInitBlock += `    let ${variable.name} = ${variable.dataType === "String" ? '"' + variable.defaultValue + '"' : variable.defaultValue};\n`;
+                    variableInitBlock += `    let ${variable.name} = ${outputLiteralValue(variable.defaultValue, variable.dataType)};\n`;
                 }
                 variableInitBlock += "\n";
 
@@ -89,5 +89,6 @@ function findReferencedFunctions(astNode, foundCallback) {
             break;
     }
 }
+
 
 exports.generateCode = generateCode;
