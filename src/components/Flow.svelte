@@ -194,7 +194,7 @@
 </div>
 
 <div class="wh100 run-overlay-floater" class:runOverlayIsVisible>
-    <div class="run-overlay">
+    <div class="flex-col run-overlay">
         <h3>Run your function!</h3>
         {#if Object.keys($fileMetadata[flowData.info.id].objectFlowData.parameters).length > 0}
             <p>Parameters</p>
@@ -216,14 +216,17 @@
                 </div>
             {/each}
         {/if}
+        
+        <div class="flex-1">
+            <pre>{runResultText}</pre>
+            <pre bind:this={logTextElem} id="log-text">{logText}</pre>
+        </div>
+
         <div>
             <button on:click={() => sendToGenerator()}>Run</button><button
                 on:click={() => (runOverlayIsVisible = false)}>Cancel</button>
         </div>
 
-        <pre>{runResultText}</pre>
-
-        <pre bind:this={logTextElem} id="log-text">{logText}</pre>
     </div>
 </div>
 
