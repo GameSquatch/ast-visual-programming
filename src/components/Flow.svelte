@@ -1,8 +1,8 @@
 <script>
-    import { flowDropHandler } from "../lib/js/drag_and_drop/drag_and_drop_handlers.js";
-    import FlowStep from "../components/flow_objects/FlowStep.svelte";
-    import { squish } from "../lib/js/custom_animations.js";
-    import { flip } from "svelte/animate";
+    import { flowDropHandler } from '../lib/js/drag_and_drop/drag_and_drop_handlers.js';
+    import FlowStep from '../components/flow_objects/FlowStep.svelte';
+    import { squish } from '../lib/js/custom_animations.js';
+    import { flip } from 'svelte/animate';
     import { currentFlowData } from './tabbed_editor/editor_store.js';
     import { fileMetadata } from './side_nav/file_metadata.js';
     import mockData from '../lib/js/data_json.js';
@@ -12,8 +12,9 @@
     currentFlowData.set(flowData);
 
     let runOverlayIsVisible = false;
-    let runResultText = "";
-    let logText = "";
+    let runResultText = '';
+    let logText = '';
+    let logTextElem;
 
     let hoverPrepend = false;
     function setHoverPrepend(newValue) {
@@ -39,7 +40,7 @@
             flowData.body.splice(node.dragData.currentIndex, 1);
             node = node.nodeData;
         }
-        
+
         flowData.body = [node, ...flowData.body];
     }
 
@@ -83,28 +84,32 @@
     function moveStep(event, i) {
         const direction = event.detail;
         if (flowData.body.length < 2) return;
-        
-        if (direction === 'down' && i < flowData.body.length - 1) {
-            const [ element ] = flowData.body.splice(i, 1);
-            flowData.body.splice(i + 1, 0, element);
-        }
 
-        else if (direction === 'up' && i > 0) {
-            const [ element ] = flowData.body.splice(i, 1);
+        if (direction === 'down' && i < flowData.body.length - 1) {
+            const [element] = flowData.body.splice(i, 1);
+            flowData.body.splice(i + 1, 0, element);
+        } else if (direction === 'up' && i > 0) {
+            const [element] = flowData.body.splice(i, 1);
             flowData.body.splice(i - 1, 0, element);
         }
 
         flowData.body = flowData.body;
     }
 
+    $: inputs = Object.values($fileMetadata[flowData.info.id].objectFlowData.parameters).map(
+        (paramData) => [ paramData.defaultValue, paramData.dataType ]
+    );
+
     async function sendToGenerator() {
-        runResultText = "";
-        logText = "";
+        runResultText = '';
+        logText = '';
+        logTextElem.textContent = '';
 
         const strBody = JSON.stringify({
             entryFunctionId: flowData.info.id,
             codeData: mockData,
-            fileMetadata: $fileMetadata
+            fileMetadata: $fileMetadata,
+            inputs
         });
 
         const response = await fetch('/api/generate-code', {
@@ -119,14 +124,27 @@
 
         //let logLines = [];
         textResult.then((codeText) => {
-            const logLines = new Function(`const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; const logLines = []; ${codeText}; return logLines; }; return dynamicFunc`)()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
+            const logLines = new Function(
+                `const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; const logLines = []; ${codeText}; return logLines; }; return dynamicFunc`
+            )()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
             runResultText = codeText;
             logText = logLines.join('\n');
         });
     }
+
+    function updateInputs(event, paramType, i) {
+        inputs[i] = [
+            paramType === 'Integer'
+                ? event.target.valueAsNumber
+                : paramType === 'Boolean'
+                ? event.target.checked
+                : event.target.value,
+            paramType
+        ];
+    }
 </script>
 
-<button on:click={() => runOverlayIsVisible = true} class="run-button">
+<button on:click={() => (runOverlayIsVisible = true)} class="run-button">
     <i class="mi-play" />
 </button>
 
@@ -134,22 +152,19 @@
     class="flow-wrapper"
     on:dragover|preventDefault={dragOverHandler}
     on:drop|stopPropagation={flowDropHandler({
-        contextName: "flow",
-        stateChangeCallback: appendDrop,
-    })}
->
-
+        contextName: 'flow',
+        stateChangeCallback: appendDrop
+    })}>
     <div
         class="bumper-zone"
         class:hoverDrag={hoverPrepend}
         on:drop|stopPropagation={flowDropHandler({
-            contextName: "flow",
-            stateChangeCallback: prependDrop,
+            contextName: 'flow',
+            stateChangeCallback: prependDrop
         })}
         on:dragover|preventDefault={dragOverHandler}
         on:dragenter={() => setHoverPrepend(true)}
-        on:dragleave={() => setHoverPrepend(false)}
-    />
+        on:dragleave={() => setHoverPrepend(false)} />
 
     {#each flowData.body as flowStep, i (flowStep.id)}
         <div
@@ -157,54 +172,58 @@
             transition:squish|local={{
                 duration: 300,
                 opacity: 0.4,
-                start: 0.2,
-            }}
-        >
+                start: 0.2
+            }}>
             <FlowStep
                 on:delete={(event) => deleteFlowStep(event.detail)}
-                on:replace={(event) =>
-                    replaceFlowStepContents(i, { ...event.detail })}
+                on:replace={(event) => replaceFlowStepContents(i, { ...event.detail })}
                 on:insertAfter={(event) => insertAfterStep(i, event.detail)}
                 bind:nodeData={flowStep}
                 accessor={i}
-                on:moveFlowStep={(event) =>
-                    handleMoveFlowStep(event.detail)}
+                on:moveFlowStep={(event) => handleMoveFlowStep(event.detail)}
                 on:moveStep={(event) => moveStep(event, i)}
-                nodePath={`${flowData.info.id}.body.${i}`}
-            />
+                nodePath={`${flowData.info.id}.body.${i}`} />
         </div>
-        {/each}
+    {/each}
 
     <div
         class="bumper-zone"
         class:hoverDrag={hoverAppend}
         on:dragenter={() => setHoverAppend(true)}
-        on:dragleave={() => setHoverAppend(false)}
-    />
+        on:dragleave={() => setHoverAppend(false)} />
 </div>
-
 
 <div class="wh100 run-overlay-floater" class:runOverlayIsVisible>
     <div class="run-overlay">
         <h3>Run your function!</h3>
-        <p>Parameters</p>
-        {#each Object.keys($fileMetadata[flowData.info.id].objectFlowData.parameters) as paramId (paramId)}
-            {@const paramData = $fileMetadata[flowData.info.id].objectFlowData.parameters[paramId]}
-            <div class="input-wrapper">
-                <label>{paramData.name}
-                    <input type="{paramData.dataType === 'String' ? 'text' : 'number'}" />
-                </label>
-            </div>
-        {:else}
-            <p>This function has no parameters yet</p>
-        {/each}
+        {#if Object.keys($fileMetadata[flowData.info.id].objectFlowData.parameters).length > 0}
+            <p>Parameters</p>
+            {#each Object.keys($fileMetadata[flowData.info.id].objectFlowData.parameters) as paramId, i (paramId)}
+                {@const paramData = $fileMetadata[flowData.info.id].objectFlowData.parameters[paramId]}
+                <div class="input-wrapper">
+                    <label
+                        >{paramData.name}
+                        <input
+                            value={paramData.defaultValue}
+                            checked={paramData.defaultValue === true}
+                            on:change={(event) => updateInputs(event, paramData.dataType, i)}
+                            type={paramData.dataType === 'String'
+                                ? 'text'
+                                : paramData.dataType === 'Boolean'
+                                ? 'checkbox'
+                                : 'number'} />
+                    </label>
+                </div>
+            {/each}
+        {/if}
         <div>
-            <button on:click={() => sendToGenerator()}>Run</button><button on:click={() => runOverlayIsVisible = false}>Cancel</button>
+            <button on:click={() => sendToGenerator()}>Run</button><button
+                on:click={() => (runOverlayIsVisible = false)}>Cancel</button>
         </div>
 
-<pre>{runResultText}</pre>
+        <pre>{runResultText}</pre>
 
-<pre id="log-text">{logText}</pre>
+        <pre bind:this={logTextElem} id="log-text">{logText}</pre>
     </div>
 </div>
 

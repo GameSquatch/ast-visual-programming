@@ -5,12 +5,13 @@ const { codeWriter, outputLiteralValue } = require('./code_writer');
  * @param {string} codeInfo.entryFunctionId
  * @param {Object} codeInfo.codeData
  * @param {Object} codeInfo.fileMetadata
+ * @param {Array[]} codeInfo.inputs
  * @returns {Promise<string>}
  */
 function generateCode(codeInfo) {
     return new Promise((resolve, reject) => {
         try {
-            const { entryFunctionId, codeData, fileMetadata } = codeInfo;
+            const { entryFunctionId, codeData, fileMetadata, inputs } = codeInfo;
             let codeStr = [];
             /** @type {Object.<string, boolean>} */
             let referencedFunctions = {};
@@ -61,7 +62,9 @@ function generateCode(codeInfo) {
                 }
             })(currentFn);
 
-            codeStr.push(`${fileMetadata[entryFunctionId].title}();`);
+            const inputsAsCode = inputs.map((inPair) => outputLiteralValue(inPair[0], inPair[1]));
+
+            codeStr.push(`${fileMetadata[entryFunctionId].title}(${inputsAsCode});`);
             resolve(codeStr.join(''));
         } catch (e) {
             reject(e);
