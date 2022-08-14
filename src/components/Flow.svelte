@@ -121,7 +121,6 @@
         textResult.then((codeText) => {
             const logLines = new Function(`const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; const logLines = []; ${codeText}; return logLines; }; return dynamicFunc`)()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
             runResultText = codeText;
-            console.log(logLines);
             logText = logLines.join('\n');
         });
     }

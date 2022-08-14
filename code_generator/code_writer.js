@@ -72,7 +72,6 @@ function outputLiteralValue(value, dataType) {
 }
 
 function argStringBuilder(acc, arg, index, fileId, { codeData, fileMetadata }) {
-    //console.log(`inside reduce argtype: ${arg.type}`);
     return acc += index > 0
         ? `, ${this[arg.type](arg, fileId, { codeData, fileMetadata })}`
         : this[arg.type](arg, fileId, { codeData, fileMetadata });

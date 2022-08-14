@@ -4,8 +4,6 @@
 
     export let functionInfo;
 
-    console.log(functionInfo);
-
     $: metaData = $fileMetadata[functionInfo.id];
 
     function dragStart(event, varData) {
