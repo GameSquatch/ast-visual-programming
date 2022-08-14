@@ -58,12 +58,14 @@
         z-index: 2;
         position: absolute;
         top: 25px;
-        right: 0;
-        height: 150px;
+        right: 15px;
         width: 30%;
         min-width: 350px;
         display: flex;
         flex-wrap: wrap;
+        padding: 10px 0;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
     }
     .quick-access-floater > p {
         width: 100%;
