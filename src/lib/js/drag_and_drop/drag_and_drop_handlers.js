@@ -157,7 +157,7 @@ const dropContextMap = {
         // context name
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithFlowStep(nodeTemplates.variableRefAssignment(dragObject.dragData))
+            newNode: wrapWithFlowStep(dragObject.dragData.dataType === 'Boolean' ? nodeTemplates.ifStatement({ testData: nodeTemplates.variableRefIdentifer(dragObject.dragData) }) : nodeTemplates.variableRefAssignment(dragObject.dragData))
         }),
         flowStep: (dragObject, contextType) => new DropObject({
             dragObject,

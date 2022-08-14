@@ -109,6 +109,19 @@ const nodeTemplates = {
             expression: null
         };
     },
+
+    ifStatement: ({ testData }) => {
+        return {
+            type: "IfStatement",
+            test: { ...testData },
+            consequent: {
+                body: []
+            },
+            alternate: {
+                body: []
+            }
+        };
+    },
     /**
      * @function
      * @param {Object} spec

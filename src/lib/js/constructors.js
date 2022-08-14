@@ -6,6 +6,7 @@ import BooleanLiteral from '../../components/flow_objects/BooleanLiteral.svelte'
 import AssignmentExpression from '../../components/flow_objects/AssignmentExpression.svelte';
 import RefIdentifier from '../../components/flow_objects/RefIdentifier.svelte';
 import FunctionCallExpression from '../../components/flow_objects/FunctionCallExpression.svelte';
+import IfStatement from '../../components/flow_objects/IfStatement.svelte';
 
 // Constructors to use in <svelte:component> tags, keyed by the 'type' from the AST
 const constructors = {
@@ -16,7 +17,8 @@ const constructors = {
     "BooleanLiteral": BooleanLiteral,
     "AssignmentExpression": AssignmentExpression,
     "RefIdentifier": RefIdentifier,
-    "FunctionCallExpression": FunctionCallExpression
+    "FunctionCallExpression": FunctionCallExpression,
+    "IfStatement": IfStatement
 };
 
 export default constructors;

@@ -8,7 +8,14 @@
  */
 const codeWritersMap = {
     FlowStep: function (node, fileId, { codeData, fileMetadata }) {
-        return node.expression === null ? "" : `    ${this[node.expression.type](node.expression, fileId, { codeData, fileMetadata })};\n`;
+        return node.expression === null ? "" : `    ${this[node.expression.type](node.expression, fileId, { codeData, fileMetadata })}${node.expression.type !== 'IfStatement' ? ';' : ''}\n`;
+    },
+    IfStatement: function (node, fileId, { codeData, fileMetadata }) {
+        const test = this[node.test.type](node.test, fileId, { codeData, fileMetadata });
+        const consequent = node.consequent.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join();
+        const alternate = node.alternate.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join();
+
+        return `if (${test}) {\n    ${consequent}    } else {\n    ${alternate}    }`;
     },
     UtilityCallExpression: function (node, fileId, { codeData, fileMetadata }) {
         const utility = `${node.utilityName}.${node.utilityMethod}`;

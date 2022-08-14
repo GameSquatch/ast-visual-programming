@@ -82,6 +82,11 @@ function findReferencedFunctions(astNode, foundCallback) {
             findReferencedFunctions(astNode.left, foundCallback);
             findReferencedFunctions(astNode.right, foundCallback);
             break;
+        case "IfStatement":
+            findReferencedFunctions(astNode.test, foundCallback);
+            astNode.consequent.body.forEach((step) => findReferencedFunctions(step, foundCallback));
+            astNode.alternate.body.forEach((step) => findReferencedFunctions(step, foundCallback));
+            break;
         case "FunctionCallExpression":
             foundCallback(astNode.fileId);
         case "IdentifierRefCallExpression":
