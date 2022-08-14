@@ -34,6 +34,19 @@ const IntegerUtil = {
 };
 
 
+const BooleanUtil = {
+    and(a, b) {
+        return a && b;
+    },
+    or(a, b) {
+        return a || b;
+    },
+    not(b) {
+        return !b;
+    }
+};
+
+
 const LoggerUtil = {
     logLines: [],
     logString: function (data) {
@@ -43,7 +56,13 @@ const LoggerUtil = {
         document.querySelector('#log-text').textContent = this.logLines.join('\n');
         console.log(data);
     },
-    logNumber:  console.log
+    logNumber: function (data) {
+        // @ts-ignore
+        this.logLines.push(data);
+        // @ts-ignore
+        document.querySelector('#log-text').textContent = this.logLines.join('\n');
+        console.log(data);
+    }
 };
 
 
@@ -63,4 +82,19 @@ Number.prototype.subtract = function(num) {
     return this.valueOf() - num;
 }
 
-export { StringUtil, IntegerUtil, LoggerUtil };
+// @ts-ignore
+Boolean.prototype.not = function() {
+    return !this.valueOf();
+}
+
+// @ts-ignore
+Boolean.prototype.and = function(a) {
+    return this.valueOf() && a;
+}
+
+// @ts-ignore
+Boolean.prototype.or = function(a) {
+    return this.valueOf() || a;
+}
+
+export { StringUtil, IntegerUtil, BooleanUtil, LoggerUtil };

@@ -83,6 +83,31 @@ const utilDefs = {
             "infiniteArgs": true,
             "returnType": "Integer"
         }
+    },
+    "BooleanUtil": {
+        "and": {
+            "args": [
+                "Boolean",
+                "Boolean"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Boolean"
+        },
+        "or": {
+            "args": [
+                "Boolean",
+                "Boolean"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Boolean"
+        },
+        "not": {
+            "args": [
+                "Boolean"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        }
     }
 };
 

@@ -50,6 +50,9 @@ const codeWritersMap = {
     },
     IntegerLiteral: function (node, fileId, { codeData, fileMetadata }) {
         return node.value.toString();
+    },
+    BooleanLiteral: function (node, fileId, { codeData, fileMetadata }) {
+        return node.value.toString();
     }
 };
 

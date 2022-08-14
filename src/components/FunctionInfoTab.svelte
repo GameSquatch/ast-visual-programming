@@ -93,14 +93,14 @@
     function handleParamDefaultValueChange(event, id, dataType) {
         /** @type {HTMLInputElement} */
         const target = event.target;
-        const newValue = dataType === "String" ? event.target.value : target.valueAsNumber;
+        const newValue = dataType === "String" ? event.target.value : (dataType === 'Boolean' ? target.checked : target.valueAsNumber);
         fileMetadata.changeParameterDefaultValue({ fnId: info.id, paramId: id, newValue });
     }
 
     function handleRefDefaultValueChange(event, id, infoKey, dataType) {
         /** @type {HTMLInputElement} */
         const target = event.target;
-        const newValue = dataType === "String" ? event.target.value : target.valueAsNumber;
+        const newValue = dataType === "String" ? event.target.value : (dataType === 'Boolean' ? target.checked : target.valueAsNumber);
         info[infoKey][id] = {
             ...info[infoKey][id],
             defaultValue: newValue
@@ -156,12 +156,13 @@
                             <select
                                 on:change={(event) => changeRefType(event, varId, 'variables')}
                                 value={varObj.dataType}
-                                ><option value="String">String</option><option value="Integer">Integer</option></select>
+                                ><option value="String">String</option><option value="Integer">Integer</option><option value="Boolean">Boolean</option></select>
                         </div>
                         <div class="col-3">
                             <input
+                                checked={varObj.dataType === 'Boolean' && varObj.defaultValue === true}
                                 on:change={(event) => handleRefDefaultValueChange(event, varId, 'variables', varObj.dataType)}
-                                type={varObj.dataType === 'Integer' ? 'number' : 'text'}
+                                type={varObj.dataType === 'Integer' ? 'number' : ((varObj.dataType === 'Boolean') ? 'checkbox' : 'text')}
                                 value={varObj.defaultValue} />
                         </div>
                     </div>
@@ -200,12 +201,13 @@
                         </div>
                         <div class="col-2">
                             <select on:change={(event) => changeParamRefType(event, paramId)} value={paramObj.dataType}
-                                ><option value="String">String</option><option value="Integer">Integer</option></select>
+                                ><option value="String">String</option><option value="Integer">Integer</option><option value="Boolean">Boolean</option></select>
                         </div>
                         <div class="col-3">
                             <input
+                                checked={paramObj.dataType === 'Boolean' && paramObj.defaultValue === true}
                                 on:change={(event) => handleParamDefaultValueChange(event, paramId, paramObj.dataType)}
-                                type={paramObj.dataType === 'Integer' ? 'number' : 'text'}
+                                type={paramObj.dataType === 'Integer' ? 'number' : ((paramObj.dataType === 'Boolean') ? 'checkbox' : 'text')}
                                 value={paramObj.defaultValue} />
                         </div>
                     </div>

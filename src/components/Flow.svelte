@@ -6,7 +6,7 @@
     import { currentFlowData } from './tabbed_editor/editor_store.js';
     import { fileMetadata } from './side_nav/file_metadata.js';
     import mockData from '../lib/js/data_json.js';
-    import { StringUtil, IntegerUtil, LoggerUtil } from '../lib/js/utility_library.js';
+    import { StringUtil, IntegerUtil, LoggerUtil, BooleanUtil } from '../lib/js/utility_library.js';
 
     export let flowData;
     currentFlowData.set(flowData);
@@ -117,10 +117,11 @@
 
         const textResult = response.text();
 
-        let logLines = [];
+        //let logLines = [];
         textResult.then((codeText) => {
-            new Function(`const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, logLines) => {'use strict'; ${codeText}}; return dynamicFunc`)()(StringUtil, IntegerUtil, LoggerUtil, logLines);
+            const logLines = new Function(`const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; const logLines = []; ${codeText}; return logLines; }; return dynamicFunc`)()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
             runResultText = codeText;
+            console.log(logLines);
             logText = logLines.join('\n');
         });
     }
@@ -213,6 +214,7 @@
         height: 100%;
         overflow: auto;
         padding: 30px 10px 30px;
+        padding-left: 50px;
         position: relative;
         z-index: 1;
     }

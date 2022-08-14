@@ -58,6 +58,32 @@ const typeDefs =  {
             "returnType": "String"
         }
     },
+    "Boolean": {
+        "and": {
+            "args": [
+                "Boolean"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "or": {
+            "args": [
+                "Boolean"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "not": {
+            "args": [],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "toString": {
+            "args": [],
+            "infiniteArgs": false,
+            "returnType": "String"
+        }
+    },
     "List": {
         "join": {
             "args": [

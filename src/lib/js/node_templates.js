@@ -157,6 +157,12 @@ const nodeTemplates = {
         value,
         dataType: "Integer"
     }),
+    /** @type {({ value: boolean }) => LiteralNode} */
+    BooleanLiteral: ({ value } = { value: false }) => ({
+        type: "BooleanLiteral",
+        value,
+        dataType: "Boolean"
+    }),
     /**
      * @function
      * @param {Object} spec
