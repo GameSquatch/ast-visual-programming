@@ -145,6 +145,8 @@
                         <div class="flex col-1">
                             <div class="drag-var" draggable="true" />
                             <input
+                                required
+                                pattern="^[a-zA-Z_$][a-zA-Z0-9_$]*$"
                                 value={varObj.name}
                                 type="text"
                                 on:change={(e) => changeRefName(varId, e.target.value, 'variables')}
@@ -189,6 +191,8 @@
                         <div class="flex col-1">
                             <div class="drag-var" draggable="true" />
                             <input
+                                required
+                                pattern="^[a-zA-Z_$][a-zA-Z0-9_$]*$"
                                 value={paramObj.name}
                                 type="text"
                                 on:change={(e) => changeParamRefName(paramId, e.target.value)}
@@ -222,7 +226,7 @@
 <style>
     .tab-floater {
         --function-info-bg: #444;
-        z-index: 2;
+        z-index: 3;
         left: 0;
         top: 0;
     }
