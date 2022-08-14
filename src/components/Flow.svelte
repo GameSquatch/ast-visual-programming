@@ -126,6 +126,10 @@
     }
 </script>
 
+<button on:click={() => runOverlayIsVisible = true} class="run-button">
+    <i class="mi-play" />
+</button>
+
 <div
     class="flow-wrapper"
     on:dragover|preventDefault={dragOverHandler}
@@ -134,10 +138,6 @@
         stateChangeCallback: appendDrop,
     })}
 >
-
-    <button on:click={() => runOverlayIsVisible = true} class="run-button">
-        <i class="mi-play" />
-    </button>
 
     <div
         class="bumper-zone"
@@ -227,9 +227,10 @@
     .run-button {
         position: absolute;
         padding: 5px;
-        top: 20px;
-        left: 0;
+        top: 25px;
+        left: 20px;
         font-size: 14pt;
+        z-index: 2;
     }
 
     .run-overlay-floater {
@@ -251,5 +252,6 @@
         height: 80%;
         background: white;
         border-radius: 12px;
+        padding: 15px;
     }
 </style>
