@@ -52,15 +52,11 @@ const LoggerUtil = {
     logString: function (data) {
         // @ts-ignore
         this.logLines.push(data);
-        // @ts-ignore
-        document.querySelector('#log-text').textContent = this.logLines.join('\n');
         console.log(data);
     },
     logNumber: function (data) {
         // @ts-ignore
         this.logLines.push(data);
-        // @ts-ignore
-        document.querySelector('#log-text').textContent = this.logLines.join('\n');
         console.log(data);
     }
 };

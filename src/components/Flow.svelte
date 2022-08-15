@@ -14,7 +14,6 @@
     let runOverlayIsVisible = false;
     let runResultText = '';
     let logText = '';
-    let logTextElem;
 
     let hoverPrepend = false;
     function setHoverPrepend(newValue) {
@@ -103,7 +102,6 @@
     async function sendToGenerator() {
         runResultText = '';
         logText = '';
-        logTextElem.textContent = '';
 
         const strBody = JSON.stringify({
             entryFunctionId: flowData.info.id,
@@ -122,10 +120,9 @@
 
         const textResult = response.text();
 
-        //let logLines = [];
         textResult.then((codeText) => {
             const logLines = new Function(
-                `const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; const logLines = []; ${codeText}; return logLines; }; return dynamicFunc`
+                `const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; ${codeText}; const l = [ ...LoggerUtil.logLines ]; LoggerUtil.logLines = []; return l; }; return dynamicFunc;`
             )()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
             runResultText = codeText;
             logText = logLines.join('\n');
@@ -219,7 +216,7 @@
         
         <div class="flex-1">
             <pre>{runResultText}</pre>
-            <pre bind:this={logTextElem} id="log-text">{logText}</pre>
+            <pre>{logText}</pre>
         </div>
 
         <div>
