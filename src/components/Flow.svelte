@@ -69,11 +69,6 @@
         flowData.body[index] = newNode;
     }
 
-    function deleteFlowStep(index) {
-        flowData.body.splice(index, 1);
-        flowData.body = flowData.body;
-    }
-
     function insertAfterStep(index, dataToInsert) {
         flowData.body.splice(index + 1, 0, dataToInsert);
         flowData.body = flowData.body;
@@ -173,7 +168,6 @@
                     start: 0.2
                 }}>
                 <FlowStep
-                    on:delete={(event) => deleteFlowStep(event.detail)}
                     on:replace={(event) => replaceFlowStepContents(i, { ...event.detail })}
                     on:insertAfter={(event) => insertAfterStep(i, event.detail)}
                     nodeData={flowStep}

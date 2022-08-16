@@ -4,6 +4,7 @@
     import constructors from "../../lib/js/constructors.js";
     import DragHandle from '../DragHandle.svelte';
     import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
+    import { mockData } from '../../lib/js/data_json.js';
 
     export let accessor;
     export let nodeData;
@@ -105,7 +106,7 @@
 
         <div class="flex w100 flow-step-action-bar">
             <div class="flex-1 flex">
-                <button class="light-bg-btn delete-btn" on:click={() => dispatch('delete', accessor)}><i class="mi-delete" /></button>
+                <button class="light-bg-btn delete-btn" on:click={() => mockData.deleteFlowStepAt(nodePath)}><i class="mi-delete" /></button>
             </div>
             <DragHandle  />
         </div>
