@@ -3,13 +3,12 @@
     import FlowStep from '../components/flow_objects/FlowStep.svelte';
     import { squish } from '../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
-    import { currentFlowData } from './tabbed_editor/editor_store.js';
     import { fileMetadata } from './side_nav/file_metadata.js';
-    import mockData from '../lib/js/data_json.js';
+    import { mockData } from '../lib/js/data_json.js';
+    import { get } from 'svelte/store';
     import { StringUtil, IntegerUtil, LoggerUtil, BooleanUtil } from '../lib/js/utility_library.js';
 
     export let flowData;
-    currentFlowData.set(flowData);
 
     let runOverlayIsVisible = false;
     let runResultText = '';
@@ -105,7 +104,7 @@
 
         const strBody = JSON.stringify({
             entryFunctionId: flowData.info.id,
-            codeData: mockData,
+            codeData: get(mockData),
             fileMetadata: $fileMetadata,
             inputs
         });
@@ -163,25 +162,28 @@
         on:dragenter={() => setHoverPrepend(true)}
         on:dragleave={() => setHoverPrepend(false)} />
 
-    {#each flowData.body as flowStep, i (flowStep.id)}
-        <div
-            animate:flip={{ duration: 400 }}
-            transition:squish|local={{
-                duration: 300,
-                opacity: 0.4,
-                start: 0.2
-            }}>
-            <FlowStep
-                on:delete={(event) => deleteFlowStep(event.detail)}
-                on:replace={(event) => replaceFlowStepContents(i, { ...event.detail })}
-                on:insertAfter={(event) => insertAfterStep(i, event.detail)}
-                bind:nodeData={flowStep}
-                accessor={i}
-                on:moveFlowStep={(event) => handleMoveFlowStep(event.detail)}
-                on:moveStep={(event) => moveStep(event, i)}
-                nodePath={`${flowData.info.id}.body.${i}`} />
-        </div>
-    {/each}
+    <!-- #key removes transition animation when switching tabs -->
+    {#key flowData.info.id}
+        {#each flowData.body as flowStep, i (flowStep.id)}
+            <div
+                animate:flip={{ duration: 400 }}
+                transition:squish|local={{
+                    duration: 300,
+                    opacity: 0.4,
+                    start: 0.2
+                }}>
+                <FlowStep
+                    on:delete={(event) => deleteFlowStep(event.detail)}
+                    on:replace={(event) => replaceFlowStepContents(i, { ...event.detail })}
+                    on:insertAfter={(event) => insertAfterStep(i, event.detail)}
+                    nodeData={flowStep}
+                    accessor={i}
+                    on:moveFlowStep={(event) => handleMoveFlowStep(event.detail)}
+                    on:moveStep={(event) => moveStep(event, i)}
+                    nodePath={`${flowData.info.id}.body.${i}`} />
+            </div>
+        {/each}
+    {/key}
 
     <div
         class="bumper-zone"

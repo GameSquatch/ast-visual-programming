@@ -10,7 +10,7 @@
     import NewFileContext from './action_contexts/NewFileContext.svelte';
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
-    import mockData from '../../lib/js/data_json.js';
+    import { mockData } from '../../lib/js/data_json.js';
     import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
     import { utilDefs } from '../../lib/js/util_definitions.js';
     import { utilDataDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
@@ -22,7 +22,7 @@
 
         fileTreeStore.createRootFile({ id });
 
-        mockData[id] = createNodeTreeEntry(id);
+        mockData.update((tree) => { tree[id] = createNodeTreeEntry(id); return tree; });
     }
 
     /** @type {ContextDoneCallback} */

@@ -1,6 +1,6 @@
 import { fileTreeStore, createNodeTreeEntry, createFileTreeReference } from "../components/side_nav/file_tree.js";
 import { fileMetadata } from "../components/side_nav/file_metadata.js";
-import mockData from "../lib/js/data_json.js";
+import { mockData } from "../lib/js/data_json.js";
 import { v4 as uuidv4 } from 'uuid';
 
 const fileController = {
@@ -10,7 +10,7 @@ const fileController = {
         
         fileTreeStore.addItemAt({ treePath, itemData: fileData, navType: 'files' });
         fileMetadata.addFile({ id, title, fileType });
-        mockData[fileData.id] = createNodeTreeEntry(id);
+        mockData.update((tree) => { tree[fileData.id] = createNodeTreeEntry(id); return tree; });
     }
 };
 

@@ -1,8 +1,9 @@
 <script>
     import typeDefs from '../../lib/js/type_definitions.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
-    import { currentFlowData } from '../tabbed_editor/editor_store.js';
+    import { mockData } from '../../lib/js/data_json.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
+    import { editorStore } from '../tabbed_editor/editor_store.js';
 
     export let nodeData;
     export let contextType = null;
@@ -36,10 +37,10 @@
 
 
 {#if nodeData.refId && nodeData.fnRefType === 'variables'}
-    <span class="variable-name self">{$currentFlowData.info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
+    <span class="variable-name self">{$mockData[$editorStore.activeTab].info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
 {/if}
 {#if nodeData.refId && nodeData.fnRefType === 'parameters'}
-    <span class="parameter-name self">{$fileMetadata[$currentFlowData.info.id].objectFlowData.parameters[nodeData.refId]?.name ?? ""}</span>
+    <span class="parameter-name self">{$fileMetadata[$mockData[$editorStore.activeTab].info.id].objectFlowData.parameters[nodeData.refId]?.name ?? ""}</span>
 {/if}
 {#if availableMethods.length > 0}
     <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>

@@ -9,11 +9,12 @@
     export let treePath;
     export let treeLevel = 0;
 
-    function openNewFunction(functionId, functionTitle) {
-        editorStore.openTab({ id: functionId, title: functionTitle, fileType: 'function' });
-    }
-
+    
     $: metadata = $fileMetadata[fileData.id];
+    
+    function openNewFile(functionId, functionTitle) {
+        editorStore.openTab({ id: functionId, title: functionTitle, fileType: metadata.fileType });
+    }
 
     /**
      * @param {DragEvent} event
@@ -31,7 +32,7 @@
 <div class="flex align-center file-title"
     draggable="true"
     on:dragstart={handleDragStart}
-    on:click={(_) => openNewFunction(fileData.id, metadata.title)}
+    on:click={(_) => openNewFile(fileData.id, metadata.title)}
     >
     <NestPadding {treeLevel} />
     <span class="{metadata.fileType}">{navFileTypePrefix[metadata.fileType]}</span><span>{metadata.title}</span>

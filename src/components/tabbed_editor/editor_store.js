@@ -1,13 +1,10 @@
 import { writable } from 'svelte/store';
-import { apiCall } from '../../services/mock_api.js';
-import mockData from '../../lib/js/data_json.js';
 
 /**
  * @typedef {Object} EditorTab
  * @property {string} title
  * @property {string} id
  * @property {string} fileType
- * @property {Promise} dataPromise
  */
 
 /**
@@ -38,7 +35,7 @@ function createEditorStore(initialValue) {
 			update((editor) => {
 				editor.activeTab = id;
 				if (!editor.openedTabIds[id] && title && fileType) {
-					editor.tabs.push({ title, id, fileType, dataPromise: Promise.resolve(mockData[id]) });
+					editor.tabs.push({ title, id, fileType });
 					editor.openedTabIds[id] = true;
 				}
 
@@ -72,6 +69,5 @@ const editorStore = createEditorStore({
 	tabs: []
 });
 
-const currentFlowData = writable({});
 
-export { editorStore, currentFlowData };
+export { editorStore };
