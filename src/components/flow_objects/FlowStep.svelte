@@ -7,7 +7,9 @@
     import { mockData } from '../../lib/js/data_json.js';
 
     export let accessor;
+    /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */
     export let nodeData;
+    /** @type {string} */
     export let nodePath;
 
     let isOverInsertSpot = false;
@@ -33,20 +35,9 @@
     }
 
     function dropModify(node) {
-        if (node === null) return;
-        
-        if (node.dragType === "moveFlowStep") {// node is a dragObject at this point
-            dispatch('replace', { oldIndex: node.dragData.currentIndex, newNode: node.nodeData });
-            return;
-        }
+        if (node === null || node.dragType === 'moveFlowStep') return;
 
-        if (node.type === 'FlowStep') {// node is a node at this point
-            nodeData.expression = node.expression;
-
-        } else {
-            nodeData.expression = node;
-        }
-
+        nodeData.expression = node;
     }
     
     function insertDrop(node) {
@@ -55,22 +46,22 @@
         }
 
         if (node.dragType === "moveFlowStep") {// node is a dragObject at this point
-            dispatch('moveFlowStep', { ...node, newIndex: accessor + 1 });
+            mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: nodePath });
             return;
         }
 
-        dispatch('insertAfter', node);// node is node at this point
+        mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: node, append: true });
     }
 
-    /** @type {DragHandler} */
+    
      function handleDragStart(event) {
-        const dragData = moveFlowStepDrag(nodeData, accessor);
+        const dragData = moveFlowStepDrag({ flowStepFromPath: nodePath });
         
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
         beingDragged = true;
     }
 
-    /** @type {DragHandler} */
+    
     function checkDropCancel(event) {
         beingDragged = false;
     }

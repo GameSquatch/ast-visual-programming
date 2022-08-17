@@ -47,16 +47,14 @@ function utilDataDrag({ utilDefName }) {
 }
 
 /**
- * @callback MoveFlowStepDragStartDataCreator Creates the drag start data for moving an FlowStep within a flow
- * @param {FlowStepNode} flowStepNode The portion of the AST that represents the expression
- * and the subtree under it.
- * @param {number} [currentIndex] If the expression is within a list (most likely), it's current place within that list
+ * @function MoveFlowStepDragStartDataCreator Creates the drag start data for moving an FlowStep within a flow
+ * @param {Object} spec
+ * @param {string} spec.flowStepFromPath Path to the node being moved in its location before moving
+ * @param {FlowStepNode} spec.flowStepData
  * @returns {DragStartConfig}
  */
-
-/** @type {MoveFlowStepDragStartDataCreator} */
-function moveFlowStepDrag(flowStepNode, currentIndex) {
-    return createDragObject({ dragType: "moveFlowStep", nodeData: { ...flowStepNode }, dragData: { currentIndex } });
+function moveFlowStepDrag({ flowStepFromPath, flowStepData }) {
+    return createDragObject({ dragType: "moveFlowStep", nodeData: flowStepData, dragData: { flowStepFromPath } });
 }
 
 /**

@@ -34,44 +34,23 @@
     function prependDrop(node) {
         setHoverPrepend(false);
 
-        if ((node.dragData?.currentIndex ?? false) !== false) {
-            flowData.body.splice(node.dragData.currentIndex, 1);
-            node = node.nodeData;
+        if (node.dragType === 'moveFlowStep') {
+            mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.0`, insertAt: true });
+            return;
         }
 
-        flowData.body = [node, ...flowData.body];
+        mockData.insertNodeIntoFlowAt({ path: `${flowData.info.id}.body.0`, nodeData: node, spliceIn: true });
     }
 
     function appendDrop(node) {
         setHoverAppend(false);
 
-        if ((node.dragData?.currentIndex ?? false) !== false) {
-            flowData.body.splice(node.dragData.currentIndex, 1);
-            node = node.nodeData;
+        if (node.dragType === 'moveFlowStep') {
+            mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.${flowData.body.length}`, insertAt: true });
+            return;
         }
 
-        flowData.body = [...flowData.body, node];
-    }
-
-    function handleMoveFlowStep({ dragData, nodeData, newIndex }) {
-        if (newIndex === dragData.currentIndex + 1) return;
-
-        flowData.body.splice(dragData.currentIndex, 1);
-        newIndex = dragData.currentIndex < newIndex ? newIndex - 1 : newIndex;
-        flowData.body.splice(newIndex, 0, nodeData);
-
-        flowData.body = flowData.body;
-    }
-
-    function replaceFlowStepContents(index, { oldIndex, newNode }) {
-        flowData.body.splice(oldIndex, 1);
-        if (index > oldIndex) index--;
-        flowData.body[index] = newNode;
-    }
-
-    function insertAfterStep(index, dataToInsert) {
-        flowData.body.splice(index + 1, 0, dataToInsert);
-        flowData.body = flowData.body;
+        mockData.insertNodeIntoFlowAt({ path: `${flowData.info.id}.body.${flowData.body.length}`, nodeData: node });
     }
 
     function moveStep(event, i) {
@@ -168,11 +147,8 @@
                     start: 0.2
                 }}>
                 <FlowStep
-                    on:replace={(event) => replaceFlowStepContents(i, { ...event.detail })}
-                    on:insertAfter={(event) => insertAfterStep(i, event.detail)}
                     nodeData={flowStep}
                     accessor={i}
-                    on:moveFlowStep={(event) => handleMoveFlowStep(event.detail)}
                     on:moveStep={(event) => moveStep(event, i)}
                     nodePath={`${flowData.info.id}.body.${i}`} />
             </div>
