@@ -105,7 +105,7 @@
         {#if nodeData && nodeData.expression !== null}
             <svelte:component
                 this={constructors[nodeData.expression.type]}
-                bind:nodeData={nodeData.expression}
+                nodeData={nodeData.expression}
                 nodePath={nodePath + ".expression"}
             />
         {:else}

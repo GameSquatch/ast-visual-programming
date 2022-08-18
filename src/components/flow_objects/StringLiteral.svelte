@@ -1,13 +1,12 @@
 <script>
+    import { mockData } from "../../lib/js/data_json";
+    
     export let nodeData;
     export let isArgument = false;
     export let nodePath;
 
     function updateValue(event) {
-        nodeData = {
-            ...nodeData,
-            value: event.target.value
-        };
+        mockData.setNodeAt({ path: `${nodePath}.value`, nodeData: event.target.value });
     }
 </script>
 

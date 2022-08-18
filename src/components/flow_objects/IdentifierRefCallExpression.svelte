@@ -5,6 +5,7 @@
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
     import typeDefs from '../../lib/js/type_definitions.js'
+    import { mockData } from '../../lib/js/data_json';
 
     export let nodeData;
     export let contextType;
@@ -15,34 +16,35 @@
     function onPropertyChange(event) {
         const method = event.target.value;
         if (method === '') {
-            nodeData = {
-                ...(nodeData.refData)
-            };
+            mockData.setNodeAt({ path: nodePath, nodeData: nodeData.refData });
             return;
         }
 
         const fnDef = typeDefs[nodeData.refData.dataType][method];
         const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]());
 
-        nodeData = {
-            ...nodeData,
-            method,
-            arguments: args,
-            dataType: fnDef.returnType
-        };
+        mockData.setNodeAt({
+            path: nodePath,
+            nodeData: {
+                ...nodeData,
+                method,
+                arguments: args,
+                dataType: fnDef.returnType
+            }
+        });
     }
 
     const dropArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        nodeData.arguments.splice(argIndex, 1, node);
-        nodeData.aruments = [
-            ...nodeData.arguments
-        ];
+        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}`, nodeData: node });
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()
+        mockData.setNodeAt({
+            path: `${nodePath}.arguments.${i}`,
+            nodeData: nodeTemplates[argument.dataType + "Literal"]()
+        });
     }
 </script>
 
@@ -67,11 +69,11 @@
 
                 <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()} /> -->
                 {#if argument.type === "IdentifierRefCallExpression"}
-                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
+                    <svelte:self nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}
                     <svelte:component
                         this={constructors[argument.type]}
-                        bind:nodeData={argument}
+                        nodeData={argument}
                         argLevel={argLevel + 1}
                         isArgument={true}
                         contextType={argument.dataType}

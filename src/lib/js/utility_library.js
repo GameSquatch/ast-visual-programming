@@ -18,6 +18,14 @@ const StringUtil = {
     /** @type {(str: string, start: number, end: number) => string} */
     substring(str, start, end) {
         return str.substring(start, end);
+    },
+    /** @type {(str1: string, str2: string) => boolean} */
+    equals(str1, str2) {
+        return str1 === str2;
+    },
+    /** @type {(str1: string, str2: string) => boolean} */
+    notEquals(str1, str2) {
+        return str1 !== str2;
     }
 };
 
@@ -30,6 +38,14 @@ const IntegerUtil = {
     /** @type {(num1: number, num2: number) => number} */
     add(num1, num2) {
         return num1 + num2;
+    },
+    /** @type {(num1: number, num2: number) => boolean} */
+    equals(num1, num2) {
+        return num1 === num2;
+    },
+    /** @type {(num1: number, num2: number) => boolean} */
+    notEquals(num1, num2) {
+        return num1 !== num2;
     }
 };
 
@@ -65,6 +81,31 @@ const LoggerUtil = {
 // @ts-ignore
 String.prototype.prepend = function(str) {
     return str + this;
+};
+
+// @ts-ignore
+String.prototype.len = function() {
+    return this.length;
+};
+
+// @ts-ignore
+String.prototype.isEmpty = function() {
+    return this.length === 0;
+};
+
+// @ts-ignore
+String.prototype.isNotEmpty = function() {
+    return this.length > 0;
+};
+
+// @ts-ignore
+String.prototype.equals = function(str) {
+    return this === str;
+};
+
+// @ts-ignore
+String.prototype.notEquals = function(str) {
+    return this !== str;
 };
 
 

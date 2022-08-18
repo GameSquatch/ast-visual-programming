@@ -1,5 +1,6 @@
 <script>
     import constructors from '../../lib/js/constructors.js';
+import { mockData } from '../../lib/js/data_json.js';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
 
@@ -9,11 +10,11 @@
     function stateChangeOnDrop(node) {
         if (node === null) return;
 
-        nodeData.right = node;
+        mockData.setNodeAt({ path: `${nodePath}.right`, nodeData: node });
     }
 
     function clearAssignment(_) {
-        nodeData.right = nodeTemplates[nodeData.left.dataType + 'Literal']();
+        mockData.setNodeAt({ path: `${nodePath}.right`, nodeData: nodeTemplates[nodeData.left.dataType + 'Literal']() });
     }
 </script>
 
@@ -34,7 +35,7 @@
             Drag an expression here
         {:else}
             <!-- <ClearNodeProp onClick={(_) => nodeData.right = null} /> -->
-            <svelte:component this={constructors[nodeData.right.type]} bind:nodeData={nodeData.right} contextType={nodeData.left.dataType} nodePath={nodePath + ".right"} />
+            <svelte:component this={constructors[nodeData.right.type]} nodeData={nodeData.right} contextType={nodeData.left.dataType} nodePath={nodePath + ".right"} />
         {/if}
     </div>
 </div>

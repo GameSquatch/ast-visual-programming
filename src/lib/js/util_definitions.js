@@ -65,6 +65,22 @@ const utilDefs = {
             ],
             "infiniteArgs": false,
             "returnType": "String"
+        },
+        "equals": {
+            "args": [
+                "String",
+                "String"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "notEquals": {
+            "args": [
+                "String",
+                "String"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
         }
     },
     "IntegerUtil": {
@@ -82,6 +98,22 @@ const utilDefs = {
             ],
             "infiniteArgs": true,
             "returnType": "Integer"
+        },
+        "equals": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "notEquals": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
         }
     },
     "BooleanUtil": {

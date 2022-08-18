@@ -31,10 +31,34 @@ const typeDefs =  {
             "infiniteArgs": false,
             "returnType": "String"
         },
-        "length": {
+        "len": {
             "args": [],
             "infiniteArgs": false,
             "returnType": "Integer"
+        },
+        "isEmpty": {
+            "args": [],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "isNotEmpty": {
+            "args": [],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "equals": {
+            "args": [
+                "String"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "notEquals": {
+            "args": [
+                "String"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
         }
     },
     "Integer": {

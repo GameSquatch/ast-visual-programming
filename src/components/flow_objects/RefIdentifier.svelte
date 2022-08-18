@@ -25,11 +25,12 @@
             return;
         }
 
-        nodeData = nodeTemplates.identifierRefCallExpression({
+        const newNodeData = nodeTemplates.identifierRefCallExpression({
             method: event.target.value,
             dataType: nodeData.dataType,
             refData: nodeData
         });
+        mockData.setNodeAt({ path: nodePath, nodeData: newNodeData });
 
         usesTypeMethod = true;
     }

@@ -1,4 +1,6 @@
 <script>
+    import { mockData } from "../../lib/js/data_json";
+
     export let nodeData;
     export let isArgument = false;
     export let nodePath;
@@ -7,10 +9,7 @@
      * @param {Event} event
      */
     function updateValue(event) {
-        nodeData = {
-            ...nodeData,
-            value: event.target.valueAsNumber
-        };
+        mockData.setNodeAt({ path: `${nodePath}.value`, nodeData: event.target.valueAsNumber });
     }
 </script>
 

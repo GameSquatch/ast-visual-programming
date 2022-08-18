@@ -3,6 +3,7 @@
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import Argument from '../Argument.svelte';
+    import { mockData } from '../../lib/js/data_json.js';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
 
@@ -28,16 +29,20 @@
             paramNames[i] = parameter.name;
 
             if (!arg) {
-                nodeData.arguments.push(nodeTemplates[parameter.dataType + 'Literal']() );
+                mockData.setNodeAt({
+                    path: `${nodePath}.arguments.${nodeData.arguments.length}`,
+                    nodeData: nodeTemplates[parameter.dataType + 'Literal']()
+                });
                 continue;
             }
 
             if (parameter.dataType !== arg.dataType) {
-                nodeData.arguments[i] = nodeTemplates[parameter.dataType + 'Literal']();
+                mockData.setNodeAt({
+                    path: `${nodePath}.arguments.${i}`,
+                    nodeData: nodeTemplates[parameter.dataType + 'Literal']()
+                });
             }
         }
-        
-        nodeData.arguments = nodeData.arguments;
     });
 
     onDestroy(fmUnsub);
@@ -45,12 +50,14 @@
     const populateArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        nodeData.arguments.splice(argIndex, 1, node);
-        nodeData.arguments = nodeData.arguments;
+        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}`, nodeData: node });
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()
+        mockData.setNodeAt({
+            path: `${nodePath}.arguments.${i}`,
+            nodeData: nodeTemplates[argument.dataType + "Literal"]()
+        });
     }
 </script>
 
@@ -65,11 +72,11 @@
                 returnType={argument.dataType}>
 
                 {#if argument.type === "FunctionCallExpression"}
-                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
+                    <svelte:self nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}
                     <svelte:component
                         this={constructors[argument.type]}
-                        bind:nodeData={argument}
+                        nodeData={argument}
                         argLevel={argLevel + 1}
                         isArgument={true}
                         contextType={argument.dataType}

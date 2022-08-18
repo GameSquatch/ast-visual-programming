@@ -5,6 +5,7 @@
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
     import { utilDefs } from '../../lib/js/util_definitions.js';
+    import { mockData } from '../../lib/js/data_json.js';
 
     /** @type {import('../../lib/js/node_templates.js').UtilityCallExpressionData} */
     export let nodeData;
@@ -20,26 +21,29 @@
         const fnDef = utilDefs[nodeData.utilityName][utilityMethod];
         const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]());
 
-        nodeData = {
-            ...nodeData,
-            utilityMethod,
-            arguments: args,
-            dataType: fnDef.returnType
-        };
+        mockData.setNodeAt({
+            path: nodePath,
+            nodeData: {
+                ...nodeData,
+                utilityMethod,
+                arguments: args,
+                dataType: fnDef.returnType
+            }
+        });
     };
 
 
     const populateArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        nodeData.arguments.splice(argIndex, 1, node);
-        nodeData.arguments = [
-            ...nodeData.arguments
-        ];
+        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}`, nodeData: node });
     };
 
     function onClear(i, argument) {
-        nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()
+        mockData.setNodeAt({
+            path: `${nodePath}.arguments.${i}`,
+            nodeData: nodeTemplates[argument.dataType + "Literal"]()
+        });
     }
 </script>
 
@@ -62,11 +66,11 @@
 
                 <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()} /> -->
                 {#if argument.type === "UtilityCallExpression"}
-                    <svelte:self bind:nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
+                    <svelte:self nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
                 {:else}
                     <svelte:component
                         this={constructors[argument.type]}
-                        bind:nodeData={argument}
+                        nodeData={argument}
                         argLevel={argLevel + 1}
                         isArgument={true}
                         contextType={argument.dataType}

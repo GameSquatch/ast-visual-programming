@@ -285,6 +285,17 @@ const mockData = (function () {
 
                 return flowData;
             });
+        },
+
+        setNodeAt({ path, nodeData }) {
+            const treePath = new TreePath({ stringPath: path });
+
+            this.update((flowData) => {
+                let parentNode = this.getParentReference({ flowData, treePath });
+
+                parentNode[treePath.getTokenAt(-1)] = nodeData;
+                return flowData;
+            });
         }
     };
 
