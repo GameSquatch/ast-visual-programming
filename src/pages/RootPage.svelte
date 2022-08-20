@@ -6,26 +6,22 @@
 
 <div id="root">
     <Header />
-    <div class="w100 content-wrapper">
-        <SideNav />
-        
-        <div class="flex-1">
-            <TabbedEditor />
-        </div>
-    </div>
+    <SideNav />
+    <TabbedEditor />
 </div>
 
-    
 <style>
     #root {
+        position: relative;
         width: 100%;
         height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    .content-wrapper {
-        flex: 1;
-        display: flex;
-        overflow: hidden;
+        display: grid;
+        grid-template-areas:
+            'head head head'
+            'nav main main'
+            'foot foot foot';
+        grid-template-rows: auto 1fr 25px;
+        grid-template-columns: minmax(24%, 425px) 1fr 1fr;
+        z-index: 0;
     }
 </style>

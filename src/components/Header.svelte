@@ -31,6 +31,7 @@
 
 <style>
     .header {
+        grid-area: head;
         display: flex;
         justify-content: space-between;
         padding: 0.75rem;

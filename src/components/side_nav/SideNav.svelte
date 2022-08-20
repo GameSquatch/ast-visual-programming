@@ -87,14 +87,11 @@
     
 <style>
     .side-nav-wrapper {
-        position: relative;
-        width: 24%;
-        max-width: 425px;
+        grid-area: nav;
         height: 100%;
         background: #eee;
         display: flex;
         flex-direction: column;
-        z-index: 0;
     }
     
     .project-structure-pane {
@@ -109,6 +106,7 @@
         padding: 8px;
         position: relative;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+        clip-path: inset(0 0 -4px 0);
     }
     .nav-action-btn {
         margin-right: 8px;
@@ -133,6 +131,7 @@
         padding: 6px;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
         cursor: pointer;
+        clip-path: inset(-4px 0 0 0);
     }
 
     .utilities-container {
