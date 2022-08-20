@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { connectToChat } from '../../server/socket/chat_sock.js';
     import ChatMessage from '../components/chat/ChatMessage.svelte';
 
@@ -53,6 +53,10 @@
             userCount = count - 1;
         });
     });
+
+    onDestroy(() => {
+        socket?.disconnect();
+    })
 
 
     function sendMessage() {
