@@ -3,16 +3,10 @@
     import FlowStep from '../components/flow_objects/FlowStep.svelte';
     import { squish } from '../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
-    import { fileMetadata } from './side_nav/file_metadata.js';
     import { mockData } from '../lib/js/data_json.js';
-    import { get } from 'svelte/store';
-    import { StringUtil, IntegerUtil, LoggerUtil, BooleanUtil } from '../lib/js/utility_library.js';
 
     export let flowData;
 
-    let runOverlayIsVisible = false;
-    let runResultText = '';
-    let logText = '';
 
     let hoverPrepend = false;
     function setHoverPrepend(newValue) {
@@ -67,56 +61,8 @@
 
         flowData.body = flowData.body;
     }
-
-    $: inputs = Object.values($fileMetadata[flowData.info.id].objectFlowData.parameters).map(
-        (paramData) => [ paramData.defaultValue, paramData.dataType ]
-    );
-
-    async function sendToGenerator() {
-        runResultText = '';
-        logText = '';
-
-        const strBody = JSON.stringify({
-            entryFunctionId: flowData.info.id,
-            codeData: get(mockData),
-            fileMetadata: $fileMetadata,
-            inputs
-        });
-
-        const response = await fetch('/api/generate-code', {
-            body: strBody,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const textResult = response.text();
-
-        textResult.then((codeText) => {
-            const logLines = new Function(
-                `const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; ${codeText}; const l = [ ...LoggerUtil.logLines ]; LoggerUtil.logLines = []; return l; }; return dynamicFunc;`
-            )()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
-            runResultText = codeText;
-            logText = logLines.join('\n');
-        });
-    }
-
-    function updateInputs(event, paramType, i) {
-        inputs[i] = [
-            paramType === 'Integer'
-                ? event.target.valueAsNumber
-                : paramType === 'Boolean'
-                ? event.target.checked
-                : event.target.value,
-            paramType
-        ];
-    }
 </script>
 
-<button on:click={() => (runOverlayIsVisible = true)} class="run-button">
-    <i class="mi-play" />
-</button>
 
 <div
     class="flow-wrapper"
@@ -162,42 +108,7 @@
         on:dragleave={() => setHoverAppend(false)} />
 </div>
 
-<div class="wh100 run-overlay-floater" class:runOverlayIsVisible>
-    <div class="flex-col run-overlay">
-        <h3>Run your function!</h3>
-        {#if Object.keys($fileMetadata[flowData.info.id].objectFlowData.parameters).length > 0}
-            <p>Parameters</p>
-            {#each Object.keys($fileMetadata[flowData.info.id].objectFlowData.parameters) as paramId, i (paramId)}
-                {@const paramData = $fileMetadata[flowData.info.id].objectFlowData.parameters[paramId]}
-                <div class="input-wrapper">
-                    <label
-                        >{paramData.name}
-                        <input
-                            value={paramData.defaultValue}
-                            checked={paramData.defaultValue === true}
-                            on:change={(event) => updateInputs(event, paramData.dataType, i)}
-                            type={paramData.dataType === 'String'
-                                ? 'text'
-                                : paramData.dataType === 'Boolean'
-                                ? 'checkbox'
-                                : 'number'} />
-                    </label>
-                </div>
-            {/each}
-        {/if}
-        
-        <div class="flex-1">
-            <pre>{runResultText}</pre>
-            <pre>{logText}</pre>
-        </div>
 
-        <div>
-            <button on:click={() => sendToGenerator()}>Run</button><button
-                on:click={() => (runOverlayIsVisible = false)}>Cancel</button>
-        </div>
-
-    </div>
-</div>
 
 <style>
     .flow-wrapper {
@@ -214,36 +125,5 @@
     }
     .bumper-zone.hoverDrag {
         background: rgba(255, 255, 255, 0.35);
-    }
-
-    .run-button {
-        position: absolute;
-        padding: 5px;
-        top: 25px;
-        left: 20px;
-        font-size: 14pt;
-        z-index: 2;
-    }
-
-    .run-overlay-floater {
-        position: absolute;
-        top: 0;
-        left: 0;
-        backdrop-filter: blur(2px);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 5;
-    }
-    .run-overlay-floater.runOverlayIsVisible {
-        display: flex;
-    }
-
-    .run-overlay {
-        width: 60%;
-        height: 80%;
-        background: white;
-        border-radius: 12px;
-        padding: 15px;
     }
 </style>

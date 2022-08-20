@@ -12,8 +12,8 @@ const codeWritersMap = {
     },
     IfStatement: function (node, fileId, { codeData, fileMetadata }) {
         const test = this[node.test.type](node.test, fileId, { codeData, fileMetadata });
-        const consequent = node.consequent.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join();
-        const alternate = node.alternate.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join();
+        const consequent = node.consequent.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join('    ');
+        const alternate = node.alternate.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join('    ');
 
         return `if (${test}) {\n    ${consequent}    } else {\n    ${alternate}    }`;
     },

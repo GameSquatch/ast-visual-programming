@@ -1,6 +1,6 @@
 <script>
     import constructors from "../../lib/js/constructors.js";
-    import FlowStep from "./FlowStep.svelte";
+    import SubFlow from './SubFlow.svelte';
 
     export let nodeData;
     export let nodePath;
@@ -12,18 +12,10 @@
 
 <div class="flex">
     <div class="true-flow flex-1">
-        {#each nodeData.consequent.body as flowStep, i (flowStep.id)}
-            <FlowStep nodeData={flowStep} accessor={i} />
-        {:else}
-            <div>True Path</div>
-        {/each}
+        <SubFlow nodePath={`${nodePath}.consequent.body`} subFlowBody={nodeData.consequent.body} />
     </div>
 
     <div class="false-flow flex-1">
-        {#each nodeData.alternate.body as flowStep, i (flowStep.id)}
-            <FlowStep nodeData={flowStep} accessor={i} />
-        {:else}
-            <div>False Path</div>
-        {/each}
+        <SubFlow nodePath={`${nodePath}.alternate.body`} subFlowBody={nodeData.alternate.body} />
     </div>
 </div>
