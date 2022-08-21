@@ -39,7 +39,6 @@
         const textResult = response.text();
 
         textResult.then((codeText) => {
-            console.log(codeText);
             const logLines = new Function(
                 `const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; ${codeText}; const l = [ ...LoggerUtil.logLines ]; LoggerUtil.logLines = []; return l; }; return dynamicFunc;`
             )()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
@@ -58,12 +57,17 @@
             paramType
         ];
     }
+
+    function showRunOverlay() {
+        runOverlayIsVisible = true;
+        sendToGenerator();
+    }
 </script>
 
 <FunctionInfoTab bind:info={tabViewData.info} />
 <QuickAccessDraggables functionInfo={tabViewData.info} />
 
-<button on:click={() => (runOverlayIsVisible = true)} class="run-button">
+<button on:click={() => showRunOverlay()} class="run-button">
     <i class="mi-play" />
 </button>
 
