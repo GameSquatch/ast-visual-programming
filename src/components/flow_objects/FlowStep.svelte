@@ -102,7 +102,7 @@
             <DragHandle  />
         </div>
     
-        {#if nodeData && nodeData.expression !== null}
+        {#if nodeData?.expression ?? false}
             <svelte:component
                 this={constructors[nodeData.expression.type]}
                 nodeData={nodeData.expression}
@@ -124,21 +124,6 @@
 </div>
 
 <style>
-    .flow-step-container {
-        padding: 32px;
-        border: 2px solid #787878;
-        border-radius: 8px;
-        background: #efefef;
-        position: relative;
-        z-index: 1;
-        overflow-x: auto;
-        display: inline-block;
-    }
-    .flow-step-container:focus {
-        outline: #0072ff dashed 1px;
-        outline-offset: 5px;
-    }
-
     .line-down-box {
         margin-left: 20px;
         border-left: 1px dashed black;

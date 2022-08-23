@@ -1,5 +1,6 @@
 <script>
     import FlowStep from './FlowStep.svelte';
+    import IfStatement from './IfStatement.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import { mockData } from '../../lib/js/data_json.js';
     import { squish } from '../../lib/js/custom_animations.js';
@@ -91,6 +92,7 @@
         on:dragleave={() => setHoverPrepend(false)} />
 
     {#each subFlowBody as flowStep, i (flowStep.id)}
+        {@const path = `${nodePath}.${i}`}
         <div
             animate:flip={{ duration: 400 }}
             transition:squish|local={{
@@ -98,11 +100,18 @@
                 opacity: 0.4,
                 start: 0.2
             }}>
-            <FlowStep
-                nodeData={flowStep}
-                accessor={i}
-                on:moveStep={(event) => moveStep(event, i)}
-                nodePath={`${nodePath}.${i}`} />
+            
+            {#if flowStep.type === 'IfStatement'}
+                <IfStatement
+                    nodeData={flowStep}
+                    nodePath={path} />
+            {:else}
+                <FlowStep
+                    nodeData={flowStep}
+                    accessor={i}
+                    on:moveStep={(event) => moveStep(event, i)}
+                    nodePath={path} />
+            {/if}
         </div>
     {/each}
 
@@ -119,7 +128,7 @@
     }
 
     .bumper-zone {
-        height: 75px;
+        height: 45px;
     }
     .bumper-zone.hoverDrag {
         background: rgba(255, 255, 255, 0.35);

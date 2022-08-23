@@ -157,7 +157,9 @@ const dropContextMap = {
         // context name
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithFlowStep(dragObject.dragData.dataType === 'Boolean' ? nodeTemplates.ifStatement({ testData: nodeTemplates.variableRefIdentifer(dragObject.dragData) }) : nodeTemplates.variableRefAssignment(dragObject.dragData))
+            newNode: dragObject.dragData.dataType === 'Boolean'
+                ? nodeTemplates.ifStatement({ testData: nodeTemplates.variableRefIdentifer(dragObject.dragData) })
+                : wrapWithFlowStep(nodeTemplates.variableRefAssignment(dragObject.dragData))
         }),
         flowStep: (dragObject, contextType) => new DropObject({
             dragObject,
@@ -185,7 +187,7 @@ const dropContextMap = {
         argument: (dragObject, contextType) => new DropObject({
             dragObject,
             newNode: utilFromTypedContext(dragObject, contextType),
-        }),
+        })
     },
     flowStep: {
         flow: (dragObject, contextType) => new DropObject({
@@ -207,7 +209,7 @@ const dropContextMap = {
         flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithFlowStep(nodeTemplates[dragObject.dragData.fileType](dragObject.dragData)) }),
         flowStep: (dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates[dragObject.dragData.fileType](dragObject.dragData) }),
         assignment: noNode,//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
-        argument: noNode//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
+        argument: noNode//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) })
     }
 }
 

@@ -10,23 +10,18 @@ let blockLevel = 1;
 const codeWritersMap = {
     FlowStep: function (node, fileId, { codeData, fileMetadata }) {
         const blockSpaces = ' '.repeat(blockLevel * 4);
-        let endChar = ';';
-
-        if (node.expression?.type === 'IfStatement') {
-            blockLevel += 1;
-            endChar = '';
-        }
 
         const codeStr = this[node.expression.type](node.expression, fileId, { codeData, fileMetadata });
-        return node.expression === null ? '' : `${blockSpaces}${codeStr}${endChar}\n`;
+        return node.expression === null ? '' : `${blockSpaces}${codeStr};\n`;
     },
     IfStatement: function (node, fileId, { codeData, fileMetadata }) {
         const test = this[node.test.type](node.test, fileId, { codeData, fileMetadata });
-        const blockSpaces = ' '.repeat((blockLevel - 1) * 4);
+        const blockSpaces = ' '.repeat(blockLevel * 4);
+        blockLevel += 1;
         const consequent = node.consequent.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join('');
         const alternate = node.alternate.body.map((step) => this[step.type](step, fileId, { codeData, fileMetadata })).join('');
         
-        const ifStr = `if (${test}) {\n${consequent}${blockSpaces}} else {\n${alternate}${blockSpaces}}`;
+        const ifStr = `${blockSpaces}if (${test}) {\n${consequent}${blockSpaces}} else {\n${alternate}${blockSpaces}}\n`;
         blockLevel -= 1;
         return ifStr;
     },

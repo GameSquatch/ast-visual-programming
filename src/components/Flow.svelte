@@ -1,6 +1,7 @@
 <script>
     import { flowDropHandler } from '../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import FlowStep from '../components/flow_objects/FlowStep.svelte';
+    import IfStatement from '../components/flow_objects/IfStatement.svelte';
     import { squish } from '../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
     import { mockData } from '../lib/js/data_json.js';
@@ -85,6 +86,7 @@
     <!-- #key removes transition animation when switching tabs -->
     {#key flowData.info.id}
         {#each flowData.body as flowStep, i (flowStep.id)}
+            {@const path = `${flowData.info.id}.body.${i}`}
             <div
                 animate:flip={{ duration: 400 }}
                 transition:squish|local={{
@@ -92,11 +94,17 @@
                     opacity: 0.4,
                     start: 0.2
                 }}>
+            {#if flowStep.type === 'IfStatement'}
+                <IfStatement
+                    nodeData={flowStep}
+                    nodePath={path} />
+            {:else}
                 <FlowStep
                     nodeData={flowStep}
                     accessor={i}
                     on:moveStep={(event) => moveStep(event, i)}
-                    nodePath={`${flowData.info.id}.body.${i}`} />
+                    nodePath={path} />
+            {/if}
             </div>
         {/each}
     {/key}

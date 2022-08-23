@@ -156,62 +156,59 @@ const mockData = (function () {
                     }
                 },
                 {
-                    "type": "FlowStep",
+                    "type": "IfStatement",
                     "id": uuidv4(),
-                    "expression": {
-                        "type": "IfStatement",
-                        "test": {
-                            "type": "RefIdentifier",
-                            "refId": var4,
-                            "dataType": "Boolean",
-                            "fnRefType": "variables"
-                        },
-                        "consequent": {
-                            "body": [
-                                {
-                                    "type": "FlowStep",
-                                    "id": uuidv4(),
-                                    "expression": {
-                                        "type": "AssignmentExpression",
-                                        "left": {
-                                            "type": "RefIdentifier",
-                                            "refId": var3,
-                                            "dataType": "String",
-                                            "fnRefType": "variables"
-                                        },
-                                        "right": {
-                                            "type": "StringLiteral",
-                                            "value": "dookie",
-                                            "dataType": "String"
-                                        }
+                    "test": {
+                        "type": "RefIdentifier",
+                        "refId": var4,
+                        "dataType": "Boolean",
+                        "fnRefType": "variables"
+                    },
+                    "consequent": {
+                        "body": [
+                            {
+                                "type": "FlowStep",
+                                "id": uuidv4(),
+                                "expression": {
+                                    "type": "AssignmentExpression",
+                                    "left": {
+                                        "type": "RefIdentifier",
+                                        "refId": var3,
+                                        "dataType": "String",
+                                        "fnRefType": "variables"
+                                    },
+                                    "right": {
+                                        "type": "StringLiteral",
+                                        "value": "dookie",
+                                        "dataType": "String"
                                     }
                                 }
-                            ]
-                        },
-                        "alternate": {
-                            "body": [
-                                {
-                                    "type": "FlowStep",
-                                    "id": uuidv4(),
-                                    "expression": {
-                                        "type": "AssignmentExpression",
-                                        "left": {
-                                            "type": "RefIdentifier",
-                                            "refId": var3,
-                                            "dataType": "String",
-                                            "fnRefType": "variables"
-                                        },
-                                        "right": {
-                                            "type": "StringLiteral",
-                                            "value": "not dookie",
-                                            "dataType": "String"
-                                        }
+                            }
+                        ]
+                    },
+                    "alternate": {
+                        "body": [
+                            {
+                                "type": "FlowStep",
+                                "id": uuidv4(),
+                                "expression": {
+                                    "type": "AssignmentExpression",
+                                    "left": {
+                                        "type": "RefIdentifier",
+                                        "refId": var3,
+                                        "dataType": "String",
+                                        "fnRefType": "variables"
+                                    },
+                                    "right": {
+                                        "type": "StringLiteral",
+                                        "value": "not dookie",
+                                        "dataType": "String"
                                     }
                                 }
-                            ]
-                        }
+                            }
+                        ]
                     }
-                },
+                }
             ]
         }
     });
@@ -229,20 +226,20 @@ const mockData = (function () {
             return parentRef;
         },
         /** @type {(path: string) => void} */
-		deleteFlowStepAt(path) {
-			const deletePath = new TreePath({ stringPath: path });
+        deleteFlowStepAt(path) {
+            const deletePath = new TreePath({ stringPath: path });
 
-			this.update((flowData) => {
-				let bodyArr = this.getParentReference({ flowData, treePath: deletePath});
+            this.update((flowData) => {
+                let bodyArr = this.getParentReference({ flowData, treePath: deletePath });
 
-				// @ts-ignore
-				bodyArr.splice(parseInt(deletePath.getTokenAt(-1)), 1);
+                // @ts-ignore
+                bodyArr.splice(parseInt(deletePath.getTokenAt(-1)), 1);
 
-				return flowData;
-			});
-		},
+                return flowData;
+            });
+        },
 
-        moveFlowStep({ fromPath, toPath, insertAt = false}) {
+        moveFlowStep({ fromPath, toPath, insertAt = false }) {
             const fromTreePath = new TreePath({ stringPath: fromPath });
             const toTreePath = new TreePath({ stringPath: toPath });
 

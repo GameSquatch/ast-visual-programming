@@ -113,6 +113,7 @@ const nodeTemplates = {
     ifStatement: ({ testData }) => {
         return {
             type: "IfStatement",
+            id: uuidv4(),
             test: { ...testData },
             consequent: {
                 body: []
