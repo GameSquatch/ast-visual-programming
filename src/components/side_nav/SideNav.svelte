@@ -92,7 +92,7 @@
         background: #eee;
         display: flex;
         flex-direction: column;
-        clip-path: inset(0, 0, 0, 0);
+        clip-path: inset(0 0 0 0);
     }
     
     .project-structure-pane {
