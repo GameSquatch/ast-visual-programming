@@ -99,6 +99,22 @@ const utilDefs = {
             "infiniteArgs": true,
             "returnType": "Integer"
         },
+        "multiply": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Integer"
+        },
+        "divide": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Integer"
+        },
         "equals": {
             "args": [
                 "Integer",
@@ -108,6 +124,38 @@ const utilDefs = {
             "returnType": "Boolean"
         },
         "notEquals": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "gt": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "gte": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "lt": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "lte": {
             "args": [
                 "Integer",
                 "Integer"

@@ -76,6 +76,62 @@ const typeDefs =  {
             "infiniteArgs": true,
             "returnType": "Integer"
         },
+        "multiplyBy": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Integer"
+        },
+        "divideBy": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Integer"
+        },
+        "equals": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "notEquals": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "gt": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "gte": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "lt": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
+        "lte": {
+            "args": [
+                "Integer"
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean"
+        },
         "toString": {
             "args": [],
             "infiniteArgs": false,

@@ -39,6 +39,14 @@ const IntegerUtil = {
     add(num1, num2) {
         return num1 + num2;
     },
+    /** @type {(num1: number, num2: number) => number} */
+    multiply(num1, num2) {
+        return num1 * num2;
+    },
+    /** @type {(num1: number, num2: number) => number} */
+    divide(num1, num2) {
+        return num1 / num2;
+    },
     /** @type {(num1: number, num2: number) => boolean} */
     equals(num1, num2) {
         return num1 === num2;
@@ -46,6 +54,22 @@ const IntegerUtil = {
     /** @type {(num1: number, num2: number) => boolean} */
     notEquals(num1, num2) {
         return num1 !== num2;
+    },
+    /** @type {(num1: number, num2: number) => boolean} */
+    gt(num1, num2) {
+        return num1 > num2;
+    },
+    /** @type {(num1: number, num2: number) => boolean} */
+    gte(num1, num2) {
+        return num1 >= num2;
+    },
+    /** @type {(num1: number, num2: number) => boolean} */
+    lt(num1, num2) {
+        return num1 < num2;
+    },
+    /** @type {(num1: number, num2: number) => boolean} */
+    lte(num1, num2) {
+        return num1 <= num2;
     }
 };
 
@@ -112,26 +136,67 @@ String.prototype.notEquals = function(str) {
 // @ts-ignore
 Number.prototype.add = function(num) {
     return this.valueOf() + num;
-}
+};
 
 // @ts-ignore
 Number.prototype.subtract = function(num) {
     return this.valueOf() - num;
-}
+};
+
+// @ts-ignore
+Number.prototype.multiplyBy = function(num) {
+    return this.valueOf() * num;
+};
+
+// @ts-ignore
+Number.prototype.divideBy = function(num) {
+    return this.valueOf() / num;
+};
+
+// @ts-ignore
+Number.prototype.equals = function(num) {
+    return this.valueOf() === num;
+};
+
+// @ts-ignore
+Number.prototype.notEquals = function(num) {
+    return this.valueOf() !== num;
+};
+
+// @ts-ignore
+Number.prototype.lt = function(num) {
+    return this.valueOf() < num;
+};
+
+// @ts-ignore
+Number.prototype.lte = function(num) {
+    return this.valueOf() <= num;
+};
+
+// @ts-ignore
+Number.prototype.gt = function(num) {
+    return this.valueOf() > num;
+};
+
+// @ts-ignore
+Number.prototype.gte = function(num) {
+    return this.valueOf() >= num;
+};
+
 
 // @ts-ignore
 Boolean.prototype.not = function() {
     return !this.valueOf();
-}
+};
 
 // @ts-ignore
 Boolean.prototype.and = function(a) {
     return this.valueOf() && a;
-}
+};
 
 // @ts-ignore
 Boolean.prototype.or = function(a) {
     return this.valueOf() || a;
-}
+};
 
 export { StringUtil, IntegerUtil, BooleanUtil, LoggerUtil };
