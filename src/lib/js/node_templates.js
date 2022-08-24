@@ -157,6 +157,15 @@ const nodeTemplates = {
         dataType,
         fnRefType
     }),
+
+    returnStatement: function ({ functionId, returnType }) {
+        return {
+            type: "ReturnStatement",
+            functionId,
+            returnType,
+            expression: this[returnType + 'Literal']()
+        };
+    },
     // Capitalizing because it matches the 'type' field in the AST
     /** @type {({ value: string }) => LiteralNode} */
     StringLiteral: ({ value } = { value: "" }) => ({

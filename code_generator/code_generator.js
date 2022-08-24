@@ -74,8 +74,13 @@ function generateCode(codeInfo) {
 
 
 function findReferencedFunctions(astNode, foundCallback) {
+    if (astNode === null) {
+        return;
+    }
+    
     switch (astNode.type) {
         case "FlowStep":
+        case "ReturnStatement":
             findReferencedFunctions(astNode.expression, foundCallback);
             break;
         case "AssignmentExpression":

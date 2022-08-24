@@ -25,7 +25,7 @@ const mockData = (function () {
                         "dataType": "Integer"
                     }
                 },
-                "dataType": "String"
+                "returnType": "String"
             },
             "body": [
                 {
@@ -134,7 +134,7 @@ const mockData = (function () {
                         "dataType": "Boolean"
                     }
                 },
-                "dataType": "String"
+                "returnType": "Integer"
             },
             "body": [
                 {

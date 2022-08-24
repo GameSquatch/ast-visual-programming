@@ -4,7 +4,7 @@ import { typeDefaults } from '../../lib/js/type_defaults';
 /**
  * @typedef {Object} FileMetadataFlowData
  * @property {Object.<string, FunctionParameterConfig>} parameters
- * @property {string} dataType
+ * @property {string} returnType
  */
 /**
  * @typedef {Object} FileMetadataEntry
@@ -22,7 +22,7 @@ import { typeDefaults } from '../../lib/js/type_defaults';
         fileType: "function",
         objectFlowData: {
             parameters: {},
-            dataType: "String"
+            returnType: "String"
         }
     },
     "123": {
@@ -30,7 +30,7 @@ import { typeDefaults } from '../../lib/js/type_defaults';
         fileType: "function",
         objectFlowData: {
             parameters: {},
-            dataType: "String"
+            returnType: "Integer"
         }
     }
 };
@@ -101,7 +101,7 @@ const fileMetadata = (() => {
 const fileTypeObjectFlowTemplates = {
     "function": () => ({
         parameters: {},
-        dataType: "String"
+        returnType: "String"
     })
 };
 

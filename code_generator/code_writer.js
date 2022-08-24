@@ -60,6 +60,12 @@ const codeWritersMap = {
 
         return variableRef.name;
     },
+    ReturnStatement: function(node, fileId, { codeData, fileMetadata }) {
+        const expr = node.expression === null
+            ? ''
+            : ` ${this[node.expression.type](node.expression, fileId, { codeData, fileMetadata })}`;
+        return `return${expr}`;
+    },
     StringLiteral: function (node, fileId, { codeData, fileMetadata }) {
         return outputLiteralValue(node.value, "String");
     },

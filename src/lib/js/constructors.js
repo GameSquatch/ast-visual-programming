@@ -7,6 +7,7 @@ import AssignmentExpression from '../../components/flow_objects/AssignmentExpres
 import RefIdentifier from '../../components/flow_objects/RefIdentifier.svelte';
 import FunctionCallExpression from '../../components/flow_objects/FunctionCallExpression.svelte';
 import IfStatement from '../../components/flow_objects/IfStatement.svelte';
+import ReturnStatement from '../../components/flow_objects/ReturnStatement.svelte';
 
 // Constructors to use in <svelte:component> tags, keyed by the 'type' from the AST
 const constructors = {
@@ -18,7 +19,8 @@ const constructors = {
     "AssignmentExpression": AssignmentExpression,
     "RefIdentifier": RefIdentifier,
     "FunctionCallExpression": FunctionCallExpression,
-    "IfStatement": IfStatement
+    "IfStatement": IfStatement,
+    "ReturnStatement": ReturnStatement
 };
 
 export default constructors;

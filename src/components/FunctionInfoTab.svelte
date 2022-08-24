@@ -106,6 +106,10 @@
             defaultValue: newValue
         };
     }
+
+    function setReturnType(event) {
+        info.returnType = event.target.value;
+    }
 </script>
 
 <div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
@@ -114,10 +118,11 @@
             <div class="section">
                 <div class="return-type-statement">
                     <h4>Return Type:</h4>
-                    <select>
-                        <option value="Void" selected>Void</option>
-                        <option value="String">String</option>
-                        <option value="Integer">Integer</option>
+                    <select on:change={setReturnType}>
+                        <option value="Void" selected={info.returnType === 'Void'}>Void</option>
+                        <option value="String" selected={info.returnType === 'String'}>String</option>
+                        <option value="Integer" selected={info.returnType === 'Integer'}>Integer</option>
+                        <option value="Boolean" selected={info.returnType === 'Boolean'}>Boolean</option>
                     </select>
                 </div>
             </div>

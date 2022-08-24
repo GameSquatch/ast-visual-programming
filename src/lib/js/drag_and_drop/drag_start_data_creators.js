@@ -43,7 +43,7 @@ function doActionDataDrag() {
 }
 
 function utilDataDrag({ utilDefName }) {
-    return createDragObject({ dragType: "util", dragData: { utilDefName }});
+    return createDragObject({ dragType: "util", dragData: { utilDefName } });
 }
 
 /**
@@ -100,4 +100,17 @@ function navFolderDrag(folderData) {
 }
 
 
-export { doActionDataDrag, moveFlowStepDrag, fnInfoRefObjectDrag, navFileDrag, navFolderDrag, utilDataDrag };
+function returnStatementDrag(functionData) {
+    return createDragObject({ dragType: 'return', dragData: { ...functionData } });
+}
+
+
+export {
+    doActionDataDrag,
+    moveFlowStepDrag,
+    fnInfoRefObjectDrag,
+    navFileDrag,
+    navFolderDrag,
+    utilDataDrag,
+    returnStatementDrag
+};

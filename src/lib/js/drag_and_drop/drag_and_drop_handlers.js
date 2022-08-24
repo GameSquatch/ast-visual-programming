@@ -131,6 +131,16 @@ function variableRefFromTypedContext(dragObject, contextType) {
 }
 
 
+function functionFromTypedContext(dragObject, contextType) {
+    if (dragObject.dragData.objectFlowData.returnType !== contextType) {
+        alert("Types do not match");
+        return null;
+    }
+
+    return nodeTemplates.function(dragObject.dragData);
+}
+
+
 function noNode(dragObject, _) {
     return new DropObject({ dragObject });
 }
@@ -208,6 +218,16 @@ const dropContextMap = {
     "file": {
         flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithFlowStep(nodeTemplates[dragObject.dragData.fileType](dragObject.dragData)) }),
         flowStep: (dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates[dragObject.dragData.fileType](dragObject.dragData) }),
+        assignment: (dragObject, contextType) => new DropObject({ dragObject, newNode: functionFromTypedContext(dragObject, contextType) }),
+        argument: (dragObject, contextType) => new DropObject({ dragObject, newNode: functionFromTypedContext(dragObject, contextType) }),
+    },
+
+    "return": {
+        flow: (dragObject, contextType) => new DropObject({
+            dragObject,
+            newNode: wrapWithFlowStep(nodeTemplates.returnStatement(dragObject.dragData))
+        }),
+        flowStep: noNode,
         assignment: noNode,//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),
         argument: noNode//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) })
     }

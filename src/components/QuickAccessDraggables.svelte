@@ -1,6 +1,6 @@
 <script>
     import { fileMetadata } from './side_nav/file_metadata.js';
-    import { fnInfoRefObjectDrag } from '../lib/js/drag_and_drop/drag_start_data_creators.js';
+    import { fnInfoRefObjectDrag, returnStatementDrag } from '../lib/js/drag_and_drop/drag_start_data_creators.js';
 
     export let functionInfo;
 
@@ -8,6 +8,11 @@
 
     function dragStart(event, varData) {
         const dragData = fnInfoRefObjectDrag(varData);
+        event.dataTransfer.setData('text/json', JSON.stringify(dragData));
+    }
+
+    function returnDragStart(event) {
+        const dragData = returnStatementDrag({ functionId: functionInfo.id, returnType: functionInfo.returnType });
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
     }
 </script>
@@ -31,6 +36,7 @@
                 >{varData.name}
             </span>
         {/each}
+        <span on:dragstart={returnDragStart} class="var-tag return-tag" draggable="true">return</span>
     </div>
 
     <div class="right-col">
