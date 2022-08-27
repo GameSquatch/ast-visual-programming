@@ -23,7 +23,7 @@
 <div class="header">
     <h1>{headerText}</h1>
     <div class="flex header-actions">
-        <button class="light-bg-btn" on:click={handleRouteClick('/app/run')}>Run</button>
+        <!-- <button class="light-bg-btn" on:click={handleRouteClick('/app/run')}>Run</button> -->
         <button class="light-bg-btn" on:click={handleRouteClick('/app/chat')}>Chat</button>
         <button class="light-bg-btn" on:click={(_) => logout()}>Log Out</button>
     </div>
