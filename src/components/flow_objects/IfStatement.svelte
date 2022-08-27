@@ -2,6 +2,8 @@
     import constructors from "../../lib/js/constructors.js";
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import { mockData } from '../../lib/js/data_json.js';
+    import { contextMenuStore } from "../../store/context_menu_store.js";
+    import nodeTemplates from "../../lib/js/node_templates.js";
     import SubFlow from './SubFlow.svelte';
 
     export let nodeData;
@@ -14,16 +16,34 @@
 
         mockData.setNodeAt({ path: `${nodePath}.test`, nodeData: node });
     }
+
+    function showContextMenu(event) {
+        contextMenuStore.update((state) => ({
+            showing: true,
+            x: event.clientX,
+            y: event.clientY,
+            menuItems: [
+                {
+                    title: 'Change To Flow Step',
+                    onSelected: () => mockData.setNodeAt({ path: nodePath, nodeData: nodeTemplates.flowStep() })
+                }
+            ]
+        }));
+    }
 </script>
 
 
-<div class="if-statement-container">
+<div on:contextmenu|stopPropagation|preventDefault={showContextMenu} class="if-statement-container">
     <div
         on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: 'Boolean', stateChangeCallback: handleDrop })}
         on:dragover|preventDefault={() => {}}
         class='flow-step-container'
     >
-        <svelte:component this={constructors[nodeData.test.type]} nodeData={nodeData.test} nodePath={`${nodePath}.test`} contextType={'Boolean'} />
+        {#if nodeData.test}
+            <svelte:component this={constructors[nodeData.test.type]} nodeData={nodeData.test} nodePath={`${nodePath}.test`} contextType={'Boolean'} />
+        {:else}
+            <div class="drag-here"><span>Drag Boolean Here</span></div>
+        {/if}
     </div>
     
     <div class="flex branches-wrapper">
@@ -47,5 +67,11 @@
     }
     .false-flow {
         background: rgba(255, 0, 0, 0.2);
+    }
+
+    .drag-here {
+        padding: 24px 30px;
+        border-radius: 10px;
+        border: 1px dashed black;
     }
 </style>

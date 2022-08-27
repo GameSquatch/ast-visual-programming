@@ -5,6 +5,8 @@
     import DragHandle from '../DragHandle.svelte';
     import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import { mockData } from '../../lib/js/data_json.js';
+    import { contextMenuStore } from '../../store/context_menu_store.js';
+import nodeTemplates from '../../lib/js/node_templates.js';
 
     export let accessor;
     /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */
@@ -82,6 +84,24 @@
             event.stopPropagation();
         }
     }
+
+    function showContextMenu(event) {
+        contextMenuStore.update((state) => ({
+            showing: true,
+            x: event.clientX,
+            y: event.clientY,
+            menuItems: [
+                {
+                    title: 'Add Flow Step',
+                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.flowStep(), append: true })
+                },
+                {
+                    title: 'Add If Step',
+                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.ifStatement(), append: true })
+                }
+            ]
+        }));
+    }
 </script>
 
 <div class:beingDragged>
@@ -118,6 +138,7 @@
         on:dragleave|preventDefault={insertDragLeave}
         on:drop|stopPropagation={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
         on:drop|stopPropagation={removeInsertHover}
+        on:contextmenu|stopPropagation|preventDefault={showContextMenu}
         class="line-down-box"
         class:insert-drag-over={isOverInsertSpot}
     ></div>

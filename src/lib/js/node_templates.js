@@ -110,11 +110,11 @@ const nodeTemplates = {
         };
     },
 
-    ifStatement: ({ testData }) => {
+    ifStatement: ({ testData } = { testData: null}) => {
         return {
             type: "IfStatement",
             id: uuidv4(),
-            test: { ...testData },
+            test: testData,
             consequent: {
                 body: []
             },
