@@ -64,7 +64,7 @@
     }
 </script>
 
-<FunctionInfoTab bind:info={tabViewData.info} />
+<FunctionInfoTab info={tabViewData.info} />
 <QuickAccessDraggables functionInfo={tabViewData.info} />
 
 <button on:click={() => showRunOverlay()} class="run-button">

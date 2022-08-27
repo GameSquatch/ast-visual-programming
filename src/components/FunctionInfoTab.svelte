@@ -5,6 +5,7 @@
     import { v4 as uuidv4 } from 'uuid';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
     import { typeDefaults } from '../lib/js/type_defaults.js';
+    import { mockData } from '../lib/js/data_json.js';
 
     export let info;
 
@@ -43,7 +44,7 @@
     }
 
     function addVariable(_) {
-        info.variables = {
+        $mockData[info.id].info.variables = {
             ...info.variables,
             [uuidv4()]: {
                 name: 'newVar',
@@ -69,9 +70,9 @@
         }
     }
 
-    function changeRefName(refId, newName, infoKey) {
-        info[infoKey][refId] = {
-            ...info[infoKey][refId],
+    function changeRefName(refId, newName) {
+        $mockData[info.id].info.variables[refId] = {
+            ...info.variables[refId],
             name: newName
         };
     }
@@ -79,9 +80,9 @@
         fileMetadata.changeParameterName({ fnId: info.id, paramId, newName });
     }
 
-    function changeRefType(event, id, infoKey) {
-        info[infoKey][id] = {
-            ...info[infoKey][id],
+    function changeRefType(event, id) {
+        $mockData[info.id].info.variables[id] = {
+            ...info.variables[id],
             dataType: event.target.value,
             defaultValue: typeDefaults[event.target.value]
         };
@@ -97,12 +98,12 @@
         fileMetadata.changeParameterDefaultValue({ fnId: info.id, paramId: id, newValue });
     }
 
-    function handleRefDefaultValueChange(event, id, infoKey, dataType) {
+    function handleRefDefaultValueChange(event, id, dataType) {
         /** @type {HTMLInputElement} */
         const target = event.target;
         const newValue = dataType === "String" ? event.target.value : (dataType === 'Boolean' ? target.checked : target.valueAsNumber);
-        info[infoKey][id] = {
-            ...info[infoKey][id],
+        $mockData[info.id].info.variables[id] = {
+            ...info.variables[id],
             defaultValue: newValue
         };
     }
@@ -154,12 +155,12 @@
                                 pattern="^[a-zA-Z_$][a-zA-Z0-9_$]*$"
                                 value={varObj.name}
                                 type="text"
-                                on:change={(e) => changeRefName(varId, e.target.value, 'variables')}
+                                on:change={(e) => changeRefName(varId, e.target.value)}
                                 class="var-name" />
                         </div>
                         <div class="col-2">
                             <select
-                                on:change={(event) => changeRefType(event, varId, 'variables')}
+                                on:change={(event) => changeRefType(event, varId)}
                                 value={varObj.dataType}
                                 ><option value="String">String</option><option value="Integer">Integer</option><option value="Boolean">Boolean</option></select>
                         </div>
