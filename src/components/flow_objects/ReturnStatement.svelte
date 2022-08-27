@@ -2,13 +2,14 @@
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
     import { mockData } from '../../lib/js/data_json.js';
+    import { fileMetadata } from '../side_nav/file_metadata';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
 
     export let nodeData;
     export let nodePath;
 
-    $: returnType = $mockData[nodeData.functionId].info.returnType;
+    $: returnType = $fileMetadata[nodeData.functionId].objectFlowData.returnType;
 
     function handleDrop(node) {
         if (node === null) {
@@ -23,7 +24,7 @@
     }
 </script>
 
-<p>return <span class="small-text">=&gt; {nodeData.returnType}</span></p>
+<p>return <span class="small-text">=&gt; {returnType}</span></p>
 
 {#if nodeData?.expression ?? false}
     <Argument onClear={clearStatement} argLevel={1} {returnType} on:innerDrop={(event) => flowDropHandler({ contextName: 'assignment', contextType: returnType, stateChangeCallback: handleDrop})(event.detail)}>

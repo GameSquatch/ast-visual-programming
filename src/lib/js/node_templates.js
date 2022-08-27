@@ -109,7 +109,12 @@ const nodeTemplates = {
             expression: null
         };
     },
-
+    /**
+     * @function
+     * @param {Object} spec
+     * @param {Object} [spec.testData] 
+     * @returns {Object}
+     */
     ifStatement: ({ testData } = { testData: null}) => {
         return {
             type: "IfStatement",

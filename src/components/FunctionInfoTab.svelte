@@ -109,8 +109,10 @@
     }
 
     function setReturnType(event) {
-        info.returnType = event.target.value;
+        $fileMetadata[info.id].objectFlowData.returnType = event.target.value;
     }
+
+    $: returnType = $fileMetadata[info.id].objectFlowData.returnType;
 </script>
 
 <div on:mouseenter={stopTimer} class="absolute w100 tab-floater">
@@ -120,10 +122,10 @@
                 <div class="return-type-statement">
                     <h4>Return Type:</h4>
                     <select on:change={setReturnType}>
-                        <option value="Void" selected={info.returnType === 'Void'}>Void</option>
-                        <option value="String" selected={info.returnType === 'String'}>String</option>
-                        <option value="Integer" selected={info.returnType === 'Integer'}>Integer</option>
-                        <option value="Boolean" selected={info.returnType === 'Boolean'}>Boolean</option>
+                        <option value="Void" selected={returnType === 'Void'}>Void</option>
+                        <option value="String" selected={returnType === 'String'}>String</option>
+                        <option value="Integer" selected={returnType === 'Integer'}>Integer</option>
+                        <option value="Boolean" selected={returnType === 'Boolean'}>Boolean</option>
                     </select>
                 </div>
             </div>

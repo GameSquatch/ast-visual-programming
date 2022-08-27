@@ -12,7 +12,7 @@
     }
 
     function returnDragStart(event) {
-        const dragData = returnStatementDrag({ functionId: functionInfo.id, returnType: functionInfo.returnType });
+        const dragData = returnStatementDrag({ functionId: functionInfo.id, returnType: metaData.objectFlowData.returnType });
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
     }
 </script>
