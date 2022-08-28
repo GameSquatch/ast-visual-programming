@@ -99,6 +99,14 @@ const utilDefs = {
             "infiniteArgs": true,
             "returnType": "Integer"
         },
+        "subtract": {
+            "args": [
+                "Integer",
+                "Integer"
+            ],
+            "infiniteArgs": true,
+            "returnType": "Integer"
+        },
         "multiply": {
             "args": [
                 "Integer",
@@ -131,7 +139,7 @@ const utilDefs = {
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "gt": {
+        "greaterThan": {
             "args": [
                 "Integer",
                 "Integer"
@@ -139,7 +147,7 @@ const utilDefs = {
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "gte": {
+        "greaterThanOrEqual": {
             "args": [
                 "Integer",
                 "Integer"
@@ -147,7 +155,7 @@ const utilDefs = {
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "lt": {
+        "lessThan": {
             "args": [
                 "Integer",
                 "Integer"
@@ -155,7 +163,7 @@ const utilDefs = {
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "lte": {
+        "lessThanOrEqual": {
             "args": [
                 "Integer",
                 "Integer"

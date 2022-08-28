@@ -17,20 +17,26 @@ import { typeDefaults } from '../../lib/js/type_defaults';
  * @type {Object.<string, FileMetadataEntry>} FileMetadata
  */
  const fm = {
+    "factorial": {
+        title: "factorial",
+        fileType: "function",
+        objectFlowData: {
+            parameters: {
+                "8c2f9aa2-0a80-4409-8e96-da2aabe1d1d5": {
+                    name: "a",
+                    dataType: "Integer",
+                    defaultValue: 0
+                }
+            },
+            returnType: "Integer"
+        }
+    },
     "abc": {
         title: "Main",
         fileType: "function",
         objectFlowData: {
             parameters: {},
             returnType: "String"
-        }
-    },
-    "123": {
-        title: "Fn2",
-        fileType: "function",
-        objectFlowData: {
-            parameters: {},
-            returnType: "Integer"
         }
     }
 };

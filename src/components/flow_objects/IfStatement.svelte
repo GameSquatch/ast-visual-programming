@@ -17,29 +17,50 @@
         mockData.setNodeAt({ path: `${nodePath}.test`, nodeData: node });
     }
 
+
+    /**
+     * @function
+     * @param {Event} event
+     */
     function showContextMenu(event) {
+        if (nodeData.test.type !== "RefIdentifier") {
+            return;
+        }
+
+        event.stopPropagation();
+        event.preventDefault();
+        const menuItems = [{
+            title: 'Change to Assignment',
+            onSelected: () => {
+                const flowStep = nodeTemplates.flowStep();
+                flowStep.expression = nodeTemplates.variableRefAssignment({
+                    refId: nodeData.test.refId,
+                    dataType: 'Boolean',
+                    fnRefType: nodeData.test.fnRefType
+                });
+
+                mockData.setNodeAt({ path: nodePath, nodeData: flowStep });
+            }
+        }];
+            
         contextMenuStore.update((state) => ({
             showing: true,
             x: event.clientX,
             y: event.clientY,
-            menuItems: [
-                {
-                    title: 'Change To Flow Step',
-                    onSelected: () => mockData.setNodeAt({ path: nodePath, nodeData: nodeTemplates.flowStep() })
-                }
-            ]
+            menuItems
         }));
     }
 </script>
 
 
-<div on:contextmenu|stopPropagation|preventDefault={showContextMenu} class="if-statement-container">
+<div on:contextmenu={showContextMenu} class="if-statement-container">
     <div
         on:drop|stopPropagation={flowDropHandler({ contextName: 'argument', contextType: 'Boolean', stateChangeCallback: handleDrop })}
         on:dragover|preventDefault={() => {}}
         class='flow-step-container'
     >
         {#if nodeData.test}
+        if
             <svelte:component this={constructors[nodeData.test.type]} nodeData={nodeData.test} nodePath={`${nodePath}.test`} contextType={'Boolean'} />
         {:else}
             <div class="drag-here"><span>Drag Boolean Here</span></div>
@@ -48,10 +69,12 @@
     
     <div class="flex branches-wrapper">
         <div class="false-flow flex-1">
+            else
             <SubFlow nodePath={`${nodePath}.alternate.body`} subFlowBody={nodeData.alternate.body} />
         </div>
 
         <div class="true-flow flex-1">
+            then
             <SubFlow nodePath={`${nodePath}.consequent.body`} subFlowBody={nodeData.consequent.body} />
         </div>
     </div>

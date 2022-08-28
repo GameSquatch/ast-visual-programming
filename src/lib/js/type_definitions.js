@@ -104,28 +104,28 @@ const typeDefs =  {
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "gt": {
+        "greaterThan": {
             "args": [
                 "Integer"
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "gte": {
+        "greaterThanOrEqual": {
             "args": [
                 "Integer"
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "lt": {
+        "lessThan": {
             "args": [
                 "Integer"
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "lte": {
+        "lessThanOrEqual": {
             "args": [
                 "Integer"
             ],

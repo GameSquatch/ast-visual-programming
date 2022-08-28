@@ -10,157 +10,32 @@ const var4 = "86d3dc6d-3c58-4cef-8eda-d84617bb121f"
 
 const mockData = (function () {
     const { update, set, subscribe } = writable({
-        "abc": {
+        "factorial": {
             "info": {
-                "id": "abc",
-                "variables": {
-                    [var1]: {
-                        "name": "aStr",
-                        "defaultValue": "",
-                        "dataType": "String"
-                    },
-                    [var2]: {
-                        "name": "aNum",
-                        "defaultValue": 0,
-                        "dataType": "Integer"
-                    }
-                }
+                "id": "factorial",
+                "variables": {}
             },
             "body": [
-                {
-                    "type": "FlowStep",
-                    "id": uuidv4(),
-                    "expression": {
-                        "type": "AssignmentExpression",
-                        "left": {
-                            "type": "RefIdentifier",
-                            "refId": var1,
-                            "dataType": "String",
-                            "fnRefType": "variables"
-                        },
-                        "right": {
-                            "type": "UtilityCallExpression",
-                            "utilityName": "StringUtil",
-                            "utilityMethod": "concat",
-                            "arguments": [
-                                {
-                                    "type": "StringLiteral",
-                                    "value": "A long string teehee",
-                                    "dataType": "String"
-                                },
-                                {
-                                    "type": "RefIdentifier",
-                                    "refId": var1,
-                                    "dataType": "String",
-                                    "fnRefType": "variables"
-                                }
-                            ],
-                            "dataType": "String"
-                        }
-                    }
-                },
-                {
-                    "type": "FlowStep",
-                    "id": uuidv4(),
-                    "expression": {
-                        "type": "AssignmentExpression",
-                        "left": {
-                            "type": "RefIdentifier",
-                            "refId": var1,
-                            "dataType": "String",
-                            "fnRefType": "variables"
-                        },
-                        "right": {
-                            "type": "IdentifierRefCallExpression",
-                            "refData": {
-                                "type": "RefIdentifier",
-                                "refId": var1,
-                                "dataType": "String",
-                                "fnRefType": "variables"
-                            },
-                            "method": "concat",
-                            "arguments": [
-                                {
-                                    "type": "StringLiteral",
-                                    "value": "A long string teehee",
-                                    "dataType": "String"
-                                }
-                            ],
-                            "dataType": "String"
-                        }
-                    }
-                },
-                {
-                    "type": "FlowStep",
-                    "id": uuidv4(),
-                    "expression": {
-                        "type": "AssignmentExpression",
-                        "left": {
-                            "type": "RefIdentifier",
-                            "refId": var2,
-                            "dataType": "Integer",
-                            "fnRefType": "variables"
-                        },
-                        "right": {
-                            "type": "UtilityCallExpression",
-                            "utilityName": "StringUtil",
-                            "utilityMethod": "length",
-                            "arguments": [
-                                {
-                                    "type": "StringLiteral",
-                                    "value": "Counting the length of the string",
-                                    "dataType": "String"
-                                }
-                            ],
-                            "dataType": "Integer"
-                        }
-                    }
-                }
-            ]
-        },
-        "123": {
-            "info": {
-                "id": "123",
-                "variables": {
-                    [var3]: {
-                        "name": "Fn2Str",
-                        "defaultValue": "hello",
-                        "dataType": "String"
-                    },
-                    [var4]: {
-                        "name": "isBool",
-                        "defaultValue": true,
-                        "dataType": "Boolean"
-                    }
-                }
-            },
-            "body": [
-                {
-                    "type": "FlowStep",
-                    "id": uuidv4(),
-                    "expression": {
-                        "type": "AssignmentExpression",
-                        "left": {
-                            "type": "RefIdentifier",
-                            "refId": var3,
-                            "dataType": "String",
-                            "fnRefType": "variables"
-                        },
-                        "right": {
-                            "type": "StringLiteral",
-                            "value": "",
-                            "dataType": "String"
-                        }
-                    }
-                },
                 {
                     "type": "IfStatement",
                     "id": uuidv4(),
                     "test": {
-                        "type": "RefIdentifier",
-                        "refId": var4,
+                        "type": "IdentifierRefCallExpression",
+                        "method": "lessThan",
                         "dataType": "Boolean",
-                        "fnRefType": "variables"
+                        "arguments": [
+                            {
+                                "type": "IntegerLiteral",
+                                "value": 2,
+                                "dataType": "Integer"
+                            }
+                        ],
+                        "refData": {
+                            "type": "RefIdentifier",
+                            "fnRefType": "parameters",
+                            "refId": "8c2f9aa2-0a80-4409-8e96-da2aabe1d1d5",
+                            "dataType": "Integer"
+                        }
                     },
                     "consequent": {
                         "body": [
@@ -168,17 +43,13 @@ const mockData = (function () {
                                 "type": "FlowStep",
                                 "id": uuidv4(),
                                 "expression": {
-                                    "type": "AssignmentExpression",
-                                    "left": {
-                                        "type": "RefIdentifier",
-                                        "refId": var3,
-                                        "dataType": "String",
-                                        "fnRefType": "variables"
-                                    },
-                                    "right": {
-                                        "type": "StringLiteral",
-                                        "value": "dookie",
-                                        "dataType": "String"
+                                    "type": "ReturnStatement",
+                                    "functionId": "factorial",
+                                    "returnType": "Integer",
+                                    "expression": {
+                                        "type": "IntegerLiteral",
+                                        "value": 1,
+                                        "dataType": "Integer"
                                     }
                                 }
                             }
@@ -189,21 +60,81 @@ const mockData = (function () {
                             {
                                 "type": "FlowStep",
                                 "id": uuidv4(),
-                                "expression": {
-                                    "type": "AssignmentExpression",
-                                    "left": {
-                                        "type": "RefIdentifier",
-                                        "refId": var3,
-                                        "dataType": "String",
-                                        "fnRefType": "variables"
-                                    },
-                                    "right": {
-                                        "type": "StringLiteral",
-                                        "value": "not dookie",
-                                        "dataType": "String"
+                                "expression":
+                                {
+                                    "type": "ReturnStatement",
+                                    "functionId": "factorial",
+                                    "returnType": "Integer",
+                                    "expression": {
+                                        "type": "IdentifierRefCallExpression",
+                                        "refData": {
+                                            "type": "RefIdentifier",
+                                            "fnRefType": "parameters",
+                                            "refId": "8c2f9aa2-0a80-4409-8e96-da2aabe1d1d5",
+                                            "dataType": "Integer"
+                                        },
+                                        "dataType": "Integer",
+                                        "method": "multiplyBy",
+                                        "arguments": [
+                                            {
+                                                "type": "FunctionCallExpression",
+                                                "fileId": "factorial",
+                                                "arguments": [
+                                                    {
+                                                        "type": "IdentifierRefCallExpression",
+                                                        "dataType": "Integer",
+                                                        "refData": {
+                                                            "type": "RefIdentifier",
+                                                            "fnRefType": "parameters",
+                                                            "refId": "8c2f9aa2-0a80-4409-8e96-da2aabe1d1d5",
+                                                            "dataType": "Integer"
+                                                        },
+                                                        "method": "subtract",
+                                                        "arguments": [
+                                                            {
+                                                                "type": "IntegerLiteral",
+                                                                "value": 1,
+                                                                "dataType": "Integer"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     }
                                 }
                             }
+                        ]
+                    }
+                }
+            ]
+        },
+        "abc": {
+            "info": {
+                "id": "abc",
+                "variables": {}
+            },
+            "body": [
+                {
+                    "type": "FlowStep",
+                    "id": uuidv4(),
+                    "expression": {
+                        "type": "UtilityCallExpression",
+                        "utilityName": "LoggerUtil",
+                        "utilityMethod": "logNumber",
+                        "dataType": "Void",
+                        "arguments": [
+                            {
+                            "type": "FunctionCallExpression",
+                            "fileId": "factorial",
+                            "arguments": [
+                                {
+                                    "type": "IntegerLiteral",
+                                    "value": 5,
+                                    "dataType": "Integer"
+                                }
+                            ]
+                        }
                         ]
                     }
                 }

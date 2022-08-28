@@ -40,6 +40,10 @@ const IntegerUtil = {
         return num1 + num2;
     },
     /** @type {(num1: number, num2: number) => number} */
+    subtract(num1, num2) {
+        return num1 - num2;
+    },
+    /** @type {(num1: number, num2: number) => number} */
     multiply(num1, num2) {
         return num1 * num2;
     },
@@ -56,19 +60,19 @@ const IntegerUtil = {
         return num1 !== num2;
     },
     /** @type {(num1: number, num2: number) => boolean} */
-    gt(num1, num2) {
+    greaterThan(num1, num2) {
         return num1 > num2;
     },
     /** @type {(num1: number, num2: number) => boolean} */
-    gte(num1, num2) {
+    greaterThanOrEqual(num1, num2) {
         return num1 >= num2;
     },
     /** @type {(num1: number, num2: number) => boolean} */
-    lt(num1, num2) {
+    lessThan(num1, num2) {
         return num1 < num2;
     },
     /** @type {(num1: number, num2: number) => boolean} */
-    lte(num1, num2) {
+    lessThanOrEqual(num1, num2) {
         return num1 <= num2;
     }
 };
@@ -164,22 +168,22 @@ Number.prototype.notEquals = function(num) {
 };
 
 // @ts-ignore
-Number.prototype.lt = function(num) {
+Number.prototype.lessThan = function(num) {
     return this.valueOf() < num;
 };
 
 // @ts-ignore
-Number.prototype.lte = function(num) {
+Number.prototype.lessThanOrEqual = function(num) {
     return this.valueOf() <= num;
 };
 
 // @ts-ignore
-Number.prototype.gt = function(num) {
+Number.prototype.greaterThan = function(num) {
     return this.valueOf() > num;
 };
 
 // @ts-ignore
-Number.prototype.gte = function(num) {
+Number.prototype.greaterThanOrEqual = function(num) {
     return this.valueOf() >= num;
 };
 

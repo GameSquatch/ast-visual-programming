@@ -6,7 +6,9 @@
     import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import { mockData } from '../../lib/js/data_json.js';
     import { contextMenuStore } from '../../store/context_menu_store.js';
-import nodeTemplates from '../../lib/js/node_templates.js';
+    import { fileMetadata } from '../side_nav/file_metadata.js';
+    import { get } from 'svelte/store';
+    import nodeTemplates from '../../lib/js/node_templates.js';
 
     export let accessor;
     /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */
@@ -85,7 +87,7 @@ import nodeTemplates from '../../lib/js/node_templates.js';
         }
     }
 
-    function showContextMenu(event) {
+    function showInsertContextMenu(event) {
         contextMenuStore.update((state) => ({
             showing: true,
             x: event.clientX,
@@ -102,6 +104,36 @@ import nodeTemplates from '../../lib/js/node_templates.js';
             ]
         }));
     }
+
+    /**
+     * @function
+     * @param {Event} event
+     */
+    function showChangeContextMenu(event) {
+        const fm = get(fileMetadata);
+        const isBoolAssignment = nodeData.expression?.type === 'AssignmentExpression' && nodeData.expression.left?.dataType === 'Boolean';
+        const isBoolFunctionCall = nodeData.expression?.type === 'FunctionCallExpression' && fm[nodeData.expression.fileId].objectFlowData.returnType === 'Boolean';
+        
+        if (isBoolAssignment || isBoolFunctionCall) {
+            event.preventDefault();
+            event.stopPropagation();
+            const testData = isBoolAssignment
+                ? nodeData.expression.left
+                : nodeData.expression;
+                
+            contextMenuStore.update((state) => ({
+            showing: true,
+            x: event.clientX,
+            y: event.clientY,
+            menuItems: [
+                {
+                    title: 'Change To If Statement',
+                    onSelected: () => mockData.setNodeAt({ path: nodePath, nodeData: nodeTemplates.ifStatement({ testData }) })
+                }
+            ]
+        }));
+        }
+    }
 </script>
 
 <div class:beingDragged>
@@ -113,7 +145,8 @@ import nodeTemplates from '../../lib/js/node_templates.js';
         on:dragend|stopPropagation={checkDropCancel}
         on:focus={() => isFocused = true}
         on:blur={() => isFocused = false}
-        on:keyup|preventDefault={checkKeyUp} >
+        on:keyup|preventDefault={checkKeyUp}
+        on:contextmenu={showChangeContextMenu} >
 
         <div class="flex w100 flow-step-action-bar">
             <div class="flex-1 flex">
@@ -138,7 +171,7 @@ import nodeTemplates from '../../lib/js/node_templates.js';
         on:dragleave|preventDefault={insertDragLeave}
         on:drop|stopPropagation={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
         on:drop|stopPropagation={removeInsertHover}
-        on:contextmenu|stopPropagation|preventDefault={showContextMenu}
+        on:contextmenu|stopPropagation|preventDefault={showInsertContextMenu}
         class="line-down-box"
         class:insert-drag-over={isOverInsertSpot}
     ></div>

@@ -31,7 +31,7 @@ const startValue = {
         },
         {
             type: "file",
-            id: "123"
+            id: "factorial"
         }
     ],
     folders: [
@@ -126,7 +126,7 @@ const fileTreeStore = {
             return tree;
         });
     }
-}
+};
 
 
 /**
