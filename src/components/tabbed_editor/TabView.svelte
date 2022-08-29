@@ -99,7 +99,9 @@
         
         <div class="flex-1">
             <pre>{runResultText}</pre>
-            <pre>{logText}</pre>
+            <div class="log-text-container">
+                <pre>{#if logText}{logText}{:else}// Use the LoggerUtil to view data{/if}</pre>
+            </div>
         </div>
 
         <div>
@@ -140,5 +142,14 @@
         background: white;
         border-radius: 12px;
         padding: 15px;
+    }
+
+    .log-text-container {
+        background: #222;
+        color: greenyellow;
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid #666;
+        margin-top: 15px;
     }
 </style>

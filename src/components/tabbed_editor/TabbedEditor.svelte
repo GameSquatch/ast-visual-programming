@@ -23,7 +23,7 @@
 			{/await}
 		{:else}
 		<p>
-			No data yet available; open a tab to view
+			Nothing to see here - open a file to start working!
 		</p>
 		{/if}
 	</div>

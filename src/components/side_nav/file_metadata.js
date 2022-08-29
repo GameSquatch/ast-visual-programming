@@ -32,7 +32,7 @@ import { typeDefaults } from '../../lib/js/type_defaults';
         }
     },
     "abc": {
-        title: "Main",
+        title: "main",
         fileType: "function",
         objectFlowData: {
             parameters: {},

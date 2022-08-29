@@ -21,7 +21,7 @@
 </script>
 
 <div class="header">
-    <h1>{headerText}</h1>
+    <h3>{headerText}</h3>
     <div class="flex header-actions">
         <!-- <button class="light-bg-btn" on:click={handleRouteClick('/app/run')}>Run</button> -->
         <button class="light-bg-btn" on:click={handleRouteClick('/app/chat')}>Chat</button>
@@ -34,6 +34,7 @@
         grid-area: head;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 0.75rem;
     }
 
