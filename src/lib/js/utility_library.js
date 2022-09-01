@@ -20,11 +20,11 @@ const StringUtil = {
         return str.substring(start, end);
     },
     /** @type {(str1: string, str2: string) => boolean} */
-    equals(str1, str2) {
+    equalTo(str1, str2) {
         return str1 === str2;
     },
     /** @type {(str1: string, str2: string) => boolean} */
-    notEquals(str1, str2) {
+    notEqualTo(str1, str2) {
         return str1 !== str2;
     }
 };
@@ -52,11 +52,11 @@ const IntegerUtil = {
         return num1 / num2;
     },
     /** @type {(num1: number, num2: number) => boolean} */
-    equals(num1, num2) {
+    equalTo(num1, num2) {
         return num1 === num2;
     },
     /** @type {(num1: number, num2: number) => boolean} */
-    notEquals(num1, num2) {
+    notEqualTo(num1, num2) {
         return num1 !== num2;
     },
     /** @type {(num1: number, num2: number) => boolean} */
@@ -127,12 +127,12 @@ String.prototype.isNotEmpty = function() {
 };
 
 // @ts-ignore
-String.prototype.equals = function(str) {
+String.prototype.equalTo = function(str) {
     return this === str;
 };
 
 // @ts-ignore
-String.prototype.notEquals = function(str) {
+String.prototype.notEqualTo = function(str) {
     return this !== str;
 };
 
@@ -158,12 +158,12 @@ Number.prototype.divideBy = function(num) {
 };
 
 // @ts-ignore
-Number.prototype.equals = function(num) {
+Number.prototype.equalTo = function(num) {
     return this.valueOf() === num;
 };
 
 // @ts-ignore
-Number.prototype.notEquals = function(num) {
+Number.prototype.notEqualTo = function(num) {
     return this.valueOf() !== num;
 };
 

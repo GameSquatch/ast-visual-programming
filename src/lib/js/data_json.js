@@ -79,6 +79,7 @@ const mockData = (function () {
                                             {
                                                 "type": "FunctionCallExpression",
                                                 "fileId": "factorial",
+                                                "dataType": "Integer",
                                                 "arguments": [
                                                     {
                                                         "type": "IdentifierRefCallExpression",
@@ -127,6 +128,7 @@ const mockData = (function () {
                             {
                             "type": "FunctionCallExpression",
                             "fileId": "factorial",
+                            "dataType": "Integer",
                             "arguments": [
                                 {
                                     "type": "IntegerLiteral",

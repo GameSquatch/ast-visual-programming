@@ -19,7 +19,7 @@
     function onPropertyChange(event) {
         const utilityMethod = event.target.value;
         const fnDef = utilDefs[nodeData.utilityName][utilityMethod];
-        const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]());
+        const args = fnDef.args.map((arg) => nodeTemplates[arg.dataType + "Literal"]());
 
         mockData.setNodeAt({
             path: nodePath,

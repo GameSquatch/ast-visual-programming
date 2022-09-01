@@ -21,7 +21,7 @@
         }
 
         const fnDef = typeDefs[nodeData.refData.dataType][method];
-        const args = fnDef.args.map((argType) => nodeTemplates[argType + "Literal"]());
+        const args = fnDef.args.map((arg) => nodeTemplates[arg.dataType + "Literal"]());
 
         mockData.setNodeAt({
             path: nodePath,

@@ -1,6 +1,11 @@
 /**
+ * @typedef {Object} ArgSpec
+ * @property {string} name
+ * @property {string} dataType
+ */
+/**
  * @typedef {Object} FunctionDefinition
- * @property {string[]} args
+ * @property {ArgSpec[]} args
  * @property {boolean} infiniteArgs
  * @property {string} returnType
  */
@@ -14,14 +19,20 @@ const utilDefs = {
     "LoggerUtil": {
         "logString": {
             "args": [
-                "String"
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Void"
         },
         "logNumber": {
             "args": [
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Void"
@@ -30,54 +41,90 @@ const utilDefs = {
     "StringUtil": {
         "concat": {
             "args": [
-                "String",
-                "String"
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "String"
         },
         "trim": {
             "args": [
-                "String"
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "String"
         },
         "length": {
             "args": [
-                "String"
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Integer"
         },
         "fromInt": {
             "args": [
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "String"
         },
         "substring": {
             "args": [
-                "String",
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "String"
         },
-        "equals": {
+        "equalTo": {
             "args": [
-                "String",
-                "String"
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "notEquals": {
+        "notEqualTo": {
             "args": [
-                "String",
-                "String"
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "String",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
@@ -86,87 +133,150 @@ const utilDefs = {
     "IntegerUtil": {
         "toString": {
             "args": [
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "String"
         },
         "add": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Integer"
         },
         "subtract": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Integer"
         },
         "multiply": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Integer"
         },
         "divide": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Integer"
         },
-        "equals": {
+        "equalTo": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
-        "notEquals": {
+        "notEqualTo": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
         "greaterThan": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
         "greaterThanOrEqual": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
         "lessThan": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
         },
         "lessThanOrEqual": {
             "args": [
-                "Integer",
-                "Integer"
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"
@@ -175,23 +285,38 @@ const utilDefs = {
     "BooleanUtil": {
         "and": {
             "args": [
-                "Boolean",
-                "Boolean"
+                {
+                    "dataType": "Boolean",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Boolean",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Boolean"
         },
         "or": {
             "args": [
-                "Boolean",
-                "Boolean"
+                {
+                    "dataType": "Boolean",
+                    "name": "todo"
+                },
+                {
+                    "dataType": "Boolean",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": true,
             "returnType": "Boolean"
         },
         "not": {
             "args": [
-                "Boolean"
+                {
+                    "dataType": "Boolean",
+                    "name": "todo"
+                }
             ],
             "infiniteArgs": false,
             "returnType": "Boolean"

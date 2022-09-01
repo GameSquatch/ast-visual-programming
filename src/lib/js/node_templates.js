@@ -54,6 +54,7 @@ import { utilDefs } from './util_definitions.js';
  * @typedef {Object} FunctionCallExpression
  * @property {string} type
  * @property {string} fileId
+ * @property {string} dataType
  * @property {Array.<LiteralNode|UtilityCallExpressionData|RefIdentifier|FunctionCallExpression>} arguments
  */
 
@@ -73,8 +74,8 @@ const nodeTemplates = {
             type: "UtilityCallExpression",
             utilityName: utilDefName,
             utilityMethod: methodName,
-            arguments: definitionArgs.map((argType) => {
-                const argTypeAdj = argType + 'Literal';
+            arguments: definitionArgs.map((arg) => {
+                const argTypeAdj = arg.dataType + 'Literal';
                 return this[argTypeAdj]();
             }),
             dataType: methodDefinition.returnType
@@ -96,7 +97,7 @@ const nodeTemplates = {
             type: "IdentifierRefCallExpression",
             refData: {...refData},
             method,
-            arguments: definitionArgs.map((argType) => this[argType + "Literal"]()),
+            arguments: definitionArgs.map((argType) => this[argType.dataType + "Literal"]()),
             dataType
         };
     },
@@ -195,13 +196,15 @@ const nodeTemplates = {
      * @function
      * @param {Object} spec
      * @param {string} spec.fileId - The id that refers back to the file metadata writable store
+     * @param {Object} spec.objectFlowData
      * @returns {FunctionCallExpression}
      */
-    "function": function({ fileId }) {
+    "function": function({ fileId, objectFlowData }) {
         return {
             type: "FunctionCallExpression",
             fileId,
-            arguments: []
+            arguments: [],
+            dataType: objectFlowData.returnType
         };
     }
 };
