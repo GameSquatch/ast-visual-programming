@@ -27,6 +27,7 @@
 
     function prependDrop(node) {
         setHoverPrepend(false);
+        if (node === null) return;
 
         if (node.dragType === 'moveFlowStep') {
             mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.0`, insertAt: true });
@@ -38,6 +39,7 @@
 
     function appendDrop(node) {
         setHoverAppend(false);
+        if (node === null) return;
 
         if (node.dragType === 'moveFlowStep') {
             mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.${flowData.body.length}`, insertAt: true });
