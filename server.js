@@ -1,7 +1,5 @@
 const express = require('express');
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
-const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
-const { authCookieParser, checkIfAlreadyAuthed, checkCookieToken, attachFirestore } = require('./server/middleware.js');
+const { authCookieParser, checkIfAlreadyAuthed, checkCookieToken } = require('./server/middleware.js');
 const { createJWT, createSetCookieHeader } = require('./server/utils.js');
 const { startSocketServer } = require('./server/socket/socket_server.js');
 const http = require('http');
@@ -13,23 +11,13 @@ const isProd = process.env.NODE_ENV === 'production';
 if (!isProd) {
     require('dotenv').config();
 }
-// @ts-ignore
-const serviceAccount = isProd && JSON.parse(process.env.FIREBASE_ADMIN_CERT);
-
-(isProd && initializeApp({
-    credential: cert(serviceAccount)
-}));
-
-const db = isProd && getFirestore();
-
 
 const app = express();
-
 
 const server = http.createServer(app);
 startSocketServer(server);
 
-app.use(attachFirestore(db), authCookieParser);
+app.use(authCookieParser);
 
 app.use('/api', apiRouter);
 app.get('/', (req, res) => res.redirect('/app'));
@@ -50,7 +38,7 @@ appRouter.post('/login', express.urlencoded({ extended: true }), (req, res) => {
     res.type('application/json');
     res.set('Cache-Control', 'no-store');
 
-    const [username, password] = [ req.body.username, req.body.password ];
+    const [ username, password ] = [ req.body.username, req.body.password ];
 
     const checkUsername = process.env.DEV_Z_USERNAME ?? process.env.Z_USERNAME;
     const checkPassword = process.env.DEV_Z_PASSWORD ?? process.env.Z_PASSWORD;
