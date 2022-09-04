@@ -9,6 +9,7 @@
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { get } from 'svelte/store';
     import nodeTemplates from '../../lib/js/node_templates.js';
+import { editorStore } from '../tabbed_editor/editor_store.js';
 
     export let accessor;
     /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */
@@ -88,6 +89,10 @@
     }
 
     function showInsertContextMenu(event) {
+        const activeTab = get(editorStore).activeTab;
+        const fileReturnType = get(fileMetadata)[activeTab].objectFlowData.returnType;
+        const flowStep = nodeTemplates.flowStep();
+
         contextMenuStore.update((state) => ({
             showing: true,
             x: event.clientX,
@@ -95,11 +100,19 @@
             menuItems: [
                 {
                     title: 'Add Flow Step',
-                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.flowStep(), append: true })
+                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: { ...flowStep }, append: true })
                 },
                 {
                     title: 'Add If Step',
                     onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.ifStatement(), append: true })
+                },
+                {
+                    title: 'Add return statement',
+                    onSelected: () => mockData.insertNodeIntoFlowAt({
+                        path: nodePath,
+                        nodeData: { ...flowStep, expression: nodeTemplates.returnStatement({ functionId: get(editorStore).activeTab, returnType: fileReturnType }) },
+                        append: true
+                    })
                 }
             ]
         }));
