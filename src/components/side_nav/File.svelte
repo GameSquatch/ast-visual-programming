@@ -33,20 +33,20 @@
 
     function showContextMenu(event) {
         contextMenuStore.update((state) => ({
-                showing: true,
-                x: event.clientX,
-                y: event.clientY,
-                menuItems: [
-                    {
-                        title: 'Rename',
-                        onSelected: () => renamingMode = true
-                    },
-                    {
-                        title: 'Delete',
-                        onSelected: () => console.log('deleting')
-                    }
-                ]
-            }))
+            showing: true,
+            x: event.clientX,
+            y: event.clientY,
+            menuItems: [
+                {
+                    title: 'Rename',
+                    onSelected: () => renamingMode = true
+                },
+                {
+                    title: 'Delete',
+                    onSelected: () => console.log('deleting')
+                }
+            ]
+        }));
     }
 
     function renameDone(event) {
@@ -60,6 +60,9 @@
         event.currentTarget.blur();
     }
 
+    /**
+     * @param {HTMLInputElement} inputElem
+     */
     function selectText(inputElem) {
         inputElem.select();
     }
