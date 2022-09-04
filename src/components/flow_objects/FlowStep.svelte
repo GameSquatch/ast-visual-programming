@@ -135,16 +135,16 @@ import { editorStore } from '../tabbed_editor/editor_store.js';
                 : nodeData.expression;
                 
             contextMenuStore.update((state) => ({
-            showing: true,
-            x: event.clientX,
-            y: event.clientY,
-            menuItems: [
-                {
-                    title: 'Change To If Statement',
-                    onSelected: () => mockData.setNodeAt({ path: nodePath, nodeData: nodeTemplates.ifStatement({ testData }) })
-                }
-            ]
-        }));
+                showing: true,
+                x: event.clientX,
+                y: event.clientY,
+                menuItems: [
+                    {
+                        title: 'Change To If Statement',
+                        onSelected: () => mockData.setNodeAt({ path: nodePath, nodeData: nodeTemplates.ifStatement({ testData }) })
+                    }
+                ]
+            }));
         }
     }
 </script>
