@@ -96,7 +96,7 @@ function findReferencedFunctions(astNode, foundCallback) {
             foundCallback(astNode.fileId);
         case "IdentifierRefCallExpression":
         case "UtilityCallExpression":
-            astNode.arguments.forEach((arg) => findReferencedFunctions(arg, foundCallback));
+            astNode.arguments.forEach((arg) => findReferencedFunctions(arg.nodeData, foundCallback));
             break;
         default:
             break;

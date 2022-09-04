@@ -95,6 +95,6 @@ function outputLiteralValue(value, dataType) {
 
 function argStringBuilder(acc, arg, index, fileId, { codeData, fileMetadata }) {
     return acc += index > 0
-        ? `, ${this[arg.type](arg, fileId, { codeData, fileMetadata })}`
-        : this[arg.type](arg, fileId, { codeData, fileMetadata });
+        ? `, ${this[arg.nodeData.type](arg.nodeData, fileId, { codeData, fileMetadata })}`
+        : this[arg.nodeData.type](arg.nodeData, fileId, { codeData, fileMetadata });
 }
