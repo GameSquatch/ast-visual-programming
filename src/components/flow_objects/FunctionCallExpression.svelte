@@ -31,15 +31,25 @@
             if (!arg) {
                 mockData.setNodeAt({
                     path: `${nodePath}.arguments.${nodeData.arguments.length}`,
-                    nodeData: nodeTemplates[parameter.dataType + 'Literal']()
+                    nodeData: {
+                        nodeData: nodeTemplates[parameter.dataType + 'Literal'](),
+                        name: parameter.name,
+                        description: '',
+                        dataType: parameter.dataType
+                    }
                 });
                 continue;
             }
-
+            
             if (parameter.dataType !== arg.dataType) {
                 mockData.setNodeAt({
                     path: `${nodePath}.arguments.${i}`,
-                    nodeData: nodeTemplates[parameter.dataType + 'Literal']()
+                    nodeData: {
+                        nodeData: nodeTemplates[parameter.dataType + 'Literal'](),
+                        name: arg.name,
+                        description: arg.description,
+                        dataType: parameter.dataType
+                    }
                 });
             }
         }
@@ -50,12 +60,12 @@
     const populateArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}`, nodeData: node });
+        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
     };
 
     function onClear(i, argument) {
         mockData.setNodeAt({
-            path: `${nodePath}.arguments.${i}`,
+            path: `${nodePath}.arguments.${i}.nodeData`,
             nodeData: nodeTemplates[argument.dataType + "Literal"]()
         });
     }
@@ -66,21 +76,22 @@
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
             <Argument {argLevel}
-                argName={paramNames[i]}
+                name={paramNames[i]}
+                description={argument.description}
                 on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.dataType, stateChangeCallback: populateArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}
                 returnType={argument.dataType}>
 
                 {#if argument.type === "FunctionCallExpression"}
-                    <svelte:self nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
+                    <svelte:self nodeData={argument.nodeData} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i + ".nodeData"} />
                 {:else}
                     <svelte:component
-                        this={constructors[argument.type]}
-                        nodeData={argument}
+                        this={constructors[argument.nodeData.type]}
+                        nodeData={argument.nodeData}
                         argLevel={argLevel + 1}
                         isArgument={true}
                         contextType={argument.dataType}
-                        nodePath={nodePath + ".arguments." + i} />
+                        nodePath={nodePath + ".arguments." + i + ".nodeData"} />
                 {/if}
             </Argument>
         {/each}

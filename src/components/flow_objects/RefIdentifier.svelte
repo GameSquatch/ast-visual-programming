@@ -30,6 +30,7 @@
             dataType: nodeData.dataType,
             refData: nodeData
         });
+        
         mockData.setNodeAt({ path: nodePath, nodeData: newNodeData });
 
         usesTypeMethod = true;

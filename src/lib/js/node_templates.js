@@ -76,7 +76,11 @@ const nodeTemplates = {
             utilityMethod: methodName,
             arguments: definitionArgs.map((arg) => {
                 const argTypeAdj = arg.dataType + 'Literal';
-                return this[argTypeAdj]();
+                const argNodeData = this[argTypeAdj]();
+                return {
+                    nodeData: argNodeData,
+                    ...arg
+                }
             }),
             dataType: methodDefinition.returnType
         };
@@ -87,7 +91,6 @@ const nodeTemplates = {
      * @param {string} spec.method
      * @param {string} spec.dataType
      * @param {Object} spec.refData
-     * @returns {VariableRefCallExpression}
      */
     identifierRefCallExpression: function({ method, dataType, refData }) {
         const methodDefinition = typeDefs[refData.dataType][method];
@@ -97,7 +100,13 @@ const nodeTemplates = {
             type: "IdentifierRefCallExpression",
             refData: {...refData},
             method,
-            arguments: definitionArgs.map((argType) => this[argType.dataType + "Literal"]()),
+            arguments: definitionArgs.map((argType) => {
+                const argNodeData = this[argType.dataType + "Literal"]();
+                return {
+                    nodeData: argNodeData,
+                    ...argType
+                };
+            }),
             dataType
         };
     },

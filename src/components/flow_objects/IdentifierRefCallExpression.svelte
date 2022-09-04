@@ -21,7 +21,12 @@
         }
 
         const fnDef = typeDefs[nodeData.refData.dataType][method];
-        const args = fnDef.args.map((arg) => nodeTemplates[arg.dataType + "Literal"]());
+        const args = fnDef.args.map((arg) => {
+            return {
+                nodeData: nodeTemplates[arg.dataType + "Literal"](),
+                ...fnDef
+            }
+        });
 
         mockData.setNodeAt({
             path: nodePath,
@@ -37,12 +42,12 @@
     const dropArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}`, nodeData: node });
+        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
     };
 
     function onClear(i, argument) {
         mockData.setNodeAt({
-            path: `${nodePath}.arguments.${i}`,
+            path: `${nodePath}.arguments.${i}.nodeData`,
             nodeData: nodeTemplates[argument.dataType + "Literal"]()
         });
     }
@@ -62,22 +67,25 @@
     </div>
     <div class="arguments-wrapper">
         {#each nodeData.arguments as argument, i (i)}
-            <Argument {argLevel} 
+            <Argument
+                name={argument.name}
+                description={argument.description}
+                {argLevel} 
                 on:innerDrop={(event) => flowDropHandler({ contextName: 'argument', contextType: argument.dataType, stateChangeCallback: dropArgument(i) })(event.detail)}
                 onClear={() => onClear(i, argument)}
                 returnType={argument.dataType}>
 
                 <!-- <ClearNodeProp onClick={(_) => nodeData.arguments[i] = nodeTemplates[argument.dataType + "Literal"]()} /> -->
-                {#if argument.type === "IdentifierRefCallExpression"}
-                    <svelte:self nodeData={argument} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i} />
+                {#if argument.nodeData.type === "IdentifierRefCallExpression"}
+                    <svelte:self nodeData={argument.nodeData} argLevel={argLevel + 1} isArgument={true} contextType={argument.dataType} nodePath={nodePath + ".arguments." + i + ".nodeData"} />
                 {:else}
                     <svelte:component
-                        this={constructors[argument.type]}
-                        nodeData={argument}
+                        this={constructors[argument.nodeData.type]}
+                        nodeData={argument.nodeData}
                         argLevel={argLevel + 1}
                         isArgument={true}
                         contextType={argument.dataType}
-                        nodePath={nodePath + ".arguments." + i} />
+                        nodePath={nodePath + ".arguments." + i + ".nodeData"} />
                 {/if}
             </Argument>
         {/each}

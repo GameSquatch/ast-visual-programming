@@ -25,8 +25,13 @@ const mockData = (function () {
                         "dataType": "Boolean",
                         "arguments": [
                             {
-                                "type": "IntegerLiteral",
-                                "value": 2,
+                                "nodeData": {
+                                    "type": "IntegerLiteral",
+                                    "value": 2,
+                                    "dataType": "Integer"
+                                },
+                                "name": "a",
+                                "description": "The number who's factorial you want to calculate",
                                 "dataType": "Integer"
                             }
                         ],
@@ -77,29 +82,44 @@ const mockData = (function () {
                                         "method": "multiplyBy",
                                         "arguments": [
                                             {
-                                                "type": "FunctionCallExpression",
-                                                "fileId": "factorial",
-                                                "dataType": "Integer",
-                                                "arguments": [
-                                                    {
-                                                        "type": "IdentifierRefCallExpression",
-                                                        "dataType": "Integer",
-                                                        "refData": {
-                                                            "type": "RefIdentifier",
-                                                            "fnRefType": "parameters",
-                                                            "refId": "8c2f9aa2-0a80-4409-8e96-da2aabe1d1d5",
+                                                "nodeData": {
+                                                    "type": "FunctionCallExpression",
+                                                    "fileId": "factorial",
+                                                    "dataType": "Integer",
+                                                    "arguments": [
+                                                        {
+                                                            "nodeData": {
+                                                                "type": "IdentifierRefCallExpression",
+                                                                "dataType": "Integer",
+                                                                "refData": {
+                                                                    "type": "RefIdentifier",
+                                                                    "fnRefType": "parameters",
+                                                                    "refId": "8c2f9aa2-0a80-4409-8e96-da2aabe1d1d5",
+                                                                    "dataType": "Integer"
+                                                                },
+                                                                "method": "subtract",
+                                                                "arguments": [
+                                                                    {
+                                                                        "nodeData": {
+                                                                            "type": "IntegerLiteral",
+                                                                            "value": 1,
+                                                                            "dataType": "Integer"
+                                                                        },
+                                                                        "name": "a",
+                                                                        "description": "Ref identifier argument 8c2",
+                                                                        "dataType": "Integer"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "name": "a",
+                                                            "description": "",
                                                             "dataType": "Integer"
-                                                        },
-                                                        "method": "subtract",
-                                                        "arguments": [
-                                                            {
-                                                                "type": "IntegerLiteral",
-                                                                "value": 1,
-                                                                "dataType": "Integer"
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
+                                                        }
+                                                    ]
+                                                },
+                                                "name": "ok",
+                                                "description": "To multiply by the caller",
+                                                "dataType": "Integer"
                                             }
                                         ]
                                     }
@@ -126,17 +146,27 @@ const mockData = (function () {
                         "dataType": "Void",
                         "arguments": [
                             {
-                            "type": "FunctionCallExpression",
-                            "fileId": "factorial",
-                            "dataType": "Integer",
-                            "arguments": [
-                                {
-                                    "type": "IntegerLiteral",
-                                    "value": 5,
-                                    "dataType": "Integer"
-                                }
-                            ]
-                        }
+                                "nodeData": {
+                                    "type": "FunctionCallExpression",
+                                    "fileId": "factorial",
+                                    "dataType": "Integer",
+                                    "arguments": [
+                                        {
+                                            "nodeData": {
+                                                "type": "IntegerLiteral",
+                                                "value": 5,
+                                                "dataType": "Integer"
+                                            },
+                                            "name": "a",
+                                            "description": "The number who's factorial you want to calculate",
+                                            "dataType": "Integer"
+                                        }
+                                    ]
+                                },
+                                "dataType": "Integer",
+                                "name": null,
+                                "description": "The thing to log"
+                            }
                         ]
                     }
                 }
