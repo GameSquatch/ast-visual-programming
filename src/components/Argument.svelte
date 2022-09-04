@@ -20,7 +20,9 @@
 
 <div class="flex wrapper">
     <p class="gt-symbol" on:click={onClear}><span class="small-text">{returnType}</span> &gt; <span class="small-text">{name ?? ''}</span> </p>
-    <span class="description-hover">{description ?? ''}</span>
+    {#if description}
+        <span class="description-hover">{description}</span>
+    {/if}
     <div on:drop|stopPropagation={(event) => dispatch('innerDrop', event)}
         on:dragover={() => {}}
         class="flex-1 argument-container {argLevelClass}">
@@ -42,6 +44,7 @@
         cursor: pointer;
     }
     .gt-symbol:hover + .description-hover {
+        display: block;
         transition: opacity 0.25s ease-out;
         opacity: 1;
     }
@@ -49,11 +52,13 @@
     .description-hover {
         position: absolute;
         top: 100%;
-        left: 0;
+        right: 0;
+        display: none;
         opacity: 0;
         background: black;
         color: white;
         padding: 8px;
+        z-index: 5;
     }
 
     .argument-container {
