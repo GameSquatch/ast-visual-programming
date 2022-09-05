@@ -74,7 +74,6 @@
 </script>
 
 <div
-    class="flow-wrapper"
     on:dragover|preventDefault={dragOverHandler}
     on:drop|stopPropagation={flowDropHandler({
         contextName: 'flow',
@@ -123,10 +122,6 @@
 </div>
 
 <style>
-    .flow-wrapper {
-        height: 100%;
-    }
-
     .bumper-zone {
         height: 45px;
     }

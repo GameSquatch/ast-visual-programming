@@ -9,7 +9,7 @@
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { get } from 'svelte/store';
     import nodeTemplates from '../../lib/js/node_templates.js';
-import { editorStore } from '../tabbed_editor/editor_store.js';
+    import FlowStepConnector from './FlowStepConnector.svelte';
 
     export let accessor;
     /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */
@@ -17,7 +17,6 @@ import { editorStore } from '../tabbed_editor/editor_store.js';
     /** @type {string} */
     export let nodePath;
 
-    let isOverInsertSpot = false;
     let beingDragged = false;
     let isFocused = false;
     const dispatch = createEventDispatcher();
@@ -29,37 +28,15 @@ import { editorStore } from '../tabbed_editor/editor_store.js';
     function insertDragOverHandler(event) {
         // something
     }
-    function insertDragEnter(event) {
-        isOverInsertSpot = true;
-    }
-    function insertDragLeave(event) {
-        isOverInsertSpot = false;
-    }
-    function removeInsertHover(event) {
-        isOverInsertSpot = false;
-    }
 
     function dropModify(node) {
         if (node === null || node.dragType === 'moveFlowStep') return;
 
         nodeData.expression = node;
     }
-    
-    function insertDrop(node) {
-        if (node === null) {
-            return;
-        }
-
-        if (node.dragType === "moveFlowStep") {// node is a dragObject at this point
-            mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: nodePath });
-            return;
-        }
-
-        mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: node, append: true });
-    }
 
     
-     function handleDragStart(event) {
+    function handleDragStart(event) {
         const dragData = moveFlowStepDrag({ flowStepFromPath: nodePath });
         
         event.dataTransfer.setData('text/json', JSON.stringify(dragData));
@@ -86,36 +63,6 @@ import { editorStore } from '../tabbed_editor/editor_store.js';
         if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
             event.stopPropagation();
         }
-    }
-
-    function showInsertContextMenu(event) {
-        const activeTab = get(editorStore).activeTab;
-        const fileReturnType = get(fileMetadata)[activeTab].objectFlowData.returnType;
-        const flowStep = nodeTemplates.flowStep();
-
-        contextMenuStore.update((state) => ({
-            showing: true,
-            x: event.clientX,
-            y: event.clientY,
-            menuItems: [
-                {
-                    title: 'Add Flow Step',
-                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: { ...flowStep }, append: true })
-                },
-                {
-                    title: 'Add If Step',
-                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.ifStatement(), append: true })
-                },
-                {
-                    title: 'Add return statement',
-                    onSelected: () => mockData.insertNodeIntoFlowAt({
-                        path: nodePath,
-                        nodeData: { ...flowStep, expression: nodeTemplates.returnStatement({ functionId: get(editorStore).activeTab, returnType: fileReturnType }) },
-                        append: true
-                    })
-                }
-            ]
-        }));
     }
 
     /**
@@ -178,31 +125,13 @@ import { editorStore } from '../tabbed_editor/editor_store.js';
             <p class="dull-text">Drag an action here</p>
         {/if}
     </div>
-    <div
-        on:dragover|preventDefault={insertDragOverHandler}
-        on:dragenter|preventDefault={insertDragEnter}
-        on:dragleave|preventDefault={insertDragLeave}
-        on:drop|stopPropagation={flowDropHandler({ contextName: 'flow', stateChangeCallback: insertDrop })}
-        on:drop|stopPropagation={removeInsertHover}
-        on:contextmenu|stopPropagation|preventDefault={showInsertContextMenu}
-        class="line-down-box"
-        class:insert-drag-over={isOverInsertSpot}
-    ></div>
+    
+    <FlowStepConnector
+        {nodePath}
+        dragOverHandler={insertDragOverHandler} />
 </div>
 
 <style>
-    .line-down-box {
-        margin-left: 20px;
-        border-left: 1px dashed black;
-        height: 30px;
-    }
-
-    .insert-drag-over {
-        border-left: 2px dashed green;
-        transition: height 0.3s ease-out;
-        height: 45px;
-    }
-
     .beingDragged {
         opacity: 0.4;
     }
