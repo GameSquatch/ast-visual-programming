@@ -24,7 +24,7 @@
         const args = fnDef.args.map((arg) => {
             return {
                 nodeData: nodeTemplates[arg.dataType + "Literal"](),
-                ...fnDef
+                ...arg
             }
         });
 
