@@ -11,7 +11,6 @@
     import nodeTemplates from '../../lib/js/node_templates.js';
     import FlowStepConnector from './FlowStepConnector.svelte';
 
-    export let accessor;
     /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */
     export let nodeData;
     /** @type {string} */

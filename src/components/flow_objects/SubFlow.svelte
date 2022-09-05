@@ -107,7 +107,6 @@
             {:else}
                 <FlowStep
                     nodeData={flowStep}
-                    accessor={i}
                     on:moveStep={(event) => moveStep(event, i)}
                     nodePath={path} />
             {/if}
