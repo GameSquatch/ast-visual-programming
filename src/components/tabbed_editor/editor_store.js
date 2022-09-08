@@ -20,12 +20,9 @@ function createEditorStore(initialValue) {
 		update,
 		/**
 		 * @function
-		 * @param {Object} spec
-		 * @param {string} spec.fileId 
-		 * @param {string} [spec.title]
-		 * @param {string} [spec.fileType]
+		 * @param {string} fileId
 		 */
-		openTab({ fileId }) {
+		openTab(fileId) {
 			update((editor) => {
 				editor.activeTab = fileId;
 				if (!editor.openedTabIds[fileId]) {
