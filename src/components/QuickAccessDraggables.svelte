@@ -36,7 +36,6 @@
                 >{varData.name}
             </span>
         {/each}
-        <span on:dragstart={returnDragStart} class="var-tag return-tag" draggable="true">return</span>
     </div>
 
     <div class="right-col">
@@ -55,6 +54,8 @@
                 draggable="true">{paramData.name}</span>
         {/each}
     </div>
+
+    <div class="return-tag-container"><span on:dragstart={returnDragStart} class="var-tag return-tag" draggable="true">return</span></div>
 </div>
 
 <style>
@@ -71,7 +72,7 @@
         background: rgba(255, 255, 255, 0.3);
         border-radius: 12px;
     }
-    .quick-access-floater > p {
+    .quick-access-floater > p, .return-tag-container {
         width: 100%;
         text-align: center;
     }
@@ -85,6 +86,14 @@
         text-align: center;
         margin-bottom: 10px;
         box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.24);
+        border: 1px solid black;
+    }
+
+    .return-tag-container {
+        margin-top: 10px;
+    }
+    .return-tag {
+        border: 2px solid white;
     }
 
     .left-col,
