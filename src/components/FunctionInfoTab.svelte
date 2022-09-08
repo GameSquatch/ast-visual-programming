@@ -99,6 +99,7 @@
     }
 
     function handleRefDefaultValueChange(event, id, dataType) {
+        console.log(id, dataType);
         /** @type {HTMLInputElement} */
         const target = event.target;
         const newValue = dataType === "String" ? event.target.value : (dataType === 'Boolean' ? target.checked : target.valueAsNumber);
@@ -169,7 +170,7 @@
                         <div class="col-3">
                             <input
                                 checked={varObj.dataType === 'Boolean' && varObj.defaultValue === true}
-                                on:change={(event) => handleRefDefaultValueChange(event, varId, 'variables', varObj.dataType)}
+                                on:change={(event) => handleRefDefaultValueChange(event, varId, varObj.dataType)}
                                 type={varObj.dataType === 'Integer' ? 'number' : ((varObj.dataType === 'Boolean') ? 'checkbox' : 'text')}
                                 value={varObj.defaultValue} />
                         </div>
