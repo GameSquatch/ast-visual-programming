@@ -26,6 +26,10 @@ const StringUtil = {
     /** @type {(str1: string, str2: string) => boolean} */
     notEqualTo(str1, str2) {
         return str1 !== str2;
+    },
+    /** @type {(str: string, index: number) => string} */
+    charAt(str, index) {
+        return str[index] ?? '';
     }
 };
 
@@ -87,6 +91,10 @@ const BooleanUtil = {
     },
     not(b) {
         return !b;
+    },
+    /** @type {(b: boolean) => string} */
+    toString(b) {
+        return b.toString();
     }
 };
 

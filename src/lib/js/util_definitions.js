@@ -153,6 +153,23 @@ const utilDefs = {
             "infiniteArgs": false,
             "returnType": "Boolean",
             "description": "Compares two strings against each other and returns true or false"
+        },
+        "charAt": {
+            "args": [
+                {
+                    "dataType": "String",
+                    "name": "base string",
+                    "description": "The string you are indexing"
+                },
+                {
+                    "dataType": "Integer",
+                    "name": "index",
+                    "description": "The index within the string"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Returns the character at the specified position"
         }
     },
     "IntegerUtil": {
@@ -385,6 +402,18 @@ const utilDefs = {
             "infiniteArgs": false,
             "returnType": "Boolean",
             "description": "Inverts a true to false and a false to true"
+        },
+        "toString": {
+            "args": [
+                {
+                    "dataType": "Boolean",
+                    "name": null,
+                    "description": "The bool you want to convert"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Converts a boolean to a string"
         }
     }
 };

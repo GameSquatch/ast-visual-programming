@@ -91,6 +91,100 @@ const typeDefs = {
             "infiniteArgs": false,
             "returnType": "Boolean",
             "description": "Checks for non-equality of strings"
+        },
+        "charAt": {
+            "args": [
+                {
+                    "dataType": "Integer",
+                    "name": "index",
+                    "description": "The index within the string"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Returns the character at the specified position"
+        },
+        "includes": {
+            "args": [
+                {
+                    "dataType": "String",
+                    "name": "needle",
+                    "description": "A string to search within the calling string"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "Boolean",
+            "description": "If the calling string contains needle, return true, otherwise false"
+        },
+        "indexOf": {
+            "args": [
+                {
+                    "dataType": "String",
+                    "name": "needle",
+                    "description": "A string to search within the calling string"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "Integer",
+            "description": "If the calling string contains needle, return index of first char, otherwise -1"
+        },
+        "repeat": {
+            "args": [
+                {
+                    "dataType": "Integer",
+                    "name": "count",
+                    "description": "The number of times to repeat the calling string"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Repeats the calling string count times and returns that as a new string"
+        },
+        "replace": {
+            "args": [
+                {
+                    "dataType": "String",
+                    "name": "pattern",
+                    "description": "A string to search within the calling string"
+                },
+                {
+                    "dataType": "String",
+                    "name": "replacement",
+                    "description": "The value to replace the pattern with"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Replaces a pattern with something and returns a new string"
+        },
+        "replaceAll": {
+            "args": [
+                {
+                    "dataType": "String",
+                    "name": "pattern",
+                    "description": "A string to search within the calling string"
+                },
+                {
+                    "dataType": "String",
+                    "name": "replacement",
+                    "description": "The value to replace the pattern with"
+                }
+            ],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Replaces all occurrances of a pattern with something and returns a new string"
+        },
+        "toUpperCase": {
+            "args": [],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Converts string to upper case"
+        },
+        "toLowerCase": {
+            "args": [],
+            "infiniteArgs": false,
+            "returnType": "String",
+            "description": "Converts string to lower case"
         }
     },
     "Integer": {
