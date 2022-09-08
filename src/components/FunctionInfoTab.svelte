@@ -91,6 +91,12 @@
         fileMetadata.changeParameterType({ fnId: info.id, paramId: id, dataType: event.target.value });
     }
 
+    /**
+     * @function
+     * @param event
+     * @param {string} id
+     * @param {string} dataType
+     */
     function handleParamDefaultValueChange(event, id, dataType) {
         /** @type {HTMLInputElement} */
         const target = event.target;
@@ -98,8 +104,13 @@
         fileMetadata.changeParameterDefaultValue({ fnId: info.id, paramId: id, newValue });
     }
 
+    /**
+     * @function
+     * @param event
+     * @param {string} id
+     * @param {string} dataType
+     */
     function handleRefDefaultValueChange(event, id, dataType) {
-        console.log(id, dataType);
         /** @type {HTMLInputElement} */
         const target = event.target;
         const newValue = dataType === "String" ? event.target.value : (dataType === 'Boolean' ? target.checked : target.valueAsNumber);
