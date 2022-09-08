@@ -1,17 +1,11 @@
 import { writable } from 'svelte/store';
 
-/**
- * @typedef {Object} EditorTab
- * @property {string} title
- * @property {string} id
- * @property {string} fileType
- */
 
 /**
  * @typedef {object} EditorState
  * @property {string} activeTab
  * @property {Object.<string, boolean>} openedTabIds
- * @property {EditorTab[]} tabs
+ * @property {string[]} tabs
  */
 
 /**
@@ -27,16 +21,16 @@ function createEditorStore(initialValue) {
 		/**
 		 * @function
 		 * @param {Object} spec
-		 * @param {string} spec.id 
+		 * @param {string} spec.fileId 
 		 * @param {string} [spec.title]
 		 * @param {string} [spec.fileType]
 		 */
-		openTab({ id, title, fileType }) {
+		openTab({ fileId }) {
 			update((editor) => {
-				editor.activeTab = id;
-				if (!editor.openedTabIds[id] && title && fileType) {
-					editor.tabs.push({ title, id, fileType });
-					editor.openedTabIds[id] = true;
+				editor.activeTab = fileId;
+				if (!editor.openedTabIds[fileId]) {
+					editor.tabs.push(fileId);
+					editor.openedTabIds[fileId] = true;
 				}
 
 				return editor;
@@ -54,7 +48,7 @@ function createEditorStore(initialValue) {
 				if (editor.tabs.length === 0) {
 					editor.activeTab = '';
 				} else if (id === editor.activeTab) {
-					editor.activeTab = editor.tabs[0].id;
+					editor.activeTab = editor.tabs[0];
 				}
 				
 				return editor;

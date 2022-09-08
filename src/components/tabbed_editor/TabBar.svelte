@@ -1,17 +1,19 @@
 <script>
 	import { editorStore } from './editor_store.js';
+	import { fileMetadata } from '../side_nav/file_metadata.js';
 	
-	export let tabData;
+	export let tabFileIds;
 </script>
 
 <div class="tabs-wrapper">
 	<div class="tabs-flex">
-		{#each tabData as tab, i (tab.id)}
-		<div on:click={(_) => editorStore.openTab({ id: tab.id })} class="tab {tab.fileType}" class:active={$editorStore.activeTab === tab.id}>
-			<span>{tab.title}</span>
-			<div style="width: 18px"></div>
-			<span class="close-x" on:click={(_) => editorStore.closeTab(tab.id, i)}><i class="mi-close" /></span>
-		</div>
+		{#each tabFileIds as fileId, i (fileId)}
+		{@const fm = $fileMetadata[fileId]}
+			<div on:click={(_) => editorStore.openTab(fileId)} class="tab {fm.fileType}" class:active={$editorStore.activeTab === fileId}>
+				<span>{fm.title}</span>
+				<div style="width: 18px"></div>
+				<span class="close-x" on:click={(_) => editorStore.closeTab(fileId, i)}><i class="mi-close" /></span>
+			</div>
 		{/each}
 	</div>
 </div>

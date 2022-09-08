@@ -10,7 +10,7 @@
 
 <div class="editor-wrapper">
 	<div>
-		<TabBar tabData={$editorStore.tabs} />
+		<TabBar tabFileIds={$editorStore.tabs} />
 	</div>
 	<div class="tab-view-wrapper">
 		{#if $editorStore.activeTab !== ''}

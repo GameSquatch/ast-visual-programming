@@ -15,8 +15,8 @@
     
     $: metadata = $fileMetadata[fileData.id];
     
-    function openNewFile(functionId, functionTitle) {
-        editorStore.openTab({ id: functionId, title: functionTitle, fileType: metadata.fileType });
+    function openNewFile(functionId) {
+        editorStore.openTab({ fileId: functionId });
     }
 
     /**
