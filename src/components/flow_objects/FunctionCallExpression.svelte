@@ -17,7 +17,6 @@
     let paramNames = [];
 
     // Populate empty arguments when the file metadata has params added to it
-    // TODO: what happens when the param data type changes?
     const fmUnsub = fileMetadata.subscribe((metadata) => {
         fm = metadata;
         const parameters = metadata[nodeData.fileId].objectFlowData.parameters;

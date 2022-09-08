@@ -40,7 +40,7 @@
 
         textResult.then((codeText) => {
             const logLines = new Function(
-                `const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; ${codeText}; const l = [ ...LoggerUtil.logLines ]; LoggerUtil.logLines = []; return l; }; return dynamicFunc;`
+                `const dynamicFunc = (StringUtil, IntegerUtil, LoggerUtil, BooleanUtil) => {'use strict'; const executedSteps = []; ${codeText}; const l = [ ...LoggerUtil.logLines ]; LoggerUtil.logLines = []; console.log(executedSteps); return l; }; return dynamicFunc;`
             )()(StringUtil, IntegerUtil, LoggerUtil, BooleanUtil);
             runResultText = codeText;
             logText = logLines.join('\n');
