@@ -17,8 +17,6 @@
             return;
         }
 
-        console.log(node);
-
         mockData.setNodeAt({ path: `${nodePath}.test`, nodeData: node });
     }
 

@@ -74,6 +74,12 @@ const fileMetadata = (() => {
                 return state;
             });
         },
+        deleteParameter({ fnId, paramId }) {
+            this.update((state) => {
+                delete state[fnId].objectFlowData.parameters[paramId];
+                return state;
+            });
+        },
         changeParameterType({ fnId, paramId, dataType }) {
             update((state) => {
                 const param = state[fnId].objectFlowData.parameters[paramId];

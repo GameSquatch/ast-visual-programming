@@ -120,6 +120,17 @@
         };
     }
 
+    function deleteVar(varId) {
+        mockData.update((state) => {
+            delete state[info.id].info.variables[varId];
+            return state;
+        });
+    }
+
+    function deleteParam(paramId) {
+        fileMetadata.deleteParameter({ fnId: info.id, paramId });
+    }
+
     function setReturnType(event) {
         $fileMetadata[info.id].objectFlowData.returnType = event.target.value;
     }
@@ -163,6 +174,7 @@
                             })}
                         class="flex w100 var-container">
                         <div class="flex col-1">
+                            <button class="delete-btn" on:click={() => deleteVar(varId)}>Del</button>
                             <div class="drag-var" draggable="true" />
                             <input
                                 required
@@ -210,6 +222,7 @@
                             })}
                         class="flex w100 var-container">
                         <div class="flex col-1">
+                            <button class="delete-btn" on:click={() => deleteParam(paramId)}>Del</button>
                             <div class="drag-var" draggable="true" />
                             <input
                                 required
@@ -300,6 +313,10 @@
     }
     .col-3 {
         min-width: 250px;
+    }
+
+    .delete-btn {
+        margin-right: 5px;
     }
 
     /* input {
