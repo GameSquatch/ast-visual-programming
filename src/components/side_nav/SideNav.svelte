@@ -11,7 +11,7 @@
     import { navStore } from './nav_store.js';
     import { v4 as uuidv4 } from 'uuid';
     import { mockData } from '../../lib/js/data_json.js';
-    import { getDragData } from "../../lib/js/drag_and_drop/drag_and_drop_handlers";
+    import { getDragData } from '../../lib/js/drag_and_drop/drag_and_drop_handlers';
     import { utilDefs } from '../../lib/js/util_definitions.js';
     import { utilDataDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
@@ -22,7 +22,10 @@
 
         fileTreeStore.createRootFile({ id });
 
-        mockData.update((tree) => { tree[id] = createNodeTreeEntry(id); return tree; });
+        mockData.update((tree) => {
+            tree[id] = createNodeTreeEntry(id);
+            return tree;
+        });
     }
 
     /** @type {ContextDoneCallback} */
@@ -39,7 +42,7 @@
         }
 
         const itemLocation = dragObject.dragType === 'folder' ? 'folders' : 'files';
-        fileTreeStore.moveItem({ from: dragObject.dragData.treePath, to: itemLocation, navType: itemLocation })
+        fileTreeStore.moveItem({ from: dragObject.dragData.treePath, to: itemLocation, navType: itemLocation });
     }
 
     /** @type {(utilDefName: string) => (event: DragEvent) => void} */
@@ -52,13 +55,51 @@
 
 <div class="side-nav-wrapper">
     <div class="flex w100 nav-action-bar">
-        <button on:click={() => navStore.showContext(NewFolderContext, addFolder)} class="nav-action-btn light-bg-btn"><i class="mi-folder-add" /></button>
-        <button on:click={() => navStore.showContext(NewFileContext, addFile)} class="nav-action-btn light-bg-btn"><i class="mi-document-add" /></button>
-        <button class="nav-action-btn light-bg-btn"><i class="mi-search" /></button>
+        <button on:click={() => navStore.showContext(NewFolderContext, addFolder)} class="nav-action-btn light-bg-btn">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor">
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+            </svg>
+        </button>
+        <button on:click={() => navStore.showContext(NewFileContext, addFile)} class="nav-action-btn light-bg-btn">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor">
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+        </button>
+        <button class="nav-action-btn light-bg-btn">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor">
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+        </button>
 
         {#if $navStore.isShowingContext}
-            <div transition:fly|local={{ duration: 345, x: -600, opacity: 1, easing: quintOut }} class="absolute nav-context-pane">
-                <svelte:component onDoneCallback={$navStore.onDoneCallback} this={$navStore.contextType} />
+            <div
+                transition:fly|local={{ duration: 345, x: -600, opacity: 1, easing: quintOut }}
+                class="absolute nav-context-pane">
+                <svelte:component this={$navStore.contextType} onDoneCallback={$navStore.onDoneCallback} />
             </div>
         {/if}
     </div>
@@ -74,17 +115,21 @@
     </div>
 
     <div class="utility-drawer">
-        <div class="title" on:click={() => navStore.toggleUtilDrawer()}><i class="mi-chevron-{$navStore.utilDrawerIsOpen ? 'down' : 'up'}"></i> Utilities</div>
+        <div class="title" on:click={() => navStore.toggleUtilDrawer()}>
+            <i class="mi-chevron-{$navStore.utilDrawerIsOpen ? 'down' : 'up'}" /> Utilities
+        </div>
         {#if $navStore.utilDrawerIsOpen}
             <div transition:slide|local={{ duration: 300, easing: quintOut }} class="utilities-container">
                 {#each Object.keys(utilDefs) as utilDefName (utilDefName)}
-                    <div on:dragstart={handleUtilDragStart(utilDefName)} class="utility-row" draggable="true">{utilDefName}</div>
+                    <div on:dragstart={handleUtilDragStart(utilDefName)} class="utility-row" draggable="true">
+                        {utilDefName}
+                    </div>
                 {/each}
             </div>
         {/if}
     </div>
 </div>
-    
+
 <style>
     .side-nav-wrapper {
         grid-area: nav;
@@ -94,7 +139,7 @@
         flex-direction: column;
         clip-path: inset(0 0 0 0);
     }
-    
+
     .project-structure-pane {
         flex: 1;
         z-index: 1;
@@ -110,14 +155,14 @@
     }
     .nav-action-btn {
         margin-right: 8px;
-        font-size: 12pt;
+        max-width: 38px;
         text-align: center;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 2px 6px;
     }
-    
+
     .nav-context-pane {
         z-index: 3;
         top: 100%;

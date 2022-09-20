@@ -1,7 +1,7 @@
 <script>
     import Flow from '../Flow.svelte';
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
-	import QuickAccessDraggables from '../QuickAccessDraggables.svelte';
+    import QuickAccessDraggables from '../QuickAccessDraggables.svelte';
     import { mockData } from '../../lib/js/data_json.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { get } from 'svelte/store';
@@ -13,9 +13,10 @@
     let runResultText = '';
     let logText = '';
 
-    $: inputs = Object.values($fileMetadata[tabViewData.info.id].objectFlowData.parameters).map(
-        (paramData) => [ paramData.defaultValue, paramData.dataType ]
-    );
+    $: inputs = Object.values($fileMetadata[tabViewData.info.id].objectFlowData.parameters).map((paramData) => [
+        paramData.defaultValue,
+        paramData.dataType
+    ]);
 
     async function sendToGenerator() {
         runResultText = '';
@@ -68,7 +69,12 @@
 <QuickAccessDraggables functionInfo={tabViewData.info} />
 
 <button on:click={() => showRunOverlay()} class="run-button">
-    <i class="mi-play" />
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+    </svg>
 </button>
 
 <Flow flowData={tabViewData} />
@@ -90,13 +96,13 @@
                             type={paramData.dataType === 'String'
                                 ? 'text'
                                 : paramData.dataType === 'Boolean'
-                                ? 'checkbox'
-                                : 'number'} />
+                                    ? 'checkbox'
+                                    : 'number'} />
                     </label>
                 </div>
             {/each}
         {/if}
-        
+
         <div class="flex-1">
             <pre>{runResultText}</pre>
             <div class="log-text-container">
@@ -108,7 +114,6 @@
             <button on:click={() => sendToGenerator()}>Run</button><button
                 on:click={() => (runOverlayIsVisible = false)}>Cancel</button>
         </div>
-
     </div>
 </div>
 
@@ -118,7 +123,7 @@
         padding: 5px;
         top: 25px;
         left: 20px;
-        font-size: 14pt;
+        max-width: 32px;
         z-index: 2;
     }
 
