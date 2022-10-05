@@ -39,7 +39,7 @@ const startValue = {
     ]
 };
 
-const { subscribe, set, update } = writable(startValue);
+const { subscribe, set, update } = writable({});
 
 const fileTreeStore = {
     subscribe,

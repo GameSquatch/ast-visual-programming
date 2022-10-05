@@ -17,7 +17,7 @@
     function typeMatches(utilityKey) {
         return typeMethods[utilityKey].returnType === nodeData.dataType;
     }
-    const availableMethods = (contextType ?? false) ? Object.keys(typeMethods).filter(typeMatches) : [];
+    const availableMethods = contextType ?? false ? Object.keys(typeMethods).filter(typeMatches) : [];
 
     function methodSelected(event) {
         if (!event.target.value) {
@@ -30,36 +30,42 @@
             dataType: nodeData.dataType,
             refData: nodeData
         });
-        
+
         mockData.setNodeAt({ path: nodePath, nodeData: newNodeData });
 
         usesTypeMethod = true;
     }
 </script>
 
+{#await $editorStore.tabs[$editorStore.activeTab].data}
+    <p>Loading</p>
+{:then fileData}
+    {#if nodeData.refId && nodeData.fnRefType === 'variables'}
+        <span class="variable-name self">{fileData.info[nodeData.fnRefType][nodeData.refId]?.name ?? ''}</span>
+    {/if}
+    {#if nodeData.refId && nodeData.fnRefType === 'parameters'}
+        <span class="parameter-name self"
+            >{$fileMetadata[fileData.info.id].objectFlowData.parameters[nodeData.refId]
+                ?.name ?? ''}</span>
+    {/if}
+{/await}
 
-{#if nodeData.refId && nodeData.fnRefType === 'variables'}
-    <span class="variable-name self">{$mockData[$editorStore.activeTab].info[nodeData.fnRefType][nodeData.refId]?.name ?? ""}</span>
-{/if}
-{#if nodeData.refId && nodeData.fnRefType === 'parameters'}
-    <span class="parameter-name self">{$fileMetadata[$mockData[$editorStore.activeTab].info.id].objectFlowData.parameters[nodeData.refId]?.name ?? ""}</span>
-{/if}
 {#if availableMethods.length > 0}
-    <select class="{usesTypeMethod ? '' : 'type-method-select'}" on:change={methodSelected}>
-        <option selected></option>
+    <select class={usesTypeMethod ? '' : 'type-method-select'} on:change={methodSelected}>
+        <option selected />
         {#each Object.keys(typeMethods).filter(typeMatches) as typeMethod}
             <option>{typeMethod}</option>
         {/each}
     </select>
 {/if}
 
-
 <style>
     .self {
         padding: 4px 0;
         font-weight: bold;
     }
-    .self:hover + .type-method-select, .type-method-select:hover {
+    .self:hover + .type-method-select,
+    .type-method-select:hover {
         opacity: 1;
     }
 

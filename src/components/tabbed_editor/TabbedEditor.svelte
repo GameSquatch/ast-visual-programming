@@ -1,25 +1,21 @@
 <script>
 	import { editorStore } from './editor_store.js';
-	import { mockData } from '../../lib/js/data_json.js';
 	import TabBar from './TabBar.svelte';
 	import TabView from './TabView.svelte';
-	
-	//$: dataPromise = $editorStore.tabs.filter((tab) => tab.id === $editorStore.activeTab)[0]?.dataPromise;
-	let dataPromise = Promise.resolve("haha");
 </script>
 
 <div class="editor-wrapper">
 	<div>
-		<TabBar tabFileIds={$editorStore.tabs} />
+		<TabBar tabFileIds={[ ...$editorStore.openedTabIds ]} />
 	</div>
 	<div class="tab-view-wrapper">
 		{#if $editorStore.activeTab !== ''}
-			{#await dataPromise}
+			{#await $editorStore.tabs[$editorStore.activeTab].data}
 			<p>
 				...loading
 			</p>
-			{:then prom}
-			<TabView tabViewData={$mockData[$editorStore.activeTab]} />
+			{:then fileData}
+				<TabView tabViewData={fileData} />
 			{/await}
 		{:else}
 		<p>

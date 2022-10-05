@@ -4,8 +4,8 @@ import { writable } from 'svelte/store';
 /**
  * @typedef {object} EditorState
  * @property {string} activeTab
- * @property {Object.<string, boolean>} openedTabIds
- * @property {string[]} tabs
+ * @property {Set<string>} openedTabIds
+ * @property {Object.<string, { fileId: string, data: Promise<Object> }>} tabs
  */
 
 /**
@@ -25,27 +25,31 @@ function createEditorStore(initialValue) {
 		openTab(fileId) {
 			update((editor) => {
 				editor.activeTab = fileId;
-				if (!editor.openedTabIds[fileId]) {
-					editor.tabs.push(fileId);
-					editor.openedTabIds[fileId] = true;
+				if (!editor.tabs[fileId]) {
+					editor.tabs[fileId] = {
+						fileId,
+						data: fetch(`/api/file/${fileId}`).then((data) => data.json())
+					};
+				}
+
+				if (!editor.openedTabIds.has(fileId)) {
+					editor.openedTabIds.add(fileId);
 				}
 
 				return editor;
 			});
 		},
 		/**
-		 * @param {string} id 
-		 * @param {number} index 
+		 * @param {string} id
 		 */
-		closeTab(id, index) {
+		closeTab(id) {
 			update((editor) => {
-				editor.tabs.splice(index, 1);
-				delete editor.openedTabIds[id];
+				editor.openedTabIds.delete(id);
 				
-				if (editor.tabs.length === 0) {
+				if (editor.openedTabIds.size === 0) {
 					editor.activeTab = '';
 				} else if (id === editor.activeTab) {
-					editor.activeTab = editor.tabs[0];
+					editor.activeTab = editor.tabs[editor.openedTabIds.values().next().value].fileId;
 				}
 				
 				return editor;
@@ -56,8 +60,8 @@ function createEditorStore(initialValue) {
 
 const editorStore = createEditorStore({
 	activeTab: '',
-	openedTabIds: {},
-	tabs: []
+	openedTabIds: new Set(),
+	tabs: {}
 });
 
 

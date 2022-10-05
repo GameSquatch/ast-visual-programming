@@ -3,6 +3,9 @@
     import Header from '../components/Header.svelte';
     import TabbedEditor from '../components/tabbed_editor/TabbedEditor.svelte';
     import { contextMenuStore } from '../store/context_menu_store.js';
+    import { fileMetadata } from '../components/side_nav/file_metadata.js';
+    import { fileTreeStore } from '../components/side_nav/file_tree.js';
+    import LoadingPage from './LoadingPage.svelte';
 
     $: style = $contextMenuStore.showing ? `display:inline-block;top:${$contextMenuStore.y}px;left:${$contextMenuStore.x}px` : '';
 
@@ -12,19 +15,36 @@
             return state;
         });
     }
+
+    const fileMetadataFetch = fetch('/api/file-metadata').then((data) => data.json());
+    const fileTreeFetch = fetch('/api/file-tree').then((data) => data.json());
+    const loadAll = Promise.all([
+        fileMetadataFetch,
+        new Promise((res) => setTimeout(res, 2000)),
+        fileTreeFetch
+    ]).then((data) => {
+        $fileMetadata = data[0];
+        $fileTreeStore = data[2];
+    });
 </script>
 
-<div on:click={hideDefocused} id="root">
-    <Header />
-    <SideNav />
-    <TabbedEditor />
+{#await loadAll}
+    <LoadingPage />
+{:then}
+    <div on:click={hideDefocused} id="root">
+        <Header />
+        <SideNav />
+        <TabbedEditor />
 
-    <div class="context-menu" style="{style}">
-        {#each $contextMenuStore.menuItems as menuItemData, i (i)}
-            <div on:click={menuItemData.onSelected} class="menu-item">{menuItemData.title}</div>
-        {/each}
+        <div class="context-menu" style="{style}">
+            {#each $contextMenuStore.menuItems as menuItemData, i (i)}
+                <div on:click={menuItemData.onSelected} class="menu-item">{menuItemData.title}</div>
+            {/each}
+        </div>
     </div>
-</div>
+{/await}
+
+
 
 <style>
     #root {
