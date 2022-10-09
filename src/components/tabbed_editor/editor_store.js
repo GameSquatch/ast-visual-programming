@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { mockData } from '../../lib/js/data_json.js';
 
 
 /**
@@ -26,9 +27,11 @@ function createEditorStore(initialValue) {
 			update((editor) => {
 				editor.activeTab = fileId;
 				if (!editor.tabs[fileId]) {
+					const filePromise = fetch(`/api/file/${fileId}`).then((data) => data.json());
+					filePromise.then((data) => mockData.setFile(data));
 					editor.tabs[fileId] = {
 						fileId,
-						data: fetch(`/api/file/${fileId}`).then((data) => data.json())
+						data: filePromise
 					};
 				}
 
@@ -45,6 +48,8 @@ function createEditorStore(initialValue) {
 		closeTab(id) {
 			update((editor) => {
 				editor.openedTabIds.delete(id);
+				delete editor.tabs[id];
+				mockData.removeFile(id);
 				
 				if (editor.openedTabIds.size === 0) {
 					editor.activeTab = '';

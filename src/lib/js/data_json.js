@@ -9,7 +9,7 @@ const var4 = "86d3dc6d-3c58-4cef-8eda-d84617bb121f"
 
 
 const mockData = (function () {
-    const { update, set, subscribe } = writable({
+    /* const { update, set, subscribe } = writable({
         "factorial": {
             "info": {
                 "id": "factorial",
@@ -172,7 +172,9 @@ const mockData = (function () {
                 }
             ]
         }
-    });
+    }); */
+
+    const { update, set, subscribe } = writable({});
 
     return {
         subscribe,
@@ -253,6 +255,20 @@ const mockData = (function () {
 
                 parentNode[treePath.getTokenAt(-1)] = nodeData;
                 return flowData;
+            });
+        },
+
+        setFile(fileData) {
+            this.update((files) => {
+                files[fileData.info.id] = fileData;
+                return files;
+            });
+        },
+
+        removeFile(fileId) {
+            this.update((files) => {
+                delete files[fileId];
+                return files;
             });
         }
     };

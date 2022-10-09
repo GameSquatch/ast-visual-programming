@@ -37,18 +37,16 @@
     }
 </script>
 
-{#await $editorStore.tabs[$editorStore.activeTab].data}
-    <p>Loading</p>
-{:then fileData}
+{#if $mockData[$editorStore.activeTab]}
     {#if nodeData.refId && nodeData.fnRefType === 'variables'}
-        <span class="variable-name self">{fileData.info[nodeData.fnRefType][nodeData.refId]?.name ?? ''}</span>
+        <span class="variable-name self">{$mockData[$editorStore.activeTab].info[nodeData.fnRefType][nodeData.refId]?.name ?? ''}</span>
     {/if}
     {#if nodeData.refId && nodeData.fnRefType === 'parameters'}
         <span class="parameter-name self"
-            >{$fileMetadata[fileData.info.id].objectFlowData.parameters[nodeData.refId]
+            >{$fileMetadata[$mockData[$editorStore.activeTab].info.id].objectFlowData.parameters[nodeData.refId]
                 ?.name ?? ''}</span>
     {/if}
-{/await}
+{/if}
 
 {#if availableMethods.length > 0}
     <select class={usesTypeMethod ? '' : 'type-method-select'} on:change={methodSelected}>
