@@ -1,7 +1,7 @@
 <script>
     import constructors from "../../lib/js/constructors.js";
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-    import { mockData } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { contextMenuStore } from "../../store/context_menu_store.js";
     import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import nodeTemplates from "../../lib/js/node_templates.js";
@@ -17,7 +17,7 @@
             return;
         }
 
-        mockData.setNodeAt({ path: `${nodePath}.test`, nodeData: node });
+        fileDataStore.setNodeAt({ path: `${nodePath}.test`, nodeData: node });
     }
 
 
@@ -42,7 +42,7 @@
                     fnRefType: nodeData.test.fnRefType
                 });
 
-                mockData.setNodeAt({ path: nodePath, nodeData: flowStep });
+                fileDataStore.setNodeAt({ path: nodePath, nodeData: flowStep });
             }
         }];
             
@@ -72,7 +72,7 @@
     
         <div class="flex w100 flow-step-action-bar">
             <div class="flex-1 flex">
-                <button class="light-bg-btn delete-btn" on:click={() => mockData.deleteFlowStepAt(nodePath)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="delete-icon">
+                <button class="light-bg-btn delete-btn" on:click={() => fileDataStore.deleteFlowStepAt(nodePath)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="delete-icon">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                   </svg></button>
             </div>

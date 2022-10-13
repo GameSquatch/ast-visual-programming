@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import { TreePath } from './tree_path.js';
 
 
-const mockData = (function () {
+const fileDataStore = (function () {
     const { update, set, subscribe } = writable({});
 
     return {
@@ -104,4 +104,4 @@ const mockData = (function () {
 
 })();
 
-export { mockData };
+export { fileDataStore };

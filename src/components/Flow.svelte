@@ -4,7 +4,7 @@
     import IfStatement from '../components/flow_objects/IfStatement.svelte';
     import { squish } from '../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
-    import { mockData } from '../lib/js/file_data_store.js';
+    import { fileDataStore } from '../lib/js/file_data_store.js';
 
     export let flowData;
 
@@ -30,11 +30,11 @@
         if (node === null) return;
 
         if (node.dragType === 'moveFlowStep') {
-            mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.0`, insertAt: true });
+            fileDataStore.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.0`, insertAt: true });
             return;
         }
 
-        mockData.insertNodeIntoFlowAt({ path: `${flowData.info.id}.body.0`, nodeData: node, spliceIn: true });
+        fileDataStore.insertNodeIntoFlowAt({ path: `${flowData.info.id}.body.0`, nodeData: node, spliceIn: true });
     }
 
     function appendDrop(node) {
@@ -42,11 +42,11 @@
         if (node === null) return;
 
         if (node.dragType === 'moveFlowStep') {
-            mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.${flowData.body.length}`, insertAt: true });
+            fileDataStore.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: `${flowData.info.id}.body.${flowData.body.length}`, insertAt: true });
             return;
         }
 
-        mockData.insertNodeIntoFlowAt({ path: `${flowData.info.id}.body.${flowData.body.length}`, nodeData: node });
+        fileDataStore.insertNodeIntoFlowAt({ path: `${flowData.info.id}.body.${flowData.body.length}`, nodeData: node });
     }
 
     function moveStep(event, i) {

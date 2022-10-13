@@ -1,12 +1,12 @@
 <script>
-    import { mockData } from "../../lib/js/file_data_store";
+    import { fileDataStore } from "../../lib/js/file_data_store";
     
     export let nodeData;
     export let isArgument = false;
     export let nodePath;
 
     function updateValue(event) {
-        mockData.setNodeAt({ path: `${nodePath}.value`, nodeData: event.target.checked });
+        fileDataStore.setNodeAt({ path: `${nodePath}.value`, nodeData: event.target.checked });
     }
 </script>
 

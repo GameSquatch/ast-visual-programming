@@ -1,6 +1,6 @@
 <script>
 	import { editorStore } from './editor_store.js';
-	import { mockData } from '../../lib/js/file_data_store.js';
+	import { fileDataStore } from '../../lib/js/file_data_store.js';
 	import TabBar from './TabBar.svelte';
 	import TabView from './TabView.svelte';
 </script>
@@ -16,7 +16,7 @@
 				...loading
 			</p>
 			{:then}
-				<TabView tabViewData={$mockData[$editorStore.activeTab]} />
+				<TabView tabViewData={$fileDataStore[$editorStore.activeTab]} />
 			{/await}
 		{:else}
 		<p>

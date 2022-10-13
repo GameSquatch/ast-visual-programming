@@ -2,7 +2,7 @@
     import Flow from '../Flow.svelte';
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
     import QuickAccessDraggables from '../QuickAccessDraggables.svelte';
-    import { mockData } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { get } from 'svelte/store';
     import { StringUtil, IntegerUtil, LoggerUtil, BooleanUtil } from '../../lib/js/utility_library.js';
@@ -24,7 +24,7 @@
 
         const strBody = JSON.stringify({
             entryFunctionId: tabViewData.info.id,
-            codeData: get(mockData),
+            codeData: get(fileDataStore),
             fileMetadata: $fileMetadata,
             inputs
         });

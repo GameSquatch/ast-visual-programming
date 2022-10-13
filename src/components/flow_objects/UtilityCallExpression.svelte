@@ -5,7 +5,7 @@
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
     import { utilDefs } from '../../lib/js/util_definitions.js';
-    import { mockData } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
 
     /** @type {import('../../lib/js/node_templates.js').UtilityCallExpressionData} */
     export let nodeData;
@@ -26,7 +26,7 @@
             };
         });
 
-        mockData.setNodeAt({
+        fileDataStore.setNodeAt({
             path: nodePath,
             nodeData: {
                 ...nodeData,
@@ -41,11 +41,11 @@
     const populateArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
+        fileDataStore.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
     };
 
     function onClear(i, argument) {
-        mockData.setNodeAt({
+        fileDataStore.setNodeAt({
             path: `${nodePath}.arguments.${i}.nodeData`,
             nodeData: nodeTemplates[argument.dataType + "Literal"]()
         });

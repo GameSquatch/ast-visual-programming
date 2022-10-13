@@ -1,15 +1,15 @@
 import { writable } from 'svelte/store';
-import { mockData } from '../lib/js/file_data_store.js';
+import { fileDataStore } from '../lib/js/file_data_store.js';
 
 const openFunction = writable("abc");
 
 let ast;
 openFunction.subscribe((functionId) => {
     if (!ast) {
-        ast = writable(mockData[functionId])
+        ast = writable(fileDataStore[functionId])
     }
     
-    ast.set(mockData[functionId]);
+    ast.set(fileDataStore[functionId]);
 });
 
 /*

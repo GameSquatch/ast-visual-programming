@@ -2,7 +2,7 @@
     import FlowStep from './FlowStep.svelte';
     import IfStatement from './IfStatement.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-    import { mockData } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { squish } from '../../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
 
@@ -31,7 +31,7 @@
         setHoverPrepend(false);
 
         if (node.dragType === 'moveFlowStep') {
-            mockData.moveFlowStep({
+            fileDataStore.moveFlowStep({
                 fromPath: node.dragData.flowStepFromPath,
                 toPath: `${nodePath}.0`,
                 insertAt: true
@@ -39,14 +39,14 @@
             return;
         }
 
-        mockData.insertNodeIntoFlowAt({ path: `${nodePath}.0`, nodeData: node, spliceIn: true });
+        fileDataStore.insertNodeIntoFlowAt({ path: `${nodePath}.0`, nodeData: node, spliceIn: true });
     }
 
     function appendDrop(node) {
         setHoverAppend(false);
 
         if (node.dragType === 'moveFlowStep') {
-            mockData.moveFlowStep({
+            fileDataStore.moveFlowStep({
                 fromPath: node.dragData.flowStepFromPath,
                 toPath: `${nodePath}.${subFlowBody.length}`,
                 insertAt: true
@@ -54,7 +54,7 @@
             return;
         }
 
-        mockData.insertNodeIntoFlowAt({ path: `${nodePath}.${subFlowBody.length}`, nodeData: node });
+        fileDataStore.insertNodeIntoFlowAt({ path: `${nodePath}.${subFlowBody.length}`, nodeData: node });
     }
 
     function moveStep(event, i) {

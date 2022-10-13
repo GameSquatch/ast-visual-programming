@@ -1,7 +1,7 @@
 <script>
     import typeDefs from '../../lib/js/type_definitions.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
-    import { mockData } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { editorStore } from '../tabbed_editor/editor_store.js';
 
@@ -31,19 +31,19 @@
             refData: nodeData
         });
 
-        mockData.setNodeAt({ path: nodePath, nodeData: newNodeData });
+        fileDataStore.setNodeAt({ path: nodePath, nodeData: newNodeData });
 
         usesTypeMethod = true;
     }
 </script>
 
-{#if $mockData[$editorStore.activeTab]}
+{#if $fileDataStore[$editorStore.activeTab]}
     {#if nodeData.refId && nodeData.fnRefType === 'variables'}
-        <span class="variable-name self">{$mockData[$editorStore.activeTab].info[nodeData.fnRefType][nodeData.refId]?.name ?? ''}</span>
+        <span class="variable-name self">{$fileDataStore[$editorStore.activeTab].info[nodeData.fnRefType][nodeData.refId]?.name ?? ''}</span>
     {/if}
     {#if nodeData.refId && nodeData.fnRefType === 'parameters'}
         <span class="parameter-name self"
-            >{$fileMetadata[$mockData[$editorStore.activeTab].info.id].objectFlowData.parameters[nodeData.refId]
+            >{$fileMetadata[$fileDataStore[$editorStore.activeTab].info.id].objectFlowData.parameters[nodeData.refId]
                 ?.name ?? ''}</span>
     {/if}
 {/if}

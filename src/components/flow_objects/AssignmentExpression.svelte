@@ -1,6 +1,6 @@
 <script>
     import constructors from '../../lib/js/constructors.js';
-import { mockData } from '../../lib/js/file_data_store.js';
+import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
 
@@ -10,11 +10,11 @@ import { mockData } from '../../lib/js/file_data_store.js';
     function stateChangeOnDrop(node) {
         if (node === null) return;
 
-        mockData.setNodeAt({ path: `${nodePath}.right`, nodeData: node });
+        fileDataStore.setNodeAt({ path: `${nodePath}.right`, nodeData: node });
     }
 
     function clearAssignment(_) {
-        mockData.setNodeAt({ path: `${nodePath}.right`, nodeData: nodeTemplates[nodeData.left.dataType + 'Literal']() });
+        fileDataStore.setNodeAt({ path: `${nodePath}.right`, nodeData: nodeTemplates[nodeData.left.dataType + 'Literal']() });
     }
 </script>
 

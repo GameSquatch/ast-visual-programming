@@ -1,7 +1,7 @@
 <script>
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
-    import { mockData } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { fileMetadata } from '../side_nav/file_metadata';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
@@ -16,11 +16,11 @@
             return;
         }
 
-        mockData.setNodeAt({ path: `${nodePath}.expression`, nodeData: node })
+        fileDataStore.setNodeAt({ path: `${nodePath}.expression`, nodeData: node })
     }
 
     function clearStatement(_) {
-        mockData.setNodeAt({ path: `${nodePath}.expression`, nodeData: nodeTemplates[returnType + 'Literal']() });
+        fileDataStore.setNodeAt({ path: `${nodePath}.expression`, nodeData: nodeTemplates[returnType + 'Literal']() });
     }
 </script>
 

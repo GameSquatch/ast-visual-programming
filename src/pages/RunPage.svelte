@@ -1,11 +1,11 @@
 <script>
     import { routes } from '../store/routes.js';
-    import { mockData } from '../lib/js/file_data_store.js';
+    import { fileDataStore } from '../lib/js/file_data_store.js';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
     import { StringUtil, IntegerUtil, LoggerUtil } from '../lib/js/utility_library.js';
     import { get } from 'svelte/store';
 
-    $: fnKeys = Object.keys(get(mockData)).filter((fileKey) => $fileMetadata[fileKey].fileType === 'function');
+    $: fnKeys = Object.keys(get(fileDataStore)).filter((fileKey) => $fileMetadata[fileKey].fileType === 'function');
 
     /** @type {Promise<string>|null} */
     let generatingPromise = null;
@@ -31,7 +31,7 @@
     async function sendToGenerator() {
         const strBody = JSON.stringify({
             entryFunctionId,
-            codeData: get(mockData),
+            codeData: get(fileDataStore),
             fileMetadata: $fileMetadata
         });
 

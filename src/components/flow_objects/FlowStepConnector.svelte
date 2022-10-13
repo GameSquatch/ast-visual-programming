@@ -1,6 +1,6 @@
 <script>
     import { flowDropHandler } from "../../lib/js/drag_and_drop/drag_and_drop_handlers.js";
-    import { mockData } from "../../lib/js/file_data_store.js";
+    import { fileDataStore } from "../../lib/js/file_data_store.js";
     import { editorStore } from "../tabbed_editor/editor_store.js";
     import { fileMetadata } from "../side_nav/file_metadata.js";
     import { get } from 'svelte/store';
@@ -29,11 +29,11 @@
         }
 
         if (node.dragType === "moveFlowStep") {// node is a dragObject at this point
-            mockData.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: nodePath });
+            fileDataStore.moveFlowStep({ fromPath: node.dragData.flowStepFromPath, toPath: nodePath });
             return;
         }
 
-        mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: node, append: true });
+        fileDataStore.insertNodeIntoFlowAt({ path: nodePath, nodeData: node, append: true });
     }
 
     function showInsertContextMenu(event) {
@@ -48,15 +48,15 @@
             menuItems: [
                 {
                     title: 'Add Flow Step',
-                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: { ...flowStep }, append: true })
+                    onSelected: () => fileDataStore.insertNodeIntoFlowAt({ path: nodePath, nodeData: { ...flowStep }, append: true })
                 },
                 {
                     title: 'Add If Step',
-                    onSelected: () => mockData.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.ifStatement(), append: true })
+                    onSelected: () => fileDataStore.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.ifStatement(), append: true })
                 },
                 {
                     title: 'Add return statement',
-                    onSelected: () => mockData.insertNodeIntoFlowAt({
+                    onSelected: () => fileDataStore.insertNodeIntoFlowAt({
                         path: nodePath,
                         nodeData: { ...flowStep, expression: nodeTemplates.returnStatement({ functionId: get(editorStore).activeTab, returnType: fileReturnType }) },
                         append: true

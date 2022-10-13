@@ -1,5 +1,5 @@
 <script>
-    import { mockData } from "../../lib/js/file_data_store";
+    import { fileDataStore } from "../../lib/js/file_data_store";
 
     export let nodeData;
     export let isArgument = false;
@@ -9,7 +9,7 @@
      * @param {Event} event
      */
     function updateValue(event) {
-        mockData.setNodeAt({ path: `${nodePath}.value`, nodeData: event.target.valueAsNumber });
+        fileDataStore.setNodeAt({ path: `${nodePath}.value`, nodeData: event.target.valueAsNumber });
     }
 </script>
 

@@ -3,7 +3,7 @@
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import Argument from '../Argument.svelte';
-    import { mockData } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
 
@@ -25,7 +25,7 @@
         // When a parameter is deleted, we need the argument to be removed as well.
         // I am NOT sure how to handle modifying every single function that calls this function in a collaborative way yet
         // if (nodeData.arguments.length > parameterKeys.length) {
-        //     mockData.setNodeAt({
+        //     fileDataStore.setNodeAt({
         //         path: `${nodePath}.arguments`,
         //         nodeData: nodeData.arguments.slice(0, parameterKeys.length)
         //     });
@@ -61,7 +61,7 @@
             }
         }
 
-        mockData.setNodeAt({
+        fileDataStore.setNodeAt({
             path: `${nodePath}.arguments`,
             nodeData: [...resetArgs]
         });
@@ -72,11 +72,11 @@
     const populateArgument = (argIndex) => (node) => {
         if (node === null) return;
 
-        mockData.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
+        fileDataStore.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
     };
 
     function onClear(i, argument) {
-        mockData.setNodeAt({
+        fileDataStore.setNodeAt({
             path: `${nodePath}.arguments.${i}.nodeData`,
             nodeData: nodeTemplates[argument.dataType + 'Literal']()
         });

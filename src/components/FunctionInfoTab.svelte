@@ -5,7 +5,7 @@
     import { v4 as uuidv4 } from 'uuid';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
     import { typeDefaults } from '../lib/js/type_defaults.js';
-    import { mockData } from '../lib/js/file_data_store.js';
+    import { fileDataStore } from '../lib/js/file_data_store.js';
 
     export let info;
 
@@ -44,7 +44,7 @@
     }
 
     function addVariable(_) {
-        $mockData[info.id].info.variables = {
+        $fileDataStore[info.id].info.variables = {
             ...info.variables,
             [uuidv4()]: {
                 name: 'newVar',
@@ -71,7 +71,7 @@
     }
 
     function changeRefName(refId, newName) {
-        $mockData[info.id].info.variables[refId] = {
+        $fileDataStore[info.id].info.variables[refId] = {
             ...info.variables[refId],
             name: newName
         };
@@ -81,7 +81,7 @@
     }
 
     function changeRefType(event, id) {
-        $mockData[info.id].info.variables[id] = {
+        $fileDataStore[info.id].info.variables[id] = {
             ...info.variables[id],
             dataType: event.target.value,
             defaultValue: typeDefaults[event.target.value]
@@ -114,14 +114,14 @@
         /** @type {HTMLInputElement} */
         const target = event.target;
         const newValue = dataType === "String" ? event.target.value : (dataType === 'Boolean' ? target.checked : target.valueAsNumber);
-        $mockData[info.id].info.variables[id] = {
+        $fileDataStore[info.id].info.variables[id] = {
             ...info.variables[id],
             defaultValue: newValue
         };
     }
 
     function deleteVar(varId) {
-        mockData.update((state) => {
+        fileDataStore.update((state) => {
             delete state[info.id].info.variables[varId];
             return state;
         });
