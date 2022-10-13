@@ -1,5 +1,5 @@
 <script>
-    import { mockData } from "../../lib/js/data_json";
+    import { mockData } from "../../lib/js/file_data_store";
     
     export let nodeData;
     export let isArgument = false;

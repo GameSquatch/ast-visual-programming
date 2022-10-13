@@ -1,6 +1,6 @@
 <script>
     import { routes } from '../store/routes.js';
-    import { mockData } from '../lib/js/data_json.js';
+    import { mockData } from '../lib/js/file_data_store.js';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
     import { StringUtil, IntegerUtil, LoggerUtil } from '../lib/js/utility_library.js';
     import { get } from 'svelte/store';

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { mockData } from '../lib/js/data_json.js';
+import { mockData } from '../lib/js/file_data_store.js';
 
 const openFunction = writable("abc");
 

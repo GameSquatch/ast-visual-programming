@@ -1,6 +1,6 @@
 <script>
 	import { editorStore } from './editor_store.js';
-	import { mockData } from '../../lib/js/data_json.js';
+	import { mockData } from '../../lib/js/file_data_store.js';
 	import TabBar from './TabBar.svelte';
 	import TabView from './TabView.svelte';
 </script>

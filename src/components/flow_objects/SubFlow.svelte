@@ -2,7 +2,7 @@
     import FlowStep from './FlowStep.svelte';
     import IfStatement from './IfStatement.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-    import { mockData } from '../../lib/js/data_json.js';
+    import { mockData } from '../../lib/js/file_data_store.js';
     import { squish } from '../../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
 

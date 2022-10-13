@@ -4,7 +4,7 @@
     import IfStatement from '../components/flow_objects/IfStatement.svelte';
     import { squish } from '../lib/js/custom_animations.js';
     import { flip } from 'svelte/animate';
-    import { mockData } from '../lib/js/data_json.js';
+    import { mockData } from '../lib/js/file_data_store.js';
 
     export let flowData;
 

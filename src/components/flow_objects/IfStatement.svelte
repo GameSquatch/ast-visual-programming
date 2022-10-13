@@ -1,7 +1,7 @@
 <script>
     import constructors from "../../lib/js/constructors.js";
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-    import { mockData } from '../../lib/js/data_json.js';
+    import { mockData } from '../../lib/js/file_data_store.js';
     import { contextMenuStore } from "../../store/context_menu_store.js";
     import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
     import nodeTemplates from "../../lib/js/node_templates.js";

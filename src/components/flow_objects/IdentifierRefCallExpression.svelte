@@ -5,7 +5,7 @@
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
     import typeDefs from '../../lib/js/type_definitions.js'
-    import { mockData } from '../../lib/js/data_json';
+    import { mockData } from '../../lib/js/file_data_store';
 
     export let nodeData;
     export let contextType;

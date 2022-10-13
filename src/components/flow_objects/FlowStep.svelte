@@ -4,7 +4,7 @@
     import constructors from "../../lib/js/constructors.js";
     import DragHandle from '../DragHandle.svelte';
     import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
-    import { mockData } from '../../lib/js/data_json.js';
+    import { mockData } from '../../lib/js/file_data_store.js';
     import { contextMenuStore } from '../../store/context_menu_store.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { get } from 'svelte/store';

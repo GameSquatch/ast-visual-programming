@@ -5,7 +5,7 @@
     import { v4 as uuidv4 } from 'uuid';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
     import { typeDefaults } from '../lib/js/type_defaults.js';
-    import { mockData } from '../lib/js/data_json.js';
+    import { mockData } from '../lib/js/file_data_store.js';
 
     export let info;
 

@@ -5,7 +5,7 @@
     import constructors from '../../lib/js/constructors.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
     import { utilDefs } from '../../lib/js/util_definitions.js';
-    import { mockData } from '../../lib/js/data_json.js';
+    import { mockData } from '../../lib/js/file_data_store.js';
 
     /** @type {import('../../lib/js/node_templates.js').UtilityCallExpressionData} */
     export let nodeData;
