@@ -20,8 +20,8 @@ const fileDataStore = (function () {
         subscribe,
         update,
         set,
-        /** @type {(path: string) => void} */
-        deleteFlowStepAt(path) {
+        /** @type {({ path: string }) => void} */
+        deleteFlowStepAt({ path }) {
             mutateAtServer('deleteFlowStepAt', { path })
                 .catch((err) => {
                     console.error('Reverse the delete operation, since this failed');

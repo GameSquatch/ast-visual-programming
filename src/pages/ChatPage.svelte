@@ -56,7 +56,7 @@
 
     onDestroy(() => {
         socket?.disconnect();
-    })
+    });
 
 
     function sendMessage() {

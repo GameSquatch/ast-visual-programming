@@ -262,6 +262,8 @@ router.get('/file/:fileId', (req, res) => {
 
 router.post('/ast-mutate/:mutation', (req, res) => {
     fileData = astMutators[req.params.mutation]({ treeRef: fileData, ...req.body });
+    // @ts-ignore
+    req.io.emit('mutate', { mutation: req.params.mutation, paramsObj: { ...req.body }});
     res.status(200).json({ message: 'Successfully mutated server-side object' });
 });
 

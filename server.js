@@ -15,11 +15,15 @@ if (!isProd) {
 const app = express();
 
 const server = http.createServer(app);
-startSocketServer(server);
+const io = startSocketServer(server);
 
 app.use(authCookieParser);
 
-app.use('/api', apiRouter);
+app.use('/api', (req, res, next) => {
+    // @ts-ignore
+    req.io = io;
+    next();
+}, apiRouter);
 app.get('/', (req, res) => res.redirect('/app'));
 
 
