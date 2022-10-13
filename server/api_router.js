@@ -3,29 +3,9 @@ const { checkCookieToken } = require('./middleware.js');
 const { generateCode } = require('../code_generator/code_generator.js');
 const router = express.Router();
 const uuidv4 =  require('uuid').v4;
+const { astMutators } = require('../src/lib/js/ast_mutation_functions.js');
 
 router.use(checkCookieToken, express.json());
-
-router.post('/generate-code', (req, res) => {
-    res.set({
-        'Content-Type': 'text/plain',
-        'Cache-Control': 'no-store'
-    });
-
-    if (req.body.entryFunctionId === undefined) {
-        res.status(400).send('Bad message; need entryFunction');
-        return;
-    }
-
-    generateCode(req.body)
-        .then((generatedCode) => {
-            res.status(200).send(generatedCode);
-        })
-        .catch((e) => {
-            res.status(500).send('Something broke: ' + e.message);
-        });
-});
-
 
 
 /**
@@ -110,7 +90,7 @@ router.get('/file-tree', (req, res) => {
 
 
 
-const mockData = {
+let fileData = {
     "factorial": {
         "info": {
             "id": "factorial",
@@ -276,7 +256,34 @@ const mockData = {
 };
 
 router.get('/file/:fileId', (req, res) => {
-    res.status(200).json(mockData[req.params.fileId]);
+    res.status(200).json(fileData[req.params.fileId]);
+});
+
+
+router.post('/ast-mutate/:mutation', (req, res) => {
+    fileData = astMutators[req.params.mutation]({ treeRef: fileData, ...req.body });
+    res.status(200).json({ message: 'Successfully mutated server-side object' });
+});
+
+
+router.post('/generate-code', (req, res) => {
+    res.set({
+        'Content-Type': 'text/plain',
+        'Cache-Control': 'no-store'
+    });
+
+    if (req.body.entryFunctionId === undefined) {
+        res.status(400).send('Bad message; need entryFunctionId');
+        return;
+    }
+
+    generateCode({ ...req.body, codeData: fileData })
+        .then((generatedCode) => {
+            res.status(200).send(generatedCode);
+        })
+        .catch((e) => {
+            res.status(500).send('Something broke: ' + e.message);
+        });
 });
 
 module.exports = router;

@@ -14,4 +14,4 @@ class TreePath {
     }
 }
 
-export { TreePath };
+module.exports = { TreePath };

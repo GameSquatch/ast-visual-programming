@@ -1,5 +1,16 @@
 import { writable } from 'svelte/store';
-import { TreePath } from './tree_path.js';
+import { astMutators } from './ast_mutation_functions.js';
+
+
+function mutateAtServer(mutation, bodyData) {
+    return fetch(`/api/ast-mutate/${mutation}`, {
+        body: JSON.stringify(bodyData),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
 
 
 const fileDataStore = (function () {
@@ -9,81 +20,48 @@ const fileDataStore = (function () {
         subscribe,
         update,
         set,
-        /** @type {({ flowData: Object, treePath: TreePath }) => Object} */
-        getParentReference({ flowData, treePath }) {
-            let parentRef = flowData;
-            for (let i = 0; i < treePath.tokens.length - 1; ++i) {
-                parentRef = parentRef[treePath.tokens[i]];
-            }
-            return parentRef;
-        },
         /** @type {(path: string) => void} */
         deleteFlowStepAt(path) {
-            const deletePath = new TreePath({ stringPath: path });
+            mutateAtServer('deleteFlowStepAt', { path })
+                .catch((err) => {
+                    console.error('Reverse the delete operation, since this failed');
+                });
 
             this.update((flowData) => {
-                let bodyArr = this.getParentReference({ flowData, treePath: deletePath });
-
-                // @ts-ignore
-                bodyArr.splice(parseInt(deletePath.getTokenAt(-1)), 1);
-
-                return flowData;
+                return astMutators.deleteFlowStepAt({ path, treeRef: flowData });
             });
         },
 
         moveFlowStep({ fromPath, toPath, insertAt = false }) {
-            const fromTreePath = new TreePath({ stringPath: fromPath });
-            const toTreePath = new TreePath({ stringPath: toPath });
+            mutateAtServer('moveFlowStep', { fromPath, toPath, insertAt })
+                .catch((err) => {
+                    console.error('Reverse the move operation, since this failed');
+                });
 
             this.update((flowData) => {
-                /** @type {Object} */
-                let fromBodyArr = this.getParentReference({ flowData, treePath: fromTreePath });
-                let fromIndex = parseInt(fromTreePath.getTokenAt(-1));
-                const toIndex = parseInt(toTreePath.getTokenAt(-1)) + (insertAt ? 0 : 1);
-
-                let deleteNodeRef = fromBodyArr[fromIndex];
-
-                /** @type {Object} */
-                let toBodyArr = this.getParentReference({ flowData, treePath: toTreePath });
-
-                if (fromBodyArr === toBodyArr && fromIndex === toIndex) {
-                    return flowData;
-                }
-
-                toBodyArr.splice(toIndex, 0, deleteNodeRef);
-                // If we are moving to the same array, we have just modified the index, depending on where to moved from,
-                // so we need to readjust it to delete the original flow step
-                if (fromBodyArr === toBodyArr) {
-                    fromIndex += (fromIndex > toIndex ? 1 : 0);
-                }
-                fromBodyArr.splice(fromIndex, 1);
-
-                return flowData;
+                return astMutators.moveFlowStep({ treeRef: flowData, fromPath, toPath, insertAt });
             });
         },
 
         insertNodeIntoFlowAt({ path, nodeData, append = false }) {
-            const treePath = new TreePath({ stringPath: path });
+            mutateAtServer('insertNodeIntoFlowAt', { path, nodeData, append })
+                .catch((err) => {
+                    console.error('Reverse the insert at operation, since this failed');
+                });
 
             this.update((flowData) => {
-                /** @type {Object} */
-                let nodeLocation = this.getParentReference({ flowData, treePath });
-
-                const index = +treePath.getTokenAt(-1);
-                nodeLocation.splice(append ? index + 1 : index, 0, nodeData);
-
-                return flowData;
+                return astMutators.insertNodeIntoFlowAt({ treeRef: flowData, path, nodeData, append });
             });
         },
 
         setNodeAt({ path, nodeData }) {
-            const treePath = new TreePath({ stringPath: path });
+            mutateAtServer('setNodeAt', { path, nodeData })
+                .catch((err) => {
+                    console.error('Reverse the set at operation, since this failed');
+                });
 
             this.update((flowData) => {
-                let parentNode = this.getParentReference({ flowData, treePath });
-
-                parentNode[treePath.getTokenAt(-1)] = nodeData;
-                return flowData;
+                return astMutators.setNodeAt({ treeRef: flowData, path, nodeData });
             });
         },
 
