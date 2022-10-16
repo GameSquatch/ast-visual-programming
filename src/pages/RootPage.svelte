@@ -6,6 +6,26 @@
     import { fileMetadata } from '../components/side_nav/file_metadata.js';
     import { fileTreeStore } from '../components/side_nav/file_tree.js';
     import LoadingPage from './LoadingPage.svelte';
+    import { fileDataStore } from '../lib/js/file_data_store';
+	import { astMutators } from '../lib/js/ast_mutation_functions.js';
+	import { onMount, onDestroy } from 'svelte';
+	import { socketStore } from '../store/socket_store.js';
+
+	let socket;
+
+    onMount(() => {
+		socket = socketStore.startConnection();
+
+		socket.on('mutate', ({ mutation, paramsObj }) => {
+			fileDataStore.update((fileData) => {
+				return astMutators[mutation]({ treeRef: fileData, ...paramsObj });
+			});
+		});
+    });
+
+    onDestroy(() => {
+		socketStore.disconnect();
+    });
 
     $: style = $contextMenuStore.showing ? `display:inline-block;top:${$contextMenuStore.y}px;left:${$contextMenuStore.x}px` : '';
 

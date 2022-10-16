@@ -1,27 +1,8 @@
 <script>
 	import { editorStore } from './editor_store.js';
 	import { fileDataStore } from '../../lib/js/file_data_store.js';
-	import { astMutators } from '../../lib/js/ast_mutation_functions.js';
 	import TabBar from './TabBar.svelte';
 	import TabView from './TabView.svelte';
-	import { onMount, onDestroy } from 'svelte';
-    import { connectToChat } from '../../../server/socket/chat_sock.js';
-
-	let socket;
-
-    onMount(() => {
-        socket = connectToChat();
-
-		socket.on('mutate', ({ mutation, paramsObj }) => {
-			fileDataStore.update((fileData) => {
-				return astMutators[mutation]({ treeRef: fileData, ...paramsObj });
-			})
-		});
-    });
-
-    onDestroy(() => {
-        socket?.disconnect();
-    });
 </script>
 
 <div class="editor-wrapper">
