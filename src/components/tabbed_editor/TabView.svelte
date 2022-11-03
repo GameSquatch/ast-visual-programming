@@ -68,8 +68,14 @@
 <FunctionInfoTab info={tabViewData.info} />
 <QuickAccessDraggables functionInfo={tabViewData.info} />
 
-<button on:click={() => showRunOverlay()} class="run-button">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<button on:click={() => showRunOverlay()} class="run-button"
+    ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="svg-icon-size">
         <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -96,8 +102,8 @@
                             type={paramData.dataType === 'String'
                                 ? 'text'
                                 : paramData.dataType === 'Boolean'
-                                    ? 'checkbox'
-                                    : 'number'} />
+                                ? 'checkbox'
+                                : 'number'} />
                     </label>
                 </div>
             {/each}
@@ -120,11 +126,12 @@
 <style>
     .run-button {
         position: absolute;
-        padding: 5px;
+        padding: 3px;
         top: 25px;
         left: 20px;
-        max-width: 32px;
         z-index: 2;
+        display: flex;
+        align-items: center;
     }
 
     .run-overlay-floater {
@@ -156,5 +163,10 @@
         border-radius: 10px;
         border: 2px solid #666;
         margin-top: 15px;
+    }
+
+    .svg-icon-size {
+        width: 28px;
+        height: auto;
     }
 </style>

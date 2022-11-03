@@ -61,7 +61,8 @@
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
-                stroke="currentColor">
+                stroke="currentColor"
+                class="svg-icon-size">
                 <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -74,7 +75,8 @@
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
-                stroke="currentColor">
+                stroke="currentColor"
+                class="svg-icon-size">
                 <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -87,7 +89,8 @@
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
-                stroke="currentColor">
+                stroke="currentColor"
+                class="svg-icon-size">
                 <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -189,5 +192,10 @@
     .utility-row:hover {
         background-color: #ddd;
         cursor: move;
+    }
+
+    .svg-icon-size {
+        width: 24px;
+        height: auto;
     }
 </style>

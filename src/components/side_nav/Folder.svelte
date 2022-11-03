@@ -146,7 +146,8 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
-            stroke="currentColor">
+            stroke="currentColor"
+            class="svg-icon-size">
             <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -159,7 +160,8 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
-            stroke="currentColor">
+            stroke="currentColor"
+            class="svg-icon-size">
             <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -200,11 +202,12 @@
     .folder-action-btn {
         border: 1px solid #737373;
         border-radius: 5px;
-        max-width: 25px;
+        padding: 2px;
+        display: flex;
+        align-items: center;
     }
 
     .svg-icon-size {
         width: 18px;
-        height: 18px;
     }
 </style>
