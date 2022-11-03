@@ -1,9 +1,9 @@
 const express = require('express');
-const { authCookieParser, checkIfAlreadyAuthed, checkCookieToken } = require('./server/middleware.js');
-const { createJWT, createSetCookieHeader } = require('./server/utils.js');
-const { startSocketServer } = require('./server/socket/socket_server.js');
+const { authCookieParser, checkIfAlreadyAuthed, checkCookieToken } = require('./server/middleware.cjs');
+const { createJWT, createSetCookieHeader } = require('./server/utils.cjs');
+const { startSocketServer } = require('./server/socket/socket_server.cjs');
 const http = require('http');
-const apiRouter = require('./server/api_router.js');
+const { apiRouter } = require('./server/api_router.cjs');
 
 const PORT = process.env.PORT || 4200;
 

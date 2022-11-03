@@ -2,35 +2,28 @@
   "name": "z-flow",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "start": "node server.js",
-    "prod": "node server.js",
-    "test": "rollup -c rollup_test.config.js && npx mocha --ui tdd test/run_tests.js",
-    "comp-test": "rollup -c rollup_component_test.config.js && npx mocha --ui tdd --require global-jsdom/register test/run_component_tests.js"
+    "build": "vite build --watch",
+    "start": "node server.cjs",
+    "prod": "vite build --minify --mode 'production' && node server.cjs",
+    "test": "echo 'TODO figure out how to integrate tests with vite'",
+    "comp-test": "echo 'TODO figure out how to integrate component tests with vite'"
   },
   "dependencies": {
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "firebase-admin": "^11.0.0",
-    "socket.io": "^4.5.1",
-    "socket.io-client": "^4.5.1",
-    "svelte": "^3.49.0",
-    "uuid": "^8.3.2"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.2.0",
+    "socket.io": "^4.5.3",
+    "socket.io-client": "^4.5.3",
+    "svelte": "^3.52.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.1",
-    "@rollup/plugin-multi-entry": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
     "@testing-library/svelte": "^3.1.3",
     "chai": "^4.3.6",
     "global-jsdom": "^8.4.0",
     "jsdom": "^20.0.0",
     "mocha": "^10.0.0",
-    "rollup": "^2.77.0",
-    "rollup-plugin-css-only": "^3.1.0",
-    "rollup-plugin-livereload": "^2.0.0",
-    "rollup-plugin-svelte": "^7.1.0",
-    "rollup-plugin-terser": "^7.0.0"
+    "vite": "^3.2.0",
+    "@sveltejs/vite-plugin-svelte": "^1.1.0"
   }
 }

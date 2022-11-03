@@ -1,4 +1,6 @@
 const { Server } = require('socket.io');
+const { fileData } = require('../api_router.cjs');
+const { astMutators } = require('../../src/lib/js/ast_mutation_functions.cjs');
 
 
 function startSocketServer(server) {
@@ -8,7 +10,8 @@ function startSocketServer(server) {
     io.on('connection', (socket) => {
         connectedUserCount += 1;
         socket.on('mutate', (mutationData) => {
-            console.log(socket.id);
+            const { mutation, paramsObj } = mutationData;
+            astMutators[mutation]({ treeRef: fileData, ...paramsObj });
             socket.broadcast.emit('mutate', mutationData);
         });
 

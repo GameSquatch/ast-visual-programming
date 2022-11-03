@@ -1,4 +1,4 @@
-const { TreePath } = require('./tree_path.js');
+const { TreePath } = require('./tree_path.cjs');
 
 const astMutators = {
     /** @type {({ flowData: Object, treePath: TreePath }) => Object} */
@@ -12,7 +12,12 @@ const astMutators = {
     /** @type {({ path: string, treeRef: Object }) => Object} */
     deleteFlowStepAt({ path, treeRef }) {
         const deletePath = new TreePath({ stringPath: path });
-        let bodyArr = this.getParentReference({ flowData: treeRef, treePath: deletePath });
+        let bodyArr;
+        try {
+            bodyArr = this.getParentReference({ flowData: treeRef, treePath: deletePath });
+        } catch (_) {
+            return null;
+        }
 
         // @ts-ignore
         bodyArr.splice(parseInt(deletePath.getTokenAt(-1)), 1);
@@ -24,15 +29,30 @@ const astMutators = {
         const fromTreePath = new TreePath({ stringPath: fromPath });
         const toTreePath = new TreePath({ stringPath: toPath });
 
-        /** @type {Object} */
-        let fromBodyArr = this.getParentReference({ flowData: treeRef, treePath: fromTreePath });
         let fromIndex = parseInt(fromTreePath.getTokenAt(-1));
         const toIndex = parseInt(toTreePath.getTokenAt(-1)) + (insertAt ? 0 : 1);
 
-        let deleteNodeRef = fromBodyArr[fromIndex];
+        let fromBodyArr;
+        try {
+            /** @type {Object} */
+            fromBodyArr = this.getParentReference({ flowData: treeRef, treePath: fromTreePath });
+        } catch (_) {
+            fromBodyArr = null;
+        }
 
-        /** @type {Object} */
-        let toBodyArr = this.getParentReference({ flowData: treeRef, treePath: toTreePath });
+        let deleteNodeRef = fromBodyArr?.[fromIndex];
+
+        let toBodyArr;
+        try {
+            /** @type {Object} */
+            toBodyArr = this.getParentReference({ flowData: treeRef, treePath: toTreePath });
+        } catch (_) {
+            toBodyArr = null;
+        }
+
+        if (fromBodyArr === null && toBodyArr === null) {
+            return null;
+        }
 
         if (fromBodyArr === toBodyArr && fromIndex === toIndex) {
             return treeRef;
@@ -52,8 +72,13 @@ const astMutators = {
     insertNodeIntoFlowAt({ treeRef, path, nodeData, append }) {
         const treePath = new TreePath({ stringPath: path });
 
+        let nodeLocation;
+        try {
         /** @type {Object} */
-        let nodeLocation = this.getParentReference({ flowData: treeRef, treePath });
+            nodeLocation = this.getParentReference({ flowData: treeRef, treePath });
+        } catch {
+            return null;
+        }
 
         const index = +treePath.getTokenAt(-1);
         nodeLocation.splice(append ? index + 1 : index, 0, nodeData);
@@ -64,7 +89,12 @@ const astMutators = {
     setNodeAt({ treeRef, path, nodeData }) {
         const treePath = new TreePath({ stringPath: path });
 
-        let parentNode = this.getParentReference({ flowData: treeRef, treePath });
+        let parentNode;
+        try {
+            parentNode = this.getParentReference({ flowData: treeRef, treePath });
+        } catch {
+            return null;
+        }
 
         parentNode[treePath.getTokenAt(-1)] = nodeData;
         return treeRef;

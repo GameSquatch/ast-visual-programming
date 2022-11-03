@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
-import { TreePath } from '../../lib/js/tree_path.js';
+import { TreePath } from '../../lib/js/tree_path.cjs';
 
 
 /**

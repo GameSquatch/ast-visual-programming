@@ -1,9 +1,9 @@
 const express = require('express');
-const { checkCookieToken } = require('./middleware.js');
+const { checkCookieToken } = require('./middleware.cjs');
 const { generateCode } = require('../code_generator/code_generator.js');
 const router = express.Router();
 const uuidv4 =  require('uuid').v4;
-const { astMutators } = require('../src/lib/js/ast_mutation_functions.js');
+const { astMutators } = require('../src/lib/js/ast_mutation_functions.cjs');
 
 router.use(checkCookieToken, express.json());
 
@@ -280,4 +280,7 @@ router.post('/generate-code', (req, res) => {
         });
 });
 
-module.exports = router;
+module.exports = {
+    apiRouter: router,
+    fileData
+};

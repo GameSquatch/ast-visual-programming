@@ -1,4 +1,4 @@
-const { validateToken } = require('./utils.js');
+const { validateToken } = require('./utils.cjs');
 const express = require('express');
 
 

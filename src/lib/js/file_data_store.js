@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { astMutators } from './ast_mutation_functions.js';
+import { astMutators } from './ast_mutation_functions.cjs';
 import { socketStore } from '../../store/socket_store.js';
 import { get } from 'svelte/store';
 
