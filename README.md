@@ -1,46 +1,38 @@
-# Visual Programming
+# create-svelte
 
-The currently deployed version (which may or may not be the most recent commit) can be found here: https://z-flow.herokuapp.com/app
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-<h3 style="color:red">PLEASE NOTE</h3>
+## Creating a project
 
-**This is a work in progress, and I have changed many things since this README was created.**
+If you're seeing this, you've probably already done this step. Congrats!
 
-<hr/>
+```bash
+# create a new project in the current directory
+npm create svelte@latest
 
-As of now (July 26th, 2022), the code generator is working again and produces JS. I am aiming to integrate that into the web app soon. As of right now, it is only generating code off of a static example set, which is the same tree being used to populate the starting values of the web app.
-
-The idea behind this project is to see if web-based tools, JSON, and Abstract Syntax Trees (AST) could be used to generate backend logic code from a frontend UI tool.
-
-This involves some heavy recursion, but by using this pattern, the implementation almost builds itself in a way. As an example, the code in `code_generator/code_generator.js` only calls the code generator for the root node; the generators then build themselves by calling the code generators for their constituent code generators. This continues until a terminal node within the syntax tree is reached. At which point, the string for the generated code is returned to the generator that called it. In other words, higher level code generators build their code by putting together the strings that lower level generators return.
-
-For a function call (CallExpression) that looks like `doThing("hello")`, the generator would be accomplishing the following:
-```
-CallExpression() ->
-  callee + "(" + arguments + ")"
-
-callee = Identifier() ->
-  name // "doThing"
-
-arguments = StringLiteral() ->
-  value // "hello"
+# create a new project in my-app
+npm create svelte@latest my-app
 ```
 
-Where `arguments` would build a comma-separated string while looping through each item in the arg list
+## Developing
 
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-# Generating Test Code
+```bash
+npm run dev
 
-To test this out, first view the mock data object in the `code_generator.js` file, then run the file running this from the root of the project:
-```sh
-node code_generator/code_generator.js
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
 ```
-The code will generate from the source JSON object and output into the terminal. You will see a made up language that has a `StringUtil` class with static string manipulation method `concat`.
 
-<hr/>
+## Building
 
-# Plans
+To create a production version of your app:
 
-My next immediate goal is to improve styling and clean up the code base a bit. I have pushed really hard lately to get functionality there, a tabbed editor, and a file explorer tree, which has been successful, but now I want to make it *pretty*.
+```bash
+npm run build
+```
 
-Next to that, I also hope to start generating JS from what users create and just run it on the browser.
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
