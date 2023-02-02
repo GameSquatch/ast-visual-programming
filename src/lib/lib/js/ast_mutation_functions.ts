@@ -1,4 +1,4 @@
-import { TreePath } from './tree_path';
+import { TreePath } from './tree_path.js';
 
 const astMutators = {
     /** @type {({ flowData: Object, treePath: TreePath }) => Object} */
