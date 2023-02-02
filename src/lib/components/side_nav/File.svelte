@@ -77,12 +77,8 @@
     <NestPadding {treeLevel} />
     {#if renamingMode}
         <input type="text" use:requestFocus use:selectText on:blur={renameDone} on:keyup={enterKeyCheck} value="{metadata.title}" />
-    {:else if metadata}
-    <!-- <p>Ok</p> -->
-        <span class="{metadata.fileType}">f(x)</span><span>{metadata.title}</span>
-        <!-- {navFileTypePrefix[metadata.fileType]} -->
     {:else}
-        <p>Loading</p>
+        <span class="{metadata.fileType}">{navFileTypePrefix[metadata.fileType]}</span><span>{metadata.title}</span>
     {/if}
 </div>
 

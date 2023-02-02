@@ -1,14 +1,28 @@
-import type { FileDataDocument } from "$lib/file_data/stores/file_data_store";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
-interface FileStore {
-    [fileId: string]: FileDataDocument
+interface FileData {
+    [fileId: string]: {
+        info: {
+            id: string,
+            variables: {
+                [varId: string]: any
+            }
+        },
+        body: any[]
+    }
 }
 
-const fileData: Record<string, FileDataDocument> = {
-    '6d70d9ea-cebe-4e2b-9c83-722e1d004420': {
+const fileData: FileData = {
+    'factorial': {
         info: {
-            id: '6d70d9ea-cebe-4e2b-9c83-722e1d004420',
+            id: 'factorial',
+            variables: {}
+        },
+        body: []
+    },
+    'abc': {
+        info: {
+            id: 'abc',
             variables: {}
         },
         body: []
