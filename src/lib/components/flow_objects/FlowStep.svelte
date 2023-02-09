@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import { flowDropHandler } from "../../lib/js/drag_and_drop/drag_and_drop_handlers.js";
     import constructors from "../../lib/js/constructors.js";

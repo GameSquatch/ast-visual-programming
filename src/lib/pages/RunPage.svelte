@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { routes } from '../store/routes.js';
     import { fileDataStore } from '../lib/js/file_data_store.js';
     import { fileMetadata } from '../components/side_nav/file_metadata.js';

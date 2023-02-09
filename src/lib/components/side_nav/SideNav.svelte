@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
     import { slide } from 'svelte/transition';

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Flow from '../Flow.svelte';
     import FunctionInfoTab from '../FunctionInfoTab.svelte';
     import QuickAccessDraggables from '../QuickAccessDraggables.svelte';

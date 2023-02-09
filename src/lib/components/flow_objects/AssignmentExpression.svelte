@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import constructors from '../../lib/js/constructors.js';
 import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';

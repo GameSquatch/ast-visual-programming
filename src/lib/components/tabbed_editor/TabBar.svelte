@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { editorStore } from './editor_store.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
 

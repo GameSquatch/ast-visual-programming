@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { editorStore } from './editor_store.js';
 	import { fileDataStore } from '../../lib/js/file_data_store.js';
 	import TabBar from './TabBar.svelte';

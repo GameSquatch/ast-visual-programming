@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import typeDefs from '../../lib/js/type_definitions.js';
     import nodeTemplates from '../../lib/js/node_templates.js';
     import { fileDataStore } from '../../lib/js/file_data_store.js';

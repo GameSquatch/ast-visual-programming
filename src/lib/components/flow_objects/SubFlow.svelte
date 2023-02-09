@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import FlowStep from './FlowStep.svelte';
     import IfStatement from './IfStatement.svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';

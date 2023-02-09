@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import NewFileContext from './action_contexts/NewFileContext.svelte';
     import NewFolderContext from './action_contexts/NewFolderContext.svelte';
     import File from './File.svelte';

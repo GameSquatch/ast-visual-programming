@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { fileDataStore } from "../../lib/js/file_data_store";
     
     export let nodeData;

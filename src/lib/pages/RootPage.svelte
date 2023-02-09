@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
     import SideNav from '../components/side_nav/SideNav.svelte';
     import Header from '../components/Header.svelte';
     import TabbedEditor from '../components/tabbed_editor/TabbedEditor.svelte';
     import { contextMenuStore } from '../store/context_menu_store.js';
-    import { fileMetadata } from '../components/side_nav/file_metadata.js';
-    import { fileTreeStore } from '../components/side_nav/file_tree.js';
+    // import { fileMetadata } from '../components/side_nav/file_metadata.js';
+    // import { fileTreeStore } from '../components/side_nav/file_tree.js';
     import LoadingPage from './LoadingPage.svelte';
     // import { fileDataStore } from '../lib/js/file_data_store';
 	// import { astMutators } from '../lib/js/ast_mutation_functions.js';

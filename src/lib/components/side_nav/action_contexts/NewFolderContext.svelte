@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { navStore } from '../nav_store.js';
     import SingleInputWithSubmit from './SingleInputWithSubmit.svelte';
 

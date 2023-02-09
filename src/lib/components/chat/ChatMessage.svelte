@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     export let msgData;
 
     const date = new Date(msgData.msgTime);

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { dragStartHandler } from '../../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     
     export let dragData;

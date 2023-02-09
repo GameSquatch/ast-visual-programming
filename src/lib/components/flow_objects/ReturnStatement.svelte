@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
     import { fileDataStore } from '../../lib/js/file_data_store.js';

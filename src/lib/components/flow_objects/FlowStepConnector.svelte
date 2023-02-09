@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { flowDropHandler } from "../../lib/js/drag_and_drop/drag_and_drop_handlers.js";
     import { fileDataStore } from "../../lib/js/file_data_store.js";
     import { editorStore } from "../tabbed_editor/editor_store.js";

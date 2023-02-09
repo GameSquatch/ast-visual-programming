@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { onDestroy } from 'svelte';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';

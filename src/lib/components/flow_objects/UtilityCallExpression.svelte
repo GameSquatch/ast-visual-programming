@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import { utilNamesThatMatchContextDataType } from './flow_utilities.js';
     import Argument from '../Argument.svelte';

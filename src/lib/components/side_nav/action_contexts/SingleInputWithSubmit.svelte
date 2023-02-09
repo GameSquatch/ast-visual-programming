@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { requestFocus } from './use_request_focus.js';
     import { onEnterKeyHandler } from './enter_key_handler.js';
 

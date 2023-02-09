@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { fileMetadata } from './side_nav/file_metadata.js';
     import { fnInfoRefObjectDrag, returnStatementDrag } from '../lib/js/drag_and_drop/drag_start_data_creators.js';
 

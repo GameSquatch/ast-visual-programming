@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { routes } from '../store/routes.js';
 
     const headerText = "Z-Flow";

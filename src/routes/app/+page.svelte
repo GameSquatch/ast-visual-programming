@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import RootPage from '$lib/pages/RootPage.svelte';
     import RunPage from '$lib/pages/RunPage.svelte';
     import ChatPage from '$lib/pages/ChatPage.svelte';
