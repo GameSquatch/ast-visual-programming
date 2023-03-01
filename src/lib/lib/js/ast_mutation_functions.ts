@@ -1,16 +1,14 @@
 import { TreePath } from './tree_path.js';
 
 const astMutators = {
-    /** @type {({ flowData: Object, treePath: TreePath }) => Object} */
-    getParentReference({ flowData, treePath }) {
+    getParentReference({ flowData, treePath }: { flowData: any, treePath: TreePath }): any {
         let parentRef = flowData;
         for (let i = 0; i < treePath.tokens.length - 1; ++i) {
             parentRef = parentRef[treePath.tokens[i]];
         }
         return parentRef;
     },
-    /** @type {({ path: string, treeRef: Object }) => Object} */
-    deleteFlowStepAt({ path, treeRef }) {
+    deleteFlowStepAt({ path, treeRef }: { path: string, treeRef: Object }): Object | null {
         const deletePath = new TreePath({ stringPath: path });
         let bodyArr;
         try {
@@ -24,8 +22,7 @@ const astMutators = {
 
         return treeRef;
     },
-
-    moveFlowStep({ treeRef, fromPath, toPath, insertAt }) {
+    moveFlowStep({ treeRef, fromPath, toPath, insertAt }: { treeRef: Object, fromPath: string, toPath: string, insertAt: boolean }): Object | null {
         const fromTreePath = new TreePath({ stringPath: fromPath });
         const toTreePath = new TreePath({ stringPath: toPath });
 
@@ -34,7 +31,6 @@ const astMutators = {
 
         let fromBodyArr;
         try {
-            /** @type {Object} */
             fromBodyArr = this.getParentReference({ flowData: treeRef, treePath: fromTreePath });
         } catch (_) {
             fromBodyArr = null;
@@ -42,9 +38,8 @@ const astMutators = {
 
         let deleteNodeRef = fromBodyArr?.[fromIndex];
 
-        let toBodyArr;
+        let toBodyArr: any;
         try {
-            /** @type {Object} */
             toBodyArr = this.getParentReference({ flowData: treeRef, treePath: toTreePath });
         } catch (_) {
             toBodyArr = null;
@@ -68,8 +63,7 @@ const astMutators = {
 
         return treeRef;
     },
-
-    insertNodeIntoFlowAt({ treeRef, path, nodeData, append }) {
+    insertNodeIntoFlowAt({ treeRef, path, nodeData, append }: { treeRef: Object, path: string, nodeData: Object, append: boolean }): Object | null {
         const treePath = new TreePath({ stringPath: path });
 
         let nodeLocation;
@@ -85,8 +79,7 @@ const astMutators = {
 
         return treeRef;
     },
-
-    setNodeAt({ treeRef, path, nodeData }) {
+    setNodeAt({ treeRef, path, nodeData }: { treeRef: Object, path: string, nodeData: Object }): Object | null {
         const treePath = new TreePath({ stringPath: path });
 
         let parentNode;

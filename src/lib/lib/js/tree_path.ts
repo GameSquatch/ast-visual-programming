@@ -13,7 +13,7 @@ class TreePath {
         this.tokens = stringPath.split(delimiter);
     }
 
-    getTokenAt(pos) {
+    getTokenAt(pos: number) {
         if (pos < 0) {
             pos = this.tokens.length + pos;
         }
