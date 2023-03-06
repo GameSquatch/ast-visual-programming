@@ -2,7 +2,7 @@
     import { slide } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
     import { fnInfoRefObjectDrag } from '../lib/js/drag_and_drop/drag_start_data_creators.js';
-    import { fileMetadata } from '../components/side_nav/file_metadata.js';
+    import { fileMetadata } from './side_nav/file_metadata.js';
     import { typeDefaults } from '../lib/js/type_defaults.js';
     import { fileDataStore } from '../lib/js/file_data_store.js';
 

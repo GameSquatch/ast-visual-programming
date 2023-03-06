@@ -10,4 +10,4 @@
     }
 </script>
 
-<input type="checkbox" value={nodeData.value} checked={nodeData.value === true} on:change={updateValue} />
+<label><input type="checkbox" value={nodeData.value} checked={nodeData.value === true} on:change={updateValue} />{nodeData.value ? 'true' : 'false'}</label>

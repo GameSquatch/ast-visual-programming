@@ -1,23 +1,20 @@
-/**
- * @typedef {Object} ArgSpec
- * @property {string?} name
- * @property {string} dataType
- * @property {string} description
- */
-/**
- * @typedef {Object} FunctionDefinition
- * @property {ArgSpec[]} args
- * @property {boolean} infiniteArgs
- * @property {string} returnType
- * @property {string} description
- */
-/**
- * @typedef {Object.<string, FunctionDefinition>} FunctionCollection
- */
-/**
- * @type {Object.<string, FunctionCollection>}
- */
-const utilDefs = {
+
+interface ArgSpec {
+    name: string | null,
+    dataType: string,
+    description: string
+}
+
+interface FunctionDefinition {
+    args: ArgSpec[],
+    infiniteArgs: boolean,
+    returnType: string,
+    description: string
+}
+
+type FunctionCollection = Record<string, FunctionDefinition>;
+
+const utilDefs: Record<string, FunctionCollection> = {
     "LoggerUtil": {
         "logString": {
             "args": [

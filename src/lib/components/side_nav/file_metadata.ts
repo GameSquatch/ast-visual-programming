@@ -1,22 +1,19 @@
 import { writable } from 'svelte/store';
-import { typeDefaults } from '../../lib/js/type_defaults';
+import { typeDefaults } from '../../lib/js/type_defaults.js';
+import type { FunctionParameterConfig } from '../../common_types.js';
 
-/**
- * @typedef {Object} FileMetadataFlowData
- * @property {Object.<string, FunctionParameterConfig>} parameters
- * @property {string} returnType
- */
-/**
- * @typedef {Object} FileMetadataEntry
- * @property {string} title
- * @property {string} fileType
- * @property {FileMetadataFlowData} objectFlowData
- */
+interface FileMetadataFlowData {
+    parameters: Record<string, FunctionParameterConfig>,
+    returnType: string
+}
 
-/**
- * @type {Object.<string, FileMetadataEntry>} FileMetadata
- */
- const fm = {
+interface FileMetadataEntry {
+    title: string,
+    fileType: string,
+    objectFlowData: FileMetadataFlowData
+}
+
+const fm: Record<string, FileMetadataEntry> = {
     "factorial": {
         title: "factorial",
         fileType: "function",
@@ -41,18 +38,8 @@ import { typeDefaults } from '../../lib/js/type_defaults';
     }
 };
 
-/**
- * @typedef {Object} FunctionParameterConfig
- * @property {string} name
- * @property {string} dataType
- * @property {string|number|boolean} defaultValue
- */
-/**
- * 
- * @param {FunctionParameterConfig} startingValues
- * @returns {FunctionParameterConfig}
- */
-function createParameter({ name = "newParam", dataType = "String", defaultValue = "" }) {
+
+function createParameter({ name = "newParam", dataType = "String", defaultValue = "" }: FunctionParameterConfig): FunctionParameterConfig {
     return {
         name,
         dataType,
@@ -110,21 +97,14 @@ const fileMetadata = (() => {
 })();
 
 
-const fileTypeObjectFlowTemplates = {
+const fileTypeObjectFlowTemplates: Record<string, () => FileMetadataFlowData> = {
     "function": () => ({
         parameters: {},
         returnType: "String"
     })
 };
 
-/**
- * @function
- * @param {Object} spec
- * @param {string} spec.title
- * @param {string} spec.fileType
- * @returns {FileMetadataEntry}
- */
-function createFileMetadata({ title, fileType }) {
+function createFileMetadata({ title, fileType }: { title: string, fileType: string }): FileMetadataEntry {
     const fileOjbectFlowData = fileTypeObjectFlowTemplates[fileType]?.() ?? {};
 
     return {

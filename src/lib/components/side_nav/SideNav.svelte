@@ -14,8 +14,8 @@
     import { utilDefs } from '../../lib/js/util_definitions.js';
     import { utilDataDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
 
-    /** @type {ContextDoneCallback} */
-    function addFile(title, fileType) {
+
+    function addFile(title: string, fileType: string) {
         const id = crypto.randomUUID();
         $fileMetadata[id] = createFileMetadata({ title, fileType });
 
@@ -27,7 +27,6 @@
         });
     }
 
-    /** @type {ContextDoneCallback} */
     function addFolder(title) {
         fileTreeStore.createRootFolder({ title });
     }
@@ -194,7 +193,7 @@
     }
 
     .svg-icon-size {
-        width: 24px;
+        width: 22px;
         height: auto;
     }
 </style>
