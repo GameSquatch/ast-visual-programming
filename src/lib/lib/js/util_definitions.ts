@@ -1,7 +1,7 @@
 
 interface ArgSpec {
     name: string | null,
-    dataType: string,
+    dataType: "String" | "Integer" | "Boolean",
     description: string
 }
 
@@ -170,7 +170,7 @@ const utilDefs: Record<string, FunctionCollection> = {
         }
     },
     "IntegerUtil": {
-        "toString": {
+        "asString": {
             "args": [
                 {
                     "dataType": "Integer",
@@ -400,7 +400,7 @@ const utilDefs: Record<string, FunctionCollection> = {
             "returnType": "Boolean",
             "description": "Inverts a true to false and a false to true"
         },
-        "toString": {
+        "asString": {
             "args": [
                 {
                     "dataType": "Boolean",

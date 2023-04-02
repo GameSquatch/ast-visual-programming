@@ -27,12 +27,11 @@
         });
     }
 
-    function addFolder(title) {
+    function addFolder(title: string) {
         fileTreeStore.createRootFolder({ title });
     }
 
-    /** @type {(event: DragEvent) => void} */
-    function handleDrop(event) {
+    function handleDrop(event: DragEvent) {
         const dragObject = getDragData(event);
 
         if (event.dataTransfer === null || !['file', 'folder'].includes(dragObject.dragType)) {
@@ -43,11 +42,14 @@
         fileTreeStore.moveItem({ from: dragObject.dragData.treePath, to: itemLocation, navType: itemLocation });
     }
 
-    /** @type {(utilDefName: string) => (event: DragEvent) => void} */
-    function handleUtilDragStart(utilDefName) {
-        return (event) => {
-            event.dataTransfer.setData('text/json', JSON.stringify(utilDataDrag({ utilDefName })));
+    function handleUtilDragStart(utilDefName: string) {
+        return (event: DragEvent) => {
+            event.dataTransfer?.setData('text/json', JSON.stringify(utilDataDrag({ utilDefName })));
         };
+    }
+
+    function handleDragenter(event: DragEvent) {
+        
     }
 </script>
 
@@ -105,7 +107,7 @@
         {/if}
     </div>
 
-    <div on:drop|stopPropagation={handleDrop} on:dragover|preventDefault={() => {}} class="project-structure-pane">
+    <div on:drop|stopPropagation={handleDrop} on:dragover|preventDefault={() => {}} on:dragenter|preventDefault={handleDragenter} class="project-structure-pane">
         {#each $fileTreeStore.folders as folder, i (folder.id)}
             <Folder treePath={`folders.${i}`} bind:fileData={folder} />
         {/each}

@@ -36,7 +36,7 @@ const StringUtil = {
 
 const IntegerUtil = {
     /** @type {(num: number) => string} */
-    toString(num) {
+    asString(num) {
         return num.toString();
     },
     /** @type {(num1: number, num2: number) => number} */
@@ -93,7 +93,7 @@ const BooleanUtil = {
         return !b;
     },
     /** @type {(b: boolean) => string} */
-    toString(b) {
+    asString(b) {
         return b.toString();
     }
 };

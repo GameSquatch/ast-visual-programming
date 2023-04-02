@@ -2,70 +2,81 @@ import typeDefs from './type_definitions.js';
 import { utilDefs } from './util_definitions.js';
 
 
-/**
- * @typedef {Object} UtilityCallExpressionData
- * @property {string} type
- * @property {string} utilityName
- * @property {string} utilityMethod
- * @property {LiteralNode[]} arguments
- * @property {string} dataType
- */
+type IFlowStep = IUtilityCallExpression
+    | ILiteralNode
+    | IVariableRefCallExpression
+    | IFlowStepExpression
+    | IRefIdentifier
+    | IRefAssignment
+    | IFunctionCallExpression
+    | IIdentiferRefCallExpression;
+    
+type ArgumentNodes = ILiteralNode
+    | IUtilityCallExpression
+    | IRefIdentifier
+    | IFunctionCallExpression
+    | IIdentiferRefCallExpression;
 
-/**
- * @typedef {Object} LiteralNode
- * @property {string} type
- * @property {string|number|boolean} value
- * @property {string} dataType
- */
+interface IUtilityCallExpression {
+    type: "UtilityCallExpression";
+    utilityName: string;
+    utilityMethod: string;
+    arguments: ArgumentNodes[];
+    dataType: string;
+}
 
-/**
- * @typedef {Object} VariableRefCallExpression
- * @property {string} type
- * @property {Object} refData
- * @property {string} method
- * @property {Array.<LiteralNode|UtilityCallExpressionData|RefIdentifier|FunctionCallExpression>} arguments
- * @property {string} dataType
- */
+interface ILiteralNode {
+    type: "StringLiteral" | "IntegerLiteral" | "BooleanLiteral";
+    value: string | number | boolean;
+    dataType: string;
+}
 
-/**
- * @typedef {Object} FlowStep
- * @property {string} type
- * @property {string} id
- * @property {null} expression
- */
 
-/**
- * @typedef {Object} RefIdentifier
- * @property {string} type
- * @property {string} refId
- * @property {string} dataType
- * @property {string} fnRefType
- */
+interface IVariableRefCallExpression {
+    type: "VariableRefCallExpression";
+    refData: any;
+    method: string;
+    arguments: ArgumentNodes[];
+    dataType: string;
+}
 
-/**
- * @typedef {Object} RefAssignment
- * @property {string} type
- * @property {RefIdentifier} left
- * @property {UtilityCallExpressionData|VariableRefCallExpression|LiteralNode} right
- */
+interface IFlowStepExpression {
+    type: "FlowStep";
+    id: string;
+    expression: any | null;
+}
 
-/**
- * @typedef {Object} FunctionCallExpression
- * @property {string} type
- * @property {string} fileId
- * @property {string} dataType
- * @property {Array.<LiteralNode|UtilityCallExpressionData|RefIdentifier|FunctionCallExpression>} arguments
- */
+interface IRefIdentifier {
+    type: "RefIdentifier";
+    refId: string;
+    dataType: string;
+    fnRefType: string;
+}
+
+interface IRefAssignment {
+    type: "RefAssignment";
+    left: IRefIdentifier;
+    right: IUtilityCallExpression | IVariableRefCallExpression | ILiteralNode;
+}
+
+interface IFunctionCallExpression {
+    type: "FunctionCallExpression";
+    fileId: string;
+    dataType: string;
+    arguments: IFlowStep[];
+}
+
+interface IIdentiferRefCallExpression {
+    type: "IdentifierRefCallExpression";
+    refData: any;
+    method: string;
+    arguments: ArgumentNodes[];
+    dataType: string;
+}
 
 
 const nodeTemplates = {
-    /**
-     * @function
-     * @param {Object} spec
-     * @param {string} spec.utilDefName
-     * @param {string} spec.methodName
-     */
-    util: function({ utilDefName, methodName }) {
+    util: function({ utilDefName, methodName }: { utilDefName: string, methodName: string }): IUtilityCallExpression {
         const methodDefinition = utilDefs[utilDefName][methodName];
         const definitionArgs = methodDefinition.args;
 
@@ -74,8 +85,8 @@ const nodeTemplates = {
             utilityName: utilDefName,
             utilityMethod: methodName,
             arguments: definitionArgs.map((arg) => {
-                const argTypeAdj = arg.dataType + 'Literal';
-                const argNodeData = this[argTypeAdj]();
+                const argTypeAdj = arg.dataType + 'Literal' as ("StringLiteral" | "IntegerLiteral" | "BooleanLiteral");
+                const argNodeData = literalTemplates[argTypeAdj]();
                 return {
                     nodeData: argNodeData,
                     ...arg
@@ -84,14 +95,7 @@ const nodeTemplates = {
             dataType: methodDefinition.returnType
         };
     },
-    /**
-     * @function
-     * @param {Object} spec
-     * @param {string} spec.method
-     * @param {string} spec.dataType
-     * @param {Object} spec.refData
-     */
-    identifierRefCallExpression: function({ method, dataType, refData }) {
+    identifierRefCallExpression: function({ method, dataType, refData }: { method: string, dataType: string, refData: any }): IIdentiferRefCallExpression {
         const methodDefinition = typeDefs[refData.dataType][method];
         const definitionArgs = methodDefinition.args;
 
@@ -177,29 +181,10 @@ const nodeTemplates = {
             type: "ReturnStatement",
             functionId,
             returnType,
-            expression: this[returnType + 'Literal']()
+            expression: literalTemplates[returnType + 'Literal']()
         };
     },
-    // Capitalizing because it matches the 'type' field in the AST
-    /** @type {({ value: string }) => LiteralNode} */
-    StringLiteral: ({ value } = { value: "" }) => ({
-        type: "StringLiteral",
-        value: value,
-        dataType: "String"
-    }),
-    // Capitalizing because it matches the 'type' field in the AST
-    /** @type {({ value: number }) => LiteralNode} */
-    IntegerLiteral: ({ value } = { value: 0 }) => ({
-        type: "IntegerLiteral",
-        value,
-        dataType: "Integer"
-    }),
-    /** @type {({ value: boolean }) => LiteralNode} */
-    BooleanLiteral: ({ value } = { value: false }) => ({
-        type: "BooleanLiteral",
-        value,
-        dataType: "Boolean"
-    }),
+    
     /**
      * @function
      * @param {Object} spec
@@ -216,5 +201,23 @@ const nodeTemplates = {
         };
     }
 };
+
+const literalTemplates: Record<"StringLiteral"|"IntegerLiteral"|"BooleanLiteral", (a?: any) => ILiteralNode> = {
+    StringLiteral: ({ value } = { value: "" }) => ({
+        type: "StringLiteral",
+        value: value,
+        dataType: "String"
+    }),
+    IntegerLiteral: ({ value } = { value: 0 }) => ({
+        type: "IntegerLiteral",
+        value,
+        dataType: "Integer"
+    }),
+    BooleanLiteral: ({ value } = { value: false }) => ({
+        type: "BooleanLiteral",
+        value,
+        dataType: "Boolean"
+    }),
+}
 
 export default nodeTemplates;

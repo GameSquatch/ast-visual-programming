@@ -308,7 +308,7 @@ const typeDefs = {
             "returnType": "Boolean",
             "description": "Checks that the argument is less than or equal to the calling number"
         },
-        "toString": {
+        "asString": {
             "args": [],
             "infiniteArgs": false,
             "returnType": "String",
@@ -346,7 +346,7 @@ const typeDefs = {
             "returnType": "Boolean",
             "description": "Inverts the calling boolean"
         },
-        "toString": {
+        "asString": {
             "args": [],
             "infiniteArgs": false,
             "returnType": "String",
