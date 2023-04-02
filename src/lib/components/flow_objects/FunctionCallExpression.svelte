@@ -18,10 +18,7 @@
 
     // Populate empty arguments when the file metadata has params added to it
     const fmUnsub = fileMetadata.subscribe((metadata) => {
-        let firstRun = false;
-        if (!fm) firstRun = true;
         fm ??= metadata;
-        if (firstRun) return;
         const parameters = metadata[nodeData.fileId].objectFlowData.parameters;
         const parameterKeys = Object.keys(parameters);
 
