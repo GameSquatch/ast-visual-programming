@@ -4,10 +4,10 @@
     import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { fileMetadata } from '../side_nav/file_metadata';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-    import nodeTemplates from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IReturnStatement } from '../../lib/js/node_templates.js';
 
-    export let nodeData;
-    export let nodePath;
+    export let nodeData: IReturnStatement;
+    export let nodePath: string;
 
     $: returnType = $fileMetadata[nodeData.functionId].objectFlowData.returnType;
 
@@ -20,7 +20,7 @@
     }
 
     function clearStatement(_) {
-        fileDataStore.setNodeAt({ path: `${nodePath}.expression`, nodeData: nodeTemplates[returnType + 'Literal']() });
+        fileDataStore.setNodeAt({ path: `${nodePath}.expression`, nodeData: AstNodeCreators.literalFromDataType(returnType) });
     }
 </script>
 

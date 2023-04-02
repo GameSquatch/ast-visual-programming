@@ -1,8 +1,8 @@
-
+import type { PrimitiveType } from './lib/js/node_templates.js';
 
 interface FunctionRefData {
     name: string,
-    dataType: string,
+    dataType: PrimitiveType,
     defaultValue: string | number | boolean,
     refId: string,
     dragType: string,
@@ -11,7 +11,7 @@ interface FunctionRefData {
 
 interface FunctionParameterConfig {
     name: string,
-    dataType: string,
+    dataType: PrimitiveType,
     defaultValue: string | number | boolean
 }
 
@@ -22,7 +22,7 @@ interface FileDragData {
     fileType: string,
     objectFlowData: {
         parameters: FunctionParameterConfig,
-        dataType: string
+        dataType: PrimitiveType
     }
 }
 

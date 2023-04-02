@@ -3,15 +3,15 @@
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import { methodNamesThatMatchContextDataType } from './flow_utilities.js';
     import constructors from '../../lib/js/constructors.js';
-    import nodeTemplates from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IIdentiferRefCallExpression } from '../../lib/js/node_templates.js';
     import typeDefs from '../../lib/js/type_definitions.js'
     import { fileDataStore } from '../../lib/js/file_data_store';
 
-    export let nodeData;
+    export let nodeData: IIdentiferRefCallExpression;
     export let contextType;
     export let isArgument = false;
     export let argLevel = 1;
-    export let nodePath;
+    export let nodePath: string;
 
     function onPropertyChange(event) {
         const method = event.target.value;
@@ -23,7 +23,7 @@
         const fnDef = typeDefs[nodeData.refData.dataType][method];
         const args = fnDef.args.map((arg) => {
             return {
-                nodeData: nodeTemplates[arg.dataType + "Literal"](),
+                nodeData: AstNodeCreators.literalFromDataType(arg.dataType),
                 ...arg
             }
         });
@@ -39,16 +39,16 @@
         });
     }
 
-    const dropArgument = (argIndex) => (node) => {
+    const dropArgument = (argIndex: number) => (node) => {
         if (node === null) return;
 
         fileDataStore.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
     };
 
-    function onClear(i, argument) {
+    function onClear(i: number, argument) {
         fileDataStore.setNodeAt({
             path: `${nodePath}.arguments.${i}.nodeData`,
-            nodeData: nodeTemplates[argument.dataType + "Literal"]()
+            nodeData: AstNodeCreators.literalFromDataType(argument.dataType)
         });
     }
 </script>

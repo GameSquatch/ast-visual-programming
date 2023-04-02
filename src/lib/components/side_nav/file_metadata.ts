@@ -1,10 +1,11 @@
 import { writable } from 'svelte/store';
 import { typeDefaults } from '../../lib/js/type_defaults.js';
 import type { FunctionParameterConfig } from '../../common_types.js';
+import type { PrimitiveType } from '$lib/lib/js/node_templates.js';
 
 interface FileMetadataFlowData {
     parameters: Record<string, FunctionParameterConfig>,
-    returnType: string
+    returnType: PrimitiveType
 }
 
 interface FileMetadataEntry {

@@ -1,24 +1,7 @@
+import type { FunctionDefinition } from './util_definitions.js';
 
-/**
- * @typedef {Object} ArgSpec
- * @property {string?} name
- * @property {string} dataType
- * @property {string} description
- */
-/**
- * @typedef {Object} FunctionDefinition
- * @property {Array<ArgSpec>} args
- * @property {boolean} infiniteArgs
- * @property {string} returnType
- * @property {string} description
- */
-/**
- * @typedef {Object.<string, FunctionDefinition>} FunctionCollection
- */
-/**
- * @type {Object.<string, FunctionCollection>}
- */
-const typeDefs = {
+
+const typeDefs: Record<string, Record<string, FunctionDefinition>> = {
     "String": {
         "concat": {
             "args": [

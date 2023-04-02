@@ -30,13 +30,6 @@
 
 
 /**
- * @typedef {Object} AssignmentExpression
- * @property {string} type
- * @property {RefIdentifier} left
- * @property {RefIdentifier|IdentifierRefCallExpression|UtilityCallExpression} right
- */
-
-/**
  * @typedef {Object} IdentifierRefCallExpression
  * @property {string} type
  * @property {Literal} variable

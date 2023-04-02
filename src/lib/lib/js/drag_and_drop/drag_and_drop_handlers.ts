@@ -1,4 +1,4 @@
-import nodeTemplates from '../node_templates.js';
+import { AstNodeCreators } from '../node_templates.js';
 import typeDefs from '../type_definitions.js';
 import DropObject from './drop_object.js';
 import { utilDefs } from '../util_definitions.js'
@@ -75,7 +75,7 @@ const findUtilReturnTypeMatch = (contextType, utilDefName) => {
 
 
 function wrapWithFlowStep(node) {
-    const expr = nodeTemplates.flowStep();
+    const expr = AstNodeCreators.flowStep();
     expr.expression = node;
     return expr;
 }
@@ -90,14 +90,14 @@ function wrapWithFlowStep(node) {
  function utilFromTypedContext(dragObject, contextType) {
     const methodName = findUtilReturnTypeMatch(contextType, dragObject.dragData.utilDefName);
     if (methodName === null) return null;
-    return nodeTemplates.util({ utilDefName: dragObject.dragData.utilDefName, methodName });
+    return AstNodeCreators.util({ utilDefName: dragObject.dragData.utilDefName, methodName });
 }
 
 
 function voidUtil(dragObject) {
     for (let methodName of Object.keys(utilDefs[dragObject.dragData.utilDefName])) {
         if (utilDefs[dragObject.dragData.utilDefName][methodName].returnType === "Void") {
-            return wrapWithFlowStep( nodeTemplates.util({ utilDefName: dragObject.dragData.utilDefName, methodName }) );
+            return wrapWithFlowStep( AstNodeCreators.util({ utilDefName: dragObject.dragData.utilDefName, methodName }) );
         }
     }
     return null;
@@ -115,17 +115,17 @@ function variableRefFromTypedContext(dragObject, contextType) {
     const variableTypeMatchesContext = dragDataTypeMatchesContext(dragObject, contextType);
     
     if (variableTypeMatchesContext) {
-        return nodeTemplates.variableRefIdentifer(dragObject.dragData);
+        return AstNodeCreators.variableRefIdentifer(dragObject.dragData);
     }
 
     const method = findReturnTypeMatch(dragObject.dragData.dataType)(contextType);
     if (method === null) alert("Types don't match and no methods exist to match the type");
     
     return method !== null
-        ? nodeTemplates.identifierRefCallExpression({
+        ? AstNodeCreators.identifierRefCallExpression({
             method: method,
             dataType: contextType,
-            refData: nodeTemplates.variableRefIdentifer(dragObject.dragData)
+            refData: AstNodeCreators.variableRefIdentifer(dragObject.dragData)
         })
         : null;
 }
@@ -137,7 +137,7 @@ function functionFromTypedContext(dragObject, contextType) {
         return null;
     }
 
-    return nodeTemplates.function(dragObject.dragData);
+    return AstNodeCreators(dragObject.dragData);
 }
 
 
@@ -168,12 +168,12 @@ const dropContextMap = {
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
             newNode: dragObject.dragData.dataType === 'Boolean'
-                ? nodeTemplates.ifStatement({ testData: nodeTemplates.variableRefIdentifer(dragObject.dragData) })
-                : wrapWithFlowStep(nodeTemplates.variableRefAssignment(dragObject.dragData))
+                ? AstNodeCreators.ifStatement({ testData: AstNodeCreators.variableRefIdentifer(dragObject.dragData) })
+                : wrapWithFlowStep(AstNodeCreators.variableRefAssignment(dragObject.dragData))
         }),
         flowStep: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: nodeTemplates.variableRefAssignment(dragObject.dragData)
+            newNode: AstNodeCreators.variableRefAssignment(dragObject.dragData)
         }),
         assignment: (dragObject, contextType) => new DropObject({
             dragObject,
@@ -202,7 +202,7 @@ const dropContextMap = {
     flowStep: {
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: nodeTemplates.flowStep()
+            newNode: AstNodeCreators.flowStep()
         }),
         flowStep: noNode,
         assignment: noNode,
@@ -216,8 +216,8 @@ const dropContextMap = {
     },
     /** @type {Object.<string, FunctionContextCallback>} */
     "file": {
-        flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithFlowStep(nodeTemplates[dragObject.dragData.fileType](dragObject.dragData)) }),
-        flowStep: (dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates[dragObject.dragData.fileType](dragObject.dragData) }),
+        flow: (dragObject, contextType) => new DropObject({ dragObject, newNode: wrapWithFlowStep(AstNodeCreators.fromFileType(dragObject.dragData.fileType, dragObject.dragData)) }),
+        flowStep: (dragObject, contextType) => new DropObject({ dragObject, newNode: AstNodeCreators.fromFileType(dragObject.dragData.fileType, dragObject.dragData) }),
         assignment: (dragObject, contextType) => new DropObject({ dragObject, newNode: functionFromTypedContext(dragObject, contextType) }),
         argument: (dragObject, contextType) => new DropObject({ dragObject, newNode: functionFromTypedContext(dragObject, contextType) }),
     },
@@ -225,7 +225,7 @@ const dropContextMap = {
     "return": {
         flow: (dragObject, contextType) => new DropObject({
             dragObject,
-            newNode: wrapWithFlowStep(nodeTemplates.returnStatement(dragObject.dragData))
+            newNode: wrapWithFlowStep(AstNodeCreators.returnStatement(dragObject.dragData))
         }),
         flowStep: noNode,
         assignment: noNode,//(dragObject, contextType) => new DropObject({ dragObject, newNode: nodeTemplates['function'](dragObject.dragData) }),

@@ -4,7 +4,7 @@
     import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { contextMenuStore } from "../../store/context_menu_store.js";
     import { moveFlowStepDrag } from '../../lib/js/drag_and_drop/drag_start_data_creators.js';
-    import nodeTemplates from "../../lib/js/node_templates.js";
+    import {AstNodeCreators} from "../../lib/js/node_templates.js";
     import SubFlow from './SubFlow.svelte';
     import FlowStepConnector from "./FlowStepConnector.svelte";
     import DragHandle from '../DragHandle.svelte';
@@ -35,8 +35,8 @@
         const menuItems = [{
             title: 'Change to Assignment',
             onSelected: () => {
-                const flowStep = nodeTemplates.flowStep();
-                flowStep.expression = nodeTemplates.variableRefAssignment({
+                const flowStep = AstNodeCreators.flowStep();
+                flowStep.expression = AstNodeCreators.variableRefAssignment({
                     refId: nodeData.test.refId,
                     dataType: 'Boolean',
                     fnRefType: nodeData.test.fnRefType

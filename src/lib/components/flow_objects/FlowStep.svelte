@@ -8,7 +8,7 @@
     import { contextMenuStore } from '../../store/context_menu_store.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { get } from 'svelte/store';
-    import nodeTemplates from '../../lib/js/node_templates.js';
+    import { AstNodeCreators } from '../../lib/js/node_templates.js';
     import FlowStepConnector from './FlowStepConnector.svelte';
 
     /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */
@@ -87,7 +87,7 @@
                 menuItems: [
                     {
                         title: 'Change To If Statement',
-                        onSelected: () => fileDataStore.setNodeAt({ path: nodePath, nodeData: nodeTemplates.ifStatement({ testData }) })
+                        onSelected: () => fileDataStore.setNodeAt({ path: nodePath, nodeData: AstNodeCreators.ifStatement({ testData }) })
                     }
                 ]
             }));

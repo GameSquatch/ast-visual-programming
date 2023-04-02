@@ -1,11 +1,11 @@
 <script lang="ts">
     import constructors from '../../lib/js/constructors.js';
-import { fileDataStore } from '../../lib/js/file_data_store.js';
+    import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-    import nodeTemplates from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IAssignmentExpression } from '../../lib/js/node_templates.js';
 
-    export let nodeData;
-    export let nodePath;
+    export let nodeData: IAssignmentExpression;
+    export let nodePath: string;
 
     function stateChangeOnDrop(node) {
         if (node === null) return;
@@ -14,7 +14,7 @@ import { fileDataStore } from '../../lib/js/file_data_store.js';
     }
 
     function clearAssignment(_) {
-        fileDataStore.setNodeAt({ path: `${nodePath}.right`, nodeData: nodeTemplates[nodeData.left.dataType + 'Literal']() });
+        fileDataStore.setNodeAt({ path: `${nodePath}.right`, nodeData: AstNodeCreators.literalFromDataType(nodeData.left.dataType)});
     }
 </script>
 

@@ -21,7 +21,7 @@
     <label for="file-type-select">
         File Type:
         <select id="file-type-select" bind:this={selectElem}>
-            <option value="function" selected>Function</option>
+            <option value="func" selected>Function</option>
         </select>
     </label>
     <SingleInputWithSubmit buttonText={'Add File'} bind:inputValue={newFileName} placeholder={'File Name'} submitCallback={submit} />

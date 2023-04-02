@@ -1,15 +1,15 @@
 
 interface ArgSpec {
-    name: string | null,
-    dataType: "String" | "Integer" | "Boolean",
-    description: string
+    name: string | null;
+    dataType: "String" | "Integer" | "Boolean";
+    description: string;
 }
 
 interface FunctionDefinition {
-    args: ArgSpec[],
-    infiniteArgs: boolean,
-    returnType: string,
-    description: string
+    args: ArgSpec[];
+    infiniteArgs: boolean;
+    returnType: string;
+    description: string;
 }
 
 type FunctionCollection = Record<string, FunctionDefinition>;
@@ -415,4 +415,4 @@ const utilDefs: Record<string, FunctionCollection> = {
     }
 };
 
-export { utilDefs };
+export { utilDefs, type FunctionDefinition, type ArgSpec };

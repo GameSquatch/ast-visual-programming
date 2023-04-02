@@ -5,7 +5,7 @@
     import { fileMetadata } from "../side_nav/file_metadata.js";
     import { get } from 'svelte/store';
     import { contextMenuStore } from '../../store/context_menu_store.js';
-    import nodeTemplates from "../../lib/js/node_templates.js";
+    import { AstNodeCreators } from "../../lib/js/node_templates.js";
 
     export let dragOverHandler;
     export let nodePath;
@@ -39,7 +39,7 @@
     function showInsertContextMenu(event) {
         const activeTab = get(editorStore).activeTab;
         const fileReturnType = get(fileMetadata)[activeTab].objectFlowData.returnType;
-        const flowStep = nodeTemplates.flowStep();
+        const flowStep = AstNodeCreators.flowStep();
 
         contextMenuStore.update((state) => ({
             showing: true,
@@ -52,13 +52,13 @@
                 },
                 {
                     title: 'Add If Step',
-                    onSelected: () => fileDataStore.insertNodeIntoFlowAt({ path: nodePath, nodeData: nodeTemplates.ifStatement(), append: true })
+                    onSelected: () => fileDataStore.insertNodeIntoFlowAt({ path: nodePath, nodeData: AstNodeCreators.ifStatement(), append: true })
                 },
                 {
                     title: 'Add return statement',
                     onSelected: () => fileDataStore.insertNodeIntoFlowAt({
                         path: nodePath,
-                        nodeData: { ...flowStep, expression: nodeTemplates.returnStatement({ functionId: get(editorStore).activeTab, returnType: fileReturnType }) },
+                        nodeData: { ...flowStep, expression: AstNodeCreators.returnStatement({ functionId: get(editorStore).activeTab, returnType: fileReturnType }) },
                         append: true
                     })
                 }

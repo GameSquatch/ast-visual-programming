@@ -3,25 +3,22 @@
     import { utilNamesThatMatchContextDataType } from './flow_utilities.js';
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
-    import nodeTemplates from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IUtilityCallExpression } from '../../lib/js/node_templates.js';
     import { utilDefs } from '../../lib/js/util_definitions.js';
     import { fileDataStore } from '../../lib/js/file_data_store.js';
 
-    /** @type {import('../../lib/js/node_templates.js').UtilityCallExpressionData} */
-    export let nodeData;
-    /** @type {string} */
-    export let contextType;
+    export let nodeData: IUtilityCallExpression;
+    export let contextType: string;
     export let isArgument = false;
     export let argLevel = 1;
-    /** @type {string} */
-    export let nodePath;
+    export let nodePath: string;
 
     function onPropertyChange(event) {
         const utilityMethod = event.target.value;
         const fnDef = utilDefs[nodeData.utilityName][utilityMethod];
         const args = fnDef.args.map((arg) => {
             return {
-                nodeData: nodeTemplates[arg.dataType + "Literal"](),
+                nodeData: AstNodeCreators.literalFromDataType(arg.dataType),
                 ...arg
             };
         });
@@ -38,16 +35,16 @@
     };
 
 
-    const populateArgument = (argIndex) => (node) => {
+    const populateArgument = (argIndex: number) => (node) => {
         if (node === null) return;
 
         fileDataStore.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
     };
 
-    function onClear(i, argument) {
+    function onClear(i: number, argument) {
         fileDataStore.setNodeAt({
             path: `${nodePath}.arguments.${i}.nodeData`,
-            nodeData: nodeTemplates[argument.dataType + "Literal"]()
+            nodeData: AstNodeCreators.literalFromDataType(argument.dataType)
         });
     }
 </script>

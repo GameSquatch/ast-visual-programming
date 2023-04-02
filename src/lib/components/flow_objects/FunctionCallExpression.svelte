@@ -5,16 +5,16 @@
     import Argument from '../Argument.svelte';
     import { fileDataStore } from '../../lib/js/file_data_store.js';
     import constructors from '../../lib/js/constructors.js';
-    import nodeTemplates from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IFunctionCallExpression } from '../../lib/js/node_templates.js';
 
-    export let nodeData;
+    export let nodeData: IFunctionCallExpression;
     export let contextType;
     export let isArgument = false;
     export let argLevel = 1;
-    export let nodePath;
+    export let nodePath: string;
 
     let fm;
-    let paramNames = [];
+    let paramNames: string[] = [];
 
     // Populate empty arguments when the file metadata has params added to it
     const fmUnsub = fileMetadata.subscribe((metadata) => {
@@ -40,7 +40,7 @@
 
             if (!arg) {
                 resetArgs[i] = {
-                    nodeData: nodeTemplates[parameter.dataType + 'Literal'](),
+                    nodeData: AstNodeCreators.literalFromDataType(parameter.dataType),
                     name: parameter.name,
                     description: '',
                     dataType: parameter.dataType
@@ -53,7 +53,7 @@
             // When the parameter's data type changes
             if (parameter.dataType !== arg.dataType) {
                 resetArgs[i] = {
-                    nodeData: nodeTemplates[parameter.dataType + 'Literal'](),
+                    nodeData: AstNodeCreators.literalFromDataType(parameter.dataType),
                     name: arg.name,
                     description: arg.description,
                     dataType: parameter.dataType
@@ -69,16 +69,16 @@
 
     onDestroy(fmUnsub);
 
-    const populateArgument = (argIndex) => (node) => {
+    const populateArgument = (argIndex: number) => (node) => {
         if (node === null) return;
 
         fileDataStore.setNodeAt({ path: `${nodePath}.arguments.${argIndex}.nodeData`, nodeData: node });
     };
 
-    function onClear(i, argument) {
+    function onClear(i: number, argument) {
         fileDataStore.setNodeAt({
             path: `${nodePath}.arguments.${i}.nodeData`,
-            nodeData: nodeTemplates[argument.dataType + 'Literal']()
+            nodeData: AstNodeCreators.literalFromDataType(argument.dataType)
         });
     }
 </script>
