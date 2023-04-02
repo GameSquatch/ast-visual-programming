@@ -3,7 +3,7 @@
     import { utilNamesThatMatchContextDataType } from './flow_utilities.js';
     import Argument from '../Argument.svelte';
     import constructors from '../../lib/js/constructors.js';
-    import { AstNodeCreators, type IUtilityCallExpression } from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IUtilityCallExpression } from '../../lib/js/ast_node_creators.js';
     import { utilDefs } from '../../lib/js/util_definitions.js';
     import { fileDataStore } from '../../lib/js/file_data_store.js';
 

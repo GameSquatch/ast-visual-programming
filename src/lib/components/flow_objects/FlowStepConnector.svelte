@@ -5,7 +5,7 @@
     import { fileMetadata } from "../side_nav/file_metadata.js";
     import { get } from 'svelte/store';
     import { contextMenuStore } from '../../store/context_menu_store.js';
-    import { AstNodeCreators } from "../../lib/js/node_templates.js";
+    import { AstNodeCreators } from "../../lib/js/ast_node_creators.js";
 
     export let dragOverHandler;
     export let nodePath;

@@ -8,7 +8,7 @@
     import { contextMenuStore } from '../../store/context_menu_store.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { get } from 'svelte/store';
-    import { AstNodeCreators } from '../../lib/js/node_templates.js';
+    import { AstNodeCreators } from '../../lib/js/ast_node_creators.js';
     import FlowStepConnector from './FlowStepConnector.svelte';
 
     /** @type {import('../../lib/js/drag_and_drop/drag_start_data_creators.js').FlowStepNode} */

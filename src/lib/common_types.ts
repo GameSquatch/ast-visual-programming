@@ -1,4 +1,4 @@
-import type { PrimitiveType } from './lib/js/node_templates.js';
+import type { PrimitiveType } from './lib/js/ast_node_creators.js';
 
 interface FunctionRefData {
     name: string,

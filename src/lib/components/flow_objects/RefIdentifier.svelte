@@ -1,6 +1,6 @@
 <script lang="ts">
     import typeDefs from '../../lib/js/type_definitions.js';
-    import {AstNodeCreators} from '../../lib/js/node_templates.js';
+    import {AstNodeCreators} from '../../lib/js/ast_node_creators.js';
     import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { fileMetadata } from '../side_nav/file_metadata.js';
     import { editorStore } from '../tabbed_editor/editor_store.js';

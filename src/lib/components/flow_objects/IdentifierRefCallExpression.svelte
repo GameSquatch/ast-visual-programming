@@ -3,7 +3,7 @@
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js'
     import { methodNamesThatMatchContextDataType } from './flow_utilities.js';
     import constructors from '../../lib/js/constructors.js';
-    import { AstNodeCreators, type IIdentiferRefCallExpression } from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IIdentiferRefCallExpression } from '../../lib/js/ast_node_creators.js';
     import typeDefs from '../../lib/js/type_definitions.js'
     import { fileDataStore } from '../../lib/js/file_data_store';
 

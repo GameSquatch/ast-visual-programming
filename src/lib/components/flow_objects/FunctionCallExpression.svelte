@@ -5,7 +5,7 @@
     import Argument from '../Argument.svelte';
     import { fileDataStore } from '../../lib/js/file_data_store.js';
     import constructors from '../../lib/js/constructors.js';
-    import { AstNodeCreators, type IFunctionCallExpression } from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IFunctionCallExpression } from '../../lib/js/ast_node_creators.js';
 
     export let nodeData: IFunctionCallExpression;
     export let contextType;

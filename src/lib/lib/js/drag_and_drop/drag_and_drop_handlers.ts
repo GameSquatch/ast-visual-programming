@@ -1,4 +1,4 @@
-import { AstNodeCreators } from '../node_templates.js';
+import { AstNodeCreators } from '../ast_node_creators.js';
 import typeDefs from '../type_definitions.js';
 import DropObject from './drop_object.js';
 import { utilDefs } from '../util_definitions.js'

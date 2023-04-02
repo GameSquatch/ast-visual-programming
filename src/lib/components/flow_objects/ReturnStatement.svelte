@@ -4,7 +4,7 @@
     import { fileDataStore } from '../../lib/js/file_data_store.js';
     import { fileMetadata } from '../side_nav/file_metadata';
     import { flowDropHandler } from '../../lib/js/drag_and_drop/drag_and_drop_handlers.js';
-    import { AstNodeCreators, type IReturnStatement } from '../../lib/js/node_templates.js';
+    import { AstNodeCreators, type IReturnStatement } from '../../lib/js/ast_node_creators.js';
 
     export let nodeData: IReturnStatement;
     export let nodePath: string;
