@@ -2,6 +2,7 @@ import typeDefs from './type_definitions.js';
 import { utilDefs, type ArgSpec } from './util_definitions.js';
 
 type PrimitiveType = "String" | "Integer" | "Boolean";
+type FileType = "func";
 
 type IFlowStep = IUtilityCallExpression
     | ILiteralNode
@@ -10,10 +11,13 @@ type IFlowStep = IUtilityCallExpression
     | IRefIdentifier
     | IRefAssignment
     | IFunctionCallExpression
-    | IIdentiferRefCallExpression;
+    | IIdentiferRefCallExpression
+    | IAssignmentExpression
+    | IIfStatement
+    | IReturnStatement;
     
 type ArgumentNode = {
-    nodeData: ILiteralNode | IIdentiferRefCallExpression | IUtilityCallExpression
+    nodeData: ILiteralNode | IIdentiferRefCallExpression | IUtilityCallExpression | IRefIdentifier | IVariableRefCallExpression | IFunctionCallExpression
 } & ArgSpec;
 
 interface IUtilityCallExpression {
@@ -45,6 +49,21 @@ interface IBooleanLiteral {
     type: "BooleanLiteral";
     value: boolean;
     dataType: "Boolean";
+}
+
+type TypeValuePair = TypeValuePairString | TypeValuePairInteger | TypeValuePairBoolean;
+
+interface TypeValuePairString {
+    dataType: "String";
+    value?: string;
+}
+interface TypeValuePairInteger {
+    dataType: "Integer";
+    value?: number;
+}
+interface TypeValuePairBoolean {
+    dataType: "Boolean";
+    value?: boolean;
 }
 
 
@@ -101,10 +120,10 @@ interface IIfStatement {
     id: string;
     test: IFlowStep | null;
     consequent: {
-        body: []
+        body: IFlowStep[]
     };
     alternate: {
-        body: []
+        body: IFlowStep[]
     };
 }
 
@@ -212,7 +231,7 @@ class AstNodeCreators {
         };
     }
 
-    static fromFileType(fileType: string, fileData: any) {
+    static fromFileType(fileType: FileType, fileData: any) {
         switch (fileType) {
             case 'func':
                 return AstNodeCreators.func(fileData);
@@ -228,14 +247,15 @@ class AstNodeCreators {
         };
     }
 
-    static literalFromDataType(dataType: PrimitiveType, startingValue?: string | number | boolean): ILiteralNode {
+
+    static literalFromDataType(dataType: PrimitiveType): ILiteralNode {
         switch (dataType) {
             case "String":
-                return AstNodeCreators.stringLiteral(startingValue as string);
+                return AstNodeCreators.stringLiteral();
             case "Boolean":
-                return AstNodeCreators.booleanLiteral(startingValue as boolean);
+                return AstNodeCreators.booleanLiteral();
             case "Integer":
-                return AstNodeCreators.integerLiteral(startingValue as number);
+                return AstNodeCreators.integerLiteral();
         }
     }
 
