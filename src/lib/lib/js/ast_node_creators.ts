@@ -51,22 +51,6 @@ interface IBooleanLiteral {
     dataType: "Boolean";
 }
 
-type TypeValuePair = TypeValuePairString | TypeValuePairInteger | TypeValuePairBoolean;
-
-interface TypeValuePairString {
-    dataType: "String";
-    value?: string;
-}
-interface TypeValuePairInteger {
-    dataType: "Integer";
-    value?: number;
-}
-interface TypeValuePairBoolean {
-    dataType: "Boolean";
-    value?: boolean;
-}
-
-
 interface IVariableRefCallExpression {
     type: "VariableRefCallExpression";
     refData: any;
