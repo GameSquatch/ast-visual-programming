@@ -1,10 +1,11 @@
 import typeDefs from './type_definitions.js';
 import { utilDefs, type ArgSpec } from './util_definitions.js';
 
-type PrimitiveType = "String" | "Integer" | "Boolean";
-type FileType = "func";
+type PrimitiveType = 'String' | 'Integer' | 'Boolean';
+type FileType = 'func';
 
-type IFlowStep = IUtilityCallExpression
+type IFlowStep =
+    | IUtilityCallExpression
     | ILiteralNode
     | IVariableRefCallExpression
     | IFlowStepExpression
@@ -15,44 +16,47 @@ type IFlowStep = IUtilityCallExpression
     | IAssignmentExpression
     | IIfStatement
     | IReturnStatement;
-    
+
 type ArgumentNode = {
-    nodeData: ILiteralNode | IIdentiferRefCallExpression | IUtilityCallExpression | IRefIdentifier | IVariableRefCallExpression | IFunctionCallExpression
+    nodeData:
+        | ILiteralNode
+        | IIdentiferRefCallExpression
+        | IUtilityCallExpression
+        | IRefIdentifier
+        | IVariableRefCallExpression
+        | IFunctionCallExpression;
 } & ArgSpec;
 
 interface IUtilityCallExpression {
-    type: "UtilityCallExpression";
+    type: 'UtilityCallExpression';
     utilityName: string;
     utilityMethod: string;
     arguments: ArgumentNode[];
     dataType: string;
 }
 
-type ILiteralNode = IStringLiteral
-    | IIntegerLiteral
-    | IBooleanLiteral;
-
+type ILiteralNode = IStringLiteral | IIntegerLiteral | IBooleanLiteral;
 
 interface IStringLiteral {
-    type: "StringLiteral";
+    type: 'StringLiteral';
     value: string;
-    dataType: "String";
+    dataType: 'String';
 }
 
 interface IIntegerLiteral {
-    type: "IntegerLiteral";
+    type: 'IntegerLiteral';
     value: number;
-    dataType: "Integer";
+    dataType: 'Integer';
 }
 
 interface IBooleanLiteral {
-    type: "BooleanLiteral";
+    type: 'BooleanLiteral';
     value: boolean;
-    dataType: "Boolean";
+    dataType: 'Boolean';
 }
 
 interface IVariableRefCallExpression {
-    type: "VariableRefCallExpression";
+    type: 'VariableRefCallExpression';
     refData: any;
     method: string;
     arguments: ArgumentNode[];
@@ -60,39 +64,39 @@ interface IVariableRefCallExpression {
 }
 
 interface IFlowStepExpression {
-    type: "FlowStep";
+    type: 'FlowStep';
     id: string;
     expression: any | null;
 }
 
 interface IRefIdentifier {
-    type: "RefIdentifier";
+    type: 'RefIdentifier';
     refId: string;
     dataType: PrimitiveType;
     fnRefType: string;
 }
 
 interface IRefAssignment {
-    type: "RefAssignment";
+    type: 'RefAssignment';
     left: IRefIdentifier;
     right: IUtilityCallExpression | IVariableRefCallExpression | ILiteralNode;
 }
 
 interface IAssignmentExpression {
-    type: "AssignmentExpression";
+    type: 'AssignmentExpression';
     left: IRefIdentifier;
-    right: IUtilityCallExpression | IVariableRefCallExpression | ILiteralNode
+    right: IUtilityCallExpression | IVariableRefCallExpression | ILiteralNode;
 }
 
 interface IFunctionCallExpression {
-    type: "FunctionCallExpression";
+    type: 'FunctionCallExpression';
     fileId: string;
     dataType: PrimitiveType;
     arguments: ArgumentNode[];
 }
 
 interface IIdentiferRefCallExpression {
-    type: "IdentifierRefCallExpression";
+    type: 'IdentifierRefCallExpression';
     refData: any;
     method: string;
     arguments: ArgumentNode[];
@@ -100,35 +104,33 @@ interface IIdentiferRefCallExpression {
 }
 
 interface IIfStatement {
-    type: "IfStatement";
+    type: 'IfStatement';
     id: string;
     test: IFlowStep | null;
     consequent: {
-        body: IFlowStep[]
+        body: IFlowStep[];
     };
     alternate: {
-        body: IFlowStep[]
+        body: IFlowStep[];
     };
 }
 
 interface IReturnStatement {
-    type: "ReturnStatement";
+    type: 'ReturnStatement';
     functionId: string;
     returnType: PrimitiveType;
     expression: IFlowStep;
 }
 
-
 type RefIdentifierParams = { refId: string; dataType: PrimitiveType; fnRefType: string };
 
-
 class AstNodeCreators {
-    static util({ utilDefName, methodName }: { utilDefName: string, methodName: string }): IUtilityCallExpression {
+    static util({ utilDefName, methodName }: { utilDefName: string; methodName: string }): IUtilityCallExpression {
         const methodDefinition = utilDefs[utilDefName][methodName];
         const definitionArgs = methodDefinition.args;
 
         return {
-            type: "UtilityCallExpression",
+            type: 'UtilityCallExpression',
             utilityName: utilDefName,
             utilityMethod: methodName,
             arguments: definitionArgs.map((argType: ArgSpec): ArgumentNode => {
@@ -142,13 +144,21 @@ class AstNodeCreators {
         };
     }
 
-    static identifierRefCallExpression({ method, dataType, refData }: { method: string, dataType: PrimitiveType, refData: any }): IIdentiferRefCallExpression {
+    static identifierRefCallExpression({
+        method,
+        dataType,
+        refData
+    }: {
+        method: string;
+        dataType: PrimitiveType;
+        refData: any;
+    }): IIdentiferRefCallExpression {
         const methodDefinition = typeDefs[refData.dataType][method];
         const definitionArgs = methodDefinition.args;
 
         return {
-            type: "IdentifierRefCallExpression",
-            refData: {...refData},
+            type: 'IdentifierRefCallExpression',
+            refData: { ...refData },
             method,
             arguments: definitionArgs.map((argType: ArgSpec): ArgumentNode => {
                 const argNodeData = AstNodeCreators.literalFromDataType(argType.dataType);
@@ -164,15 +174,15 @@ class AstNodeCreators {
     static flowStep(): IFlowStep {
         const newUuid = crypto.randomUUID();
         return {
-            type: "FlowStep",
+            type: 'FlowStep',
             id: newUuid,
             expression: null
         };
     }
-    
-    static ifStatement({ testData } = { testData: null}): IIfStatement {
+
+    static ifStatement({ testData } = { testData: null }): IIfStatement {
         return {
-            type: "IfStatement",
+            type: 'IfStatement',
             id: crypto.randomUUID(),
             test: testData,
             consequent: {
@@ -183,12 +193,12 @@ class AstNodeCreators {
             }
         };
     }
-    
+
     static variableRefAssignment({ refId, dataType, fnRefType }: RefIdentifierParams): IAssignmentExpression {
         return {
-            type: "AssignmentExpression",
+            type: 'AssignmentExpression',
             left: {
-                type: "RefIdentifier",
+                type: 'RefIdentifier',
                 refId,
                 dataType,
                 fnRefType
@@ -196,19 +206,25 @@ class AstNodeCreators {
             right: AstNodeCreators.literalFromDataType(dataType)
         };
     }
-    
+
     static variableRefIdentifer({ refId, dataType, fnRefType }: RefIdentifierParams): IRefIdentifier {
         return {
-            type: "RefIdentifier",
+            type: 'RefIdentifier',
             refId,
             dataType,
             fnRefType
         };
     }
 
-    static returnStatement({ functionId, returnType }: { functionId: string; returnType: PrimitiveType }): IReturnStatement {
+    static returnStatement({
+        functionId,
+        returnType
+    }: {
+        functionId: string;
+        returnType: PrimitiveType;
+    }): IReturnStatement {
         return {
-            type: "ReturnStatement",
+            type: 'ReturnStatement',
             functionId,
             returnType,
             expression: AstNodeCreators.literalFromDataType(returnType)
@@ -221,49 +237,54 @@ class AstNodeCreators {
                 return AstNodeCreators.func(fileData);
         }
     }
-    
-    static func({ fileId, objectFlowData: { returnType } }: { fileId: string; objectFlowData: { returnType: PrimitiveType }}): IFunctionCallExpression {
+
+    static func({
+        fileId,
+        objectFlowData: { returnType }
+    }: {
+        fileId: string;
+        objectFlowData: { returnType: PrimitiveType };
+    }): IFunctionCallExpression {
         return {
-            type: "FunctionCallExpression",
+            type: 'FunctionCallExpression',
             fileId,
             arguments: [],
             dataType: returnType
         };
     }
 
-
     static literalFromDataType(dataType: PrimitiveType): ILiteralNode {
         switch (dataType) {
-            case "String":
+            case 'String':
                 return AstNodeCreators.stringLiteral();
-            case "Boolean":
+            case 'Boolean':
                 return AstNodeCreators.booleanLiteral();
-            case "Integer":
+            case 'Integer':
                 return AstNodeCreators.integerLiteral();
         }
     }
 
-    static stringLiteral(startingValue = ""): IStringLiteral {
+    static stringLiteral(startingValue = ''): IStringLiteral {
         return {
-            type: "StringLiteral",
+            type: 'StringLiteral',
             value: startingValue,
-            dataType: "String"
+            dataType: 'String'
         };
     }
-    
+
     static integerLiteral(startingValue = 0): IIntegerLiteral {
         return {
-            type: "IntegerLiteral",
+            type: 'IntegerLiteral',
             value: startingValue,
-            dataType: "Integer"
+            dataType: 'Integer'
         };
     }
 
     static booleanLiteral(startingValue = false): IBooleanLiteral {
         return {
-            type: "BooleanLiteral",
+            type: 'BooleanLiteral',
             value: startingValue,
-            dataType: "Boolean"
+            dataType: 'Boolean'
         };
     }
 }
